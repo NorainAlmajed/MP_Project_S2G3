@@ -9,11 +9,21 @@ import UIKit
 
 class NgoTableTableViewCell: UITableViewCell {
 
+    @IBOutlet weak var imgNgoPhotot: UIImageView!
+    @IBOutlet weak var lblNgoName: UILabel!
+    @IBOutlet weak var lblCategory: UILabel!
     override func awakeFromNib() {
         super.awakeFromNib()
         // Initialization code
     }
 
+    func setupCell(photo: UIImage, name:String, category: String){
+        
+        imgNgoPhotot.image = photo
+        lblNgoName.text = name
+        lblCategory.text = category
+        
+    }
     override func setSelected(_ selected: Bool, animated: Bool) {
         super.setSelected(selected, animated: animated)
 

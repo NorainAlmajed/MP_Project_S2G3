@@ -1,0 +1,12 @@
+override func viewDidLoad() {
+    super.viewDidLoad()
+
+    guard let ngo = selectedNgo else { return }
+
+    lblNgoName.text = ngo.name
+    lblCategory.text = ngo.category
+    imgNgo.image = ngo.photo
+    lblNgoMission.text = ngo.mission
+    lblPhone.text = String(ngo.phoneNumber)
+    lblEmail.text = ngo.email
+}

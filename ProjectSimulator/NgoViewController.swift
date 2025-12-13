@@ -16,9 +16,6 @@ class NgoViewController: UIViewController, UITableViewDelegate, UITableViewDataS
         tableView.delegate = self
         tableView.dataSource = self
 
-        
-        
-        
     }
     
     
@@ -32,24 +29,40 @@ class NgoViewController: UIViewController, UITableViewDelegate, UITableViewDataS
         let data = arrNgo[indexPath.row]
         
         cell.setupCell(photo: data.photo, name: data.name, category: data.category)//setupCell form NgoTableViewController
-        
-        
+
         return cell
     }
     
+//    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+//        let cell = tableView.dequeueReusableCell(withIdentifier: "NgoCell", for: indexPath) as! NgoTableTableViewCell
+//        let data = arrNgo[indexPath.row]
+//        cell.setupCell(photo: data.photo, name: data.name, category: data.category)
+//        return cell
+//    }
+
     
+
     
-    
-    
-    //to edit the height of the row -- i commanted it becuse i cant run the code and see the reusly
+    //to edit the height of the row 
            func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
             return 100
         }
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+       tableView.deselectRow(at: indexPath, animated: true) // added this  to deselect row
         print("cell index = \(indexPath.row)") // to show the index of the cell
     }
     
+    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
+        if segue.identifier == "showNgoDetails" {
+            let vc = segue.destination as! NgoDetailsViewController
+
+            if let indexPath = tableView.indexPathForSelectedRow {
+                vc.selectedNgo = arrNgo[indexPath.row]
+            }
+        }
+    }
+
     
     
     

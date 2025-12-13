@@ -1,0 +1,79 @@
+//
+//  NgoDetailsViewController.swift
+//  ProjectSimulator
+//
+//  Created by Raghad Aleskafi on 12/12/2025.
+//
+
+import UIKit
+
+class NgoDetailsViewController: UIViewController {
+
+    var selectedNgo: NGO?
+    @IBOutlet weak var lblMissionText: UILabel!
+    
+    @IBOutlet weak var lblMissionTxt: UILabel!
+    
+    @IBOutlet weak var lblNgoCategory: UILabel!
+    @IBOutlet weak var lblNgoName: UILabel!
+    @IBOutlet weak var misssionView: UIView!
+    
+    @IBOutlet weak var img_logo: UIImageView!
+    @IBOutlet weak var lblContactNgo: UILabel!
+    @IBOutlet weak var btnPhoneLogo: UIButton!
+    @IBOutlet weak var lblPgoneNumber: UILabel!
+    @IBOutlet weak var lblEmail: UILabel!
+    @IBOutlet weak var btnEmailLogo: UIButton!
+    @IBOutlet weak var btnDonateToNgo: UIButton!
+    @IBOutlet weak var btnChatWithUs: UIButton!
+    
+    
+    override func viewDidLoad() {
+        super.viewDidLoad()
+       
+        // Mission View styling
+            misssionView.backgroundColor = .white
+            misssionView.layer.cornerRadius = 16
+            misssionView.layer.borderWidth = 1
+            misssionView.layer.borderColor = UIColor.systemGray4.cgColor
+            misssionView.clipsToBounds = true
+
+        // Image View styling (same border)
+            img_logo.backgroundColor = .white
+            img_logo.layer.cornerRadius = 12
+            img_logo.layer.borderWidth = 1
+            img_logo.layer.borderColor = UIColor.systemGray4.cgColor
+            img_logo.clipsToBounds = true
+        
+        guard let ngo = selectedNgo else { return }
+
+        lblNgoName.text = ngo.name
+        lblNgoCategory.text = ngo.category
+        img_logo.image = ngo.photo
+        lblMissionText.text = ngo.mission
+        lblPgoneNumber.text = String(ngo.phoneNumber)
+        lblEmail.text = ngo.email
+      
+
+
+        // Do any additional setup after loading the view.
+    }
+    
+    
+    
+    
+   
+
+       
+
+    /*
+    // MARK: - Navigation
+
+    // In a storyboard-based application, you will often want to do a little preparation before navigation
+    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
+        // Get the new view controller using segue.destination.
+        // Pass the selected object to the new view controller.
+    }
+    */
+
+}

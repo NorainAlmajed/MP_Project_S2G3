@@ -27,7 +27,7 @@ var arrNgo: [NGO] = [
         photo: UIImage(named: "img_alkwther_logo") ?? UIImage(),
         mission: "Al Kawther Society for Social Care is dedicated to nurturing and empowering orphans by providing them with education, emotional support, and a safe environment to grow into confident and compassionate members of society.",
         phoneNumber: 17677737,
-        email: "contact@alkawthersociety.org",
+        email: "contact@alkawthersociety.org"
         
     ),
     
@@ -35,27 +35,27 @@ var arrNgo: [NGO] = [
         name: "Amal Foundation",
         category: "Charity",
         photo: UIImage(named: "img_amal_logo") ?? UIImage(),
-        mission: "Al Kawther Society for Social Care is dedicated to nurturing and empowering orphans by providing them with education, emotional support, and a safe environment to grow into confident and compassionate members of society.",
-        phoneNumber: 17677737,
-        email: "contact@alkawthersociety.org",
+        mission: "Amal Foundation’s mission is to bring hope and dignity to widowed women by empowering them with emotional support, education, and sustainable opportunities to rebuild their lives with confidence and purpose.",
+        phoneNumber: 17677777,
+        email: "info@amalfoundation.org"
     ),
     
     NGO(
         name: "Uco Elderly Care",
         category: "Adult Day Care Center",
         photo: UIImage(named: "img_uco_logo") ?? UIImage(),
-        mission: "Amal Foundation’s mission is to bring hope and dignity to widowed women by empowering them with emotional support, education, and sustainable opportunities to rebuild their lives with confidence and purpose.",
-        phoneNumber: 17677777,
-        email: "info@amalfoundation.org",
+        mission: "To provide compassionate care, support, and a safe environment for elderly individuals, promoting their well-being, dignity, and active participation in the community.",
+        phoneNumber: 17677717,
+        email: "uco@gmail.com"
     ),
     
     NGO(
         name: "Heal Foundation",
         category: "Rehabilitation & Recovery",
         photo: UIImage(named: "img_heal_logo") ?? UIImage(),
-        mission: "Mission: Heal is dedicated to helping individuals recover from addiction with compassion, guidance, and community support empowering them to rebuild their lives with dignity, strength, and hope.",
-        phoneNumber: 17677717,
-        email: "info@aalics.org",
+        mission: "Heal is dedicated to helping individuals recover from addiction with compassion, guidance, and community support empowering them to rebuild their lives with dignity, strength, and hope.",
+        phoneNumber: 17645189,
+        email: "info@heal.org"
     )
 ]
 

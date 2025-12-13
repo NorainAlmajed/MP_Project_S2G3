@@ -28,7 +28,7 @@ class NotificationsViewController: UIViewController {
         layout.minimumLineSpacing = 10              // space between cells
         notificationsCollectionView.collectionViewLayout = layout
 
-        // Do any additional setup after loading the view
+        // Do any additional setup after loading the view.
     }
     
 }

@@ -29,7 +29,6 @@ class NotificationsViewController: UIViewController {
         notificationsCollectionView.collectionViewLayout = layout
 
         // Do any additional setup after loading the view.
-        //test
     }
     
 }

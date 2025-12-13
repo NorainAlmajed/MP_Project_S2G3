@@ -24,10 +24,61 @@ class RaghadDonatoinFormViewController: UIViewController, UITableViewDelegate, U
 
         self.title = "Donation Form"
                 navigationController?.navigationBar.prefersLargeTitles = false
+
+    
+    // dismiss keyboard on tap
+       let tap = UITapGestureRecognizer(target: self, action: #selector(dismissKeyboard))
+       tap.cancelsTouchesInView = false
+       view.addGestureRecognizer(tap)
+
+       // (optional but recommended)
+       donationFormTableview.keyboardDismissMode = .onDrag
+        
+        addDoneButtonOnKeyboard()
+
+        
+   }
+  
+    
+    
+    func addDoneButtonOnKeyboard() {
+        let toolbar = UIToolbar()
+        toolbar.sizeToFit()
+
+        let flex = UIBarButtonItem(barButtonSystemItem: .flexibleSpace,
+                                  target: nil,
+                                  action: nil)
+
+        let done = UIBarButtonItem(title: "Done",
+                                   style: .done,
+                                   target: self,
+                                   action: #selector(doneButtonTapped))
+
+        toolbar.items = [flex, done]
+
+        // attach to all textfields in this view
+        view.subviews.forEach { view in
+            if let textField = view as? UITextField {
+                textField.inputAccessoryView = toolbar
+            }
+        }
     }
     
+    
+    
+@objc func dismissKeyboard() {
+    view.endEditing(true)
+}
+
+    @objc func doneButtonTapped() { //to add done in the keyboard 
+        view.endEditing(true)
+    }
+    
+    
+    
+    
     func numberOfSections(in donationFormTableview: UITableView) -> Int {
-        return 6   // or any number you want
+        return 8   // or any number you want
     }
 
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
@@ -59,8 +110,13 @@ class RaghadDonatoinFormViewController: UIViewController, UITableViewDelegate, U
             return 160   // Section5Cell
         case 5:
             return 220   // Section6Cell
-        default:
-            return 44
+            case 6:
+                return 160   // ✅ Section7Cell (choose height)
+            case 7:
+                return 400  // ✅ Section8Cell (choose height)
+            default:
+                return 44
+            }
         }
     }
     
@@ -74,4 +130,4 @@ class RaghadDonatoinFormViewController: UIViewController, UITableViewDelegate, U
     }
     */
 
-}
+

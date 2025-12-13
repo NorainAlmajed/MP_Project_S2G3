@@ -142,10 +142,10 @@
             </objects>
             <point key="canvasLocation" x="2074.0458015267177" y="598.59154929577471"/>
         </scene>
-        <!--Cancelled View Controller-->
+        <!--Donation Details View Controller-->
         <scene sceneID="dug-z0-hdc">
             <objects>
-                <viewController id="8WF-hI-DHx" customClass="CancelledViewController" customModule="ProjectSimulator" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController id="8WF-hI-DHx" customClass="DonationDetailsViewController" customModule="ProjectSimulator" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="Psp-T3-vVS">
                         <rect key="frame" x="0.0" y="0.0" width="393" height="852"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>

@@ -9,6 +9,8 @@ import UIKit
 
 class DonationDetailsViewController: UIViewController, UITableViewDelegate, UITableViewDataSource {
     
+//    var donation: Donation? 
+    
     @IBOutlet weak var donationTableview: UITableView!
     
     override func viewDidLoad() {
@@ -21,6 +23,8 @@ class DonationDetailsViewController: UIViewController, UITableViewDelegate, UITa
         // Set the navigation bar title
         self.title = "Donation Details"
         navigationController?.navigationBar.prefersLargeTitles = false
+        
+        
     }
     
     // Number of sections
@@ -61,10 +65,12 @@ class DonationDetailsViewController: UIViewController, UITableViewDelegate, UITa
             switch indexPath.section {
             case 0: return 128     // Small section
             case 1: return 196    // Medium section
-            case 2: return 300    // Long section
+            case 2: return 800    // Long section
             default: return 44
             }
         }
+    
+    
         }
 
     /*

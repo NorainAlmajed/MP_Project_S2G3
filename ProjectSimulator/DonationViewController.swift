@@ -44,7 +44,7 @@ extension DonationViewController: UICollectionViewDataSource {
     
     // Return number of items to display (based on donations array)
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        return donations.count
+        return user.donations.count
     }
     
     // Configure each collection view cell
@@ -54,7 +54,7 @@ extension DonationViewController: UICollectionViewDataSource {
         let cell = donationsCollectionView.dequeueReusableCell(withReuseIdentifier: "DonationCollectionViewCell", for: indexPath) as! DonationCollectionViewCell
         
         // Pass the donation data to the cell
-        cell.setup(with: donations[indexPath.row])
+        cell.setup(with: user.donations[indexPath.row])
         return cell
     }
 }
@@ -63,7 +63,25 @@ extension DonationViewController: UICollectionViewDelegateFlowLayout {
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
         return CGSize(width: 376, height: 124)
     }
+    
 }
+
+//extension DonationViewController: UICollectionViewDelegate {
+//
+//    func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
+//        let selectedDonation = user.donations[indexPath.row]
+//
+//        // Instantiate the details view controller
+//        let storyboard = UIStoryboard(name: "Main", bundle: nil)
+//        let detailsVC = storyboard.instantiateViewController(withIdentifier: "DonationDetailsViewController") as! DonationDetailsViewController
+//
+//        // Pass the donation object
+//        detailsVC.donation = selectedDonation
+//
+//        // Navigate to the details screen
+//        navigationController?.pushViewController(detailsVC, animated: true)
+//    }
+//}
 
 
 

@@ -9,6 +9,15 @@ import UIKit
 
 class Section1TableViewCell: UITableViewCell {
 
+    @IBOutlet weak var ngoNameLbl: UILabel!
+    
+    @IBOutlet weak var donationIDLbl: UILabel!
+    
+    @IBOutlet weak var creationDateLbl: UILabel!
+    
+    
+    @IBOutlet weak var NgoLogoImageView: UIImageView!
+    
     override func awakeFromNib() {
         super.awakeFromNib()
         // Initialization code

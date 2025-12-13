@@ -9,9 +9,11 @@ import UIKit
 
 class DonationDetailsViewController: UIViewController, UITableViewDelegate, UITableViewDataSource {
     
-//    var donation: Donation? 
+    var donation: Donation? 
     
     @IBOutlet weak var donationTableview: UITableView!
+    
+    
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -44,14 +46,23 @@ class DonationDetailsViewController: UIViewController, UITableViewDelegate, UITa
             case 0:
                 let cell = tableView.dequeueReusableCell(withIdentifier: "Section1Cell", for: indexPath) as! Section1TableViewCell
                 // Configure NGO name, creation time, donation ID here
+                if let donation = donation {
+                        cell.setup(with: donation)
+                    }
                 return cell
             case 1:
                 let cell = tableView.dequeueReusableCell(withIdentifier: "Section2Cell", for: indexPath) as! Section2TableViewCell
                 // Configure donor username, address, delivery date here
+                if let donation = donation {
+                        cell.setup(with: donation)
+                    }
                 return cell
             case 2:
                 let cell = tableView.dequeueReusableCell(withIdentifier: "Section3Cell", for: indexPath) as! Section3TableViewCell
                 // Configure donation summary and buttons here
+                if let donation = donation {
+                        cell.setup(with: donation) // <-- add this
+                    }
                 return cell
             default:
                 return UITableViewCell()
@@ -65,7 +76,7 @@ class DonationDetailsViewController: UIViewController, UITableViewDelegate, UITa
             switch indexPath.section {
             case 0: return 128     // Small section
             case 1: return 196    // Medium section
-            case 2: return 800    // Long section
+            case 2: return 1050    // Long section
             default: return 44
             }
         }

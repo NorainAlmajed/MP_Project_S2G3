@@ -66,22 +66,25 @@ extension DonationViewController: UICollectionViewDelegateFlowLayout {
     
 }
 
-//extension DonationViewController: UICollectionViewDelegate {
-//
-//    func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
-//        let selectedDonation = user.donations[indexPath.row]
-//
-//        // Instantiate the details view controller
-//        let storyboard = UIStoryboard(name: "Main", bundle: nil)
-//        let detailsVC = storyboard.instantiateViewController(withIdentifier: "DonationDetailsViewController") as! DonationDetailsViewController
-//
-//        // Pass the donation object
-//        detailsVC.donation = selectedDonation
-//
-//        // Navigate to the details screen
-//        navigationController?.pushViewController(detailsVC, animated: true)
-//    }
-//}
+extension DonationViewController: UICollectionViewDelegate {
+    
+    //    func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
+    //        // Perform the segue and pass the indexPath as sender
+    //        performSegue(withIdentifier: "showDonationDetails", sender: indexPath)
+    //    }
+    
+    // Prepare data for the destination VC
+    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
+        if segue.identifier == "showDonationDetails" {
+            let detailsVC = segue.destination as! DonationDetailsViewController
+            
+            if let indexPath = donationsCollectionView.indexPathsForSelectedItems?.first {
+                detailsVC.donation = user.donations[indexPath.row]
+            }
+        }
+    }
+    
+}
 
 
 

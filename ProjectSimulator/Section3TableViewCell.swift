@@ -9,18 +9,124 @@ import UIKit
 
 class Section3TableViewCell: UITableViewCell {
 
+    @IBOutlet weak var foodImageView: UIImageView!
+    
+    @IBOutlet weak var donationStatusView: UIView!
+    
+    @IBOutlet weak var statusColorView: UIView!
+    
+    @IBOutlet weak var donationStatusLbl: UILabel!
+    
+    @IBOutlet weak var quantityLbl: UILabel!
+    
+    @IBOutlet weak var categoryLbl: UILabel!
+    
+    @IBOutlet weak var weightLbl: UILabel!
+    
+    @IBOutlet weak var expirationDateLbl: UILabel!
+    
+    @IBOutlet weak var descriptionLbl: UILabel!
+    
+    @IBOutlet weak var rejectionReasonLbl: UILabel!
+    
+    @IBOutlet weak var cancelBtn: UIButton!
+    
+    @IBOutlet weak var rejectBtn: UIButton!
+    
+    @IBOutlet weak var editBtn: UIButton!
+    
+    @IBOutlet weak var acceptBtn: UIButton!
+    
+    @IBOutlet weak var collectedBtn: UIButton!
+    
     override func awakeFromNib() {
         super.awakeFromNib()
         // Initialization code
         
         // Disable selection
             self.selectionStyle = .none
+        
+        
+        // Round the small status color view
+        statusColorView.layer.cornerRadius = (statusColorView.frame.height) / 2
+        statusColorView.clipsToBounds = true
+        
+        // Round the food image view
+           foodImageView.layer.cornerRadius = 7.24
+           foodImageView.clipsToBounds = true
     }
 
     override func setSelected(_ selected: Bool, animated: Bool) {
         super.setSelected(selected, animated: animated)
 
         // Configure the view for the selected state
+        
+        // Disable selection
+                self.selectionStyle = .none
     }
+    
+    override func layoutSubviews() {
+            super.layoutSubviews()
+            
+            // Round the donation status view
+            donationStatusView.layer.cornerRadius = donationStatusView.frame.height / 2
+            donationStatusView.clipsToBounds = true
+        }
+    
 
+}
+
+extension Section3TableViewCell {
+
+    func setup(with donation: Donation) {
+        // Update the food image
+        foodImageView.image = donation.foodImage
+
+        // Update quantity, category, weight, expiration date
+        quantityLbl.text = "\(donation.quantity)"
+        categoryLbl.text = donation.Category
+        
+        if let weight = donation.weight {
+            weightLbl.text = "\(weight) kg"
+        } else {
+            weightLbl.text = "N/A"
+        }
+
+        // Format expiration date
+        let formatter = DateFormatter()
+        formatter.dateFormat = "dd/MM/yyyy"
+        expirationDateLbl.text = formatter.string(from: donation.expiryDate)
+
+        // Update description if it's not nil or empty
+        if let description = donation.description, !description.isEmpty {
+            descriptionLbl.text = description
+        }
+
+        // Update rejection reason if it's not nil or empty
+        if let rejectionReason = donation.rejectionReason, !rejectionReason.isEmpty {
+            rejectionReasonLbl.text = rejectionReason
+        }
+        
+        // Update donation status text and color
+                switch donation.status {
+                case 1:
+                    statusColorView.backgroundColor = UIColor(named: "orangeCol")
+                    donationStatusLbl.text = "Pending"
+                case 2:
+                    statusColorView.backgroundColor = UIColor(named: "greenCol")
+                    donationStatusLbl.text = "Accepted"
+                case 3:
+                    statusColorView.backgroundColor = UIColor(named: "blueCol")
+                    donationStatusLbl.text = "Collected"
+                case 4:
+                    statusColorView.backgroundColor = UIColor(named: "redCol")
+                    donationStatusLbl.text = "Rejected"
+                case 5:
+                    statusColorView.backgroundColor = UIColor(named: "greyCol")
+                    donationStatusLbl.text = "Cancelled"
+                default:
+                    statusColorView.backgroundColor = UIColor.clear
+                    donationStatusLbl.text = "Unknown"
+                }
+    }
 }

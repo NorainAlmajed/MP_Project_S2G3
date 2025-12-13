@@ -24,6 +24,13 @@ class Section1TableViewCell: UITableViewCell {
         
         // Disable selection
             self.selectionStyle = .none
+        
+        // Make NGO logo rounded
+        NgoLogoImageView.layer.cornerRadius = 7.24
+        NgoLogoImageView.clipsToBounds = true
+        
+        // Make image fill the view
+            NgoLogoImageView.contentMode = .scaleAspectFill
     }
 
     override func setSelected(_ selected: Bool, animated: Bool) {
@@ -31,5 +38,17 @@ class Section1TableViewCell: UITableViewCell {
 
         // Configure the view for the selected state
     }
+    
+    func setup(with donation: Donation) {
+           ngoNameLbl.text = donation.ngo
+           donationIDLbl.text = "Donation #\(donation.donationID)"
+           
+        // Format and display date as "23/10/2025, 9:08 AM"
+            let formatter = DateFormatter()
+            formatter.dateFormat = "dd/MM/yyyy, h:mm a"
+            creationDateLbl.text = formatter.string(from: donation.creationDate)
+           
+           NgoLogoImageView.image = donation.foodImage // or your NGO logo if you have it
+       }
 
 }

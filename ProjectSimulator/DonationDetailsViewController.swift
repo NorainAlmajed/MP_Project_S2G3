@@ -8,7 +8,7 @@
 
 import UIKit
 
-class DonationDetailsViewController: UIViewController {
+class CancelledViewController: UIViewController {
 
     @IBOutlet weak var donationAddressLbl: UILabel!
     

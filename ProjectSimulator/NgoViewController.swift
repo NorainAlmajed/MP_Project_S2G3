@@ -16,6 +16,38 @@ class NgoViewController: UIViewController, UITableViewDelegate, UITableViewDataS
         tableView.delegate = self
         tableView.dataSource = self
 
+        
+        
+        
+
+            title = "Browse NGOs"
+
+            // إزالة الخط الافتراضي (إن وُجد)
+            navigationController?.navigationBar.shadowImage = UIImage()
+
+            // خط أسفل الـ Navigation Bar
+            let bottomLine = UIView()
+            bottomLine.backgroundColor = UIColor.systemGray4
+            bottomLine.translatesAutoresizingMaskIntoConstraints = false
+
+            navigationController?.navigationBar.addSubview(bottomLine)
+
+            NSLayoutConstraint.activate([
+                bottomLine.heightAnchor.constraint(equalToConstant: 1),
+                bottomLine.leadingAnchor.constraint(equalTo: navigationController!.navigationBar.leadingAnchor),
+                bottomLine.trailingAnchor.constraint(equalTo: navigationController!.navigationBar.trailingAnchor),
+                bottomLine.bottomAnchor.constraint(equalTo: navigationController!.navigationBar.bottomAnchor)
+            ])
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
     }
     
     

@@ -45,6 +45,8 @@ class RaghadDonatoinFormViewController: UIViewController,
         override func viewDidLoad() {
             super.viewDidLoad()
 
+           // donationFormTableview.separatorStyle = .none🔐🔐🔐🔐🔐🔐🔐🔐🔐🔐🔐🔐🔐🔐🔐🔐🔐🔐🔐🔐🔐🔐🔐🔐🔐🔐🔐🔐🔐🔐🔐 remove the commint to remove the lines in the table view
+
             print("🔐 Current user:", user.username)
             print("👤 Is Admin?", user.isAdmin)
 
@@ -293,23 +295,23 @@ class RaghadDonatoinFormViewController: UIViewController,
         
         switch adjustedSection {
         case 0:
-            return 195   // Section1Cell
+            return 237   // Section1Cell
         case 1:
-            return 94   // Section2Cell
+            return 108   // Section2Cell
         case 2:
-            return 140   // Section3Cell
+            return 233  // Section3Cell
         case 3:
-            return 180   // Section4Cell
+            return 109  // Section4Cell
         case 4:
-            return 160   // Section5Cell
+            return 102  // Section5Cell
         case 5:
-            return 220   // Section6Cell
+            return 93  // Section6Cell
         case 6:
-            return 160   // ✅ Section7Cell (choose height)
+            return 161  // ✅ Section7Cell (choose height)
         case 7:
-            return 400  // ✅ Section8Cell (choose height)
+            return 62 // ✅ Section8Cell (choose height)
         default:
-            return 44
+            return 62
         }
     }
     

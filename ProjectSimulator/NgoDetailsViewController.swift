@@ -30,6 +30,24 @@ class NgoDetailsViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        self.title = "NGO Details"
+        // إزالة الظل الافتراضي (لو موجود)
+           navigationController?.navigationBar.shadowImage = UIImage()
+
+           // إنشاء خط مخصص أسفل الـ navigation bar
+           let bottomLine = UIView()
+           bottomLine.backgroundColor = UIColor.systemGray4
+           bottomLine.translatesAutoresizingMaskIntoConstraints = false
+
+           navigationController?.navigationBar.addSubview(bottomLine)
+
+           NSLayoutConstraint.activate([
+               bottomLine.heightAnchor.constraint(equalToConstant: 1),
+               bottomLine.leadingAnchor.constraint(equalTo: navigationController!.navigationBar.leadingAnchor),
+               bottomLine.trailingAnchor.constraint(equalTo: navigationController!.navigationBar.trailingAnchor),
+               bottomLine.bottomAnchor.constraint(equalTo: navigationController!.navigationBar.bottomAnchor)
+           ])
+       
        
         // Mission View styling
             misssionView.backgroundColor = .white

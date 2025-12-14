@@ -74,7 +74,7 @@ struct User {
 // MARK: - Donor Data Source
 //  Central place for all donors (NO hardcoding in ViewControllers)
 var users: [User] = [
-    User(username: "zahraa_hubail",userType: 2),//admin
+    User(username: "zahraa_hubail",userType: 1),//admin
     User(username: "raghad_aleskafi",userType: 2),//donor
     User(username: "norain_almajed",userType: 3),
     User(username: "fatima_alaiwi",userType: 1),

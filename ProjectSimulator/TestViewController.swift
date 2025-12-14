@@ -22,12 +22,27 @@ class DonationDetailsViewController: UIViewController, UITableViewDelegate, UITa
         donationTableview.delegate = self
         donationTableview.dataSource = self
         
+        donationTableview.rowHeight = UITableView.automaticDimension
+        donationTableview.estimatedRowHeight = 800   // any reasonable estimate
+
+        
         // Set the navigation bar title
         self.title = "Donation Details"
         navigationController?.navigationBar.prefersLargeTitles = false
         
-        
     }
+    
+    
+    //To make the donation page title appear
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+
+        navigationController?.setNavigationBarHidden(false, animated: animated)
+        navigationController?.navigationBar.prefersLargeTitles = false
+        title = "Donation Details"
+    }
+    
+    
     
     // Number of sections
         func numberOfSections(in tableView: UITableView) -> Int {
@@ -76,10 +91,11 @@ class DonationDetailsViewController: UIViewController, UITableViewDelegate, UITa
             switch indexPath.section {
             case 0: return 128     // Small section
             case 1: return 196    // Medium section
-            case 2: return 1050    // Long section
-            default: return 44
+            case 2: return UITableView.automaticDimension    // Long section
+            default: return UITableView.automaticDimension
             }
         }
+    
     
     
         }

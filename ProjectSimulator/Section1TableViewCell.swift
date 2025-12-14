@@ -15,7 +15,6 @@ class Section1TableViewCell: UITableViewCell {
     
     @IBOutlet weak var creationDateLbl: UILabel!
     
-    
     @IBOutlet weak var NgoLogoImageView: UIImageView!
     
     override func awakeFromNib() {

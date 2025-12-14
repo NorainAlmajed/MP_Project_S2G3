@@ -49,6 +49,12 @@ class Section3TableViewCell: UITableViewCell {
     
     @IBOutlet weak var collectedSectionView: UIView!
     
+    @IBOutlet weak var weightSectionView: UIView!
+    
+    @IBOutlet weak var descSectionView: UIView!
+    
+    @IBOutlet weak var rejectionSectionView: UIView!
+    
     
     override func awakeFromNib() {
         
@@ -95,6 +101,12 @@ extension Section3TableViewCell {
         // Reset buttons visibility first
         hideAllActionSections()
         
+        // Reset other sections visibility
+        weightSectionView.isHidden = false
+        descSectionView.isHidden = false
+        rejectionSectionView.isHidden = false
+        
+        
         //Set variables for the donation status and user role
         let role = user.userType
         let status = donation.status
@@ -138,11 +150,14 @@ extension Section3TableViewCell {
         quantityLbl.text = "\(donation.quantity)"
         categoryLbl.text = donation.Category
         
+        //Update weight
         if let weight = donation.weight {
-            weightLbl.text = "\(weight) kg"
-        } else {
-            weightLbl.text = "N/A"
-        }
+                    weightLbl.text = "\(weight) kg"
+                    weightSectionView.isHidden = false
+                } else {
+                    weightSectionView.isHidden = true
+                }
+        
 
         // Format expiration date
         let formatter = DateFormatter()
@@ -150,14 +165,21 @@ extension Section3TableViewCell {
         expirationDateLbl.text = formatter.string(from: donation.expiryDate)
 
         // Update description if it's not nil or empty
-        if let description = donation.description, !description.isEmpty {
-            descriptionLbl.text = description
-        }
+        if let description = donation.description, !description.trimmingCharacters(in: .whitespaces).isEmpty {
+                    descriptionLbl.text = description
+                    descSectionView.isHidden = false
+                } else {
+                    descSectionView.isHidden = true
+                }
 
         // Update rejection reason if it's not nil or empty
-        if let rejectionReason = donation.rejectionReason, !rejectionReason.isEmpty {
-            rejectionReasonLbl.text = rejectionReason
-        }
+        if status == 4, let rejectionReason = donation.rejectionReason, !rejectionReason.trimmingCharacters(in: .whitespaces).isEmpty {
+                    rejectionReasonLbl.text = rejectionReason
+                    rejectionSectionView.isHidden = false
+                } else {
+                    rejectionSectionView.isHidden = true
+                }
+        
         
         // Update donation status text and color
                 switch donation.status {

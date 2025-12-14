@@ -29,14 +29,45 @@ class DonationViewController: UIViewController {
         layout.minimumLineSpacing = 10              // space between cells
         donationsCollectionView.collectionViewLayout = layout
 
-        // Do any additional setup after loading the view.
+        donationsCollectionView.backgroundColor = self.view.backgroundColor
+        
+        
+        //Make the navigation bar color not white while scroling
+        let appearance = UINavigationBarAppearance()
+        appearance.configureWithOpaqueBackground()
+        appearance.backgroundColor = view.backgroundColor
+
+        navigationController?.navigationBar.standardAppearance = appearance
+        navigationController?.navigationBar.scrollEdgeAppearance = appearance
+        navigationController?.navigationBar.compactAppearance = appearance
+        
     }
     
     
     override func viewDidLayoutSubviews() {
-        super.viewDidLayoutSubviews()
+        super.viewDidLayoutSubviews()    }
     
-    }
+    
+     //Prepare data for the destination VC
+        override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
+            if segue.identifier == "showDonationDetails" {
+                let detailsVC = segue.destination as! DonationDetailsViewController
+    
+                if let indexPath = donationsCollectionView.indexPathsForSelectedItems?.first {
+                    detailsVC.donation = user.donations[indexPath.row]
+                }
+            }
+        }
+    
+        //To let the title appear in a big form
+        override func viewWillAppear(_ animated: Bool) {
+            super.viewWillAppear(animated)
+    
+            navigationController?.setNavigationBarHidden(false, animated: animated)
+            navigationController?.navigationBar.prefersLargeTitles = true
+            navigationItem.largeTitleDisplayMode = .always
+            title = "Donations"
+        }
     
 }
 
@@ -66,25 +97,6 @@ extension DonationViewController: UICollectionViewDelegateFlowLayout {
     
 }
 
-extension DonationViewController: UICollectionViewDelegate {
-    
-    //    func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
-    //        // Perform the segue and pass the indexPath as sender
-    //        performSegue(withIdentifier: "showDonationDetails", sender: indexPath)
-    //    }
-    
-    // Prepare data for the destination VC
-    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-        if segue.identifier == "showDonationDetails" {
-            let detailsVC = segue.destination as! DonationDetailsViewController
-            
-            if let indexPath = donationsCollectionView.indexPathsForSelectedItems?.first {
-                detailsVC.donation = user.donations[indexPath.row]
-            }
-        }
-    }
-    
-}
 
 
 

@@ -17,6 +17,9 @@ class Section2TableViewCell: UITableViewCell {
     
     @IBOutlet weak var pickupDatelbl: UILabel!
     
+    @IBOutlet weak var recurrenceLbl: UILabel!
+    
+    
     override func awakeFromNib() {
         super.awakeFromNib()
         // Initialization code
@@ -31,28 +34,49 @@ class Section2TableViewCell: UITableViewCell {
         // Configure the view for the selected state
     }
     
-    // Updated setup method
-        func setup(with donation: Donation) {
-            // Donor
-            donorLbl.text = donation.donor
-            
-            // Address
-            let addressText = """
-            Building \(donation.address.building), Flat \(donation.address.flat)
-            Road \(donation.address.road), Block \(donation.address.block)
-            Area: \(donation.address.area)
-            """
-            donationAddressLbl.text = addressText
+    func setup(with donation: Donation) {
+        donorLbl.text = donation.donor
+        
+        //  Setting the format of the address
+        var addressParts: [String] = []
+
+        addressParts.append("Building \(donation.address.building)")
+
+        if let flat = donation.address.flat {
+            addressParts.append("Flat \(flat)")
+        }
+
+        addressParts.append("Road \(donation.address.road)")
+        addressParts.append("Block \(donation.address.block)")
+
+        let address = addressParts.joined(separator: ", ")
+        
+        //Update address
+        donationAddressLbl.text = address
             applyLineSpacing()
-            
-            // Governorate
-            governorateLbl.text = "\(donation.address.area), \(donation.address.governorate) Governorate"
-            
-            // Pickup date and time
-            let formatter = DateFormatter()
-            formatter.dateFormat = "dd/MM/yyyy"
-            let pickupDateString = formatter.string(from: donation.pickupDate)
-            pickupDatelbl.text = "Date: \(pickupDateString), \(donation.pickupTime)"
+        
+        //Update the city and governorate
+        governorateLbl.text = "\(donation.address.area), \(donation.address.governorate) Governorate"
+        
+        //Update date
+        // Format and display date
+        let formatter = DateFormatter()
+        formatter.dateFormat = "dd/MM/yyyy, h:mm a"
+        pickupDatelbl.text = "\(formatter.string(from: donation.creationDate)) - \(donation.pickupTime) "
+        
+        // Set recurrence label based on integer value
+        switch donation.recurrence {
+                case 1:
+                    recurrenceLbl.text = "Recurrence: Repeated Daily"
+                case 2:
+                    recurrenceLbl.text = "Recurrence: Repeated Weekly"
+                case 3:
+                    recurrenceLbl.text = "Recurrence: Repeated Monthly"
+                case 4:
+                    recurrenceLbl.text = "Recurrence: Repeated Yearly"
+                default:
+                    recurrenceLbl.text = "" // 0 or any other value
+                }
         }
 
         private func applyLineSpacing() {

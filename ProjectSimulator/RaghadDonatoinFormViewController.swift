@@ -84,6 +84,19 @@ class RaghadDonatoinFormViewController: UIViewController, UITableViewDelegate, U
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         return 1
     }
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
 
     func tableView(_ tableView: UITableView,
                    cellForRowAt indexPath: IndexPath) -> UITableViewCell {
@@ -95,6 +108,11 @@ class RaghadDonatoinFormViewController: UIViewController, UITableViewDelegate, U
             return cell
    
     }
+    
+    
+    
+    
+    
     
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
         switch indexPath.section {

@@ -1,5 +1,5 @@
 //
-//  DonationViewController.swift
+//  NotificationViewController.swift
 //  ProjectSimulator
 //
 //  Created by Fatema Mohamed Amin Jaafar Hasan Hubail on 29/11/2025.
@@ -7,59 +7,52 @@
 
 import UIKit
 
-class DonationViewController: UIViewController {
+class NotificationsViewController: UIViewController {
 
     // Outlet connected to the collection view in the storyboard
-    @IBOutlet weak var donationsCollectionView: UICollectionView!
-
+    @IBOutlet weak var notificationsCollectionView: UICollectionView!
     
     override func viewDidLoad() {
         super.viewDidLoad()
-                
+        
         // Set the screen title
-        title = "Donations"
+        title = "Notifications"
         
         // Set the data source and delegate for the collection view
-        donationsCollectionView.dataSource = self
-        donationsCollectionView.delegate = self
+        notificationsCollectionView.dataSource = self
+        notificationsCollectionView.delegate = self
         
         // Configure the layout of the collection view
         let layout = UICollectionViewFlowLayout()
         layout.scrollDirection = .vertical          // vertical scrolling
         layout.minimumLineSpacing = 10              // space between cells
-        donationsCollectionView.collectionViewLayout = layout
+        notificationsCollectionView.collectionViewLayout = layout
 
         // Do any additional setup after loading the view.
     }
     
-    
-    override func viewDidLayoutSubviews() {
-        super.viewDidLayoutSubviews()
-    
-    }
-    
 }
 
-extension DonationViewController: UICollectionViewDataSource {
+extension NotificationsViewController: UICollectionViewDataSource {
     
-    // Return number of items to display (based on donations array)
+    // Return number of items to display (based on notifications array)
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        return donations.count
+        return notifications.count
     }
     
     // Configure each collection view cell
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         
-        // Dequeue a reusable cell of type DonationCollectionViewCell
-        let cell = donationsCollectionView.dequeueReusableCell(withReuseIdentifier: "DonationCollectionViewCell", for: indexPath) as! DonationCollectionViewCell
+        // Dequeue a reusable cell of type NotificationCollectionViewCell
+        let cell = notificationsCollectionView.dequeueReusableCell(withReuseIdentifier: "NotificationsCollectionViewCell", for: indexPath) as! NotificationsCollectionViewCell
         
-        // Pass the donation data to the cell
-        cell.setup(with: donations[indexPath.row])
+        // Pass the notification data to the cell
+        cell.setup(with: notifications[indexPath.row])
         return cell
     }
 }
 
-extension DonationViewController: UICollectionViewDelegateFlowLayout {
+extension NotificationsViewController: UICollectionViewDelegateFlowLayout {
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
         return CGSize(width: 376, height: 124)
     }

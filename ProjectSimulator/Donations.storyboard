@@ -1181,7 +1181,7 @@
                                                                     <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                                                 </imageView>
                                                                 <view contentMode="scaleToFill" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="5Qc-Zg-X6c">
-                                                                    <rect key="frame" x="271" y="299" width="88" height="25"/>
+                                                                    <rect key="frame" x="273" y="299" width="86" height="25"/>
                                                                     <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                                                     <subviews>
                                                                         <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="Pending" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="ATd-XY-A9H">
@@ -1444,17 +1444,22 @@
                                         </tableViewCellContentView>
                                         <connections>
                                             <outlet property="acceptBtn" destination="wim-XV-2Fz" id="gLO-Ms-wwj"/>
+                                            <outlet property="acceptSectionView" destination="8e5-1x-Vz5" id="9X0-gb-8Om"/>
                                             <outlet property="cancelBtn" destination="ywW-eh-OBa" id="HrU-r6-6FP"/>
+                                            <outlet property="cancelSectionView" destination="w41-RH-ItF" id="gG9-qG-LD7"/>
                                             <outlet property="categoryLbl" destination="xSq-o3-N96" id="dXW-6c-5j2"/>
                                             <outlet property="collectedBtn" destination="XLU-4V-e40" id="s8n-s9-Vmx"/>
+                                            <outlet property="collectedSectionView" destination="T0b-8y-S1J" id="BgR-f2-WbF"/>
                                             <outlet property="descriptionLbl" destination="DrK-Hi-HLX" id="2xW-OS-Cee"/>
                                             <outlet property="donationStatusLbl" destination="ATd-XY-A9H" id="gkB-ah-n8v"/>
                                             <outlet property="donationStatusView" destination="5Qc-Zg-X6c" id="QRk-XD-Hfl"/>
                                             <outlet property="editBtn" destination="Gdh-W9-bsz" id="c65-Nr-IIe"/>
+                                            <outlet property="editSectionView" destination="nUx-rA-K6Q" id="OdQ-YW-jOp"/>
                                             <outlet property="expirationDateLbl" destination="HX8-mA-2Ta" id="044-M1-9PB"/>
                                             <outlet property="foodImageView" destination="kVB-k4-sck" id="LGN-vV-gCf"/>
                                             <outlet property="quantityLbl" destination="Btv-fy-p4d" id="zEd-Jb-9WG"/>
                                             <outlet property="rejectBtn" destination="n4s-6C-rZ0" id="GUa-zf-GaJ"/>
+                                            <outlet property="rejectSectionView" destination="ZLC-Iw-J6U" id="VqQ-57-wRt"/>
                                             <outlet property="rejectionReasonLbl" destination="uBY-bi-1EI" id="TxP-l1-524"/>
                                             <outlet property="statusColorView" destination="Dkb-tM-r10" id="sbn-iO-hKY"/>
                                             <outlet property="weightLbl" destination="Qfz-VQ-iDr" id="WJj-xA-8ds"/>

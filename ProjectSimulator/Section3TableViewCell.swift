@@ -39,7 +39,19 @@ class Section3TableViewCell: UITableViewCell {
     
     @IBOutlet weak var collectedBtn: UIButton!
     
+    @IBOutlet weak var cancelSectionView: UIView!
+    
+    @IBOutlet weak var rejectSectionView: UIView!
+    
+    @IBOutlet weak var editSectionView: UIView!
+    
+    @IBOutlet weak var acceptSectionView: UIView!
+    
+    @IBOutlet weak var collectedSectionView: UIView!
+    
+    
     override func awakeFromNib() {
+        
         super.awakeFromNib()
         // Initialization code
         
@@ -79,6 +91,46 @@ class Section3TableViewCell: UITableViewCell {
 extension Section3TableViewCell {
 
     func setup(with donation: Donation) {
+        
+        // Reset buttons visibility first
+        hideAllActionSections()
+        
+        //Set variables for the donation status and user role
+        let role = user.userType
+        let status = donation.status
+        
+        // Admin + Pending
+            if role == 1 && status == 1 {
+                cancelSectionView.isHidden = false
+                rejectSectionView.isHidden = false
+                editSectionView.isHidden = false
+                acceptSectionView.isHidden = false
+            }
+
+            // Donor + Pending
+            else if role == 2 && status == 1 {
+                cancelSectionView.isHidden = false
+            }
+
+            // NGO + Pending
+            else if role == 3 && status == 1 {
+                rejectSectionView.isHidden = false
+                acceptSectionView.isHidden = false
+            }
+
+            // Admin + Accepted
+            else if role == 1 && status == 2 {
+                cancelSectionView.isHidden = false
+                collectedSectionView.isHidden = false
+            }
+
+            // NGO + Accepted
+            else if role == 3 && status == 2 {
+                collectedSectionView.isHidden = false
+            }
+
+            // All other cases → everything stays hidden
+        
         // Update the food image
         foodImageView.image = donation.foodImage
 
@@ -129,4 +181,13 @@ extension Section3TableViewCell {
                     donationStatusLbl.text = "Unknown"
                 }
     }
+    
+    private func hideAllActionSections() {
+        cancelSectionView.isHidden = true
+        rejectSectionView.isHidden = true
+        editSectionView.isHidden = true
+        acceptSectionView.isHidden = true
+        collectedSectionView.isHidden = true
+    }
+    
 }

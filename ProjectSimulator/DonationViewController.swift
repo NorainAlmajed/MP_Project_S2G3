@@ -67,7 +67,12 @@ class DonationViewController: UIViewController {
             navigationController?.navigationBar.prefersLargeTitles = true
             navigationItem.largeTitleDisplayMode = .always
             title = "Donations"
+            
+            // ← Add this line to refresh the collection view
+               donationsCollectionView.reloadData()
         }
+    
+    
     
 }
 

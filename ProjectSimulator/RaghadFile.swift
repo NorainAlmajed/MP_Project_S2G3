@@ -63,25 +63,33 @@ var arrNgo: [NGO] = [
 
 
 
-struct Donor {
+struct User {
     //  This struct represents ONE donor (admin chooses from these)
     let username: String
+    let userType: Int
 }
 
 
 
 // MARK: - Donor Data Source
 //  Central place for all donors (NO hardcoding in ViewControllers)
-var arrDonors: [Donor] = [
-    Donor(username: "zahraa_hubail"),
-    Donor(username: "raghad_aleskafi"),
-    Donor(username: "norain_almajed"),
-    Donor(username: "fatima_alaiwi"),
-    Donor(username: "zainab_mahdi"),
-    Donor(username: "ali_ahmed"),
-    Donor(username: "yousif_ali"),
-    Donor(username: "hassan_mahdi")
+var users: [User] = [
+    User(username: "zahraa_hubail",userType: 2),//admin
+    User(username: "raghad_aleskafi",userType: 2),//donor
+    User(username: "norain_almajed",userType: 3),
+    User(username: "fatima_alaiwi",userType: 1),
+    User(username: "zainab_mahdi",userType: 2),
+    User(username: "ali_ahmed",userType: 1),
+    User(username: "yousif_ali",userType: 1),
+    User(username: "hassan_mahdi",userType: 2)
 ]
+
+var user = users [0]
+
+extension User {
+    var isAdmin: Bool { userType == 1 }   // ✅ Admin = 1 donor= 2
+}
+
 
 
 

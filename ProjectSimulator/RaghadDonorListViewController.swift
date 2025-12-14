@@ -25,7 +25,7 @@ class RaghadDonorListViewController: UIViewController,
 
     // ✅ NEW: Get donors from your shared data file (arrDonors)
     // Make sure arrDonors exists in your "Raghad file"
-    private let donors: [Donor] = arrDonors
+    private let donors: [User] = users
 
     weak var delegate: DonorSelectionDelegate?
 

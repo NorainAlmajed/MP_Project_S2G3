@@ -26,7 +26,10 @@ class RaghadDonatoinFormViewController: UIViewController,
     private var weightValue: Double?
     private var shouldShowWeightError = false
     private var selectedExpiryDate: Date?   // 📅 stores the user-selected expiry date
-
+    // ✅🔐 Admin check from your current logged user
+    private var isAdminUser: Bool {
+        return user.isAdmin
+    }
     
     
     @IBOutlet weak var donationFormTableview: UITableView!
@@ -35,31 +38,30 @@ class RaghadDonatoinFormViewController: UIViewController,
     // ✅ NEW: store selected donor name (to show on Section2 button)
     private var selectedDonorName: String?
     
+   
+
     
-    override func viewDidLoad() {
-        super.viewDidLoad()
-        
-        // Do any additional setup after loading the view.
-        
-        donationFormTableview.delegate = self
-        donationFormTableview.dataSource = self
-        
-        self.title = "Donation Form"
-        navigationController?.navigationBar.prefersLargeTitles = false
-        
-        
-        // dismiss keyboard on tap
-        let tap = UITapGestureRecognizer(target: self, action: #selector(dismissKeyboard))
-        tap.cancelsTouchesInView = false
-        view.addGestureRecognizer(tap)
-        
-        // (optional but recommended)
-        donationFormTableview.keyboardDismissMode = .onDrag
-        
-        addDoneButtonOnKeyboard()
-        
-        
-    }
+      
+        override func viewDidLoad() {
+            super.viewDidLoad()
+
+            print("🔐 Current user:", user.username)
+            print("👤 Is Admin?", user.isAdmin)
+
+            donationFormTableview.delegate = self
+            donationFormTableview.dataSource = self
+
+            self.title = "Donation Form"
+            navigationController?.navigationBar.prefersLargeTitles = false
+
+            let tap = UITapGestureRecognizer(target: self, action: #selector(dismissKeyboard))
+            tap.cancelsTouchesInView = false
+            view.addGestureRecognizer(tap)
+
+            donationFormTableview.keyboardDismissMode = .onDrag
+            addDoneButtonOnKeyboard()
+        }
+
     
     
     
@@ -103,11 +105,13 @@ class RaghadDonatoinFormViewController: UIViewController,
     //        return 8   // or any number you want
     //    }
     
+//    func numberOfSections(in tableView: UITableView) -> Int {
+//        return 8
+//    }//he told me to put this insatde of thr one in the tpop
+//    
     func numberOfSections(in tableView: UITableView) -> Int {
-        return 8
-    }//he told me to put this insatde of thr one in the tpop
-    
-    
+        return isAdminUser ? 8 : 7   // ✅ remove Choose Donor section if NOT admin
+    }
     
     
     
@@ -125,9 +129,13 @@ class RaghadDonatoinFormViewController: UIViewController,
                    cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         
         
-        
+        let section = indexPath.section
+
+        // ✅ If NOT admin, skip donor section by shifting sections after 0
+        let adjustedSection = (!isAdminUser && section >= 1) ? section + 1 : section
+
         // ✅ Section 1 only
-        if indexPath.section == 0 {
+        if adjustedSection == 0 {
             guard let cell = tableView.dequeueReusableCell(withIdentifier: "Section1Cell",
                                                            for: indexPath) as? RaghadSection1TableViewCell else {
                 fatalError("Section1Cell not found OR class not set")
@@ -145,7 +153,7 @@ class RaghadDonatoinFormViewController: UIViewController,
         
         
         
-        if indexPath.section == 1 {
+        if adjustedSection == 1 {
             guard let cell = tableView.dequeueReusableCell(withIdentifier: "Section2Cell", for: indexPath) as? RaghadSection2TableViewCell else {
                 fatalError("Section2Cell not found OR class not set to RaghadSection2TableViewCell in storyboard")
             }
@@ -166,9 +174,19 @@ class RaghadDonatoinFormViewController: UIViewController,
             return cell
         }
         
+        // 🍔 Section 3 (Food Category)
+        if adjustedSection == 2 {
+            let cell = tableView.dequeueReusableCell(
+                withIdentifier: "Section3Cell",
+                for: indexPath
+            )
+            cell.selectionStyle = .none
+            return cell
+        }
+
         
         
-        if indexPath.section == 3 {
+        if adjustedSection == 3 {
             guard let cell = tableView.dequeueReusableCell(
                 withIdentifier: "Section4Cell",
                 for: indexPath
@@ -193,7 +211,7 @@ class RaghadDonatoinFormViewController: UIViewController,
         
         
         // ⚖️ Section 5 (Weight) = index 4
-        if indexPath.section == 4 {
+        if adjustedSection == 4 {
             guard let cell = tableView.dequeueReusableCell(
                 withIdentifier: "Section5Cell",
                 for: indexPath
@@ -221,32 +239,11 @@ class RaghadDonatoinFormViewController: UIViewController,
 
         
         
-        if indexPath.section == 5 {
-            guard let cell = tableView.dequeueReusableCell(
-                withIdentifier: "Section6Cell",
-                for: indexPath
-            ) as? RaghadSection6TableViewCell else {
-                fatalError("❌ Section6Cell not set correctly")
-            }
-
-            cell.selectionStyle = .none
-
-            // ✅🟢 Always show the saved date (or tomorrow if nil)
-            cell.configure(date: selectedExpiryDate)
-
-            // ✅🟢 Save the selected date ONLY (no reload here!)
-            cell.onDateSelected = { [weak self] date in
-                self?.selectedExpiryDate = date   // 📅 save date safely
-                // ❌ DO NOT reload the table here
-            }
-
-            return cell
-        }
-        
+//     
         
         
         // 📅✅ Section 6 (Expiry Date) = index 5
-        if indexPath.section == 5 {
+        if adjustedSection == 5 {
             guard let cell = tableView.dequeueReusableCell(
                 withIdentifier: "Section6Cell",
                 for: indexPath
@@ -271,11 +268,13 @@ class RaghadDonatoinFormViewController: UIViewController,
         
         
         
-        // ✅ Other sections (4..7)
-        let cell = tableView.dequeueReusableCell(withIdentifier: "Section\(indexPath.section + 1)Cell",
-                                                 for: indexPath)
+        let cell = tableView.dequeueReusableCell(
+            withIdentifier: "Section\(adjustedSection + 1)Cell",
+            for: indexPath
+        )
         cell.selectionStyle = .none
         return cell
+
     }
     
     
@@ -288,7 +287,11 @@ class RaghadDonatoinFormViewController: UIViewController,
     
     
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
-        switch indexPath.section {
+        
+        let section = indexPath.section
+        let adjustedSection = (!isAdminUser && section >= 1) ? section + 1 : section
+        
+        switch adjustedSection {
         case 0:
             return 195   // Section1Cell
         case 1:
@@ -348,12 +351,15 @@ class RaghadDonatoinFormViewController: UIViewController,
     // ✅ NEW: receive chosen donor name from donor list (Done button)
     func didSelectDonor(name: String) {
         selectedDonorName = name
-        //  NEW: clear error
         shouldShowDonorError = false
-        // refresh only Section 2 so button updates
-        donationFormTableview.reloadSections(IndexSet(integer: 1), with: .none)
+
+        if isAdminUser {
+            donationFormTableview.reloadSections(IndexSet(integer: 1), with: .none) // ✅ donor section exists
+        } else {
+            donationFormTableview.reloadData() // ✅ safe fallback
+        }
     }
-    
+
     
     
     //  NEW: resize image (THIS is what tutors like)
@@ -437,9 +443,10 @@ class RaghadDonatoinFormViewController: UIViewController,
             
             
             
-            
+            var sectionsToReload: [Int] = [0, 3, 4, 5]  // image, quantity, weight, expiry
+            if isAdminUser { sectionsToReload.insert(1, at: 1) } // donor only if admin
             // ✅ refresh only Section 1
-            donationFormTableview.reloadSections(IndexSet(integer: 0), with: .none)
+            donationFormTableview.reloadSections(IndexSet(sectionsToReload), with: .none)
         }
         
         
@@ -507,7 +514,8 @@ class RaghadDonatoinFormViewController: UIViewController,
     private func handleProceedTapped_TEST_ONLY() {
         
         let missingImage = (selectedDonationImage == nil)      // 📸❌
-        let missingDonor = (selectedDonorName == nil)          // 👤❌
+        let missingDonor = isAdminUser ? (selectedDonorName == nil) : false
+       // 👤❌
         let invalidWeight = (weightValue == nil)   // ⚖️❌
         shouldShowWeightError = invalidWeight
 
@@ -523,12 +531,15 @@ class RaghadDonatoinFormViewController: UIViewController,
         shouldShowWeightError = invalidWeight
         
         // 🔄 reload affected sections
-        donationFormTableview.reloadSections(
-            IndexSet([0, 1, 3, 4,5]),
-            with: .none
-        )
+//        donationFormTableview.reloadSections(
+//            IndexSet([0, 1, 3, 4,5]),
+//            with: .none)
+        var sectionsToReload: [Int] = [0, 3, 4, 5]   // image, quantity, weight, expiry
+        if isAdminUser { sectionsToReload.insert(1, at: 1) } // donor only if admin
+
+        donationFormTableview.reloadSections(IndexSet(sectionsToReload), with: .none)
+
         
-     
 
         
         // ❌ Stop if ANY error exists
@@ -546,6 +557,11 @@ class RaghadDonatoinFormViewController: UIViewController,
         
         
     }
+    // ✅🟢 Proceed button action (connect this to your Proceed button)
+    @IBAction func proceedTapped(_ sender: UIButton) {
+        handleProceedTapped_TEST_ONLY()
+    }
+
 }
 
     // TEST ONLY navigation — this screen is NOT implemented by me.

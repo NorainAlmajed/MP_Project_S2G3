@@ -53,6 +53,24 @@
 			);
 			target = 5FEF8B612EDA3636007D3A97 /* ProjectSimulator */;
 		};
+		D0FCA2BC2EEEC28F00D8AFFF /* Exceptions for "ZainabAlmahdi " folder in "ProjectSimulatorTests" target */ = {
+			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
+			membershipExceptions = (
+				Authentication.storyboard,
+				LoginViewController.swift,
+				SignupViewController.swift,
+			);
+			target = 5FEF8B772EDA363A007D3A97 /* ProjectSimulatorTests */;
+		};
+		D0FCA2BD2EEEC28F00D8AFFF /* Exceptions for "ZainabAlmahdi " folder in "ProjectSimulatorUITests" target */ = {
+			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
+			membershipExceptions = (
+				Authentication.storyboard,
+				LoginViewController.swift,
+				SignupViewController.swift,
+			);
+			target = 5FEF8B812EDA363A007D3A97 /* ProjectSimulatorUITests */;
+		};
 /* End PBXFileSystemSynchronizedBuildFileExceptionSet section */
 
 /* Begin PBXFileSystemSynchronizedRootGroup section */
@@ -72,6 +90,15 @@
 		5FEF8B852EDA363A007D3A97 /* ProjectSimulatorUITests */ = {
 			isa = PBXFileSystemSynchronizedRootGroup;
 			path = ProjectSimulatorUITests;
+			sourceTree = "<group>";
+		};
+		D0FCA2B52EEEC14000D8AFFF /* ZainabAlmahdi  */ = {
+			isa = PBXFileSystemSynchronizedRootGroup;
+			exceptions = (
+				D0FCA2BC2EEEC28F00D8AFFF /* Exceptions for "ZainabAlmahdi " folder in "ProjectSimulatorTests" target */,
+				D0FCA2BD2EEEC28F00D8AFFF /* Exceptions for "ZainabAlmahdi " folder in "ProjectSimulatorUITests" target */,
+			);
+			path = "ZainabAlmahdi ";
 			sourceTree = "<group>";
 		};
 /* End PBXFileSystemSynchronizedRootGroup section */
@@ -113,6 +140,7 @@
 			children = (
 				BDD3182E2EEB7F9500880EFF /* GoogleService-Info.plist */,
 				5FEF8BFA2EDB8B59007D3A97 /* DonationDetailViewController.swift */,
+				D0FCA2B52EEEC14000D8AFFF /* ZainabAlmahdi  */,
 				5FEF8B642EDA3636007D3A97 /* ProjectSimulator */,
 				5FEF8B7B2EDA363A007D3A97 /* ProjectSimulatorTests */,
 				5FEF8B852EDA363A007D3A97 /* ProjectSimulatorUITests */,
@@ -147,6 +175,7 @@
 			);
 			fileSystemSynchronizedGroups = (
 				5FEF8B642EDA3636007D3A97 /* ProjectSimulator */,
+				D0FCA2B52EEEC14000D8AFFF /* ZainabAlmahdi  */,
 			);
 			name = ProjectSimulator;
 			packageProductDependencies = (

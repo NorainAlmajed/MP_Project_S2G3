@@ -21,6 +21,10 @@ class RaghadSection1TableViewCell: UITableViewCell {
     
     
     
+    @IBOutlet weak var lblImageError: UILabel!
+
+    
+    
     // ✅ 2) Add delegate variable
         weak var delegate: RaghadSection1TableViewCellDelegate?
 
@@ -32,6 +36,9 @@ class RaghadSection1TableViewCell: UITableViewCell {
 
               // ✅ UI polish only (safe)
 
+            
+            lblImageError.isHidden = true
+            lblImageError.text = "Please upload an image"
             Donation_ImageView.contentMode = .scaleAspectFit
             Donation_ImageView.clipsToBounds = true
             Donation_ImageView.layer.cornerRadius = 10
@@ -71,6 +78,13 @@ class RaghadSection1TableViewCell: UITableViewCell {
             Donation_ImageView.contentMode = .center
         }
     }
+    
+    
+    // ✅ NEW: show / hide image error (same pattern as Choose Donor)
+    func configure(showError: Bool) {
+        lblImageError.isHidden = !showError
+    }
+
 
 
 }

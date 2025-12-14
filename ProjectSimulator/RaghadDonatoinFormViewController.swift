@@ -19,6 +19,14 @@ class RaghadDonatoinFormViewController: UIViewController,
                                         RaghadSection1TableViewCellDelegate,
                                         DonorSelectionDelegate {
     
+    private var shouldShowDonorError = false   // ✅ NEW
+    private var shouldShowImageError = false   // ✅ NEW: upload image validation
+    private var shouldShowQuantityError = false   // 🔢❌ Quantity error
+    private var quantityValue: Int?   // 🔢 stores user quantity
+    private var weightValue: Double?
+    private var shouldShowWeightError = false
+    private var selectedExpiryDate: Date?   // 📅 stores the user-selected expiry date
+
     
     
     @IBOutlet weak var donationFormTableview: UITableView!
@@ -109,58 +117,161 @@ class RaghadDonatoinFormViewController: UIViewController,
     }
     
     
- 
+    
     
     
     
     func tableView(_ tableView: UITableView,
                    cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         
+        
+        
         // ✅ Section 1 only
         if indexPath.section == 0 {
             guard let cell = tableView.dequeueReusableCell(withIdentifier: "Section1Cell",
                                                            for: indexPath) as? RaghadSection1TableViewCell else {
-                fatalError("Section1Cell not found OR class not set to RaghadSection1TableViewCell in storyboard")
+                fatalError("Section1Cell not found OR class not set")
             }
             
             cell.selectionStyle = .none
             cell.delegate = self
             
-            if let img = selectedDonationImage {
-                cell.Donation_ImageView.image = img
-            }
+            cell.setDonationImage(selectedDonationImage)
+            cell.configure(showError: shouldShowImageError)
+            cell.lblImageError.text = "Please upload an image"
             
             return cell
         }
         
         
+        
         if indexPath.section == 1 {
-                 guard let cell = tableView.dequeueReusableCell(withIdentifier: "Section2Cell", for: indexPath) as? RaghadSection2TableViewCell else {
-                     fatalError("Section2Cell not found OR class not set to RaghadSection2TableViewCell in storyboard")
-                 }
+            guard let cell = tableView.dequeueReusableCell(withIdentifier: "Section2Cell", for: indexPath) as? RaghadSection2TableViewCell else {
+                fatalError("Section2Cell not found OR class not set to RaghadSection2TableViewCell in storyboard")
+            }
+            
+            cell.selectionStyle = .none
+            
+            // ✅ NEW: show selected donor name on the button (or default)
+            cell.configure(
+                donorName: selectedDonorName,
+                showError: shouldShowDonorError
+            )
+            
+            
+            // ✅ NEW: button tap opens donor list page
+            cell.btnChooseDonor2.removeTarget(nil, action: nil, for: .allEvents) // avoids double-taps
+            cell.btnChooseDonor2.addTarget(self, action: #selector(openDonorList), for: .touchUpInside)
+            
+            return cell
+        }
+        
+        
+        
+        if indexPath.section == 3 {
+            guard let cell = tableView.dequeueReusableCell(
+                withIdentifier: "Section4Cell",
+                for: indexPath
+            ) as? RaghadSection4TableViewCell else {
+                fatalError("❌ Section4Cell not set correctly")
+            }
 
-                 cell.selectionStyle = .none
+            cell.selectionStyle = .none
+            cell.configure(showError: shouldShowQuantityError)
 
-                 // ✅ NEW: show selected donor name on the button (or default)
-                 cell.configure(donorName: selectedDonorName)
+            // ✅ keep quantity saved even if cell disappears
+            cell.onQuantityChanged = { [weak self] value in
+                self?.quantityValue = value
+                if value != nil && (value ?? 0) > 0 {
+                    self?.shouldShowQuantityError = false
+                }
+            }
 
-                 // ✅ NEW: button tap opens donor list page
-                 cell.btnChooseDonor2.removeTarget(nil, action: nil, for: .allEvents) // avoids double-taps
-                 cell.btnChooseDonor2.addTarget(self, action: #selector(openDonorList), for: .touchUpInside)
-
-                 return cell
-             }
+            return cell
+        }
 
         
         
+        // ⚖️ Section 5 (Weight) = index 4
+        if indexPath.section == 4 {
+            guard let cell = tableView.dequeueReusableCell(
+                withIdentifier: "Section5Cell",
+                for: indexPath
+            ) as? RaghadSection5TableViewCell else {
+                fatalError("❌ Section5Cell not set correctly")
+            }
+
+            cell.selectionStyle = .none
+
+            // 🔴 show / hide error
+            cell.configure(showError: shouldShowWeightError)
+
+            // 🔁 receive weight from cell
+            cell.onWeightChanged = { [weak self] value in
+                self?.weightValue = value
+
+                // 🟢 clear error when valid
+                if value != nil {
+                    self?.shouldShowWeightError = false
+                }
+            }
+
+            return cell
+        }
+
+        
+        
+        if indexPath.section == 5 {
+            guard let cell = tableView.dequeueReusableCell(
+                withIdentifier: "Section6Cell",
+                for: indexPath
+            ) as? RaghadSection6TableViewCell else {
+                fatalError("❌ Section6Cell not set correctly")
+            }
+
+            cell.selectionStyle = .none
+
+            // ✅🟢 Always show the saved date (or tomorrow if nil)
+            cell.configure(date: selectedExpiryDate)
+
+            // ✅🟢 Save the selected date ONLY (no reload here!)
+            cell.onDateSelected = { [weak self] date in
+                self?.selectedExpiryDate = date   // 📅 save date safely
+                // ❌ DO NOT reload the table here
+            }
+
+            return cell
+        }
+        
+        
+        
+        // 📅✅ Section 6 (Expiry Date) = index 5
+        if indexPath.section == 5 {
+            guard let cell = tableView.dequeueReusableCell(
+                withIdentifier: "Section6Cell",
+                for: indexPath
+            ) as? RaghadSection6TableViewCell else {
+                fatalError("❌ Section6Cell not set correctly")
+            }
+
+            cell.selectionStyle = .none
+
+            // ✅🟢 Always show the saved date (or tomorrow if nil)
+            cell.configure(date: selectedExpiryDate)
+
+            // ✅🟢 Save the selected date ONLY (no reload here!)
+            cell.onDateSelected = { [weak self] date in
+                self?.selectedExpiryDate = date   // 📅 save date safely
+            }
+
+            return cell
+        }
+
         
         
         
         
-        
-        
-        
-        // ✅ Other sections (3..8)
+        // ✅ Other sections (4..7)
         let cell = tableView.dequeueReusableCell(withIdentifier: "Section\(indexPath.section + 1)Cell",
                                                  for: indexPath)
         cell.selectionStyle = .none
@@ -172,7 +283,6 @@ class RaghadDonatoinFormViewController: UIViewController,
     
     
     
-   
     
     
     
@@ -201,70 +311,71 @@ class RaghadDonatoinFormViewController: UIViewController,
     }
     
     // ✅ NEW: open donor list page (present as modal with nav bar)
-//    @objc private func openDonorList() {
-//        let sb = UIStoryboard(name: "Raghad1", bundle: nil)
-//        let vc = sb.instantiateViewController(
-//            withIdentifier: "RaghadDonorListViewController"
-//        ) as! RaghadDonorListViewController
-//
-//        vc.delegate = self
-//        let nav = UINavigationController(rootViewController: vc)
-//        present(nav, animated: true)
-//    }
-
+    //    @objc private func openDonorList() {
+    //        let sb = UIStoryboard(name: "Raghad1", bundle: nil)
+    //        let vc = sb.instantiateViewController(
+    //            withIdentifier: "RaghadDonorListViewController"
+    //        ) as! RaghadDonorListViewController
+    //
+    //        vc.delegate = self
+    //        let nav = UINavigationController(rootViewController: vc)
+    //        present(nav, animated: true)
+    //    }
+    
     
     
     
     
     
     @objc private func openDonorList() {
-
+        
         // ✅ make sure the storyboard name matches your file: Raghad1.storyboard
         let sb = UIStoryboard(name: "Raghad1", bundle: nil)
-
+        
         // ✅ SAFE: if the ID is not set correctly, it will print and not crash
         guard let vc = sb.instantiateViewController(withIdentifier: "RaghadDonorListViewController") as? RaghadDonorListViewController else {
             print("❌ FIX STORYBOARD: In Raghad1.storyboard, set the donor list VC Storyboard ID to: RaghadDonorListViewController")
             return
         }
-
+        
         vc.delegate = self
         let nav = UINavigationController(rootViewController: vc)
         present(nav, animated: true)
     }
-
+    
     
     
     // ✅ NEW: receive chosen donor name from donor list (Done button)
-               func didSelectDonor(name: String) {
-                    selectedDonorName = name
-
-                 // refresh only Section 2 so button updates
-                                                   donationFormTableview.reloadSections(IndexSet(integer: 1), with: .none)
-                                               }
-
+    func didSelectDonor(name: String) {
+        selectedDonorName = name
+        //  NEW: clear error
+        shouldShowDonorError = false
+        // refresh only Section 2 so button updates
+        donationFormTableview.reloadSections(IndexSet(integer: 1), with: .none)
+    }
+    
     
     
     //  NEW: resize image (THIS is what tutors like)
     private func resizedImage(_ image: UIImage, maxWidth: CGFloat) -> UIImage {
-
+        
         // If already small, don’t resize
         if image.size.width <= maxWidth { return image }
-
+        
         let scale = maxWidth / image.size.width
         let newSize = CGSize(
             width: maxWidth,
             height: image.size.height * scale
         )
-
+        
         UIGraphicsBeginImageContextWithOptions(newSize, false, 0)
         image.draw(in: CGRect(origin: .zero, size: newSize))
         let resized = UIGraphicsGetImageFromCurrentImageContext()
         UIGraphicsEndImageContext()
-
+        
         return resized ?? image
     }
-
+    
     
     
     
@@ -317,12 +428,16 @@ class RaghadDonatoinFormViewController: UIViewController,
         let img = (info[.editedImage] as? UIImage) ?? (info[.originalImage] as? UIImage)
         
         if let img = img {
-
+            
             // ✅ NEW: resize image before saving (change 900 if you want)
             let resized = resizedImage(img, maxWidth: 900)
-
+            
             selectedDonationImage = resized
-
+            shouldShowImageError = false   // ✅ clear image error once image is chosen
+            
+            
+            
+            
             // ✅ refresh only Section 1
             donationFormTableview.reloadSections(IndexSet(integer: 0), with: .none)
         }
@@ -340,19 +455,103 @@ class RaghadDonatoinFormViewController: UIViewController,
     }
     
     
+    // ✅ PROCEED BUTTON VALIDATION (ADD THIS IN DONATION FORM VC)
+//    @IBAction func proceedTapped(_ sender: UIButton) { caht say you can delete this but i will run first to check ther eis no errors
+//        
+//        // ❌ Admin did NOT choose donor
+//        if selectedDonorName == nil {
+//            shouldShowDonorError = true
+//            
+//            // refresh only Section 2 (Choose Donor cell)
+//            donationFormTableview.reloadSections(
+//                IndexSet(integer: 1),
+//                with: .none
+//            )
+//            return
+//        }
+//        
+//        // ✅ Donor selected → continue normally
+//        shouldShowDonorError = false
+//        
+//        // TODO: navigate to Schedule Pickup page
+//    }
+//    
     
     
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    private func getQuantityValue() -> Int? {
+        let indexPath = IndexPath(row: 0, section: 3)
+        
+        guard let cell = donationFormTableview.cellForRow(at: indexPath)
+                as? RaghadSection4TableViewCell else {
+            return nil
+        }
+        
+        return cell.getQuantityValue()   // 👈 method you added in the cell
+    }
+    
+    
+    
+    
+    
+    // ✅ TEST ONLY: This function is ONLY to test that the Proceed button is connected
+    // and to test donor error handling. Your teammate will later replace this navigation.
+    private func handleProceedTapped_TEST_ONLY() {
+        
+        let missingImage = (selectedDonationImage == nil)      // 📸❌
+        let missingDonor = (selectedDonorName == nil)          // 👤❌
+        let invalidWeight = (weightValue == nil)   // ⚖️❌
+        shouldShowWeightError = invalidWeight
+
+        
+        let quantity = quantityValue
+        let invalidQuantity = (quantity == nil || (quantity ?? 0) <= 0)
+
+        
+        // 🔴 set flags
+        shouldShowImageError = missingImage
+        shouldShowDonorError = missingDonor
+        shouldShowQuantityError = invalidQuantity
+        shouldShowWeightError = invalidWeight
+        
+        // 🔄 reload affected sections
+        donationFormTableview.reloadSections(
+            IndexSet([0, 1, 3, 4,5]),
+            with: .none
+        )
+        
+     
+
+        
+        // ❌ Stop if ANY error exists
+        if missingImage || missingDonor || invalidQuantity || invalidWeight {
+            return
+            
+        }
+        
+        // ✅ All valid → Navigate
+        let sb = UIStoryboard(name: "Raghad1", bundle: nil)
+        let vc = sb.instantiateViewController(withIdentifier: "SchedulePickupVC")
+        navigationController?.pushViewController(vc, animated: true)
+        
+        
+        
+        
+    }
 }
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
+
+    // TEST ONLY navigation — this screen is NOT implemented by me.
+// It exists only to verify that the Proceed button is connected
+// and that validation logic works correctly.
+
     
     
     

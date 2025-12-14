@@ -18,6 +18,11 @@ class RaghadSection2TableViewCell: UITableViewCell {
     
     weak var delegate: RaghadSection2TableViewCellDelegate?
     
+    @IBOutlet weak var lblError: UILabel!
+    
+    
+    
+    
     
     @IBOutlet weak var lblChooseDonor: UILabel!
     
@@ -31,8 +36,33 @@ class RaghadSection2TableViewCell: UITableViewCell {
         super.awakeFromNib()
         setupChooseDonorButton()
                selectionStyle = .none
+        
+        // ✅ NEW: hide error by default
+                lblError.isHidden = true
+
         // Initialization code
   }
+    
+    
+    
+    
+    func configure(donorName: String?, showError: Bool) {
+           var config = btnChooseDonor2.configuration ?? UIButton.Configuration.filled()
+
+           if let name = donorName, !name.isEmpty {
+               config.title = name
+               config.baseForegroundColor = .label
+               lblError.isHidden = true   // ✅ hide error when donor exists
+           } else {
+               config.title = "Choose Donor"
+               config.baseForegroundColor = .systemGray
+               lblError.isHidden = !showError
+               lblError.text = "Please choose a donor"
+           }
+
+           btnChooseDonor2.configuration = config
+       }
+   
     
     
     // ✅ NEW: connect btnChooseDonor2 "Touch Up Inside" to this
@@ -85,20 +115,7 @@ class RaghadSection2TableViewCell: UITableViewCell {
      }
     
     
-    func configure(donorName: String?) {
-           var config = btnChooseDonor2.configuration ?? UIButton.Configuration.filled()
-           if let name = donorName, !name.isEmpty {
-               config.title = name
-               config.baseForegroundColor = .label
-               config.baseBackgroundColor = .systemGray6
-           } else {
-               config.title = "Choose Donor"
-               config.baseForegroundColor = .systemGray
-               config.baseBackgroundColor = .systemGray6
-           }
-           btnChooseDonor2.configuration = config
-       }
-   
+
 
     
 

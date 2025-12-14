@@ -10,6 +10,10 @@ import UIKit
 class RaghadSection7TableViewCell: UITableViewCell, UITextViewDelegate {
 
     
+    @IBOutlet weak var lblWeightError: UILabel!   // 🔴 error label
+
+    var onWeightChanged: ((Double?) -> Void)?     // ⚖️ send value to
+    
     @IBOutlet weak var lblCounter: UILabel!
     private let maxCharacters = 90
     

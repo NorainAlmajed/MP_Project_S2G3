@@ -201,17 +201,39 @@ class RaghadDonatoinFormViewController: UIViewController,
     }
     
     // ✅ NEW: open donor list page (present as modal with nav bar)
+//    @objc private func openDonorList() {
+//        let sb = UIStoryboard(name: "Raghad1", bundle: nil)
+//        let vc = sb.instantiateViewController(
+//            withIdentifier: "RaghadDonorListViewController"
+//        ) as! RaghadDonorListViewController
+//
+//        vc.delegate = self
+//        let nav = UINavigationController(rootViewController: vc)
+//        present(nav, animated: true)
+//    }
+
+    
+    
+    
+    
+    
     @objc private func openDonorList() {
+
+        // ✅ make sure the storyboard name matches your file: Raghad1.storyboard
         let sb = UIStoryboard(name: "Raghad1", bundle: nil)
-        let vc = sb.instantiateViewController(
-            withIdentifier: "RaghadDonorListViewController"
-        ) as! RaghadDonorListViewController
+
+        // ✅ SAFE: if the ID is not set correctly, it will print and not crash
+        guard let vc = sb.instantiateViewController(withIdentifier: "RaghadDonorListViewController") as? RaghadDonorListViewController else {
+            print("❌ FIX STORYBOARD: In Raghad1.storyboard, set the donor list VC Storyboard ID to: RaghadDonorListViewController")
+            return
+        }
 
         vc.delegate = self
         let nav = UINavigationController(rootViewController: vc)
         present(nav, animated: true)
     }
 
+    
     
     // ✅ NEW: receive chosen donor name from donor list (Done button)
                func didSelectDonor(name: String) {

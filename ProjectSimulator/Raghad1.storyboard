@@ -335,6 +335,7 @@
                                                     </buttonConfiguration>
                                                     <connections>
                                                         <action selector="btnChooseDonorTapped:" destination="5vA-Di-E5A" eventType="touchUpInside" id="Fqj-wS-DxG"/>
+                                                        <segue destination="h8u-SU-zAW" kind="show" id="1vv-WC-bBe"/>
                                                     </connections>
                                                 </button>
                                             </subviews>
@@ -580,7 +581,7 @@
         <!--Raghad Donor List View Controller-->
         <scene sceneID="F1D-5q-bFR">
             <objects>
-                <viewController id="ScQ-3E-xN5" customClass="RaghadDonorListViewController" customModule="ProjectSimulator" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController storyboardIdentifier="RaghadDonorListViewController" id="ScQ-3E-xN5" customClass="RaghadDonorListViewController" customModule="ProjectSimulator" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="5zJ-Xl-ZBH">
                         <rect key="frame" x="0.0" y="0.0" width="393" height="852"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
@@ -589,7 +590,7 @@
                                 <rect key="frame" x="0.0" y="162" width="393" height="622"/>
                                 <color key="backgroundColor" systemColor="systemBackgroundColor"/>
                                 <prototypes>
-                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" insetsLayoutMarginsFromSafeArea="NO" selectionStyle="blue" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" textLabel="ahN-Mb-mG1" style="IBUITableViewCellStyleDefault" id="8Ov-zd-8PT" customClass="DonorCell">
+                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" insetsLayoutMarginsFromSafeArea="NO" selectionStyle="blue" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" reuseIdentifier="DonorCell" textLabel="ahN-Mb-mG1" style="IBUITableViewCellStyleDefault" id="8Ov-zd-8PT">
                                         <rect key="frame" x="0.0" y="50" width="393" height="43.666667938232422"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="8Ov-zd-8PT" id="a7E-xr-SIX">
@@ -646,11 +647,14 @@
             </objects>
             <point key="canvasLocation" x="-312.21374045801525" y="-78.16901408450704"/>
         </scene>
-        <!--Navigation Controller-->
+        <!--Choose Donor-->
         <scene sceneID="jf4-MG-Di7">
             <objects>
                 <navigationController automaticallyAdjustsScrollViewInsets="NO" id="h8u-SU-zAW" sceneMemberID="viewController">
                     <toolbarItems/>
+                    <navigationItem key="navigationItem" title="Choose Donor" id="QuL-5e-hlu">
+                        <barButtonItem key="backBarButtonItem" title=" " id="8S3-i2-02A"/>
+                    </navigationItem>
                     <navigationBar key="navigationBar" contentMode="scaleToFill" id="x27-pI-23W">
                         <rect key="frame" x="0.0" y="118" width="393" height="44"/>
                         <autoresizingMask key="autoresizingMask"/>

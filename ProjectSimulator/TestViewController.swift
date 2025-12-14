@@ -55,34 +55,150 @@ class DonationDetailsViewController: UIViewController, UITableViewDelegate, UITa
         }
 
         // Cell for each section
-        func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+    func tableView(_ tableView: UITableView,
+                   cellForRowAt indexPath: IndexPath) -> UITableViewCell {
 
-            switch indexPath.section {
-            case 0:
-                let cell = tableView.dequeueReusableCell(withIdentifier: "Section1Cell", for: indexPath) as! Section1TableViewCell
-                // Configure NGO name, creation time, donation ID here
-                if let donation = donation {
-                        cell.setup(with: donation)
-                    }
-                return cell
-            case 1:
-                let cell = tableView.dequeueReusableCell(withIdentifier: "Section2Cell", for: indexPath) as! Section2TableViewCell
-                // Configure donor username, address, delivery date here
-                if let donation = donation {
-                        cell.setup(with: donation)
-                    }
-                return cell
-            case 2:
-                let cell = tableView.dequeueReusableCell(withIdentifier: "Section3Cell", for: indexPath) as! Section3TableViewCell
-                // Configure donation summary and buttons here
-                if let donation = donation {
-                        cell.setup(with: donation) // <-- add this
-                    }
-                return cell
-            default:
-                return UITableViewCell()
+        switch indexPath.section {
+
+        case 0:
+            let cell = tableView.dequeueReusableCell(
+                withIdentifier: "Section1Cell",
+                for: indexPath
+            ) as! Section1TableViewCell
+
+            if let donation = donation {
+                cell.setup(with: donation)
             }
+            return cell
+
+        case 1:
+            let cell = tableView.dequeueReusableCell(
+                withIdentifier: "Section2Cell",
+                for: indexPath
+            ) as! Section2TableViewCell
+
+            if let donation = donation {
+                cell.setup(with: donation)
+            }
+            return cell
+
+        case 2:
+            let cell = tableView.dequeueReusableCell(
+                withIdentifier: "Section3Cell",
+                for: indexPath
+            ) as! Section3TableViewCell
+
+            guard let donation = donation else { return cell }
+
+            cell.setup(with: donation)
+
+            cell.onCancelTapped = { [weak self] in
+                guard let self = self else { return }
+
+                let alert = UIAlertController(
+                    title: "Confirmation",
+                    message: "Are you sure you want to cancel the donation?",
+                    preferredStyle: .alert
+                )
+
+                alert.addAction(UIAlertAction(title: "Cancel", style: .cancel))
+
+                alert.addAction(UIAlertAction(title: "Yes", style: .default) { _ in
+                    // ✅ update optional safely
+                    self.donation?.status = 5
+
+                    let successAlert = UIAlertController(
+                        title: "Success",
+                        message: "The donation has been cancelled successfully",
+                        preferredStyle: .alert
+                    )
+
+                    successAlert.addAction(
+                        UIAlertAction(title: "Dismiss", style: .default) { _ in
+                            self.donationTableview.reloadData()
+                        }
+                    )
+
+                    self.present(successAlert, animated: true)
+                })
+
+                self.present(alert, animated: true)
+            }
+            
+            cell.onAcceptTapped = { [weak self] in
+                guard let self = self else { return }
+
+                let alert = UIAlertController(
+                    title: "Confirmation",
+                    message: "Are you sure you want to accept the donation?",
+                    preferredStyle: .alert
+                )
+
+                // Cancel button (left)
+                alert.addAction(UIAlertAction(title: "Cancel", style: .cancel))
+
+                // Yes button (right) – changes status
+                alert.addAction(UIAlertAction(title: "Yes", style: .default) { _ in
+                    self.donation?.status = 2  // Accepted
+
+                    let successAlert = UIAlertController(
+                        title: "Success",
+                        message: "The donation has been accepted successfully",
+                        preferredStyle: .alert
+                    )
+
+                    // Dismiss button
+                    successAlert.addAction(UIAlertAction(title: "Dismiss", style: .default) { _ in
+                        self.donationTableview.reloadData() // Refresh table
+                    })
+
+                    self.present(successAlert, animated: true)
+                })
+
+                self.present(alert, animated: true)
+            }
+
+            cell.onCollectedTapped = { [weak self] in
+                guard let self = self else { return }
+
+                let alert = UIAlertController(
+                    title: "Confirmation",
+                    message: "Are you sure you want to mark donation as collected?",
+                    preferredStyle: .alert
+                )
+
+                // Cancel button (left)
+                alert.addAction(UIAlertAction(title: "Cancel", style: .cancel))
+
+                // Yes button (right) – changes status
+                alert.addAction(UIAlertAction(title: "Yes", style: .default) { _ in
+                    self.donation?.status = 3  // Collected
+
+                    let successAlert = UIAlertController(
+                        title: "Success",
+                        message: "The donation has been marked collected successfully",
+                        preferredStyle: .alert
+                    )
+
+                    // Dismiss button
+                    successAlert.addAction(UIAlertAction(title: "Dismiss", style: .default) { _ in
+                        self.donationTableview.reloadData() // Refresh table
+                    })
+
+                    self.present(successAlert, animated: true)
+                })
+
+                self.present(alert, animated: true)
+            }
+
+            
+            return cell
+
+        default:
+            return UITableViewCell()
         }
+    }
+
 
         // MARK: - Table View Delegate
 

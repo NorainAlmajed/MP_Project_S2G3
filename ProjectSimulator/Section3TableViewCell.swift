@@ -55,6 +55,12 @@ class Section3TableViewCell: UITableViewCell {
     
     @IBOutlet weak var rejectionSectionView: UIView!
     
+    // Closure to notify the VC when buttons are tapped
+        var onCancelTapped: (() -> Void)?
+        var onAcceptTapped: (() -> Void)?
+        var onCollectedTapped: (() -> Void)?
+
+    
     
     override func awakeFromNib() {
         
@@ -72,8 +78,37 @@ class Section3TableViewCell: UITableViewCell {
         // Round the food image view
            foodImageView.layer.cornerRadius = 7.24
            foodImageView.clipsToBounds = true
+        
+        // Add target to the button
+            cancelBtn.addTarget(self, action: #selector(cancelButtonTapped), for: .touchUpInside)
+            acceptBtn.addTarget(self, action: #selector(acceptButtonTapped), for: .touchUpInside)
+            collectedBtn.addTarget(self, action: #selector(collectedButtonTapped), for: .touchUpInside)
+
+    }
+    
+    
+    
+    
+    
+    //Selectors for the buttons
+    @objc private func cancelButtonTapped() {
+            onCancelTapped?()
+        }
+    
+    @objc private func acceptButtonTapped() {
+        onAcceptTapped?()
+    }
+    
+    @objc private func collectedButtonTapped() {
+        onCollectedTapped?()
     }
 
+    
+    
+    
+    
+    
+    
     override func setSelected(_ selected: Bool, animated: Bool) {
         super.setSelected(selected, animated: animated)
 
@@ -82,6 +117,7 @@ class Section3TableViewCell: UITableViewCell {
         // Disable selection
                 self.selectionStyle = .none
     }
+    
     
     override func layoutSubviews() {
             super.layoutSubviews()
@@ -93,6 +129,9 @@ class Section3TableViewCell: UITableViewCell {
     
 
 }
+
+
+
 
 extension Section3TableViewCell {
 

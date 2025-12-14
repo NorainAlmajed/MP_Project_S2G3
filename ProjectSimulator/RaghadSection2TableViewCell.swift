@@ -7,8 +7,18 @@
 
 import UIKit
 
+
+
+protocol RaghadSection2TableViewCellDelegate: AnyObject {
+    func section2DidTapChooseDonor(_ cell: RaghadSection2TableViewCell)
+}
+
 class RaghadSection2TableViewCell: UITableViewCell {
 
+    
+    weak var delegate: RaghadSection2TableViewCellDelegate?
+    
+    
     @IBOutlet weak var lblChooseDonor: UILabel!
     
     
@@ -23,6 +33,13 @@ class RaghadSection2TableViewCell: UITableViewCell {
                selectionStyle = .none
         // Initialization code
   }
+    
+    
+    // ✅ NEW: connect btnChooseDonor2 "Touch Up Inside" to this
+    @IBAction func btnChooseDonorTapped(_ sender: Any) {
+        delegate?.section2DidTapChooseDonor(self)
+    }
+
     
     
     

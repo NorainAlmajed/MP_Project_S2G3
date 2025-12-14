@@ -7,16 +7,43 @@
 
 import UIKit
 
+
+// ✅ 1) Delegate protocol: the cell tells the ViewController "Upload tapped"
+protocol RaghadSection1TableViewCellDelegate: AnyObject {
+    func section1DidTapUploadImage(_ cell: RaghadSection1TableViewCell)
+}
+
+
 class RaghadSection1TableViewCell: UITableViewCell {
     
     
     @IBOutlet weak var Donation_ImageView: UIImageView!
     
-    override func awakeFromNib() {
-        super.awakeFromNib()
-        // Initialization code
-    }
+    
+    
+    // ✅ 2) Add delegate variable
+        weak var delegate: RaghadSection1TableViewCellDelegate?
 
+    
+    
+    
+        override func awakeFromNib() {
+              super.awakeFromNib()
+
+              // ✅ UI polish only (safe)
+
+            Donation_ImageView.contentMode = .scaleAspectFit
+            Donation_ImageView.clipsToBounds = true
+            Donation_ImageView.layer.cornerRadius = 10
+            Donation_ImageView.layer.borderWidth = 1
+            Donation_ImageView.layer.borderColor = UIColor.systemGray4.cgColor
+            Donation_ImageView.backgroundColor = UIColor.systemGray6
+
+            Donation_ImageView.image = UIImage(systemName: "photo")
+            Donation_ImageView.tintColor = .systemGray3
+        }
+  
+    
     override func setSelected(_ selected: Bool, animated: Bool) {
         super.setSelected(selected, animated: animated)
 
@@ -27,9 +54,23 @@ class RaghadSection1TableViewCell: UITableViewCell {
         
     }
     @IBAction func btnUploadImage(_ sender: Any) {
-        
+        // ✅ 3) Tell the VC to open camera/library options
+            delegate?.section1DidTapUploadImage(self)
         
     }
     
+    // ✅ helper to show image (NO resizing here)
+    func setDonationImage(_ image: UIImage?) {
+        if let image = image {
+            Donation_ImageView.image = image
+            Donation_ImageView.contentMode = .scaleAspectFit
+            Donation_ImageView.tintColor = nil
+        } else {
+            Donation_ImageView.image = UIImage(systemName: "photo")
+            Donation_ImageView.tintColor = .systemGray3
+            Donation_ImageView.contentMode = .center
+        }
+    }
+
 
 }

@@ -270,7 +270,7 @@
                                     <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" insetsLayoutMarginsFromSafeArea="NO" selectionStyle="blue" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" reuseIdentifier="Section1Cell" rowHeight="195" id="2HE-ca-9Zs" customClass="RaghadSection1TableViewCell" customModule="ProjectSimulator" customModuleProvider="target">
                                         <rect key="frame" x="0.0" y="50" width="393" height="195"/>
                                         <autoresizingMask key="autoresizingMask"/>
-                                        <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="2HE-ca-9Zs" id="mHr-xv-lCO" customClass="RaghadSection1TableViewCell" customModule="ProjectSimulator" customModuleProvider="target">
+                                        <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="2HE-ca-9Zs" id="mHr-xv-lCO">
                                             <rect key="frame" x="0.0" y="0.0" width="393" height="195"/>
                                             <autoresizingMask key="autoresizingMask"/>
                                             <subviews>
@@ -333,11 +333,14 @@
                                                     <buttonConfiguration key="configuration" style="filled" title="Choose Donor   ">
                                                         <color key="baseForegroundColor" white="0.33333333333333331" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                                     </buttonConfiguration>
+                                                    <connections>
+                                                        <action selector="btnChooseDonorTapped:" destination="5vA-Di-E5A" eventType="touchUpInside" id="Fqj-wS-DxG"/>
+                                                    </connections>
                                                 </button>
                                             </subviews>
                                         </tableViewCellContentView>
                                         <connections>
-                                            <outlet property="btnChooseDonor2" destination="9vs-X1-CXw" id="Jdi-JH-hEg"/>
+                                            <outlet property="btnChooseDonor2" destination="9vs-X1-CXw" id="GZd-uL-XNs"/>
                                             <outlet property="lblChooseDonor" destination="0S5-mz-h8m" id="MG7-3I-1Wf"/>
                                         </connections>
                                     </tableViewCell>
@@ -574,21 +577,55 @@
             </objects>
             <point key="canvasLocation" x="3467.9389312977096" y="-76.056338028169023"/>
         </scene>
-        <!--View Controller-->
-        <scene sceneID="drO-az-Ifg">
+        <!--Raghad Donor List View Controller-->
+        <scene sceneID="F1D-5q-bFR">
             <objects>
-                <placeholder placeholderIdentifier="IBFirstResponder" id="xkR-nk-Pe4" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
-                <viewController id="sme-hy-ujE" sceneMemberID="viewController">
-                    <view key="view" contentMode="scaleToFill" id="jeS-2G-b9h">
+                <viewController id="ScQ-3E-xN5" customClass="RaghadDonorListViewController" customModule="ProjectSimulator" customModuleProvider="target" sceneMemberID="viewController">
+                    <view key="view" contentMode="scaleToFill" id="5zJ-Xl-ZBH">
                         <rect key="frame" x="0.0" y="0.0" width="393" height="852"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
-                        <viewLayoutGuide key="safeArea" id="uR7-1i-Aao"/>
+                        <subviews>
+                            <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="-1" estimatedRowHeight="-1" sectionHeaderHeight="-1" estimatedSectionHeaderHeight="-1" sectionFooterHeight="-1" estimatedSectionFooterHeight="-1" translatesAutoresizingMaskIntoConstraints="NO" id="IMk-PI-M7V">
+                                <rect key="frame" x="0.0" y="162" width="393" height="622"/>
+                                <color key="backgroundColor" systemColor="systemBackgroundColor"/>
+                                <prototypes>
+                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" insetsLayoutMarginsFromSafeArea="NO" selectionStyle="blue" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" textLabel="ahN-Mb-mG1" style="IBUITableViewCellStyleDefault" id="8Ov-zd-8PT" customClass="DonorCell">
+                                        <rect key="frame" x="0.0" y="50" width="393" height="43.666667938232422"/>
+                                        <autoresizingMask key="autoresizingMask"/>
+                                        <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="8Ov-zd-8PT" id="a7E-xr-SIX">
+                                            <rect key="frame" x="0.0" y="0.0" width="393" height="43.666667938232422"/>
+                                            <autoresizingMask key="autoresizingMask"/>
+                                            <subviews>
+                                                <label opaque="NO" multipleTouchEnabled="YES" contentMode="left" insetsLayoutMarginsFromSafeArea="NO" text="Title" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" id="ahN-Mb-mG1">
+                                                    <rect key="frame" x="20" y="0.0" width="353" height="43.666667938232422"/>
+                                                    <autoresizingMask key="autoresizingMask"/>
+                                                    <fontDescription key="fontDescription" type="system" pointSize="0.0"/>
+                                                    <nil key="textColor"/>
+                                                    <nil key="highlightedColor"/>
+                                                </label>
+                                            </subviews>
+                                        </tableViewCellContentView>
+                                    </tableViewCell>
+                                </prototypes>
+                            </tableView>
+                        </subviews>
+                        <viewLayoutGuide key="safeArea" id="IkI-2G-Qph"/>
                         <color key="backgroundColor" systemColor="systemBackgroundColor"/>
+                        <constraints>
+                            <constraint firstItem="IMk-PI-M7V" firstAttribute="top" secondItem="IkI-2G-Qph" secondAttribute="top" id="1TU-4m-VwM"/>
+                            <constraint firstItem="IMk-PI-M7V" firstAttribute="leading" secondItem="IkI-2G-Qph" secondAttribute="leading" id="DaK-P1-Wmt"/>
+                            <constraint firstItem="IkI-2G-Qph" firstAttribute="bottom" secondItem="IMk-PI-M7V" secondAttribute="bottom" id="FEe-rP-Gkh"/>
+                            <constraint firstItem="IkI-2G-Qph" firstAttribute="trailing" secondItem="IMk-PI-M7V" secondAttribute="trailing" id="QKP-d9-tKc"/>
+                        </constraints>
                     </view>
-                    <navigationItem key="navigationItem" id="eEf-rR-0GM"/>
+                    <navigationItem key="navigationItem" id="9B3-9c-FKi"/>
+                    <connections>
+                        <outlet property="tableView" destination="IMk-PI-M7V" id="lb1-ge-5Gz"/>
+                    </connections>
                 </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="2NG-6M-udD" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="4428.2442748091598" y="-76.056338028169023"/>
+            <point key="canvasLocation" x="5441.9847328244268" y="-29.577464788732396"/>
         </scene>
         <!--Navigation Controller-->
         <scene sceneID="ki0-BW-SlJ">
@@ -608,6 +645,24 @@
                 <placeholder placeholderIdentifier="IBFirstResponder" id="jhF-gU-hF4" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
             </objects>
             <point key="canvasLocation" x="-312.21374045801525" y="-78.16901408450704"/>
+        </scene>
+        <!--Navigation Controller-->
+        <scene sceneID="jf4-MG-Di7">
+            <objects>
+                <navigationController automaticallyAdjustsScrollViewInsets="NO" id="h8u-SU-zAW" sceneMemberID="viewController">
+                    <toolbarItems/>
+                    <navigationBar key="navigationBar" contentMode="scaleToFill" id="x27-pI-23W">
+                        <rect key="frame" x="0.0" y="118" width="393" height="44"/>
+                        <autoresizingMask key="autoresizingMask"/>
+                    </navigationBar>
+                    <nil name="viewControllers"/>
+                    <connections>
+                        <segue destination="ScQ-3E-xN5" kind="relationship" relationship="rootViewController" id="h7f-58-mHZ"/>
+                    </connections>
+                </navigationController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="H4s-2K-gV8" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="4515.2671755725187" y="-29.577464788732396"/>
         </scene>
     </scenes>
     <resources>

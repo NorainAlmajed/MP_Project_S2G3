@@ -20,6 +20,8 @@ struct NGO//THIS IS THE NAME OF THE STRUCT
 
 
 
+
+
 var arrNgo: [NGO] = [
     NGO(
         name: "Al kawther Society Social Care",
@@ -57,6 +59,28 @@ var arrNgo: [NGO] = [
         phoneNumber: 17645189,
         email: "info@heal.org"
     )
+]
+
+
+
+struct Donor {
+    //  This struct represents ONE donor (admin chooses from these)
+    let username: String
+}
+
+
+
+// MARK: - Donor Data Source
+//  Central place for all donors (NO hardcoding in ViewControllers)
+var arrDonors: [Donor] = [
+    Donor(username: "zahraa_hubail"),
+    Donor(username: "raghad_aleskafi"),
+    Donor(username: "norain_almajed"),
+    Donor(username: "fatima_alaiwi"),
+    Donor(username: "zainab_mahdi"),
+    Donor(username: "ali_ahmed"),
+    Donor(username: "yousif_ali"),
+    Donor(username: "hassan_mahdi")
 ]
 
 

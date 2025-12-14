@@ -7,7 +7,7 @@
 
 import UIKit
 
-struct Donation {
+class Donation {
     let donationID: Int
     let ngo: String //Change
     let creationDate: Date
@@ -24,6 +24,42 @@ struct Donation {
     var description: String?
     var rejectionReason: String?
     var recurrence: Int = 0
+    
+    init(
+            donationID: Int,
+            ngo: String,
+            creationDate: Date,
+            donor: String,
+            address: Address,
+            pickupDate: Date,
+            pickupTime: String,
+            foodImage: UIImage,
+            status: Int,
+            Category: String,
+            quantity: Int,
+            weight: Double? = nil,
+            expiryDate: Date,
+            description: String? = nil,
+            rejectionReason: String? = nil,
+            recurrence: Int = 0
+        ) {
+            self.donationID = donationID
+            self.ngo = ngo
+            self.creationDate = creationDate
+            self.donor = donor
+            self.address = address
+            self.pickupDate = pickupDate
+            self.pickupTime = pickupTime
+            self.foodImage = foodImage
+            self.status = status
+            self.Category = Category
+            self.quantity = quantity
+            self.weight = weight
+            self.expiryDate = expiryDate
+            self.description = description
+            self.rejectionReason = rejectionReason
+            self.recurrence = recurrence
+        }
     
 }
 

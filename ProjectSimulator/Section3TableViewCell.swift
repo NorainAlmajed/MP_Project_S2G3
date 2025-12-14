@@ -59,6 +59,8 @@ class Section3TableViewCell: UITableViewCell {
         var onCancelTapped: (() -> Void)?
         var onAcceptTapped: (() -> Void)?
         var onCollectedTapped: (() -> Void)?
+        var onRejectTapped: (() -> Void)?
+
 
     
     
@@ -83,6 +85,8 @@ class Section3TableViewCell: UITableViewCell {
             cancelBtn.addTarget(self, action: #selector(cancelButtonTapped), for: .touchUpInside)
             acceptBtn.addTarget(self, action: #selector(acceptButtonTapped), for: .touchUpInside)
             collectedBtn.addTarget(self, action: #selector(collectedButtonTapped), for: .touchUpInside)
+            rejectBtn.addTarget(self, action: #selector(rejectButtonTapped), for: .touchUpInside)
+
 
     }
     
@@ -101,6 +105,10 @@ class Section3TableViewCell: UITableViewCell {
     
     @objc private func collectedButtonTapped() {
         onCollectedTapped?()
+    }
+    
+    @objc private func rejectButtonTapped() {
+        onRejectTapped?()
     }
 
     

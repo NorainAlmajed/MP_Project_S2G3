@@ -15,6 +15,11 @@ class ZHRejectionReasonViewController: UIViewController, UITextViewDelegate {
     
     private let maxCharacters = 90
     private let placeholderText = "Enter a rejection reason (optional)"
+    
+    // Add this property to receive the donation from the previous screen
+    var donation: Donation?
+    var onRejectionCompleted: (() -> Void)?
+
 
     
     override func viewDidLoad() {
@@ -35,7 +40,47 @@ class ZHRejectionReasonViewController: UIViewController, UITextViewDelegate {
         
         // Add Done button to keyboard
         addDoneButton()
+        
+        // Dismiss keyboard when tapping outside
+        let tap = UITapGestureRecognizer(target: self, action: #selector(dismissKeyboard))
+        tap.cancelsTouchesInView = false
+        view.addGestureRecognizer(tap)
+
     }
+    
+    @IBAction func submitTapped(_ sender: Any) {
+        dismissKeyboard()
+
+        // Ensure donation exists
+        guard let donation = donation else { return }
+
+        // Get text & trim spaces
+        let text = rejectionTextArea.text.trimmingCharacters(in: .whitespacesAndNewlines)
+
+        // Update donation regardless of empty text
+        donation.status = 4
+        donation.rejectionReason = text.isEmpty || text == placeholderText ? nil : text
+
+        // Success alert
+        let alert = UIAlertController(
+            title: "Success",
+            message: "The donation has been rejected successfully",
+            preferredStyle: .alert
+        )
+
+        alert.addAction(
+            UIAlertAction(title: "Dismiss", style: .default) { [weak self] _ in
+                self?.onRejectionCompleted?()
+                self?.dismiss(animated: true)
+            }
+        )
+
+        present(alert, animated: true)
+    }
+
+
+
+    
     
     // MARK: - Placeholder and Counter
     
@@ -85,7 +130,7 @@ class ZHRejectionReasonViewController: UIViewController, UITextViewDelegate {
     
     // MARK: - Done Button
     
-    private func addDoneButton() {
+        private func addDoneButton() {
         let toolbar = UIToolbar()
         toolbar.sizeToFit()
         let flex = UIBarButtonItem(barButtonSystemItem: .flexibleSpace, target: nil, action: nil)
@@ -96,5 +141,10 @@ class ZHRejectionReasonViewController: UIViewController, UITextViewDelegate {
     
     @objc private func doneTapped() {
         rejectionTextArea.resignFirstResponder()
+    }
+    
+    //Allow closing keyboard
+    @objc private func dismissKeyboard() {
+        view.endEditing(true)
     }
 }

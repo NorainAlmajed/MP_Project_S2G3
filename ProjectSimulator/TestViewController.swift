@@ -191,7 +191,45 @@ class DonationDetailsViewController: UIViewController, UITableViewDelegate, UITa
                 self.present(alert, animated: true)
             }
 
-            
+            cell.onRejectTapped = { [weak self] in
+                guard let self = self else { return }
+
+                let alert = UIAlertController(
+                    title: "Confirmation",
+                    message: "Are you sure you want to reject the donation?",
+                    preferredStyle: .alert
+                )
+
+                // Cancel button (left)
+                alert.addAction(UIAlertAction(title: "Cancel", style: .cancel))
+
+                // Yes button (right) → navigate to modal rejection page
+                alert.addAction(UIAlertAction(title: "Yes", style: .default) { _ in
+                    // Initialize the rejection page
+                    let storyboard = UIStoryboard(name: "Donations", bundle: nil) // replace "Main" if your storyboard has another name
+                    
+                    if let rejectionVC = storyboard.instantiateViewController(
+                        withIdentifier: "ZHRejectionReasonViewController"
+                    ) as? ZHRejectionReasonViewController {
+
+                        // Optional: pass donation data if needed
+                        rejectionVC.donation = self.donation
+                        
+                        rejectionVC.onRejectionCompleted = { [weak self] in
+                            self?.donationTableview.reloadData()
+                        }
+
+                        // Present modally
+                        rejectionVC.modalPresentationStyle = .pageSheet // slides above
+                        rejectionVC.modalTransitionStyle = .coverVertical // slide up animation
+
+                        self.present(rejectionVC, animated: true)
+                    }
+                })
+
+                self.present(alert, animated: true)
+            }
+
             return cell
 
         default:

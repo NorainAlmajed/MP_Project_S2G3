@@ -39,7 +39,7 @@ class Section1TableViewCell: UITableViewCell {
     }
     
     func setup(with donation: Donation) {
-           ngoNameLbl.text = donation.ngo
+        ngoNameLbl.text = donation.ngo.ngoName
            donationIDLbl.text = "Donation #\(donation.donationID)"
            
         // Format and display date as "23/10/2025, 9:08 AM"
@@ -47,7 +47,7 @@ class Section1TableViewCell: UITableViewCell {
             formatter.dateFormat = "dd/MM/yyyy, h:mm a"
             creationDateLbl.text = formatter.string(from: donation.creationDate)
            
-           NgoLogoImageView.image = donation.foodImage // or your NGO logo if you have it
+            NgoLogoImageView.image = donation.ngo.logo // or your NGO logo if you have it
        }
 
 }

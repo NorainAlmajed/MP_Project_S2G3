@@ -42,7 +42,12 @@ class DonationCollectionViewCell: UICollectionViewCell {
         // Set text labels
         donationCategoryLbl.text = donation.Category
         donationIDLbl.text = "Donation #" + String(donation.donationID)
-        donorNgoLbl.text = "Donor: " + donation.donor
+        if user.userType == 2 {
+            donorNgoLbl.text = "NGO: " + donation.ngo.ngoName
+        } else {
+            donorNgoLbl.text = "Donor: " + donation.donor
+        }
+        
         
         // Format and display date
         let formatter = DateFormatter()

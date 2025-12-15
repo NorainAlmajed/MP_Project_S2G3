@@ -9,7 +9,7 @@ import UIKit
 
 class Donation {
     let donationID: Int
-    let ngo: String //Change
+    let ngo: NGO
     let creationDate: Date
     let donor: String //Change
     var address: Address
@@ -27,7 +27,7 @@ class Donation {
     
     init(
             donationID: Int,
-            ngo: String,
+            ngo: NGO,
             creationDate: Date,
             donor: String,
             address: Address,

@@ -17,14 +17,25 @@
                     <view key="view" contentMode="scaleToFill" id="yr4-kR-0gs">
                         <rect key="frame" x="0.0" y="0.0" width="402" height="874"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="s4t-Cr-KyV">
+                                <rect key="frame" x="337" y="110" width="49" height="35"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                <state key="normal" title="Button"/>
+                                <buttonConfiguration key="configuration" style="plain" image="bell.fill" catalog="system"/>
+                                <connections>
+                                    <segue destination="ONd-Xx-dnE" kind="show" id="4iq-ID-1XD"/>
+                                </connections>
+                            </button>
+                        </subviews>
                         <viewLayoutGuide key="safeArea" id="PEB-9N-FAF"/>
                         <color key="backgroundColor" systemColor="systemBackgroundColor"/>
                     </view>
-                    <tabBarItem key="tabBarItem" title="" image="house.fill" catalog="system" id="aHl-Lm-kWw"/>
+                    <navigationItem key="navigationItem" id="CEE-sC-faL"/>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="D0S-GM-Gyu" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="326" y="587"/>
+            <point key="canvasLocation" x="215" y="1361"/>
         </scene>
         <!--Donation View Controller-->
         <scene sceneID="3Oi-bC-LiY">
@@ -135,7 +146,7 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="UOy-tB-a25" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="2084.7328244274809" y="598.59154929577471"/>
+            <point key="canvasLocation" x="3002.9850746268653" y="597.94050343249421"/>
         </scene>
         <!--Tab Bar Controller-->
         <scene sceneID="8z8-yA-v5M">
@@ -148,9 +159,8 @@
                         <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                     </tabBar>
                     <connections>
-                        <segue destination="0RG-3O-N3q" kind="relationship" relationship="viewControllers" id="tUP-gL-b2c"/>
+                        <segue destination="tvh-hU-jvR" kind="relationship" relationship="viewControllers" id="tUP-gL-b2c"/>
                         <segue destination="2Im-2I-44S" kind="relationship" relationship="viewControllers" id="vcz-ww-u5z"/>
-                        <segue destination="ONd-Xx-dnE" kind="relationship" relationship="viewControllers" id="2PQ-ph-uWV"/>
                     </connections>
                 </tabBarController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="fhp-bx-aMj" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
@@ -178,7 +188,7 @@
                 </navigationController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="l8t-Gy-Axw" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="1147.3282442748091" y="598.59154929577471"/>
+            <point key="canvasLocation" x="2065.6716417910447" y="597.94050343249421"/>
         </scene>
         <!--Item-->
         <scene sceneID="FXS-Nl-rQ8">
@@ -189,7 +199,7 @@
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <collectionView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" dataMode="prototypes" translatesAutoresizingMaskIntoConstraints="NO" id="nOs-IT-aoS">
-                                <rect key="frame" x="0.0" y="124" width="402" height="633"/>
+                                <rect key="frame" x="0.0" y="168" width="402" height="589"/>
                                 <color key="backgroundColor" systemColor="systemBackgroundColor"/>
                                 <collectionViewFlowLayout key="collectionViewLayout" automaticEstimatedItemSize="YES" minimumLineSpacing="10" minimumInteritemSpacing="10" id="Jxl-AI-rdu">
                                     <size key="itemSize" width="376" height="124"/>
@@ -264,7 +274,7 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="EeH-xd-fAs" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="2179" y="-144"/>
+            <point key="canvasLocation" x="1137" y="1361"/>
         </scene>
         <!--Donation Details View Controller-->
         <scene sceneID="mWt-YB-Rkf">
@@ -715,7 +725,7 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="J9t-Hr-1ro" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="2948.8549618320608" y="598.59154929577471"/>
+            <point key="canvasLocation" x="3867.1641791044772" y="597.94050343249421"/>
         </scene>
         <!--Rejection Reason View Controller-->
         <scene sceneID="aXu-xt-V2l">
@@ -768,7 +778,26 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="4aH-mV-jdd" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="3787.0229007633588" y="621.83098591549299"/>
+            <point key="canvasLocation" x="4705.9701492537315" y="621.28146453089244"/>
+        </scene>
+        <!--Navigation Controller-->
+        <scene sceneID="WST-JD-hlJ">
+            <objects>
+                <navigationController automaticallyAdjustsScrollViewInsets="NO" id="tvh-hU-jvR" sceneMemberID="viewController">
+                    <tabBarItem key="tabBarItem" title="" image="house.fill" catalog="system" id="aHl-Lm-kWw"/>
+                    <toolbarItems/>
+                    <navigationBar key="navigationBar" contentMode="scaleToFill" id="o1w-j9-w3c">
+                        <rect key="frame" x="0.0" y="124" width="402" height="44"/>
+                        <autoresizingMask key="autoresizingMask"/>
+                    </navigationBar>
+                    <nil name="viewControllers"/>
+                    <connections>
+                        <segue destination="0RG-3O-N3q" kind="relationship" relationship="rootViewController" id="fVA-cq-cBt"/>
+                    </connections>
+                </navigationController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="XCV-gW-1tx" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="216" y="598"/>
         </scene>
     </scenes>
     <resources>
@@ -777,6 +806,7 @@
         <image name="Notification" width="500" height="500"/>
         <image name="apples" width="736" height="984"/>
         <image name="basket" width="1200" height="1200"/>
+        <image name="bell.fill" catalog="system" width="123" height="128"/>
         <image name="heart.text.clipboard.fill" catalog="system" width="103" height="128"/>
         <image name="house.fill" catalog="system" width="128" height="104"/>
         <namedColor name="BeigeCol">

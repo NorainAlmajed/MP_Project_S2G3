@@ -11,6 +11,17 @@ class DonationViewController: UIViewController {
 
     // Outlet connected to the collection view in the storyboard
     @IBOutlet weak var donationsCollectionView: UICollectionView!
+    
+    
+    private let noDonationsLabel: UILabel = {
+        let label = UILabel()
+        label.text = "No donations available"
+        label.textAlignment = .center
+        label.textColor = .gray
+        label.font = UIFont.systemFont(ofSize: 18, weight: .medium)
+        label.isHidden = true
+        return label
+    }()
 
     
     override func viewDidLoad() {
@@ -41,8 +52,29 @@ class DonationViewController: UIViewController {
         navigationController?.navigationBar.scrollEdgeAppearance = appearance
         navigationController?.navigationBar.compactAppearance = appearance
         
+        view.addSubview(noDonationsLabel)
+        noDonationsLabel.translatesAutoresizingMaskIntoConstraints = false
+        NSLayoutConstraint.activate([
+            noDonationsLabel.centerXAnchor.constraint(equalTo: view.centerXAnchor),
+            noDonationsLabel.centerYAnchor.constraint(equalTo: view.centerYAnchor)
+        ])
+        
+        //Run the method
+        updateNoDonationsLabel()
+
     }
     
+    //Function to add a label when there are no donations available
+    private func updateNoDonationsLabel() {
+        if user.donations.isEmpty {
+            noDonationsLabel.isHidden = false
+            donationsCollectionView.isHidden = true
+        } else {
+            noDonationsLabel.isHidden = true
+            donationsCollectionView.isHidden = false
+        }
+    }
+
     
     override func viewDidLayoutSubviews() {
         super.viewDidLayoutSubviews()    }

@@ -29,6 +29,7 @@ struct User {
     var notifications: [Notification]
     var donations: [Donation]
     let userType: Int
+    var enableNotification: Bool = true
 }
 
 

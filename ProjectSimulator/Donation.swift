@@ -17,7 +17,7 @@ class Donation {
     var pickupTime: String
     var foodImage: UIImage
     var status: Int
-    var Category: String
+    var Category: String //Change
     var quantity: Int
     var weight: Double?
     var expiryDate: Date

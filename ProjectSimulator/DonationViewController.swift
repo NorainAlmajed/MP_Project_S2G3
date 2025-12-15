@@ -66,7 +66,7 @@ class DonationViewController: UIViewController {
     
     //Function to add a label when there are no donations available
     private func updateNoDonationsLabel() {
-        if user.donations.isEmpty {
+        if (user.donations ?? []).isEmpty {
             noDonationsLabel.isHidden = false
             donationsCollectionView.isHidden = true
         } else {
@@ -74,6 +74,7 @@ class DonationViewController: UIViewController {
             donationsCollectionView.isHidden = false
         }
     }
+
 
     
     override func viewDidLayoutSubviews() {
@@ -85,9 +86,11 @@ class DonationViewController: UIViewController {
             if segue.identifier == "showDonationDetails" {
                 let detailsVC = segue.destination as! DonationDetailsViewController
     
-                if let indexPath = donationsCollectionView.indexPathsForSelectedItems?.first {
-                    detailsVC.donation = user.donations[indexPath.row]
+                if let indexPath = donationsCollectionView.indexPathsForSelectedItems?.first,
+                   let donation = user.donations?[indexPath.row] {
+                    detailsVC.donation = donation
                 }
+
             }
         }
     
@@ -112,19 +115,22 @@ extension DonationViewController: UICollectionViewDataSource {
     
     // Return number of items to display (based on donations array)
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        return user.donations.count
+        return user.donations?.count ?? 0
     }
+
     
     // Configure each collection view cell
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
-        
-        // Dequeue a reusable cell of type DonationCollectionViewCell
         let cell = donationsCollectionView.dequeueReusableCell(withReuseIdentifier: "DonationCollectionViewCell", for: indexPath) as! DonationCollectionViewCell
-        
-        // Pass the donation data to the cell
-        cell.setup(with: user.donations[indexPath.row])
+
+        // Optional binding to safely unwrap donation
+        if let donation = user.donations?[indexPath.row] {
+            cell.setup(with: donation)
+        }
+
         return cell
     }
+
 }
 
 extension DonationViewController: UICollectionViewDelegateFlowLayout {

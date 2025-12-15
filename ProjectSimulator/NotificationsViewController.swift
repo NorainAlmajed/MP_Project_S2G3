@@ -47,9 +47,27 @@ class NotificationsViewController: UIViewController {
             target: self,
             action: #selector(clearNotifications)
             )
-        //Make the color of the clear button red
+        
+        //---- Add grey line under navigation bar ----
         navigationItem.rightBarButtonItem?.tintColor = .red
         
+        
+        // Remove default shadow
+        navigationController?.navigationBar.shadowImage = UIImage()
+
+        // Add small grey line under navigation bar
+        let bottomLine = UIView()
+        bottomLine.backgroundColor = UIColor.systemGray4
+        bottomLine.translatesAutoresizingMaskIntoConstraints = false
+        navigationController?.navigationBar.addSubview(bottomLine)
+
+        NSLayoutConstraint.activate([
+            bottomLine.heightAnchor.constraint(equalToConstant: 1),
+            bottomLine.leadingAnchor.constraint(equalTo: navigationController!.navigationBar.leadingAnchor),
+            bottomLine.trailingAnchor.constraint(equalTo: navigationController!.navigationBar.trailingAnchor),
+            bottomLine.bottomAnchor.constraint(equalTo: navigationController!.navigationBar.bottomAnchor)
+        ])
+
         //Add the lable to the view
         view.addSubview(noNotificationsLabel)
         noNotificationsLabel.translatesAutoresizingMaskIntoConstraints = false
@@ -63,14 +81,16 @@ class NotificationsViewController: UIViewController {
     }
     
     private func updateNoNotificationsLabel() {
-            if user.notifications.isEmpty {
-                noNotificationsLabel.isHidden = false
-                notificationsCollectionView.isHidden = true
-            } else {
-                noNotificationsLabel.isHidden = true
-                notificationsCollectionView.isHidden = false
-            }
-        }
+        let hasNotifications = !(user.notifications ?? []).isEmpty
+        
+        noNotificationsLabel.isHidden = hasNotifications
+        notificationsCollectionView.isHidden = !hasNotifications
+        
+        // Enable or disable Clear button based on notifications
+        navigationItem.rightBarButtonItem?.isEnabled = hasNotifications
+    }
+
+
     
     
     @objc func clearNotifications() {
@@ -97,11 +117,12 @@ class NotificationsViewController: UIViewController {
             
             // Dismiss action
             let dismissAction = UIAlertAction(title: "Dismiss", style: .default) { _ in
-                // Step 3: Clear notifications after success alert is dismissed
-                user.notifications.removeAll()
+                // Clear notifications safely
+                user.notifications = []
                 self.notificationsCollectionView.reloadData()
                 self.updateNoNotificationsLabel()
             }
+
             
             successAlert.addAction(dismissAction)
             self.present(successAlert, animated: true, completion: nil)
@@ -133,19 +154,21 @@ extension NotificationsViewController: UICollectionViewDataSource {
     
     // Return number of items to display (based on notifications array)
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        return user.notifications.count
+        return user.notifications?.count ?? 0
     }
-    
+
     // Configure each collection view cell
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
-        
-        // Dequeue a reusable cell of type NotificationCollectionViewCell
         let cell = notificationsCollectionView.dequeueReusableCell(withReuseIdentifier: "NotificationsCollectionViewCell", for: indexPath) as! NotificationsCollectionViewCell
         
-        // Pass the notification data to the cell
-        cell.setup(with: user.notifications[indexPath.row])
+        if let notification = user.notifications?[indexPath.row] {
+            cell.setup(with: notification)
+        }
+
+        
         return cell
     }
+
     
     
 }

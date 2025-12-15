@@ -26,8 +26,8 @@ struct Notification {
 struct User {
     var fullName: String
     var username: String
-    var notifications: [Notification]
-    var donations: [Donation]
+    var notifications: [Notification]?
+    var donations: [Donation]?
     let userType: Int
     var enableNotification: Bool = true
 }

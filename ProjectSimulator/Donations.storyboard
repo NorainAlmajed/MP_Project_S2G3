@@ -46,7 +46,7 @@
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <collectionView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" fixedFrame="YES" dataMode="prototypes" translatesAutoresizingMaskIntoConstraints="NO" id="kT3-WU-U2N">
-                                <rect key="frame" x="0.0" y="102" width="393" height="750"/>
+                                <rect key="frame" x="0.0" y="102" width="402" height="750"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <color key="backgroundColor" systemColor="systemBackgroundColor"/>
                                 <collectionViewFlowLayout key="collectionViewLayout" automaticEstimatedItemSize="YES" minimumLineSpacing="10" minimumInteritemSpacing="10" id="ses-KD-fH5">
@@ -57,7 +57,7 @@
                                 </collectionViewFlowLayout>
                                 <cells>
                                     <collectionViewCell opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" reuseIdentifier="DonationCollectionViewCell" id="LRa-kk-2e5" customClass="DonationCollectionViewCell" customModule="ProjectSimulator" customModuleProvider="target">
-                                        <rect key="frame" x="8.6666666666666661" y="0.0" width="376" height="124"/>
+                                        <rect key="frame" x="13" y="0.0" width="376" height="124"/>
                                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                         <collectionViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" insetsLayoutMarginsFromSafeArea="NO" id="eyq-WX-orn">
                                             <rect key="frame" x="0.0" y="0.0" width="376" height="124"/>
@@ -146,7 +146,7 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="UOy-tB-a25" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="3002.9850746268653" y="597.94050343249421"/>
+            <point key="canvasLocation" x="3001.4925373134329" y="597.94050343249421"/>
         </scene>
         <!--Tab Bar Controller-->
         <scene sceneID="8z8-yA-v5M">

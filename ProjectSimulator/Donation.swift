@@ -11,13 +11,13 @@ class Donation {
     let donationID: Int
     let ngo: NGO
     let creationDate: Date
-    let donor: String //Change
+    let donor: User
     var address: Address
     var pickupDate: Date
     var pickupTime: String
     var foodImage: UIImage
     var status: Int
-    var Category: String //Change
+    var Category: Int
     var quantity: Int
     var weight: Double?
     var expiryDate: Date
@@ -29,13 +29,13 @@ class Donation {
             donationID: Int,
             ngo: NGO,
             creationDate: Date,
-            donor: String,
+            donor: User,
             address: Address,
             pickupDate: Date,
             pickupTime: String,
             foodImage: UIImage,
             status: Int,
-            Category: String,
+            Category: Int,
             quantity: Int,
             weight: Double? = nil,
             expiryDate: Date,

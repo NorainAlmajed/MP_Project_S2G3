@@ -86,8 +86,7 @@ class Section3TableViewCell: UITableViewCell {
             acceptBtn.addTarget(self, action: #selector(acceptButtonTapped), for: .touchUpInside)
             collectedBtn.addTarget(self, action: #selector(collectedButtonTapped), for: .touchUpInside)
             rejectBtn.addTarget(self, action: #selector(rejectButtonTapped), for: .touchUpInside)
-
-
+        
     }
     
     
@@ -195,7 +194,7 @@ extension Section3TableViewCell {
 
         // Update quantity, category, weight, expiration date
         quantityLbl.text = "\(donation.quantity)"
-        categoryLbl.text = donation.Category
+        categoryLbl.text = categoryName(for: donation.Category)
         
         //Update weight
         if let weight = donation.weight {
@@ -259,4 +258,17 @@ extension Section3TableViewCell {
         collectedSectionView.isHidden = true
     }
     
+    //Method to check the category name
+    private func categoryName(for category: Int) -> String {
+        switch category {
+        case 1: return "Bakery"
+        case 2: return "Dairy"
+        case 3: return "Produce"
+        case 4: return "Poultry"
+        case 5: return "Beverages"
+        case 6: return "Canned Food"
+        case 7: return "Others"
+        default: return "Unknown"
+        }
+    }
 }

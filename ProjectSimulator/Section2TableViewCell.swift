@@ -35,7 +35,7 @@ class Section2TableViewCell: UITableViewCell {
     }
     
     func setup(with donation: Donation) {
-        donorLbl.text = donation.donor
+        donorLbl.text = donation.donor.username
         
         //  Setting the format of the address
         var addressParts: [String] = []

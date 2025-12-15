@@ -32,6 +32,17 @@ class RaghadDonatoinFormViewController: UIViewController,
     }
     
     
+    
+    // for the dropdown list this the code  15.12.2025
+    
+    // ✅🍔 NEW
+    private var selectedFoodCategory: String? = nil
+    private var isFoodDropdownOpen: Bool = false
+
+
+    
+    
+    
     @IBOutlet weak var donationFormTableview: UITableView!
     // ✅ Stores the selected image so it doesn’t disappear when you scroll
     private var selectedDonationImage: UIImage?////new
@@ -62,6 +73,15 @@ class RaghadDonatoinFormViewController: UIViewController,
 
             donationFormTableview.keyboardDismissMode = .onDrag
             addDoneButtonOnKeyboard()
+            
+            
+            // for the dropdown list this the code  15.12.2025
+            
+            // ✅🍔 NEW (safe)
+            //chat says remove this donationFormTableview.rowHeight = UITableView.automaticDimension
+            donationFormTableview.estimatedRowHeight = 200
+
+            
         }
 
     
@@ -176,39 +196,91 @@ class RaghadDonatoinFormViewController: UIViewController,
             return cell
         }
         
+//        // 🍔 Section 3 (Food Category)
+//        if adjustedSection == 2 {
+//            let cell = tableView.dequeueReusableCell(
+//                withIdentifier: "Section3Cell",
+//                for: indexPath
+//            )
+//            cell.selectionStyle = .none
+//            return cell
+//        }
+//
+//        
+//        
+//        if adjustedSection == 3 {
+//            guard let cell = tableView.dequeueReusableCell(
+//                withIdentifier: "Section4Cell",
+//                for: indexPath
+//            ) as? RaghadSection4TableViewCell else {
+//                fatalError("❌ Section4Cell not set correctly")
+//            }
+//
+//            cell.selectionStyle = .none
+//            cell.configure(showError: shouldShowQuantityError)
+//
+//            // ✅ keep quantity saved even if cell disappears
+//            cell.onQuantityChanged = { [weak self] value in
+//                self?.quantityValue = value
+//                if value != nil && (value ?? 0) > 0 {
+//                    self?.shouldShowQuantityError = false
+//                }
+//            }
+//
+//            return cell
+//        } i made comment for them 15.12.2025 and i replcae it with the code under it
+        
+        
         // 🍔 Section 3 (Food Category)
         if adjustedSection == 2 {
-            let cell = tableView.dequeueReusableCell(
+            guard let cell = tableView.dequeueReusableCell(
                 withIdentifier: "Section3Cell",
                 for: indexPath
-            )
-            cell.selectionStyle = .none
-            return cell
-        }
-
-        
-        
-        if adjustedSection == 3 {
-            guard let cell = tableView.dequeueReusableCell(
-                withIdentifier: "Section4Cell",
-                for: indexPath
-            ) as? RaghadSection4TableViewCell else {
-                fatalError("❌ Section4Cell not set correctly")
+            ) as? RaghadSection3TableViewCell else {
+                fatalError("❌ Section3Cell not set correctly")
             }
 
             cell.selectionStyle = .none
-            cell.configure(showError: shouldShowQuantityError)
 
-            // ✅ keep quantity saved even if cell disappears
-            cell.onQuantityChanged = { [weak self] value in
-                self?.quantityValue = value
-                if value != nil && (value ?? 0) > 0 {
-                    self?.shouldShowQuantityError = false
-                }
+            // ✅🍔 show saved selection + open/close state
+            cell.configure(selected: selectedFoodCategory, isOpen: isFoodDropdownOpen)
+
+            // ✅🍔 when user selects a category
+            cell.onCategoryChanged = { [weak self] category in
+                guard let self = self else { return }
+                self.selectedFoodCategory = category
+                self.isFoodDropdownOpen = false
+
+                // ✅ update height smoothly
+                self.donationFormTableview.beginUpdates()
+                self.donationFormTableview.endUpdates()
+            }
+
+            // ✅🍔 when user taps button open/close
+            cell.onToggleDropdown = { [weak self] open in
+                guard let self = self else { return }
+                self.isFoodDropdownOpen = open
+
+                self.donationFormTableview.beginUpdates()
+                self.donationFormTableview.endUpdates()
+
+                // ✅🍔 ensures dropdown is visible (pushes content up if near bottom)
+                let ip = IndexPath(row: 0, section: indexPath.section)
+                self.donationFormTableview.scrollToRow(at: ip, at: .none, animated: true)
             }
 
             return cell
         }
+
+
+        
+        
+        
+        
+        
+        
+        
+        
 
         
         
@@ -284,6 +356,9 @@ class RaghadDonatoinFormViewController: UIViewController,
     
     
     
+   
+    
+    
     
     
     
@@ -299,7 +374,12 @@ class RaghadDonatoinFormViewController: UIViewController,
         case 1:
             return 108   // Section2Cell
         case 2:
-            return 233  // Section3Cell
+           //return UITableView.automaticDimension  //233  //Section3Cell // for the dropdown list this the code 15.12.2025
+            let base: CGFloat = 44 /*button*/ + 8 /*space*/ + 20 /*label*/ + 12 + 12 /*top+bottom margins*/
+                let dropdown: CGFloat = isFoodDropdownOpen ? (56 * 7 + 8) : 0   // ✅🍔 56=rowHeight, 7=items
+                return base + dropdown
+            
+            
         case 3:
             return 109  // Section4Cell
         case 4:

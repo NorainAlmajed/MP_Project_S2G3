@@ -22,7 +22,9 @@ struct NGO//THIS IS THE NAME OF THE STRUCT
 
 
 
-var arrNgo: [NGO] = [
+var arrNgo: [NGO] =
+    //[] to make it nil
+[
     NGO(
         name: "Al kawther Society Social Care",
         category: "Orphanage",

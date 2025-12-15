@@ -114,7 +114,7 @@ class DonationViewController: UIViewController {
         //To let the title appear in a big form
         override func viewWillAppear(_ animated: Bool) {
             super.viewWillAppear(animated)
-    
+                
             navigationController?.setNavigationBarHidden(false, animated: animated)
             navigationController?.navigationBar.prefersLargeTitles = true
             navigationItem.largeTitleDisplayMode = .always

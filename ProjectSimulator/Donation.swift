@@ -9,9 +9,9 @@ import UIKit
 
 class Donation {
     let donationID: Int
-    let ngo: NGO
+    var ngo: NGO
     let creationDate: Date
-    let donor: User
+    var donor: User
     var address: Address
     var pickupDate: Date
     var pickupTime: String

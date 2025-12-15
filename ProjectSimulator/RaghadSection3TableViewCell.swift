@@ -18,9 +18,13 @@ class RaghadSection3TableViewCell: UITableViewCell, UITableViewDelegate, UITable
     
     
     @IBOutlet weak var dropdownHeightConstraint: NSLayoutConstraint!
-    //
     
     
+    @IBOutlet weak var lblFoodCategoryError: UILabel!
+    
+    
+    @IBOutlet weak var foodCategoryErrorHeight: NSLayoutConstraint!
+
     
     
     
@@ -50,8 +54,8 @@ class RaghadSection3TableViewCell: UITableViewCell, UITableViewDelegate, UITable
         
         
         print("✅ btnFoodCategory is nil? \(btnFoodCategory == nil)")
-          print("✅ dropdownTableView is nil? \(dropdownTableView == nil)")
-          print("✅ dropdownHeightConstraint is nil? \(dropdownHeightConstraint == nil)")
+        print("✅ dropdownTableView is nil? \(dropdownTableView == nil)")
+        print("✅ dropdownHeightConstraint is nil? \(dropdownHeightConstraint == nil)")
         
         
         
@@ -64,6 +68,9 @@ class RaghadSection3TableViewCell: UITableViewCell, UITableViewDelegate, UITable
         
         // ✅ CHANGE 5: Start CLOSED (height = 0)
         closeDropdown(animated: false)
+        
+        lblFoodCategoryError.isHidden = true          // 🔴🙈 NEW
+        foodCategoryErrorHeight.constant = 0          // 🔴📏 NEW
     }
     
     // ✅ NEW: Button style only (same as your input-field look)
@@ -75,8 +82,8 @@ class RaghadSection3TableViewCell: UITableViewCell, UITableViewDelegate, UITable
         btnFoodCategory.clipsToBounds = true
         
         // ✅🍔 NEW: keep button height stable (no wrapping)
-            btnFoodCategory.titleLabel?.numberOfLines = 1
-            btnFoodCategory.titleLabel?.lineBreakMode = .byTruncatingTail
+        btnFoodCategory.titleLabel?.numberOfLines = 1
+        btnFoodCategory.titleLabel?.lineBreakMode = .byTruncatingTail
         
         var config = UIButton.Configuration.plain()
         config.title = "Choose Food Type"
@@ -86,7 +93,7 @@ class RaghadSection3TableViewCell: UITableViewCell, UITableViewDelegate, UITable
         
         
         // ✅🍔 NEW: don't allow configuration to change size weirdly
-            config.titleAlignment = .leading
+        config.titleAlignment = .leading
         
         
         btnFoodCategory.configuration = config
@@ -173,10 +180,10 @@ class RaghadSection3TableViewCell: UITableViewCell, UITableViewDelegate, UITable
         config.title = category
         config.baseForegroundColor = .label
         btnFoodCategory.configuration = config
-
+        
         onCategoryChanged?(category)
     }
-
+    
     
     // MARK: - UITableViewDataSource
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
@@ -198,10 +205,16 @@ class RaghadSection3TableViewCell: UITableViewCell, UITableViewDelegate, UITable
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         let selected = categories[indexPath.row]
         updateSelectedCategory(selected)          // ✅ update button title
+        lblFoodCategoryError.isHidden = true   // 🔵✅ NEW
+        foodCategoryErrorHeight.constant = 0   // 🔴📏 NEW
+
         tableView.deselectRow(at: indexPath, animated: true)
         onToggleDropdown?(false) // ✅🍔 keep VC state synced
         closeDropdown(animated: true)             // ✅ close dropdown after choose
         contentView.layoutIfNeeded()   // ✅🍔 NEW
+        
+        
+        
     }
     
     
@@ -209,29 +222,102 @@ class RaghadSection3TableViewCell: UITableViewCell, UITableViewDelegate, UITable
     //15.12.2025
     
     
-    // ✅🍔 NEW
-    func configure(selected: String?, isOpen: Bool) {
+    //    // ✅🍔 NEW
+    //    func configure(selected: String?, isOpen: Bool) {
+    //        if let selected = selected {
+    //            var config = btnFoodCategory.configuration
+    //            config?.title = selected
+    //            config?.baseForegroundColor = .label
+    //            btnFoodCategory.configuration = config
+    //        }
+    //
+    //        // keep dropdown state correct when cell reloads / scrolls
+    //        if isOpen {
+    //            openDropdown(animated: false)
+    //        } else {
+    //            closeDropdown(animated: false)
+    //        }
+    //    }
+    //
+    //}
+    
+    // ✅🍔 UPDATED
+//    func configure(selected: String?, isOpen: Bool, showError: Bool) {
+//        
+//        // 🔴✅ NEW: error label
+//        lblFoodCategoryError.text = "Please choose a food category"
+//        lblFoodCategoryError.textColor = .systemRed
+//        lblFoodCategoryError.isHidden = !showError
+//        
+//        // ✅ existing: set selected text on button
+//        if let selected = selected {
+//            var config = btnFoodCategory.configuration
+//            config?.title = selected
+//            config?.baseForegroundColor = .label
+//            btnFoodCategory.configuration = config
+//            
+//            // 🔵✅ NEW: if user selected, hide error immediately
+//            lblFoodCategoryError.isHidden = true
+//        } else {
+//            // 🟠✅ NEW: if nothing selected, keep default title
+//            var config = btnFoodCategory.configuration
+//            config?.title = "Choose Food Type"
+//            config?.baseForegroundColor = .systemGray
+//            btnFoodCategory.configuration = config
+//        }
+//        
+//        // ✅ existing: dropdown state
+//        if isOpen {
+//            openDropdown(animated: false)
+//        } else {
+//            closeDropdown(animated: false)
+//        }
+//    }
+    
+    
+    
+    func configure(selected: String?, isOpen: Bool, showError: Bool) {
+
+        // 🔴 Error UI
+        lblFoodCategoryError.text = "Please choose a food category"
+        lblFoodCategoryError.textColor = .systemRed
+
+        lblFoodCategoryError.isHidden = !showError
+        foodCategoryErrorHeight.constant = showError ? 18 : 0   // 🔴📏 IMPORTANT
+
+        // ✅ Button title
         if let selected = selected {
             var config = btnFoodCategory.configuration
             config?.title = selected
             config?.baseForegroundColor = .label
             btnFoodCategory.configuration = config
+        } else {
+            var config = btnFoodCategory.configuration
+            config?.title = "Choose Food Type"
+            config?.baseForegroundColor = .systemGray
+            btnFoodCategory.configuration = config
         }
-        
-        // keep dropdown state correct when cell reloads / scrolls
+
+        // ✅ Dropdown state
         if isOpen {
             openDropdown(animated: false)
         } else {
             closeDropdown(animated: false)
         }
+
+        contentView.layoutIfNeeded() // 🧱✅ keeps layout stable
     }
+
+    
+    
+    
+    
+    
+    
+    
+    
     
 }
-    
-    
-    
-    
-    
     
     
 //    

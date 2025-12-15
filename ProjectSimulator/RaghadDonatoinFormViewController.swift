@@ -38,6 +38,8 @@ class RaghadDonatoinFormViewController: UIViewController,
     // ✅🍔 NEW
     private var selectedFoodCategory: String? = nil
     private var isFoodDropdownOpen: Bool = false
+//for dropdownlist validation
+    private var shouldShowFoodCategoryError = false   // 🍔❌ NEW
 
 
     
@@ -243,15 +245,19 @@ class RaghadDonatoinFormViewController: UIViewController,
             cell.selectionStyle = .none
 
             // ✅🍔 show saved selection + open/close state
-            cell.configure(selected: selectedFoodCategory, isOpen: isFoodDropdownOpen)
+            cell.configure(
+                selected: selectedFoodCategory,
+                isOpen: isFoodDropdownOpen,
+                showError: shouldShowFoodCategoryError   // 🍔❌ NEW
+            )
 
             // ✅🍔 when user selects a category
             cell.onCategoryChanged = { [weak self] category in
                 guard let self = self else { return }
                 self.selectedFoodCategory = category
                 self.isFoodDropdownOpen = false
+                self.shouldShowFoodCategoryError = false   // 🟢✅
 
-                // ✅ update height smoothly
                 self.donationFormTableview.beginUpdates()
                 self.donationFormTableview.endUpdates()
             }
@@ -373,13 +379,20 @@ class RaghadDonatoinFormViewController: UIViewController,
             return 237   // Section1Cell
         case 1:
             return 108   // Section2Cell
-        case 2:
+        //case 2:
            //return UITableView.automaticDimension  //233  //Section3Cell // for the dropdown list this the code 15.12.2025
+//            let base: CGFloat = 44 /*button*/ + 8 /*space*/ + 20 /*label*/ + 12 + 12 /*top+bottom margins*/
+//            let errorHeight: CGFloat = shouldShowFoodCategoryError ? 18 : 0   // 🔴✅ NEW
+//            return base + errorHeight + dropdown
+            
+        case 2:
             let base: CGFloat = 44 /*button*/ + 8 /*space*/ + 20 /*label*/ + 12 + 12 /*top+bottom margins*/
-                let dropdown: CGFloat = isFoodDropdownOpen ? (56 * 7 + 8) : 0   // ✅🍔 56=rowHeight, 7=items
-                return base + dropdown
-            
-            
+
+            let dropdownHeight: CGFloat = isFoodDropdownOpen ? (56 * 7 + 8) : 0   // 56=rowHeight, 7=items
+            let errorHeight: CGFloat = shouldShowFoodCategoryError ? 18 : 0       // 🔴 error label height
+
+            return base + dropdownHeight + errorHeight
+
         case 3:
             return 109  // Section4Cell
         case 4:
@@ -604,6 +617,10 @@ class RaghadDonatoinFormViewController: UIViewController,
         
         let quantity = quantityValue
         let invalidQuantity = (quantity == nil || (quantity ?? 0) <= 0)
+        
+        let missingFoodCategory = (selectedFoodCategory == nil)   // 🍔❌ NEW
+        shouldShowFoodCategoryError = missingFoodCategory         // 🍔❌ NEW
+
 
         
         // 🔴 set flags
@@ -616,24 +633,28 @@ class RaghadDonatoinFormViewController: UIViewController,
 //        donationFormTableview.reloadSections(
 //            IndexSet([0, 1, 3, 4,5]),
 //            with: .none)
-        var sectionsToReload: [Int] = [0, 3, 4, 5]   // image, quantity, weight, expiry
-        if isAdminUser { sectionsToReload.insert(1, at: 1) } // donor only if admin
-
+        var sectionsToReload: [Int] = [0, 2, 3, 4, 5]   // ✅🍔 added 2
+        if isAdminUser { sectionsToReload.insert(1, at: 1) }
         donationFormTableview.reloadSections(IndexSet(sectionsToReload), with: .none)
+
 
         
 
         
         // ❌ Stop if ANY error exists
-        if missingImage || missingDonor || invalidQuantity || invalidWeight {
+        if missingImage || missingDonor || missingFoodCategory || invalidQuantity || invalidWeight {
             return
-            
         }
+
         
         // ✅ All valid → Navigate
         let sb = UIStoryboard(name: "Raghad1", bundle: nil)
         let vc = sb.instantiateViewController(withIdentifier: "SchedulePickupVC")
         navigationController?.pushViewController(vc, animated: true)
+        
+        
+        
+        
         
         
         

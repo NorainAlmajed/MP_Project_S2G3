@@ -347,7 +347,7 @@
                                                         <segue destination="h8u-SU-zAW" kind="show" id="1vv-WC-bBe"/>
                                                     </connections>
                                                 </button>
-                                                <label hidden="YES" opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="please choose a donor" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="hwi-HP-eYp">
+                                                <label hidden="YES" opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="please choose a donor" textAlignment="natural" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="hwi-HP-eYp">
                                                     <rect key="frame" x="130" y="72" width="133" height="21"/>
                                                     <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                                     <fontDescription key="fontDescription" type="system" pointSize="12"/>
@@ -362,15 +362,21 @@
                                             <outlet property="lblError" destination="hwi-HP-eYp" id="OtA-n7-Xbv"/>
                                         </connections>
                                     </tableViewCell>
-                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" insetsLayoutMarginsFromSafeArea="NO" selectionStyle="blue" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" reuseIdentifier="Section3Cell" rowHeight="150" id="g4Z-g0-YU6" customClass="RaghadSection3TableViewCell" customModule="ProjectSimulator" customModuleProvider="target">
-                                        <rect key="frame" x="0.0" y="395" width="393" height="150"/>
+                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" insetsLayoutMarginsFromSafeArea="NO" selectionStyle="blue" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" reuseIdentifier="Section3Cell" id="g4Z-g0-YU6" customClass="RaghadSection3TableViewCell" customModule="ProjectSimulator" customModuleProvider="target">
+                                        <rect key="frame" x="0.0" y="395" width="393" height="116.66666412353516"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="g4Z-g0-YU6" id="Ocu-2q-x5u">
-                                            <rect key="frame" x="0.0" y="0.0" width="393" height="150"/>
+                                            <rect key="frame" x="0.0" y="0.0" width="393" height="116.66666412353516"/>
                                             <autoresizingMask key="autoresizingMask"/>
                                             <subviews>
+                                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" ambiguous="YES" text="Food Category" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Lh3-PW-yag">
+                                                    <rect key="frame" x="36" y="12.000000000000002" width="121" height="20.666666666666671"/>
+                                                    <fontDescription key="fontDescription" type="boldSystem" pointSize="17"/>
+                                                    <nil key="textColor"/>
+                                                    <nil key="highlightedColor"/>
+                                                </label>
                                                 <tableView hidden="YES" clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" scrollEnabled="NO" dataMode="prototypes" style="plain" rowHeight="60" estimatedRowHeight="-1" sectionHeaderHeight="-1" estimatedSectionHeaderHeight="-1" sectionFooterHeight="-1" estimatedSectionFooterHeight="-1" translatesAutoresizingMaskIntoConstraints="NO" id="NiQ-4r-PH1">
-                                                    <rect key="frame" x="36" y="104.33333333333333" width="353" height="0.0"/>
+                                                    <rect key="frame" x="36" y="104.66666666666667" width="353" height="0.0"/>
                                                     <color key="backgroundColor" systemColor="systemBackgroundColor"/>
                                                     <constraints>
                                                         <constraint firstAttribute="height" id="Ejb-Zh-ft4"/>
@@ -383,8 +389,8 @@
                                                     <color key="textColor" red="1" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
                                                     <nil key="highlightedColor"/>
                                                 </label>
-                                                <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="qdZ-gd-p4d">
-                                                    <rect key="frame" x="36" y="52.333333333333343" width="321" height="44"/>
+                                                <button opaque="NO" contentMode="scaleToFill" misplaced="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="qdZ-gd-p4d">
+                                                    <rect key="frame" x="36" y="47.666666666666742" width="321" height="44"/>
                                                     <constraints>
                                                         <constraint firstAttribute="height" constant="44" id="rZc-Yf-giI"/>
                                                     </constraints>
@@ -394,24 +400,31 @@
                                                         <action selector="foodCategoryTapped:" destination="g4Z-g0-YU6" eventType="touchUpInside" id="cGN-Hq-Iv0"/>
                                                     </connections>
                                                 </button>
-                                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" ambiguous="YES" text="Food Category" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Lh3-PW-yag">
-                                                    <rect key="frame" x="36" y="24" width="121" height="20.333333333333329"/>
-                                                    <fontDescription key="fontDescription" type="boldSystem" pointSize="17"/>
-                                                    <nil key="textColor"/>
+                                                <label hidden="YES" opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Please choose a food category" textAlignment="natural" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Q5K-CH-qvd">
+                                                    <rect key="frame" x="36" y="96.666666666666671" width="321" height="0.0"/>
+                                                    <constraints>
+                                                        <constraint firstAttribute="height" id="rs9-7e-JXM"/>
+                                                    </constraints>
+                                                    <fontDescription key="fontDescription" type="system" pointSize="12"/>
+                                                    <color key="textColor" red="1" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
                                                     <nil key="highlightedColor"/>
                                                 </label>
                                             </subviews>
                                             <constraints>
                                                 <constraint firstItem="NiQ-4r-PH1" firstAttribute="trailing" secondItem="Ocu-2q-x5u" secondAttribute="trailingMargin" constant="16" id="4pA-7z-MS0"/>
-                                                <constraint firstItem="NiQ-4r-PH1" firstAttribute="top" secondItem="qdZ-gd-p4d" secondAttribute="bottom" constant="8" id="5Cp-BZ-Gu5"/>
+                                                <constraint firstItem="qdZ-gd-p4d" firstAttribute="top" secondItem="Lh3-PW-yag" secondAttribute="bottom" constant="14" id="AOH-7m-cV7"/>
                                                 <constraint firstItem="qdZ-gd-p4d" firstAttribute="leading" secondItem="Ocu-2q-x5u" secondAttribute="leadingMargin" constant="16" id="CUe-g0-9RE"/>
                                                 <constraint firstItem="Lh3-PW-yag" firstAttribute="leading" secondItem="Ocu-2q-x5u" secondAttribute="leadingMargin" constant="16" id="Fzc-3l-Lwi"/>
+                                                <constraint firstAttribute="bottom" secondItem="NiQ-4r-PH1" secondAttribute="bottom" constant="12" id="GdD-uw-xXY"/>
+                                                <constraint firstAttribute="trailingMargin" secondItem="Q5K-CH-qvd" secondAttribute="trailing" constant="16" id="Mbs-km-fDg"/>
                                                 <constraint firstItem="eR6-Ow-MRD" firstAttribute="top" secondItem="Ocu-2q-x5u" secondAttribute="topMargin" constant="12" id="Nib-Ww-yXV"/>
+                                                <constraint firstItem="Lh3-PW-yag" firstAttribute="top" secondItem="Ocu-2q-x5u" secondAttribute="top" constant="12" id="UrJ-AM-4n6"/>
                                                 <constraint firstAttribute="trailingMargin" secondItem="eR6-Ow-MRD" secondAttribute="trailing" constant="16" id="dsJ-xb-57t"/>
+                                                <constraint firstItem="Q5K-CH-qvd" firstAttribute="leading" secondItem="Ocu-2q-x5u" secondAttribute="leadingMargin" constant="16" id="eHh-nS-drp"/>
                                                 <constraint firstItem="eR6-Ow-MRD" firstAttribute="leading" secondItem="Lh3-PW-yag" secondAttribute="trailing" constant="16" id="fnR-dq-ahV"/>
-                                                <constraint firstItem="Lh3-PW-yag" firstAttribute="top" secondItem="Ocu-2q-x5u" secondAttribute="topMargin" constant="12" id="fqu-Dc-h8O"/>
-                                                <constraint firstItem="qdZ-gd-p4d" firstAttribute="top" secondItem="Lh3-PW-yag" secondAttribute="bottom" constant="8" id="ps6-oc-qD9"/>
+                                                <constraint firstItem="NiQ-4r-PH1" firstAttribute="top" secondItem="Q5K-CH-qvd" secondAttribute="bottom" constant="8" id="iuf-ho-pOU"/>
                                                 <constraint firstItem="NiQ-4r-PH1" firstAttribute="leading" secondItem="Ocu-2q-x5u" secondAttribute="leadingMargin" constant="16" id="ttN-In-6xR"/>
+                                                <constraint firstItem="Q5K-CH-qvd" firstAttribute="top" secondItem="qdZ-gd-p4d" secondAttribute="bottom" constant="6" id="uH2-yF-g3B"/>
                                                 <constraint firstAttribute="trailingMargin" secondItem="qdZ-gd-p4d" secondAttribute="trailing" constant="16" id="zBO-Ao-nP1"/>
                                             </constraints>
                                         </tableViewCellContentView>
@@ -419,11 +432,13 @@
                                             <outlet property="btnFoodCategory" destination="qdZ-gd-p4d" id="mq2-qs-2rO"/>
                                             <outlet property="dropdownHeightConstraint" destination="Ejb-Zh-ft4" id="EeZ-4f-ZIR"/>
                                             <outlet property="dropdownTableView" destination="NiQ-4r-PH1" id="5PS-Hr-Fi1"/>
+                                            <outlet property="foodCategoryErrorHeight" destination="rs9-7e-JXM" id="LsX-Ag-X77"/>
                                             <outlet property="lblFoodCategory" destination="Lh3-PW-yag" id="96H-yc-0qD"/>
+                                            <outlet property="lblFoodCategoryError" destination="Q5K-CH-qvd" id="Hha-AO-yX2"/>
                                         </connections>
                                     </tableViewCell>
                                     <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" insetsLayoutMarginsFromSafeArea="NO" selectionStyle="blue" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" reuseIdentifier="Section4Cell" rowHeight="104" id="yJh-qD-b86" customClass="RaghadSection4TableViewCell" customModule="ProjectSimulator" customModuleProvider="target">
-                                        <rect key="frame" x="0.0" y="545" width="393" height="104"/>
+                                        <rect key="frame" x="0.0" y="511.66666412353516" width="393" height="104"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="yJh-qD-b86" id="qzW-A4-cpU">
                                             <rect key="frame" x="0.0" y="0.0" width="393" height="104"/>
@@ -452,7 +467,7 @@
                                                         <action selector="textChanged:" destination="yJh-qD-b86" eventType="editingChanged" id="T2K-3v-XQW"/>
                                                     </connections>
                                                 </textField>
-                                                <label hidden="YES" opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="please enter a valid quantity" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="4p1-zq-BOI">
+                                                <label hidden="YES" opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="please enter a valid quantity" textAlignment="natural" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="4p1-zq-BOI">
                                                     <rect key="frame" x="114" y="70" width="165" height="21"/>
                                                     <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                                     <fontDescription key="fontDescription" type="system" pointSize="12"/>
@@ -475,7 +490,7 @@
                                         </connections>
                                     </tableViewCell>
                                     <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" insetsLayoutMarginsFromSafeArea="NO" selectionStyle="blue" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" reuseIdentifier="Section5Cell" rowHeight="102" id="xO4-9F-Ge4" customClass="RaghadSection5TableViewCell" customModule="ProjectSimulator" customModuleProvider="target">
-                                        <rect key="frame" x="0.0" y="649" width="393" height="102"/>
+                                        <rect key="frame" x="0.0" y="615.66666412353516" width="393" height="102"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="xO4-9F-Ge4" id="RXc-ws-3cs">
                                             <rect key="frame" x="0.0" y="0.0" width="393" height="102"/>
@@ -498,7 +513,7 @@
                                                         <action selector="weightTextChanged:" destination="xO4-9F-Ge4" eventType="editingChanged" id="rSM-fk-e1R"/>
                                                     </connections>
                                                 </textField>
-                                                <label hidden="YES" opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="Please enter a valid weight (e.g., 1 or 1.5)" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="bJN-Cc-bYc">
+                                                <label hidden="YES" opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="Please enter a valid weight (e.g., 1 or 1.5)" textAlignment="natural" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="bJN-Cc-bYc">
                                                     <rect key="frame" x="61" y="67" width="246" height="21"/>
                                                     <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                                     <fontDescription key="fontDescription" type="system" pointSize="12"/>
@@ -513,7 +528,7 @@
                                         </connections>
                                     </tableViewCell>
                                     <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" insetsLayoutMarginsFromSafeArea="NO" selectionStyle="blue" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" reuseIdentifier="Section6Cell" rowHeight="93" id="7Or-6U-ZuP" customClass="RaghadSection6TableViewCell" customModule="ProjectSimulator" customModuleProvider="target">
-                                        <rect key="frame" x="0.0" y="751" width="393" height="93"/>
+                                        <rect key="frame" x="0.0" y="717.66666412353516" width="393" height="93"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="7Or-6U-ZuP" id="caA-PJ-MqH" customClass="RaghadSection6TableViewCell" customModule="ProjectSimulator" customModuleProvider="target">
                                             <rect key="frame" x="0.0" y="0.0" width="393" height="93"/>
@@ -549,7 +564,7 @@
                                         </connections>
                                     </tableViewCell>
                                     <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" insetsLayoutMarginsFromSafeArea="NO" selectionStyle="blue" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" reuseIdentifier="Section7Cell" rowHeight="161" id="4sX-ce-udM" customClass="RaghadSection7TableViewCell" customModule="ProjectSimulator" customModuleProvider="target">
-                                        <rect key="frame" x="0.0" y="844" width="393" height="161"/>
+                                        <rect key="frame" x="0.0" y="810.66666412353516" width="393" height="161"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="4sX-ce-udM" id="jsg-4n-UDz">
                                             <rect key="frame" x="0.0" y="0.0" width="393" height="161"/>
@@ -586,7 +601,7 @@
                                         </connections>
                                     </tableViewCell>
                                     <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" insetsLayoutMarginsFromSafeArea="NO" selectionStyle="blue" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" reuseIdentifier="Section8Cell" rowHeight="62" id="a0H-e0-6SH" customClass="RaghadSection8TableViewCell" customModule="ProjectSimulator" customModuleProvider="target">
-                                        <rect key="frame" x="0.0" y="1005" width="393" height="62"/>
+                                        <rect key="frame" x="0.0" y="971.66666412353516" width="393" height="62"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="a0H-e0-6SH" id="DsM-R6-emS" customClass="RaghadSection8TableViewCell" customModule="ProjectSimulator" customModuleProvider="target">
                                             <rect key="frame" x="0.0" y="0.0" width="393" height="62"/>

@@ -300,6 +300,12 @@ class DonationDetailsViewController: UIViewController, UITableViewDelegate, UITa
                 self.present(alert, animated: true)
             }
             
+            
+            
+            
+            
+            
+            
             //----------------------------------------------------------------------------------
             // Actions when pressing the collected button
             cell.onCollectedTapped = { [weak self] in
@@ -316,6 +322,85 @@ class DonationDetailsViewController: UIViewController, UITableViewDelegate, UITa
                 alert.addAction(UIAlertAction(title: "Yes", style: .default) { _ in
                     self.donation?.status = 3  // Collected
                     
+                    // Current Date and Time
+                    let currentDate = Date()
+
+                    // Check userType and add notifications
+                    switch user.userType {
+                    case 1: // Admin
+                        // Notify donor
+                        var donorNotifications = self.donation?.donor.notifications ?? []
+                        donorNotifications.append(Notification(
+                            title: "Donation Marked as Collected",
+                            description: "Donation #\(self.donation?.donationID ?? 0) has been marked as collected by the admin.",
+                            date: currentDate
+                        ))
+                        self.donation?.donor.notifications = donorNotifications
+                        
+                        // Notify NGO
+                        var ngoNotifications = self.donation?.ngo.notifications ?? []
+                        ngoNotifications.append(Notification(
+                            title: "Donation Marked as Collected",
+                            description: "Donation #\(self.donation?.donationID ?? 0) has been marked as collected by the admin.",
+                            date: currentDate
+                        ))
+                        self.donation?.ngo.notifications = ngoNotifications
+                        
+                    case 3: // NGO
+                        // Notify only Donor
+                        var donorNotifications = self.donation?.donor.notifications ?? []
+                        donorNotifications.append(Notification(
+                            title: "Donation Marked as Collected",
+                            description: "Donation #\(self.donation?.donationID ?? 0) has been marked as collected by \(self.donation?.ngo.ngoName ?? "the NGO").",
+                            date: currentDate
+                        ))
+                        self.donation?.donor.notifications = donorNotifications
+                        
+                    default:
+                        break
+                    }
+                    
+                    
+//                                        // -----------------------------------------------------------
+//                                        // After appending the notifications for donor, NGO, and admin
+//                                        //
+//                                        // Get the latest notification for donor, NGO, and admin
+//                                        let lastDonorNotification = donation.donor.notifications?.last?.description ?? "No notifications"
+//                                        let lastNgoNotification = donation.ngo.notifications.last?.description ?? "No notifications"
+//                                        let lastAdminNotification = admin.notifications?.last?.description ?? "No notifications"
+//                                         //Create the message for the alert
+//                                        let notificationDetails = """
+//                                            Donor Last Notification: \(lastDonorNotification)
+//                                            NGO Last Notification: \(lastNgoNotification)
+//                                            Admin Last Notification: \(lastAdminNotification)
+//                                            """
+//                    
+//                    
+//                                        // Create the alert
+//                                        let alert = UIAlertController(
+//                                            title: "Notification Details",
+//                                            message: notificationDetails,
+//                                            preferredStyle: .alert
+//                                        )
+//                    
+//                                        // Add a dismiss button
+//                                        alert.addAction(UIAlertAction(title: "Dismiss", style: .default))
+//                    
+//                                        // Present the alert to show the last notifications
+//                                        self.present(alert, animated: true)
+//                    
+//                                        // --------------------------
+//                                        // Print last notifications for testing
+//                                        print("==== Notifications Test ====")
+//                                        print("Admin last notification:", admin.notifications?.last ?? "No notifications")
+//                                        print("Donor last notification:", donation.donor.notifications?.last ?? "No notifications")
+//                                        print("NGO last notification:", donation.ngo.notifications.last ?? "No notifications")
+//                                        print("Current user type:", user.userType)
+//                                        print("============================")
+//                                        // --------------------------
+                    
+                    
+                    // Show success alert
                     let successAlert = UIAlertController(
                         title: "Success",
                         message: "The donation has been marked collected successfully",
@@ -332,6 +417,12 @@ class DonationDetailsViewController: UIViewController, UITableViewDelegate, UITa
                 self.present(alert, animated: true)
             }
 
+
+            
+            
+            
+            
+            
             //----------------------------------------------------------------------------------
             // Actions when pressing the reject button
             cell.onRejectTapped = { [weak self] in
@@ -371,6 +462,7 @@ class DonationDetailsViewController: UIViewController, UITableViewDelegate, UITa
                 
                 self.present(alert, animated: true)
             }
+
 
             return cell
             

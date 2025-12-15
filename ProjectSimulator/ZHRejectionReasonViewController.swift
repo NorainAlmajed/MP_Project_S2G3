@@ -57,10 +57,87 @@ class ZHRejectionReasonViewController: UIViewController, UITextViewDelegate {
         // Get text & trim spaces
         let text = rejectionTextArea.text.trimmingCharacters(in: .whitespacesAndNewlines)
 
-        // Update donation regardless of empty text
-        donation.status = 4
+        // Update donation status and rejection reason
+        donation.status = 4 // Rejected
         donation.rejectionReason = text.isEmpty || text == placeholderText ? nil : text
 
+        // Add notification based on user type
+        let currentDate = Date()
+
+        switch user.userType {
+        case 1: // Admin
+            // Notify donor
+            var donorNotifications = donation.donor.notifications ?? []
+            donorNotifications.append(Notification(
+                title: "Donation Rejected",
+                description: "Donation #\(donation.donationID) has been rejected by the admin.",
+                date: currentDate
+            ))
+            donation.donor.notifications = donorNotifications
+
+            // Notify NGO
+            var ngoNotifications = donation.ngo.notifications
+            ngoNotifications.append(Notification(
+                title: "Donation Rejected",
+                description: "Donation #\(donation.donationID) has been rejected by the admin.",
+                date: currentDate
+            ))
+            donation.ngo.notifications = ngoNotifications
+
+        case 3: // NGO
+            // Notify only Donor
+            var donorNotifications = donation.donor.notifications ?? []
+            donorNotifications.append(Notification(
+                title: "Donation Rejected",
+                description: "Donation #\(donation.donationID) has been rejected by \(donation.ngo.ngoName).",
+                date: currentDate
+            ))
+            donation.donor.notifications = donorNotifications
+
+        default:
+            break
+        }
+
+        
+        
+//                                                // -----------------------------------------------------------
+//                                                // After appending the notifications for donor, NGO, and admin
+//                                                //
+//                                                // Get the latest notification for donor, NGO, and admin
+//                                                let lastDonorNotification = donation.donor.notifications?.last?.description ?? "No notifications"
+//                                                let lastNgoNotification = donation.ngo.notifications.last?.description ?? "No notifications"
+//                                                let lastAdminNotification = admin.notifications?.last?.description ?? "No notifications"
+//                                                 //Create the message for the alert
+//                                                let notificationDetails = """
+//                                                    Donor Last Notification: \(lastDonorNotification)
+//                                                    NGO Last Notification: \(lastNgoNotification)
+//                                                    Admin Last Notification: \(lastAdminNotification)
+//                                                    """
+//        
+//        
+//                                                // Create the alert
+//                                                let alert1 = UIAlertController(
+//                                                    title: "Notification Details",
+//                                                    message: notificationDetails,
+//                                                    preferredStyle: .alert
+//                                                )
+//        
+//                                                // Add a dismiss button
+//                                                alert1.addAction(UIAlertAction(title: "Dismiss", style: .default))
+//        
+//                                                // Present the alert to show the last notifications
+//                                                self.present(alert1, animated: true)
+//        
+//                                                // --------------------------
+//                                                // Print last notifications for testing
+//                                                print("==== Notifications Test ====")
+//                                                print("Admin last notification:", admin.notifications?.last ?? "No notifications")
+//                                                print("Donor last notification:", donation.donor.notifications?.last ?? "No notifications")
+//                                                print("NGO last notification:", donation.ngo.notifications.last ?? "No notifications")
+//                                                print("Current user type:", user.userType)
+//                                                print("============================")
+//                                                // --------------------------
+        
         // Success alert
         let alert = UIAlertController(
             title: "Success",
@@ -77,6 +154,7 @@ class ZHRejectionReasonViewController: UIViewController, UITextViewDelegate {
 
         present(alert, animated: true)
     }
+
 
 
 

@@ -57,6 +57,12 @@ class NotificationsCollectionViewCell: UICollectionViewCell {
         // Round the container view
         containerView.layer.cornerRadius = 20
         
+        containerView.layer.shadowColor = UIColor.black.cgColor
+        containerView.layer.shadowOpacity = 0.08
+        containerView.layer.shadowRadius = 6
+        containerView.layer.shadowOffset = CGSize(width: 0, height: 2)
+        containerView.layer.masksToBounds = false
+        
     }
     
     // Called when cell is loaded from the nib/storyboard

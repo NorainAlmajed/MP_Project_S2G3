@@ -80,6 +80,13 @@ class NotificationsViewController: UIViewController {
         ])
         
         updateNoNotificationsLabel()
+        
+        if let layout = notificationsCollectionView.collectionViewLayout as? UICollectionViewFlowLayout {
+            layout.sectionInset = UIEdgeInsets(top: 12, left: 0, bottom: 12, right: 0)
+        }
+    
+
+
     }
     
     private func updateNoNotificationsLabel() {
@@ -169,7 +176,15 @@ extension NotificationsViewController: UICollectionViewDataSource {
 }
 
 extension NotificationsViewController: UICollectionViewDelegateFlowLayout {
-    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
-        return CGSize(width: 376, height: 124)
+    func collectionView(_ collectionView: UICollectionView,
+                        layout collectionViewLayout: UICollectionViewLayout,
+                        sizeForItemAt indexPath: IndexPath) -> CGSize {
+
+        let isIPad = UIDevice.current.userInterfaceIdiom == .pad
+        let horizontalPadding: CGFloat = isIPad ? 80 : 16
+
+        let width = collectionView.bounds.width - horizontalPadding
+        return CGSize(width: width, height: 130)
     }
+
 }

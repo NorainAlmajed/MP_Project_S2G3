@@ -27,11 +27,6 @@
                                     <segue destination="ONd-Xx-dnE" kind="show" id="4iq-ID-1XD"/>
                                 </connections>
                             </button>
-                            <view contentMode="scaleToFill" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="HbC-lh-L5Q">
-                                <rect key="frame" x="81" y="531" width="240" height="343"/>
-                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                <color key="backgroundColor" systemColor="systemCyanColor"/>
-                            </view>
                         </subviews>
                         <viewLayoutGuide key="safeArea" id="PEB-9N-FAF"/>
                         <color key="backgroundColor" systemColor="tableBackgroundColor"/>
@@ -907,9 +902,6 @@
         </systemColor>
         <systemColor name="systemBackgroundColor">
             <color white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-        </systemColor>
-        <systemColor name="systemCyanColor">
-            <color red="0.1960784314" green="0.67843137249999996" blue="0.90196078430000004" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
         </systemColor>
         <systemColor name="tableBackgroundColor">
             <color white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>

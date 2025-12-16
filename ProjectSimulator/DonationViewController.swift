@@ -135,8 +135,27 @@ class DonationViewController: UIViewController {
         navigationItem.hidesSearchBarWhenScrolling = false
         definesPresentationContext = true
 
+        
+        //Adding the filter button
+        navigationItem.rightBarButtonItem = UIBarButtonItem(
+            image: UIImage(systemName: "slider.horizontal.3"),
+            style: .plain,
+            target: self,
+            action: #selector(filterButtonTapped)
+        )
 
+        
+        
     }
+    
+    
+    
+    //Function for the filter button
+    @objc private func filterButtonTapped() {
+        
+    }
+
+    
     
     //Function to add a label when there are no donations available
     private func updateNoDonationsLabel() {
@@ -234,11 +253,26 @@ class DonationViewController: UIViewController {
         // IMPORTANT: assign + reload
         displayedDonations = filtered.sorted { $0.creationDate > $1.creationDate }
         donationsCollectionView.reloadData()
-        updateNoDonationsLabel()
+        updateNoDonationsLabelDuringSearch()
+
     }
 
 
 
+    //Method for putting a label when there are no results for the search
+    private func updateNoDonationsLabelDuringSearch() {
+        let isSearching = !(searchController.searchBar.text ?? "").isEmpty
+
+        if displayedDonations.isEmpty {
+            // If searching → show "No results found", otherwise "No donations available"
+            noDonationsLabel.text = isSearching ? "No results found" : "No donations available"
+            noDonationsLabel.isHidden = false
+            donationsCollectionView.isHidden = true
+        } else {
+            noDonationsLabel.isHidden = true
+            donationsCollectionView.isHidden = false
+        }
+    }
 
     
     

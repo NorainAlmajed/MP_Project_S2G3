@@ -73,7 +73,7 @@ var users: [User] = [
 //            
 //            Donation(donationID: 91475, ngo: ngo1, creationDate: Date(), donor: user1, address: Address(building: 1311, road: 3027, block: 430, flat: 402, area: "Karbabad", governorate: "Manama"), pickupDate: Date(), pickupTime: "12:00:00", foodImage: UIImage(named: "apples") ?? UIImage(), status: 2, Category: "Produce", quantity: 30, weight: nil, expiryDate: Date(), description: "Fresh red apples, locally grown and rich in flavor")
 //        ],
-         userType: 3
+         userType: 1
 )
 ]
 

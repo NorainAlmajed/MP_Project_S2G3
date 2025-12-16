@@ -87,6 +87,16 @@ class Section3TableViewCell: UITableViewCell {
             collectedBtn.addTarget(self, action: #selector(collectedButtonTapped), for: .touchUpInside)
             rejectBtn.addTarget(self, action: #selector(rejectButtonTapped), for: .touchUpInside)
         
+        // Round buttons
+            styleActionButton(cancelBtn)
+            styleActionButton(rejectBtn)
+            styleActionButton(editBtn)
+            styleActionButton(acceptBtn)
+            styleActionButton(collectedBtn)
+
+        
+        
+        
     }
     
     
@@ -127,12 +137,22 @@ class Section3TableViewCell: UITableViewCell {
     
     
     override func layoutSubviews() {
-            super.layoutSubviews()
-            
-            // Round the donation status view
-            donationStatusView.layer.cornerRadius = donationStatusView.frame.height / 2
-            donationStatusView.clipsToBounds = true
-        }
+        super.layoutSubviews()
+        
+        donationStatusView.layer.cornerRadius = donationStatusView.frame.height / 2
+        donationStatusView.clipsToBounds = true
+
+        statusColorView.layer.cornerRadius = statusColorView.frame.height / 2
+        statusColorView.clipsToBounds = true
+
+        // Buttons
+        styleActionButton(cancelBtn)
+        styleActionButton(rejectBtn)
+        styleActionButton(editBtn)
+        styleActionButton(acceptBtn)
+        styleActionButton(collectedBtn)
+    }
+
     
 
 }
@@ -271,4 +291,12 @@ extension Section3TableViewCell {
         default: return "Unknown"
         }
     }
+    
+    //For buttons radius
+    private func styleActionButton(_ button: UIButton) {
+        button.layer.cornerRadius = button.frame.height / 2
+        button.clipsToBounds = true
+    }
+
+
 }

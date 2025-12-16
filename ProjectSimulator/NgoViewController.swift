@@ -10,6 +10,22 @@ import UIKit
 class NgoViewController: UIViewController, UITableViewDelegate, UITableViewDataSource {
     
     @IBOutlet weak var tableView: UITableView!
+    // ✅🆕 1) Empty state label (when there are no NGOs)
+    private let noNgosLabel: UILabel = {
+        let label = UILabel()
+        label.text = "No NGOs available"
+        label.textAlignment = .center
+        label.textColor = .gray
+        label.font = UIFont.systemFont(ofSize: 18, weight: .medium)
+        label.isHidden = true
+        return label
+    }()
+
+    
+    
+    
+    
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         
@@ -17,7 +33,17 @@ class NgoViewController: UIViewController, UITableViewDelegate, UITableViewDataS
         tableView.dataSource = self
 
         
-        
+        // ✅🆕 3) Add empty label to the screen
+        view.addSubview(noNgosLabel)
+        noNgosLabel.translatesAutoresizingMaskIntoConstraints = false
+        NSLayoutConstraint.activate([
+            noNgosLabel.centerXAnchor.constraint(equalTo: view.centerXAnchor),
+            noNgosLabel.centerYAnchor.constraint(equalTo: view.centerYAnchor)
+        ])
+
+        // ✅🆕 4) Run the method once at start
+        updateNoNgosLabel()
+
         
 
             title = "Browse NGOs"
@@ -42,12 +68,22 @@ class NgoViewController: UIViewController, UITableViewDelegate, UITableViewDataS
         
         
         
-        
-        
-        
-        
-        
-        
+        // ✅⬅️🆕 Hide back button text for the NEXT screen (NgoDetails)
+           if #available(iOS 14.0, *) {
+               navigationItem.backButtonDisplayMode = .minimal
+           } else {
+               navigationItem.backBarButtonItem = UIBarButtonItem(title: "", style: .plain, target: nil, action: nil)
+           }
+
+           title = "Browse NGOs"
+    }
+    
+    
+    // ✅🆕 5) Refresh the table + empty label whenever the page appears
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        tableView.reloadData()
+        updateNoNgosLabel()
     }
     
     
@@ -93,9 +129,19 @@ class NgoViewController: UIViewController, UITableViewDelegate, UITableViewDataS
                 vc.selectedNgo = arrNgo[indexPath.row]
             }
         }
+         }
+
+    // ✅🆕 2) Show label if the list is empty
+    private func updateNoNgosLabel() {
+        if arrNgo.isEmpty {
+            noNgosLabel.isHidden = false
+            tableView.isHidden = true
+        } else {
+            noNgosLabel.isHidden = true
+            tableView.isHidden = false
+        }
     }
 
-    
     
     
     

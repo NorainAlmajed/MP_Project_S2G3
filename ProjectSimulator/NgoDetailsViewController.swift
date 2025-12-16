@@ -89,6 +89,21 @@ class NgoDetailsViewController: UIViewController {
         lblPgoneNumber.text = String(ngo.phoneNumber)
         lblEmail.text = ngo.email
       
+        
+        
+
+    
+
+            // ✅⬅️🆕 Hide back button text for the NEXT screen (Donation Form)
+            if #available(iOS 14.0, *) {
+                navigationItem.backButtonDisplayMode = .minimal
+            } else {
+                navigationItem.backBarButtonItem = UIBarButtonItem(title: "", style: .plain, target: nil, action: nil)
+            }
+
+        
+        
+
 
 
         // Do any additional setup after loading the view.

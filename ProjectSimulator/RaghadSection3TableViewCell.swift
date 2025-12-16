@@ -89,8 +89,8 @@ class RaghadSection3TableViewCell: UITableViewCell, UITableViewDelegate, UITable
         config.title = "Choose Food Type"
         config.baseForegroundColor = .systemGray
         config.background.backgroundColor = .clear
-        config.contentInsets = NSDirectionalEdgeInsets(top: 12, leading: 12, bottom: 12, trailing: 12)
-        
+        config.contentInsets = NSDirectionalEdgeInsets(top: 8, leading: 12, bottom: 8, trailing: 12)
+
         
         // ✅🍔 NEW: don't allow configuration to change size weirdly
         config.titleAlignment = .leading
@@ -144,7 +144,7 @@ class RaghadSection3TableViewCell: UITableViewCell, UITableViewDelegate, UITable
         dropdownHeightConstraint.constant = rowHeight * CGFloat(categories.count)
         
         if animated {
-            UIView.animate(withDuration: 0.2) {
+            UIView.animate(withDuration: 0.0) {
                 self.contentView.layoutIfNeeded()
             }
         } else {
@@ -162,7 +162,7 @@ class RaghadSection3TableViewCell: UITableViewCell, UITableViewDelegate, UITable
         }
         
         if animated {
-            UIView.animate(withDuration: 0.2, animations: {
+            UIView.animate(withDuration: 0.0, animations: {
                 self.contentView.layoutIfNeeded()
             }, completion: { _ in
                 finish()
@@ -202,21 +202,62 @@ class RaghadSection3TableViewCell: UITableViewCell, UITableViewDelegate, UITable
         return rowHeight
     }
     
-    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        let selected = categories[indexPath.row]
-        updateSelectedCategory(selected)          // ✅ update button title
-        lblFoodCategoryError.isHidden = true   // 🔵✅ NEW
-        foodCategoryErrorHeight.constant = 0   // 🔴📏 NEW
-
-        tableView.deselectRow(at: indexPath, animated: true)
-        onToggleDropdown?(false) // ✅🍔 keep VC state synced
-        closeDropdown(animated: true)             // ✅ close dropdown after choose
-        contentView.layoutIfNeeded()   // ✅🍔 NEW
-        
-        
-        
-    }
     
+    
+    
+    
+   
+        
+        // ✅ Update button title
+        func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+            
+            let selected = categories[indexPath.row]
+            
+            // ✅ update button title
+            var config = btnFoodCategory.configuration ?? UIButton.Configuration.plain()
+            config.title = selected
+            config.baseForegroundColor = .label
+            btnFoodCategory.configuration = config
+            
+            // ✅ notify VC: selected value
+            onCategoryChanged?(selected)
+            
+            // ✅ hide error
+            lblFoodCategoryError.isHidden = true
+            foodCategoryErrorHeight.constant = 0
+            
+            // ✅ IMPORTANT: tell VC dropdown is CLOSED
+            onToggleDropdown?(false)
+            
+            // ✅ close dropdown inside the cell
+            closeDropdown(animated: false)
+            
+            tableView.deselectRow(at: indexPath, animated: false)
+            contentView.layoutIfNeeded()
+        }
+    
+    
+    
+    
+    
+    
+    
+    
+//    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+//        let selected = categories[indexPath.row]
+//        updateSelectedCategory(selected)          // ✅ update button title
+//        lblFoodCategoryError.isHidden = true   // 🔵✅ NEW
+//        foodCategoryErrorHeight.constant = 0   // 🔴📏 NEW
+//
+//        tableView.deselectRow(at: indexPath, animated: true)
+//        onToggleDropdown?(false) // ✅🍔 keep VC state synced
+//        closeDropdown(animated: true)             // ✅ close dropdown after choose
+//        contentView.layoutIfNeeded()   // ✅🍔 NEW
+//        
+//        
+//        
+//    }
+//    
     
     
     //15.12.2025

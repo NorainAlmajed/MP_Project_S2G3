@@ -24,6 +24,7 @@ class RaghadDonatoinFormViewController: UIViewController,
     private var shouldShowQuantityError = false   // 🔢❌ Quantity error
     private var quantityValue: Int?   // 🔢 stores user quantity
     private var weightValue: Double?
+    private var weightInvalidFormat = false   // 🛰️WEIGHT_OPTIONAL_VC
     private var shouldShowWeightError = false
     private var selectedExpiryDate: Date?   // 📅 stores the user-selected expiry date
     // ✅🔐 Admin check from your current logged user
@@ -51,7 +52,7 @@ class RaghadDonatoinFormViewController: UIViewController,
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        //donationFormTableview.separatorStyle = .none🔐🔐🔐🔐🔐🔐🔐🔐🔐🔐🔐🔐🔐🔐🔐🔐🔐🔐🔐🔐🔐🔐🔐🔐🔐🔐🔐🔐🔐🔐🔐 remove the comment to remove the lines in the table view
+        donationFormTableview.separatorStyle = .none//🔐🔐🔐🔐🔐🔐🔐🔐🔐🔐🔐🔐🔐🔐🔐🔐🔐🔐🔐🔐🔐🔐🔐🔐🔐🔐🔐🔐🔐🔐🔐 remove the comment to remove the lines in the table view
         
         print("🔐 Current user:", user.username)
         print("👤 Is Admin?", user.isAdmin)
@@ -199,14 +200,32 @@ class RaghadDonatoinFormViewController: UIViewController,
             )
             
             // ✅ when user taps open/close
-            cell.onToggleDropdown = { [weak self] open in
-                guard let self = self else { return }
+//            cell.onToggleDropdown = { [weak self] open in
+//                guard let self = self else { return }
+//                self.isFoodDropdownOpen = open
+//                
+//                UIView.performWithoutAnimation {
+//                    self.donationFormTableview.reloadRows(at: [indexPath], with: .none)
+//                }
+//            }
+            
+            
+            cell.onToggleDropdown = { [weak self, weak cell] open in
+                guard let self = self, let cell = cell else { return }
                 self.isFoodDropdownOpen = open
-                
+
                 UIView.performWithoutAnimation {
-                    self.donationFormTableview.reloadRows(at: [indexPath], with: .none)
+                    self.donationFormTableview.beginUpdates()
+                    self.donationFormTableview.endUpdates()
                 }
             }
+
+            
+         
+            
+            
+            
+            
             
             // ✅ when user selects category
             cell.onCategoryChanged = { [weak self] category in
@@ -217,7 +236,10 @@ class RaghadDonatoinFormViewController: UIViewController,
                 self.shouldShowFoodCategoryError = false   // ✅ IMPORTANT FIX ✅
                 
                 UIView.performWithoutAnimation {
-                    self.donationFormTableview.reloadRows(at: [indexPath], with: .none)
+                    self.donationFormTableview.reloadSections(
+                        IndexSet(integer: indexPath.section),
+                        with: .none
+                    )
                 }
             }
             
@@ -246,13 +268,14 @@ class RaghadDonatoinFormViewController: UIViewController,
             cell.configure(showError: shouldShowWeightError)
             
             // 🔁 receive weight from cell
-            cell.onWeightChanged = { [weak self] value in
-                self?.weightValue = value
-                
-                // 🟢 clear error when valid
-                if value != nil {
-                    self?.shouldShowWeightError = false
-                }
+            cell.onWeightChanged = { [weak self] value, invalidFormat in   // 🛰️WEIGHT_OPTIONAL_VC
+                guard let self = self else { return }
+
+                self.weightValue = value
+                self.weightInvalidFormat = invalidFormat
+
+                // 🔴 show error ONLY when format is wrong
+                self.shouldShowWeightError = invalidFormat
             }
             
             return cell
@@ -278,10 +301,12 @@ class RaghadDonatoinFormViewController: UIViewController,
                 self.selectedExpiryDate = date   // ✅ save in VC
                 
                 // ✅ IMPORTANT: refresh ONLY expiry section so it doesn't jump/reset
-                self.donationFormTableview.reloadSections(
-                    IndexSet(integer: indexPath.section),
-                    with: .none
-                )
+                UIView.performWithoutAnimation {
+                    self.donationFormTableview.reloadSections(
+                        IndexSet(integer: indexPath.section),
+                        with: .none
+                    )
+                }
             }
             return cell 
         }
@@ -480,7 +505,9 @@ class RaghadDonatoinFormViewController: UIViewController,
             var sectionsToReload: [Int] = [0, 3, 4, 5]  // image, quantity, weight, expiry
             if isAdminUser { sectionsToReload.insert(1, at: 1) } // donor only if admin
             // ✅ refresh only Section 1
-            donationFormTableview.reloadSections(IndexSet(sectionsToReload), with: .none)
+            UIView.performWithoutAnimation {
+                self.donationFormTableview.reloadSections(IndexSet(sectionsToReload), with: .none)
+            }
         }
         
         
@@ -573,8 +600,9 @@ class RaghadDonatoinFormViewController: UIViewController,
             sectionsToReload = [0, 1, 2, 3, 4]
         }
         
-        donationFormTableview.reloadSections(IndexSet(sectionsToReload), with: .none)
-        
+        UIView.performWithoutAnimation {
+            self.donationFormTableview.reloadSections(IndexSet(sectionsToReload), with: .none)
+        }
         
         
         if !missingImage &&
@@ -597,11 +625,7 @@ class RaghadDonatoinFormViewController: UIViewController,
             return
         }
         
-        
-        
-        
-        
-        
+       
         
         
     }
@@ -614,7 +638,7 @@ class RaghadDonatoinFormViewController: UIViewController,
     private func validateAndProceed() {
         let missingImage = (selectedDonationImage == nil)
         let missingFoodCategory = (selectedFoodCategory == nil)
-        let invalidWeight = (weightValue == nil)
+        let invalidWeight = weightInvalidFormat   // 🛰️WEIGHT_OPTIONAL_VC
         let missingDonor = user.isAdmin && (selectedDonorName == nil)
         
         if missingImage || missingFoodCategory || invalidWeight || missingDonor {

@@ -13,8 +13,8 @@ class RaghadSection5TableViewCell: UITableViewCell {
 
    
     @IBOutlet weak var txtWeight: UITextField!
-    var onWeightChanged: ((Double?) -> Void)?     // ⚖️ send value to
-    
+    var onWeightChanged: ((Double?, Bool) -> Void)?   // 🧩WEIGHT_OPTIONAL_CELL
+
     
 
     override func awakeFromNib() {
@@ -28,29 +28,46 @@ class RaghadSection5TableViewCell: UITableViewCell {
             txtWeight?.inputAccessoryView = makeDoneToolbar()
         }
 
-        func configure(showError: Bool) {
-            lblWeightError?.isHidden = !showError
+    func configure(showError: Bool) {   // 🧩WEIGHT_OPTIONAL_CELL
+        lblWeightError.isHidden = !showError
+        if showError {
+            lblWeightError.text = "Invalid weight format. Use 1 or 1.5"
         }
+    }
     // ✅ Accepts: "1", "1.5", "0.5", "10.25"
     // ❌ Rejects: ".", "1.", ".5", "1..2", letters, negative
-    func getWeightValue() -> Double? {
-          guard let raw = txtWeight.text else { return nil }
-          let t = raw.trimmingCharacters(in: .whitespacesAndNewlines)
-          if t.isEmpty { return nil }
+    private func parseWeight() -> (value: Double?, invalidFormat: Bool) {   // 🧩WEIGHT_OPTIONAL_CELL
+        guard let raw = txtWeight.text else { return (nil, false) }
+        let t = raw.trimmingCharacters(in: .whitespacesAndNewlines)
 
-          if t == "." { return nil }
-          if t.hasSuffix(".") { return nil }
-          if t.hasPrefix(".") { return nil }
-          if t.filter({ $0 == "." }).count > 1 { return nil }
+        // ✅ Empty is allowed (optional)
+        if t.isEmpty { return (nil, false) }
 
-          let allowed = CharacterSet(charactersIn: "0123456789.")
-          if t.rangeOfCharacter(from: allowed.inverted) != nil { return nil }
+        // ❌ invalid formats
+        if t == "." { return (nil, true) }
+        if t.hasSuffix(".") { return (nil, true) }
+        if t.hasPrefix(".") { return (nil, true) }
+        if t.filter({ $0 == "." }).count > 1 { return (nil, true) }
 
-          guard let value = Double(t), value > 0 else { return nil }
-          return value
-      }
+        let allowed = CharacterSet(charactersIn: "0123456789.")
+        if t.rangeOfCharacter(from: allowed.inverted) != nil { return (nil, true) }
+
+        guard let value = Double(t), value > 0 else { return (nil, true) }
+        return (value, false)
+    }
+
+    
+    
+    
+    
+    
+    
+    
+    
+    
     @IBAction func weightTextChanged(_ sender: UITextField) {  // ⌨️
-        onWeightChanged?(getWeightValue())
+        let result = parseWeight()
+           onWeightChanged?(result.value, result.invalidFormat)
     }
 
  

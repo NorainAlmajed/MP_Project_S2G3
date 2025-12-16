@@ -83,6 +83,13 @@ class DonationDetailsViewController: UIViewController, UITableViewDelegate, UITa
             
             cell.setup(with: donation)
             
+            
+            
+            
+            
+            
+            
+            
             // Actions when cancel button clicked
             cell.onCancelTapped = { [weak self] in
                 guard let self = self, let donation = self.donation else { return }
@@ -104,28 +111,35 @@ class DonationDetailsViewController: UIViewController, UITableViewDelegate, UITa
                     switch user.userType {
                     case 1: // Admin
                         // Notify donor
-                        var donorNotifications = donation.donor.notifications ?? []
-                        donorNotifications.append(Notification(
-                            title: "Donation Canceled",
-                            description: "Donation #\(donation.donationID) has been canceled by the admin.",
-                            date: currentDate
-                        ))
-                        donation.donor.notifications = donorNotifications
+                        if donation.donor.enableNotification {
+                            donation.donor.notifications.append(Notification(
+                                title: "Donation Canceled",
+                                description: "Donation #\(donation.donationID) has been canceled by the admin.",
+                                date: currentDate
+                            ))
+                        }
+                        
                         
                         // Notify NGO
-                        donation.ngo.notifications.append(Notification(
-                            title: "Donation Canceled",
-                            description: "Donation #\(donation.donationID) has been canceled by the admin.",
-                            date: currentDate
-                        ))
+                        if donation.ngo.enableNotification {
+                            donation.ngo.notifications.append(Notification(
+                                title: "Donation Canceled",
+                                description: "Donation #\(donation.donationID) has been canceled by the admin.",
+                                date: currentDate
+                            ))
+                        }
+                        
                         
                     case 2: // Donor
                         // Notify only NGO
-                        donation.ngo.notifications.append(Notification(
-                            title: "Donation Canceled",
-                            description: "Donation #\(donation.donationID) has been canceled by \(user.username).",
-                            date: currentDate
-                        ))
+                        if donation.ngo.enableNotification {
+                            donation.ngo.notifications.append(Notification(
+                                title: "Donation Canceled",
+                                description: "Donation #\(donation.donationID) has been canceled by \(user.username).",
+                                date: currentDate
+                            ))
+                        }
+                        
                         
                     default:
                         break
@@ -208,32 +222,35 @@ class DonationDetailsViewController: UIViewController, UITableViewDelegate, UITa
                     switch user.userType {
                     case 1: // Admin
                         // Notify donor
-                        var donorNotifications = self.donation?.donor.notifications ?? []
-                        donorNotifications.append(Notification(
-                            title: "Donation Accepted",
-                            description: "Donation #\(self.donation?.donationID ?? 0) has been accepted by the admin.",
-                            date: currentDate
-                        ))
-                        self.donation?.donor.notifications = donorNotifications
+                        if donation.donor.enableNotification {
+                            donation.donor.notifications.append(Notification(
+                                title: "Donation Accepted",
+                                description: "Donation #\(self.donation?.donationID ?? 0) has been accepted by the admin.",
+                                date: currentDate
+                            ))
+                        }
+                        
                         
                         // Notify NGO
-                        var ngoNotifications = self.donation?.ngo.notifications ?? []
-                        ngoNotifications.append(Notification(
-                            title: "Donation Accepted",
-                            description: "Donation #\(self.donation?.donationID ?? 0) has been accepted by the admin.",
-                            date: currentDate
-                        ))
-                        self.donation?.ngo.notifications = ngoNotifications
+                        if donation.ngo.enableNotification {
+                            donation.ngo.notifications.append(Notification(
+                                title: "Donation Accepted",
+                                description: "Donation #\(self.donation?.donationID ?? 0) has been accepted by the admin.",
+                                date: currentDate
+                            ))
+                        }
+                        
                         
                     case 3: // NGO
                         // Notify only Donor
-                        var donorNotifications = self.donation?.donor.notifications ?? []
-                        donorNotifications.append(Notification(
-                            title: "Donation Accepted",
-                            description: "Donation #\(self.donation?.donationID ?? 0) has been accepted by \(self.donation?.ngo.ngoName ?? "the NGO").",
-                            date: currentDate
-                        ))
-                        self.donation?.donor.notifications = donorNotifications
+                        if donation.donor.enableNotification {
+                            donation.donor.notifications.append(Notification(
+                                title: "Donation Accepted",
+                                description: "Donation #\(self.donation?.donationID ?? 0) has been accepted by \(self.donation?.ngo.ngoName ?? "the NGO").",
+                                date: currentDate
+                            ))
+                        }
+                    
                         
                     default:
                         break
@@ -329,32 +346,35 @@ class DonationDetailsViewController: UIViewController, UITableViewDelegate, UITa
                     switch user.userType {
                     case 1: // Admin
                         // Notify donor
-                        var donorNotifications = self.donation?.donor.notifications ?? []
-                        donorNotifications.append(Notification(
-                            title: "Donation Marked as Collected",
-                            description: "Donation #\(self.donation?.donationID ?? 0) has been marked as collected by the admin.",
-                            date: currentDate
-                        ))
-                        self.donation?.donor.notifications = donorNotifications
+                        if donation.donor.enableNotification {
+                            donation.donor.notifications.append(Notification(
+                                title: "Donation Marked as Collected",
+                                description: "Donation #\(self.donation?.donationID ?? 0) has been marked as collected by the admin.",
+                                date: currentDate
+                            ))
+                        }
+                        
                         
                         // Notify NGO
-                        var ngoNotifications = self.donation?.ngo.notifications ?? []
-                        ngoNotifications.append(Notification(
-                            title: "Donation Marked as Collected",
-                            description: "Donation #\(self.donation?.donationID ?? 0) has been marked as collected by the admin.",
-                            date: currentDate
-                        ))
-                        self.donation?.ngo.notifications = ngoNotifications
+                        if donation.ngo.enableNotification {
+                            donation.ngo.notifications.append(Notification(
+                                title: "Donation Marked as Collected",
+                                description: "Donation #\(self.donation?.donationID ?? 0) has been marked as collected by the admin.",
+                                date: currentDate
+                            ))
+                        }
+                        
                         
                     case 3: // NGO
                         // Notify only Donor
-                        var donorNotifications = self.donation?.donor.notifications ?? []
-                        donorNotifications.append(Notification(
-                            title: "Donation Marked as Collected",
-                            description: "Donation #\(self.donation?.donationID ?? 0) has been marked as collected by \(self.donation?.ngo.ngoName ?? "the NGO").",
-                            date: currentDate
-                        ))
-                        self.donation?.donor.notifications = donorNotifications
+                        if donation.donor.enableNotification {
+                            donation.donor.notifications.append(Notification(
+                                title: "Donation Marked as Collected",
+                                description: "Donation #\(self.donation?.donationID ?? 0) has been marked as collected by \(self.donation?.ngo.ngoName ?? "the NGO").",
+                                date: currentDate
+                            ))
+                        }
+                        
                         
                     default:
                         break

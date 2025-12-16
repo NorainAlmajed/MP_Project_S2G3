@@ -22,11 +22,16 @@ class NotificationsViewController: UIViewController {
         return label
     }()
     
+    var sortedNotifications: [Notification] = []
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         
         // Set the screen title
         title = "Notifications"
+        
+        // Sort notifications by date (newest first)
+        sortedNotifications = user.notifications?.sorted { $0.date > $1.date } ?? []
         
         // Set the data source and delegate for the collection view
         notificationsCollectionView.dataSource = self
@@ -38,23 +43,21 @@ class NotificationsViewController: UIViewController {
         layout.minimumLineSpacing = 10              // space between cells
         notificationsCollectionView.collectionViewLayout = layout
         
-        
-        //Adding Clear Button
+        // Adding Clear Button
         navigationItem.title = "Notifications"
         navigationItem.rightBarButtonItem = UIBarButtonItem(
             title: "Clear",
             style: .plain,
             target: self,
             action: #selector(clearNotifications)
-            )
+        )
         
-        //---- Add grey line under navigation bar ----
+        // Add grey line under navigation bar
         navigationItem.rightBarButtonItem?.tintColor = .red
-        
         
         // Remove default shadow
         navigationController?.navigationBar.shadowImage = UIImage()
-
+        
         // Add small grey line under navigation bar
         let bottomLine = UIView()
         bottomLine.backgroundColor = UIColor.systemGray4
@@ -68,7 +71,7 @@ class NotificationsViewController: UIViewController {
             bottomLine.bottomAnchor.constraint(equalTo: navigationController!.navigationBar.bottomAnchor)
         ])
 
-        //Add the lable to the view
+        // Add the label to the view
         view.addSubview(noNotificationsLabel)
         noNotificationsLabel.translatesAutoresizingMaskIntoConstraints = false
         NSLayoutConstraint.activate([
@@ -77,11 +80,10 @@ class NotificationsViewController: UIViewController {
         ])
         
         updateNoNotificationsLabel()
-        
     }
     
     private func updateNoNotificationsLabel() {
-        let hasNotifications = !(user.notifications ?? []).isEmpty
+        let hasNotifications = !(sortedNotifications.isEmpty)
         
         noNotificationsLabel.isHidden = hasNotifications
         notificationsCollectionView.isHidden = !hasNotifications
@@ -90,9 +92,6 @@ class NotificationsViewController: UIViewController {
         navigationItem.rightBarButtonItem?.isEnabled = hasNotifications
     }
 
-
-    
-    
     @objc func clearNotifications() {
         // Step 1: Show confirmation alert
         let confirmAlert = UIAlertController(
@@ -119,11 +118,11 @@ class NotificationsViewController: UIViewController {
             let dismissAction = UIAlertAction(title: "Dismiss", style: .default) { _ in
                 // Clear notifications safely
                 user.notifications = []
+                self.sortedNotifications = [] // Clear the sorted notifications too
                 self.notificationsCollectionView.reloadData()
                 self.updateNoNotificationsLabel()
             }
 
-            
             successAlert.addAction(dismissAction)
             self.present(successAlert, animated: true, completion: nil)
         }
@@ -135,42 +134,24 @@ class NotificationsViewController: UIViewController {
         self.present(confirmAlert, animated: true, completion: nil)
     }
 
-    
-    //Hiding the tab bar controller
-    override func viewWillAppear(_ animated: Bool) {
-        super.viewWillAppear(animated)
-        self.tabBarController?.tabBar.isHidden = true
-    }
-
-    override func viewWillDisappear(_ animated: Bool) {
-        super.viewWillDisappear(animated)
-        self.tabBarController?.tabBar.isHidden = false
-    }
-
-    
 }
 
 extension NotificationsViewController: UICollectionViewDataSource {
     
     // Return number of items to display (based on notifications array)
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        return user.notifications?.count ?? 0
+        return sortedNotifications.count
     }
 
     // Configure each collection view cell
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         let cell = notificationsCollectionView.dequeueReusableCell(withReuseIdentifier: "NotificationsCollectionViewCell", for: indexPath) as! NotificationsCollectionViewCell
         
-        if let notification = user.notifications?[indexPath.row] {
-            cell.setup(with: notification)
-        }
-
+        let notification = sortedNotifications[indexPath.row]
+        cell.setup(with: notification)
         
         return cell
     }
-
-    
-    
 }
 
 extension NotificationsViewController: UICollectionViewDelegateFlowLayout {
@@ -178,6 +159,3 @@ extension NotificationsViewController: UICollectionViewDelegateFlowLayout {
         return CGSize(width: 376, height: 124)
     }
 }
-
-
-

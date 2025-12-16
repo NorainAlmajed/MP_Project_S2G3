@@ -67,32 +67,35 @@ class ZHRejectionReasonViewController: UIViewController, UITextViewDelegate {
         switch user.userType {
         case 1: // Admin
             // Notify donor
-            var donorNotifications = donation.donor.notifications ?? []
-            donorNotifications.append(Notification(
-                title: "Donation Rejected",
-                description: "Donation #\(donation.donationID) has been rejected by the admin.",
-                date: currentDate
-            ))
-            donation.donor.notifications = donorNotifications
+            if donation.donor.enableNotification {
+                donation.donor.notifications.append(Notification(
+                    title: "Donation Rejected",
+                    description: "Donation #\(donation.donationID) has been rejected by the admin.",
+                    date: currentDate
+                ))
+            }
+            
 
             // Notify NGO
-            var ngoNotifications = donation.ngo.notifications
-            ngoNotifications.append(Notification(
-                title: "Donation Rejected",
-                description: "Donation #\(donation.donationID) has been rejected by the admin.",
-                date: currentDate
-            ))
-            donation.ngo.notifications = ngoNotifications
+            if donation.ngo.enableNotification {
+                donation.ngo.notifications.append(Notification(
+                    title: "Donation Rejected",
+                    description: "Donation #\(donation.donationID) has been rejected by the admin.",
+                    date: currentDate
+                ))
+            }
+            
 
         case 3: // NGO
             // Notify only Donor
-            var donorNotifications = donation.donor.notifications ?? []
-            donorNotifications.append(Notification(
-                title: "Donation Rejected",
-                description: "Donation #\(donation.donationID) has been rejected by \(donation.ngo.ngoName).",
-                date: currentDate
-            ))
-            donation.donor.notifications = donorNotifications
+            if donation.donor.enableNotification {
+                donation.donor.notifications.append(Notification(
+                    title: "Donation Rejected",
+                    description: "Donation #\(donation.donationID) has been rejected by \(donation.ngo.ngoName).",
+                    date: currentDate
+                ))
+            }
+            
 
         default:
             break

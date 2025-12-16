@@ -26,7 +26,7 @@ struct Notification {
 struct User {
     var fullName: String
     var username: String
-    var notifications: [Notification]?
+    var notifications: [Notification] = []
     var donations: [Donation]?
     let userType: Int
     var enableNotification: Bool = true
@@ -34,21 +34,22 @@ struct User {
 
 var userNotifications: [Notification] = [
     
-    Notification(title: "NGO Awaiting Approval", description: "alnoor.association has just signed up and is awaiting your verification.", date: Date()),
-                 
-    Notification(title: "New Donor Regestration", description: "zahraa.hubail has just signed up to the system", date: Date()),
-                 
-    Notification(title: "New Donation Recieved", description: "Donor fatima.hassan has made a new donation to UCO Elderly Care.", date: Date()),
-    
-    Notification(title: "New Donation Recieved", description: "Donor fatima.hassan has made a new donation to UCO Elderly Care.", date: Date()),
-    
-    Notification(title: "New Donation Recieved", description: "Donor fatima.hassan has made a new donation to UCO Elderly Care.", date: Date()),
-    
-    Notification(title: "New Donation Recieved", description: "Donor fatima.hassan has made a new donation to UCO Elderly Care.", date: Date()),
-    
-    Notification(title: "New Donation Recieved", description: "Donor fatima.hassan has made a new donation to UCO Elderly Care.", date: Date()),
-    
-    Notification(title: "New Donation Recieved", description: "Donor fatima.hassan has made a new donation to UCO Elderly Care.", date: Date())
+    Notification(title: "NGO Awaiting Approval", description: "alnoor.association has just signed up and is awaiting your verification.", date: Date().addingTimeInterval(-300)),
+                     
+    Notification(title: "New Donor Regestration", description: "zahraa.hubail has just signed up to the system", date: Date().addingTimeInterval(-100)),
+                     
+    Notification(title: "New Donation Recieved", description: "Donor fatima.hassan has made a new donation to UCO Elderly Care.", date: Date().addingTimeInterval(-200)),
+        
+    Notification(title: "Donation Rejected", description: "Donation #1234 has been rejected by the admin.", date: Date()),
+        
+    Notification(title: "New Donation Accepted", description: "Donation #1234 has been accepted by the admin.", date: Date().addingTimeInterval(-400)),
+        
+    Notification(title: "New Donation Recieved", description: "Donor fatima.hassan has made a new donation to UCO Elderly Care.", date: Date().addingTimeInterval(-500)),
+        
+    Notification(title: "New Donation Recieved", description: "Donor fatima.hassan has made a new donation to UCO Elderly Care.", date: Date().addingTimeInterval(-600)),
+        
+    Notification(title: "New Donation Recieved", description: "Donor fatima.hassan has made a new donation to UCO Elderly Care.", date: Date().addingTimeInterval(-700))
+
 ]
 
 
@@ -85,6 +86,7 @@ struct NGO {
     var ngoName: String
     var logo: UIImage
     var notifications: [Notification] = []
+    var enableNotification: Bool = true
 }
 
 var ngo1 = NGO(ngoName: "Karrana Charity Society",

@@ -18,6 +18,11 @@ class NgoDetailsViewController: UIViewController {
     @IBOutlet weak var lblNgoName: UILabel!
     @IBOutlet weak var misssionView: UIView!
     
+    @IBOutlet weak var contactView: UIView!
+    
+    
+    
+    
     @IBOutlet weak var img_logo: UIImageView!
     @IBOutlet weak var lblContactNgo: UILabel!
     @IBOutlet weak var btnPhoneLogo: UIButton!
@@ -26,6 +31,9 @@ class NgoDetailsViewController: UIViewController {
     @IBOutlet weak var btnEmailLogo: UIButton!
     @IBOutlet weak var btnDonateToNgo: UIButton!
     @IBOutlet weak var btnChatWithUs: UIButton!
+    
+    
+
     
     
     override func viewDidLoad() {
@@ -55,6 +63,15 @@ class NgoDetailsViewController: UIViewController {
             misssionView.layer.borderWidth = 1
             misssionView.layer.borderColor = UIColor.systemGray4.cgColor
             misssionView.clipsToBounds = true
+        
+        // ✅📞 Contact View styling (same as Mission View)
+        contactView.backgroundColor = .white
+        contactView.layer.cornerRadius = 16
+        contactView.layer.borderWidth = 1
+        contactView.layer.borderColor=UIColor.systemGray4.cgColor
+        contactView.clipsToBounds = true
+
+        
 
         // Image View styling (same border)
             img_logo.backgroundColor = .white

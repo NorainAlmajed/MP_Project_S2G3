@@ -58,7 +58,7 @@ class RaghadDonatoinFormViewController: UIViewController,
         override func viewDidLoad() {
             super.viewDidLoad()
 
-           // donationFormTableview.separatorStyle = .none🔐🔐🔐🔐🔐🔐🔐🔐🔐🔐🔐🔐🔐🔐🔐🔐🔐🔐🔐🔐🔐🔐🔐🔐🔐🔐🔐🔐🔐🔐🔐 remove the commint to remove the lines in the table view
+            //donationFormTableview.separatorStyle = .none🔐🔐🔐🔐🔐🔐🔐🔐🔐🔐🔐🔐🔐🔐🔐🔐🔐🔐🔐🔐🔐🔐🔐🔐🔐🔐🔐🔐🔐🔐🔐 remove the comment to remove the lines in the table view
 
             print("🔐 Current user:", user.username)
             print("👤 Is Admin?", user.isAdmin)

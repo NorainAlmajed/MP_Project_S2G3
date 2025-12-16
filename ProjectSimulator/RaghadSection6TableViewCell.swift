@@ -25,15 +25,15 @@ class RaghadSection6TableViewCell: UITableViewCell {
     
     override func awakeFromNib() {
         super.awakeFromNib()
-        
+
         formatter.dateFormat = "dd/MM/yyyy"
-        
         setupDatePicker()
         setupToolbar()
-        
-        // ✅🟡 Do NOT force set text here every time.
-        // VC will call configure(date:)
+
+        txtExpiryDate.addTarget(self, action: #selector(expiryEditingBegan), for: .editingDidBegin)
+        // ✅🟢 ADD
     }
+
     
     // ✅🟢 VC calls this to show the correct date every reload
     func configure(date: Date?) {
@@ -104,4 +104,27 @@ class RaghadSection6TableViewCell: UITableViewCell {
         onDateSelected?(d)             // ✅🔥 final save (safe)
         txtExpiryDate.resignFirstResponder()
     }
+    
+    @objc private func expiryEditingBegan() {
+        // ✅ If we already have a selected date, show it
+        if let d = selectedDate {
+            datePicker.date = d
+            txtExpiryDate.text = formatter.string(from: d)
+            userStartedChanging = true
+            return
+           
+        }
+
+        // ✅ Otherwise default to tomorrow (and keep picker synced)
+        let tomorrow = Calendar.current.date(byAdding: .day, value: 1, to: Date())!
+        selectedDate = tomorrow
+        datePicker.date = tomorrow
+        txtExpiryDate.text = formatter.string(from: tomorrow)
+
+        onDateSelected?(tomorrow) // ✅ save into VC too
+    }
+
+    
+    
+    
 }

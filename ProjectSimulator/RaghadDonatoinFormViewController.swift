@@ -38,11 +38,8 @@ class RaghadDonatoinFormViewController: UIViewController,
     // ✅🍔 NEW
     private var selectedFoodCategory: String? = nil
     private var isFoodDropdownOpen: Bool = false
-//for dropdownlist validation
+    //for dropdownlist validation
     private var shouldShowFoodCategoryError = false   // 🍔❌ NEW
-
-
-    
     
     
     @IBOutlet weak var donationFormTableview: UITableView!
@@ -51,42 +48,38 @@ class RaghadDonatoinFormViewController: UIViewController,
     // ✅ NEW: store selected donor name (to show on Section2 button)
     private var selectedDonorName: String?
     
-   
-
+    override func viewDidLoad() {
+        super.viewDidLoad()
+        
+        //donationFormTableview.separatorStyle = .none🔐🔐🔐🔐🔐🔐🔐🔐🔐🔐🔐🔐🔐🔐🔐🔐🔐🔐🔐🔐🔐🔐🔐🔐🔐🔐🔐🔐🔐🔐🔐 remove the comment to remove the lines in the table view
+        
+        print("🔐 Current user:", user.username)
+        print("👤 Is Admin?", user.isAdmin)
+        
+        donationFormTableview.delegate = self
+        donationFormTableview.dataSource = self
+        
+        self.title = "Donation Form"
+        navigationController?.navigationBar.prefersLargeTitles = false
+        
+        let tap = UITapGestureRecognizer(target: self, action: #selector(dismissKeyboard))
+        tap.cancelsTouchesInView = false
+        view.addGestureRecognizer(tap)
+        
+        donationFormTableview.keyboardDismissMode = .onDrag
+        addDoneButtonOnKeyboard()
+        
+        
+        // for the dropdown list this the code  15.12.2025
+        
+        // ✅🍔 NEW (safe)
+        //chat says remove this donationFormTableview.rowHeight = UITableView.automaticDimension
+        donationFormTableview.estimatedRowHeight = 200
+        donationFormTableview.rowHeight = UITableView.automaticDimension
+        
+        
+    }
     
-      
-        override func viewDidLoad() {
-            super.viewDidLoad()
-
-            //donationFormTableview.separatorStyle = .none🔐🔐🔐🔐🔐🔐🔐🔐🔐🔐🔐🔐🔐🔐🔐🔐🔐🔐🔐🔐🔐🔐🔐🔐🔐🔐🔐🔐🔐🔐🔐 remove the comment to remove the lines in the table view
-
-            print("🔐 Current user:", user.username)
-            print("👤 Is Admin?", user.isAdmin)
-
-            donationFormTableview.delegate = self
-            donationFormTableview.dataSource = self
-
-            self.title = "Donation Form"
-            navigationController?.navigationBar.prefersLargeTitles = false
-
-            let tap = UITapGestureRecognizer(target: self, action: #selector(dismissKeyboard))
-            tap.cancelsTouchesInView = false
-            view.addGestureRecognizer(tap)
-
-            donationFormTableview.keyboardDismissMode = .onDrag
-            addDoneButtonOnKeyboard()
-            
-            
-            // for the dropdown list this the code  15.12.2025
-            
-            // ✅🍔 NEW (safe)
-            //chat says remove this donationFormTableview.rowHeight = UITableView.automaticDimension
-            donationFormTableview.estimatedRowHeight = 200
-            donationFormTableview.rowHeight = UITableView.automaticDimension
-
-            
-        }
-
     
     
     
@@ -123,17 +116,6 @@ class RaghadDonatoinFormViewController: UIViewController,
         view.endEditing(true)
     }
     
-    
-    
-    
-    //    func numberOfSections(in donationFormTableview: UITableView) -> Int {
-    //        return 8   // or any number you want
-    //    }
-    
-//    func numberOfSections(in tableView: UITableView) -> Int {
-//        return 8
-//    }//he told me to put this insatde of thr one in the tpop
-//    
     func numberOfSections(in tableView: UITableView) -> Int {
         return isAdminUser ? 8 : 7   // ✅ remove Choose Donor section if NOT admin
     }
@@ -145,20 +127,15 @@ class RaghadDonatoinFormViewController: UIViewController,
         return 1
     }
     
-    
-    
-    
-    
-    
     func tableView(_ tableView: UITableView,
                    cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         
         
         let section = indexPath.section
-
+        
         // ✅ If NOT admin, skip donor section by shifting sections after 0
         let adjustedSection = (!isAdminUser && section >= 1) ? section + 1 : section
-
+        
         // ✅ Section 1 only
         if adjustedSection == 0 {
             guard let cell = tableView.dequeueReusableCell(withIdentifier: "Section1Cell",
@@ -199,114 +176,7 @@ class RaghadDonatoinFormViewController: UIViewController,
             return cell
         }
         
-//        // 🍔 Section 3 (Food Category)
-//        if adjustedSection == 2 {
-//            let cell = tableView.dequeueReusableCell(
-//                withIdentifier: "Section3Cell",
-//                for: indexPath
-//            )
-//            cell.selectionStyle = .none
-//            return cell
-//        }
-//
-//        
-//        
-//        if adjustedSection == 3 {
-//            guard let cell = tableView.dequeueReusableCell(
-//                withIdentifier: "Section4Cell",
-//                for: indexPath
-//            ) as? RaghadSection4TableViewCell else {
-//                fatalError("❌ Section4Cell not set correctly")
-//            }
-//
-//            cell.selectionStyle = .none
-//            cell.configure(showError: shouldShowQuantityError)
-//
-//            // ✅ keep quantity saved even if cell disappears
-//            cell.onQuantityChanged = { [weak self] value in
-//                self?.quantityValue = value
-//                if value != nil && (value ?? 0) > 0 {
-//                    self?.shouldShowQuantityError = false
-//                }
-//            }
-//
-//            return cell
-//        } i made comment for them 15.12.2025 and i replcae it with the code under it
         
-        
-        // 🍔 Section 3 (Food Category)
-//        if adjustedSection == 2 {
-//            guard let cell = tableView.dequeueReusableCell(
-//                withIdentifier: "Section3Cell",
-//                for: indexPath
-//            ) as? RaghadSection3TableViewCell else {
-//                fatalError("❌ Section3Cell not set correctly")
-//            }
-//
-//            cell.selectionStyle = .none
-//
-//            // ✅🍔 show saved selection + open/close state
-//            cell.configure(
-//                selected: selectedFoodCategory,
-//                isOpen: isFoodDropdownOpen,
-//                showError: shouldShowFoodCategoryError   // 🍔❌ NEW
-//            )
-//
-//            // ✅🍔 when user selects a category
-//            cell.onCategoryChanged = { [weak self] category in
-//                guard let self = self else { return }
-//                self.selectedFoodCategory = category
-//                self.isFoodDropdownOpen = false
-//                self.shouldShowFoodCategoryError = false   // 🟢✅
-//
-//                self.donationFormTableview.beginUpdates()
-//                self.donationFormTableview.endUpdates()
-//            }
-//
-//            // ✅🍔 when user taps button open/close
-//            cell.onToggleDropdown = { [weak self] open in
-//                guard let self = self else { return }
-//                self.isFoodDropdownOpen = open
-//
-//                self.donationFormTableview.beginUpdates()
-//                self.donationFormTableview.endUpdates()
-//
-//                // ✅🍔 ensures dropdown is visible (pushes content up if near bottom)
-//                let ip = IndexPath(row: 0, section: indexPath.section)
-//                self.donationFormTableview.scrollToRow(at: ip, at: .none, animated: true)
-//            }
-//            
-//            
-//            
-//            cell.onToggleDropdown = { [weak self] isOpen in
-//                guard let self = self else { return }
-//
-//                self.isFoodDropdownOpen = isOpen
-//
-//                // ✅ reload ONLY the food category row (no animation)
-//                UIView.performWithoutAnimation {
-//                    self.donationFormTableview.reloadRows(at: [indexPath], with: .none)
-//                }
-//            }
-//
-//            cell.onCategoryChanged = { [weak self] selected in
-//                guard let self = self else { return }
-//
-//                self.selectedFoodCategory = selected
-//
-//                // ✅ close dropdown in VC too (THIS prevents white spaces)
-//                self.isFoodDropdownOpen = false
-//
-//                UIView.performWithoutAnimation {
-//                    self.donationFormTableview.reloadRows(at: [indexPath], with: .none)
-//                }
-//            }
-//
-//
-//            return cell
-//        }
-
-
         
         
         
@@ -318,47 +188,47 @@ class RaghadDonatoinFormViewController: UIViewController,
             ) as? RaghadSection3TableViewCell else {
                 fatalError("❌ Section3Cell not set correctly")
             }
-
+            
             cell.selectionStyle = .none
-
+            
             // ✅ show saved selection + open/close state + error
             cell.configure(
                 selected: selectedFoodCategory,
                 isOpen: isFoodDropdownOpen,
                 showError: shouldShowFoodCategoryError
             )
-
+            
             // ✅ when user taps open/close
             cell.onToggleDropdown = { [weak self] open in
                 guard let self = self else { return }
                 self.isFoodDropdownOpen = open
-
+                
                 UIView.performWithoutAnimation {
                     self.donationFormTableview.reloadRows(at: [indexPath], with: .none)
                 }
             }
-
+            
             // ✅ when user selects category
             cell.onCategoryChanged = { [weak self] category in
                 guard let self = self else { return }
-
+                
                 self.selectedFoodCategory = category
                 self.isFoodDropdownOpen = false
                 self.shouldShowFoodCategoryError = false   // ✅ IMPORTANT FIX ✅
-
+                
                 UIView.performWithoutAnimation {
                     self.donationFormTableview.reloadRows(at: [indexPath], with: .none)
                 }
             }
-
+            
             return cell
         }
-
         
         
         
         
-
+        
+        
         
         
         // ⚖️ Section 5 (Weight) = index 4
@@ -369,29 +239,25 @@ class RaghadDonatoinFormViewController: UIViewController,
             ) as? RaghadSection5TableViewCell else {
                 fatalError("❌ Section5Cell not set correctly")
             }
-
+            
             cell.selectionStyle = .none
-
+            
             // 🔴 show / hide error
             cell.configure(showError: shouldShowWeightError)
-
+            
             // 🔁 receive weight from cell
             cell.onWeightChanged = { [weak self] value in
                 self?.weightValue = value
-
+                
                 // 🟢 clear error when valid
                 if value != nil {
                     self?.shouldShowWeightError = false
                 }
             }
-
+            
             return cell
         }
-
-        
-        
-//     
-        
+  
         
         // 📅✅ Section 6 (Expiry Date) = index 5
         if adjustedSection == 5 {
@@ -401,20 +267,47 @@ class RaghadDonatoinFormViewController: UIViewController,
             ) as? RaghadSection6TableViewCell else {
                 fatalError("❌ Section6Cell not set correctly")
             }
-
+            
             cell.selectionStyle = .none
-
-            // ✅🟢 Always show the saved date (or tomorrow if nil)
+            
             cell.configure(date: selectedExpiryDate)
-
-            // ✅🟢 Save the selected date ONLY (no reload here!)
+            
             cell.onDateSelected = { [weak self] date in
-                self?.selectedExpiryDate = date   // 📅 save date safely
+                guard let self = self else { return }
+                
+                self.selectedExpiryDate = date   // ✅ save in VC
+                
+                // ✅ IMPORTANT: refresh ONLY expiry section so it doesn't jump/reset
+                self.donationFormTableview.reloadSections(
+                    IndexSet(integer: indexPath.section),
+                    with: .none
+                )
             }
-
+            return cell 
+        }
+        
+        
+        
+        
+        // ✅🟣 Section 8 = Proceed button
+        if adjustedSection == 7 {
+            guard let cell = tableView.dequeueReusableCell(
+                withIdentifier: "Section8Cell",
+                for: indexPath
+            ) as? RaghadSection8TableViewCell else {
+                fatalError("❌ Section8Cell not set correctly")
+            }
+            
+            cell.selectionStyle = .none
+            
+            // ✅🟢 When user taps Proceed → validate first
+            cell.onProceedTapped = { [weak self] in
+                guard let self = self else { return }
+                self.validateAndProceed()   // ✅🔒 only navigate if valid
+            }
+            
             return cell
         }
-
         
         
         
@@ -425,19 +318,8 @@ class RaghadDonatoinFormViewController: UIViewController,
         )
         cell.selectionStyle = .none
         return cell
-
+        
     }
-    
-    
-    
-    
-    
-    
-   
-    
-    
-    
-    
     
     
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
@@ -450,38 +332,8 @@ class RaghadDonatoinFormViewController: UIViewController,
             return 237   // Section1Cell
         case 1:
             return 108   // Section2Cell
-        //case 2:
-           //return UITableView.automaticDimension  //233  //Section3Cell // for the dropdown list this the code 15.12.2025
-//            let base: CGFloat = 44 /*button*/ + 8 /*space*/ + 20 /*label*/ + 12 + 12 /*top+bottom margins*/
-//            let errorHeight: CGFloat = shouldShowFoodCategoryError ? 18 : 0   // 🔴✅ NEW
-//            return base + errorHeight + dropdown
-            
-       // case 2:
-//            let base: CGFloat = 44 /*button*/ + 8 /*space*/ + 20 /*label*/ + 12 + 12 /*top+bottom margins*/
-//
-//            let dropdownHeight: CGFloat = isFoodDropdownOpen ? (56 * 7 + 8) : 0   // 56=rowHeight, 7=items
-//            let errorHeight: CGFloat = shouldShowFoodCategoryError ? 18 : 0       // 🔴 error label height
-//
-//            return base + dropdownHeight + errorHeight
-
-       // case 2:
-//            let labelHeight: CGFloat = 22          // 🏷️ Food Category label
-//            let spaceBetween: CGFloat = 8          // ↕️ space between label and button
-//            let buttonHeight: CGFloat = 44         // 🔘 choose food type button (fixed)
-//            let topBottom: CGFloat = 24            // 📦 padding (12 top + 12 bottom)
-//
-//            let base = labelHeight + spaceBetween + buttonHeight + topBottom
-//
-//            let dropdownHeight: CGFloat = isFoodDropdownOpen ? (56 * 7 + 8) : 0
-//            let errorHeight: CGFloat = shouldShowFoodCategoryError ? 18 : 0
-//
-//            return base + dropdownHeight + errorHeight
-            
         case 2:
             return UITableView.automaticDimension
-
-            
-            
         case 3:
             return 109  // Section4Cell
         case 4:
@@ -496,19 +348,6 @@ class RaghadDonatoinFormViewController: UIViewController,
             return 62
         }
     }
-    
-    // ✅ NEW: open donor list page (present as modal with nav bar)
-    //    @objc private func openDonorList() {
-    //        let sb = UIStoryboard(name: "Raghad1", bundle: nil)
-    //        let vc = sb.instantiateViewController(
-    //            withIdentifier: "RaghadDonorListViewController"
-    //        ) as! RaghadDonorListViewController
-    //
-    //        vc.delegate = self
-    //        let nav = UINavigationController(rootViewController: vc)
-    //        present(nav, animated: true)
-    //    }
-    
     
     
     
@@ -536,14 +375,14 @@ class RaghadDonatoinFormViewController: UIViewController,
     func didSelectDonor(name: String) {
         selectedDonorName = name
         shouldShowDonorError = false
-
+        
         if isAdminUser {
             donationFormTableview.reloadSections(IndexSet(integer: 1), with: .none) // ✅ donor section exists
         } else {
             donationFormTableview.reloadData() // ✅ safe fallback
         }
     }
-
+    
     
     
     //  NEW: resize image (THIS is what tutors like)
@@ -565,51 +404,62 @@ class RaghadDonatoinFormViewController: UIViewController,
         
         return resized ?? image
     }
-    
-    
-    
-    
-    
-    
-    
-    
-    // ✅ Delegate method from Section 1 cell
+ 
     func section1DidTapUploadImage(_ cell: RaghadSection1TableViewCell) {
         
-        let alert = UIAlertController(title: "Upload Image",
-                                      message: "Choose a source",
-                                      preferredStyle: .actionSheet)
+        let alert = UIAlertController(
+            title: "Upload Image",
+            message: nil,
+            preferredStyle: .actionSheet
+        )
         
-        // ✅ Camera option (only shows if available)
-        if UIImagePickerController.isSourceTypeAvailable(.camera) {
-            alert.addAction(UIAlertAction(title: "Take Photo (Camera)", style: .default) { [weak self] _ in
-                self?.openImagePicker(sourceType: .camera)
-            })
-        }
+        // 📷 Take Photo (Camera)
+        alert.addAction(UIAlertAction(title: "Take Photo", style: .default) { _ in
+            self.openCamera()
+        })
         
-        // ✅ Photo Library option
-        alert.addAction(UIAlertAction(title: "Choose from Library", style: .default) { [weak self] _ in
-            self?.openImagePicker(sourceType: .photoLibrary)
+        // 🖼 Choose from Library
+        alert.addAction(UIAlertAction(title: "Choose from Library", style: .default) { _ in
+            self.openPhotoLibrary()
         })
         
         alert.addAction(UIAlertAction(title: "Cancel", style: .cancel))
         
-        // ✅ Prevents iPad crash for actionSheet
-        if let popover = alert.popoverPresentationController {
-            popover.sourceView = cell
-            popover.sourceRect = cell.bounds
+        // iPad safety
+        if let pop = alert.popoverPresentationController {
+            pop.sourceView = cell
+            pop.sourceRect = cell.bounds
         }
         
         present(alert, animated: true)
     }
     
+    private func openCamera() {
+        if UIImagePickerController.isSourceTypeAvailable(.camera) {
+            openImagePicker(sourceType: .camera)        // 📷 real device
+        } else {
+            openImagePicker(sourceType: .photoLibrary)  // 🧪 simulator fallback
+        }
+    }
+    
+    
+    
+    private func openPhotoLibrary() {
+        openImagePicker(sourceType: .photoLibrary)
+    }
+    
+    
+    
+    
+    
     private func openImagePicker(sourceType: UIImagePickerController.SourceType) {
         let picker = UIImagePickerController()
         picker.delegate = self
         picker.sourceType = sourceType
-        picker.allowsEditing = true // user can crop
+        picker.allowsEditing = true   // 🔍 zoom / crop (THIS is what you want)
         present(picker, animated: true)
     }
+    
     
     // ✅ User picked an image
     func imagePickerController(_ picker: UIImagePickerController,
@@ -647,34 +497,26 @@ class RaghadDonatoinFormViewController: UIViewController,
     
     
     // ✅ PROCEED BUTTON VALIDATION (ADD THIS IN DONATION FORM VC)
-//    @IBAction func proceedTapped(_ sender: UIButton) { caht say you can delete this but i will run first to check ther eis no errors
-//        
-//        // ❌ Admin did NOT choose donor
-//        if selectedDonorName == nil {
-//            shouldShowDonorError = true
-//            
-//            // refresh only Section 2 (Choose Donor cell)
-//            donationFormTableview.reloadSections(
-//                IndexSet(integer: 1),
-//                with: .none
-//            )
-//            return
-//        }
-//        
-//        // ✅ Donor selected → continue normally
-//        shouldShowDonorError = false
-//        
-//        // TODO: navigate to Schedule Pickup page
-//    }
-//    
-    
-    
-    
-    
-    
-    
-    
-    
+    //    @IBAction func proceedTapped(_ sender: UIButton) { caht say you can delete this but i will run first to check ther eis no errors
+    //
+    //        // ❌ Admin did NOT choose donor
+    //        if selectedDonorName == nil {
+    //            shouldShowDonorError = true
+    //
+    //            // refresh only Section 2 (Choose Donor cell)
+    //            donationFormTableview.reloadSections(
+    //                IndexSet(integer: 1),
+    //                with: .none
+    //            )
+    //            return
+    //        }
+    //
+    //        // ✅ Donor selected → continue normally
+    //        shouldShowDonorError = false
+    //
+    //        // TODO: navigate to Schedule Pickup page
+    //    }
+    //
     
     
     
@@ -699,18 +541,18 @@ class RaghadDonatoinFormViewController: UIViewController,
         
         let missingImage = (selectedDonationImage == nil)      // 📸❌
         let missingDonor = isAdminUser ? (selectedDonorName == nil) : false
-       // 👤❌
+        // 👤❌
         let invalidWeight = (weightValue == nil)   // ⚖️❌
         shouldShowWeightError = invalidWeight
-
+        
         
         let quantity = quantityValue
         let invalidQuantity = (quantity == nil || (quantity ?? 0) <= 0)
         
         let missingFoodCategory = (selectedFoodCategory == nil)   // 🍔❌ NEW
         shouldShowFoodCategoryError = missingFoodCategory         // 🍔❌ NEW
-
-
+        
+        
         
         // 🔴 set flags
         shouldShowImageError = missingImage
@@ -719,30 +561,30 @@ class RaghadDonatoinFormViewController: UIViewController,
         shouldShowWeightError = invalidWeight
         
         // 🔄 reload affected sections
-//        donationFormTableview.reloadSections(
-//            IndexSet([0, 1, 3, 4,5]),
-//            with: .none)
+        //        donationFormTableview.reloadSections(
+        //            IndexSet([0, 1, 3, 4,5]),
+        //            with: .none)
         view.endEditing(true)
-
+        
         let sectionsToReload: [Int]
         if isAdminUser {
             sectionsToReload = [0, 1, 2, 3, 4, 5]
         } else {
             sectionsToReload = [0, 1, 2, 3, 4]
         }
-
+        
         donationFormTableview.reloadSections(IndexSet(sectionsToReload), with: .none)
-
+        
         
         
         if !missingImage &&
-           !missingDonor &&
-           !invalidQuantity &&
-           !invalidWeight &&
-           !missingFoodCategory {
-
+            !missingDonor &&
+            !invalidQuantity &&
+            !invalidWeight &&
+            !missingFoodCategory {
+            
             print("✅ Form valid — navigate to Schedule Pickup")
-
+            
             // TEMP TEST navigation (replace later)
             let alert = UIAlertController(
                 title: "Success",
@@ -751,9 +593,12 @@ class RaghadDonatoinFormViewController: UIViewController,
             )
             alert.addAction(UIAlertAction(title: "OK", style: .default))
             present(alert, animated: true)
-
+            
             return
         }
+        
+        
+        
         
         
         
@@ -764,24 +609,25 @@ class RaghadDonatoinFormViewController: UIViewController,
     @IBAction func proceedTapped(_ sender: UIButton) {
         handleProceedTapped_TEST_ONLY()
     }
-
+    
+    
+    private func validateAndProceed() {
+        let missingImage = (selectedDonationImage == nil)
+        let missingFoodCategory = (selectedFoodCategory == nil)
+        let invalidWeight = (weightValue == nil)
+        let missingDonor = user.isAdmin && (selectedDonorName == nil)
+        
+        if missingImage || missingFoodCategory || invalidWeight || missingDonor {
+            //    donationFormTableview.reloadData()❌❌❌❌❌❌❌❌❌
+            return
+        }
+        
+        performSegue(withIdentifier: "showSchedulePickup", sender: self)
+    }
 }
 
-    // TEST ONLY navigation — this screen is NOT implemented by me.
-// It exists only to verify that the Proceed button is connected
-// and that validation logic works correctly.
+
 
     
     
-    
-    /*
-    // MARK: - Navigation
-
-    // In a storyboard-based application, you will often want to do a little preparation before navigation
-    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-        // Get the new view controller using segue.destination.
-        // Pass the selected object to the new view controller.
-    
-    }*/
-
 

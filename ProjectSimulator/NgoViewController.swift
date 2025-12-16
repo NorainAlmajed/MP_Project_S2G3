@@ -7,9 +7,19 @@
 
 import UIKit
 
-class NgoViewController: UIViewController, UITableViewDelegate, UITableViewDataSource {
+class NgoViewController: UIViewController, UITableViewDelegate, UITableViewDataSource, UISearchResultsUpdating
+{
+   
     
+
+
     @IBOutlet weak var tableView: UITableView!
+    
+    
+    private let searchController = UISearchController(searchResultsController: nil)
+    private var shownNgos: [NGO] = []
+    private var selectedCategory: String? = nil
+    
     // ✅🆕 1) Empty state label (when there are no NGOs)
     private let noNgosLabel: UILabel = {
         let label = UILabel()
@@ -31,6 +41,7 @@ class NgoViewController: UIViewController, UITableViewDelegate, UITableViewDataS
         
         tableView.delegate = self
         tableView.dataSource = self
+        title = "Browse NGOs"
 
         
         // ✅🆕 3) Add empty label to the screen
@@ -46,7 +57,7 @@ class NgoViewController: UIViewController, UITableViewDelegate, UITableViewDataS
 
         
 
-            title = "Browse NGOs"
+          
 
             // إزالة الخط الافتراضي (إن وُجد)
             navigationController?.navigationBar.shadowImage = UIImage()
@@ -75,29 +86,57 @@ class NgoViewController: UIViewController, UITableViewDelegate, UITableViewDataS
                navigationItem.backBarButtonItem = UIBarButtonItem(title: "", style: .plain, target: nil, action: nil)
            }
 
-           title = "Browse NGOs"
+        
+    
+        
+        shownNgos = arrNgo
+        // ✅ iOS standard search in nav bar
+           searchController.searchResultsUpdater = self
+           searchController.obscuresBackgroundDuringPresentation = false
+           searchController.searchBar.placeholder = "Search NGOs"
+           navigationItem.searchController = searchController
+           navigationItem.hidesSearchBarWhenScrolling = false
+           definesPresentationContext = true
+
+           // ✅ iOS standard filter button on the right
+           navigationItem.rightBarButtonItem = UIBarButtonItem(
+               image: UIImage(systemName: "slider.horizontal.3"),
+               style: .plain,
+               target: self,
+               action: #selector(filterTapped)
+           )
+        
+        
+        
+        
+        
+        
+        
+        
+        
     }
     
     
     // ✅🆕 5) Refresh the table + empty label whenever the page appears
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
-        tableView.reloadData()
-        updateNoNgosLabel()
+        applySearchAndFilter()
+    }
+    
+    
+    func updateSearchResults(for searchController: UISearchController) {
+        applySearchAndFilter()
     }
     
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return arrNgo.count //to know thet the number of the cells is the same number of the items in the array 'arrNgo'
+        return shownNgos.count
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: "NgoCell") as! NgoTableTableViewCell
-        
-        let data = arrNgo[indexPath.row]
-        
-        cell.setupCell(photo: data.photo, name: data.name, category: data.category)//setupCell form NgoTableViewController
-
+        let data = shownNgos[indexPath.row]
+        cell.setupCell(photo: data.photo, name: data.name, category: data.category)
         return cell
     }
     
@@ -124,16 +163,19 @@ class NgoViewController: UIViewController, UITableViewDelegate, UITableViewDataS
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
         if segue.identifier == "showNgoDetails" {
             let vc = segue.destination as! NgoDetailsViewController
-
             if let indexPath = tableView.indexPathForSelectedRow {
-                vc.selectedNgo = arrNgo[indexPath.row]
+                vc.selectedNgo = shownNgos[indexPath.row]   // ✅ not arrNgo
             }
         }
-         }
+    }
 
     // ✅🆕 2) Show label if the list is empty
     private func updateNoNgosLabel() {
-        if arrNgo.isEmpty {
+        let isSearching = !(searchController.searchBar.text ?? "").isEmpty
+            || selectedCategory != nil
+
+        if shownNgos.isEmpty {
+            noNgosLabel.text = isSearching ? "No results found" : "No NGOs available"
             noNgosLabel.isHidden = false
             tableView.isHidden = true
         } else {
@@ -141,6 +183,45 @@ class NgoViewController: UIViewController, UITableViewDelegate, UITableViewDataS
             tableView.isHidden = false
         }
     }
+
+    
+    
+    //filter and search
+    @objc private func filterTapped() {
+   
+    }
+    
+    
+    
+    
+    
+    private func applySearchAndFilter() {
+        var result = arrNgo
+
+        // category filter
+        if let cat = selectedCategory {
+            result = result.filter { $0.category == cat }
+        }
+
+        // search by name
+        let text = (searchController.searchBar.text ?? "")
+            .trimmingCharacters(in: .whitespacesAndNewlines)
+            .lowercased()
+
+        if !text.isEmpty {
+            result = result.filter { ngo in
+                let nameMatch = ngo.name.lowercased().contains(text)
+                let categoryMatch = ngo.category.lowercased().contains(text)
+                return nameMatch || categoryMatch   // ✅ match either
+            }
+        }
+
+        shownNgos = result
+        tableView.reloadData()
+        updateNoNgosLabel()
+    }
+
+    
 
     
     

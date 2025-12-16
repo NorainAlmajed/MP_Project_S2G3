@@ -85,6 +85,7 @@ class RaghadSection1TableViewCell: UITableViewCell {
         lblImageError.isHidden = !showError
     }
 
+    
 
 
 }

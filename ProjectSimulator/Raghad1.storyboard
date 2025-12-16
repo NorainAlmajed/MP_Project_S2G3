@@ -356,7 +356,7 @@
                                                     </connections>
                                                 </button>
                                                 <label hidden="YES" opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="please choose a donor" textAlignment="natural" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="hwi-HP-eYp">
-                                                    <rect key="frame" x="130" y="72" width="133" height="21"/>
+                                                    <rect key="frame" x="45" y="72" width="133" height="21"/>
                                                     <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                                     <fontDescription key="fontDescription" type="system" pointSize="12"/>
                                                     <color key="textColor" red="1" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
@@ -468,7 +468,7 @@
                                                     </connections>
                                                 </textField>
                                                 <label hidden="YES" opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="please enter a valid quantity" textAlignment="natural" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="4p1-zq-BOI">
-                                                    <rect key="frame" x="114" y="70" width="165" height="21"/>
+                                                    <rect key="frame" x="46" y="70" width="165" height="21"/>
                                                     <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                                     <fontDescription key="fontDescription" type="system" pointSize="12"/>
                                                     <color key="textColor" red="1" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
@@ -510,11 +510,11 @@
                                                     <textInputTraits key="textInputTraits" keyboardType="decimalPad" returnKeyType="done"/>
                                                     <connections>
                                                         <action selector="txtWeight:" destination="Qo6-Z8-09B" eventType="editingDidEnd" id="gfT-c5-0Zg"/>
-                                                        <action selector="weightTextChanged:" destination="xO4-9F-Ge4" eventType="editingChanged" id="rSM-fk-e1R"/>
+                                                        <action selector="weightTextChanged:" destination="xO4-9F-Ge4" eventType="editingChanged" id="Obd-xN-cHn"/>
                                                     </connections>
                                                 </textField>
                                                 <label hidden="YES" opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="Please enter a valid weight (e.g., 1 or 1.5)" textAlignment="natural" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="bJN-Cc-bYc">
-                                                    <rect key="frame" x="61" y="67" width="246" height="21"/>
+                                                    <rect key="frame" x="46" y="67" width="246" height="21"/>
                                                     <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                                     <fontDescription key="fontDescription" type="system" pointSize="12"/>
                                                     <color key="textColor" red="1" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
@@ -631,6 +631,7 @@
                     <navigationItem key="navigationItem" id="fRa-Z8-yAY"/>
                     <connections>
                         <outlet property="donationFormTableview" destination="Tyd-Hf-QgX" id="9a3-py-KkN"/>
+                        <segue destination="ZbG-tx-p0M" kind="push" identifier="showSchedulePickup" id="bvL-rm-p9j"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="EV8-Rg-CWn" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
@@ -747,10 +748,11 @@
                         <viewLayoutGuide key="safeArea" id="P1A-9a-eDy"/>
                         <color key="backgroundColor" systemColor="systemBackgroundColor"/>
                     </view>
+                    <navigationItem key="navigationItem" id="Zgy-lM-1d7"/>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="s4l-aV-CeG" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="4700" y="761"/>
+            <point key="canvasLocation" x="3468" y="667"/>
         </scene>
     </scenes>
     <resources>

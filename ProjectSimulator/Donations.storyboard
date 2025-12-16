@@ -663,6 +663,7 @@
                                                             </subviews>
                                                             <color key="backgroundColor" systemColor="systemBackgroundColor"/>
                                                             <constraints>
+                                                                <constraint firstItem="ywW-eh-OBa" firstAttribute="width" secondItem="w41-RH-ItF" secondAttribute="width" multiplier="0.936508" id="46O-Hr-Ldx"/>
                                                                 <constraint firstAttribute="height" constant="47" id="5dd-J5-uJ0"/>
                                                                 <constraint firstItem="ywW-eh-OBa" firstAttribute="centerX" secondItem="w41-RH-ItF" secondAttribute="centerX" constant="-16" id="Nfj-He-G1s"/>
                                                                 <constraint firstItem="ywW-eh-OBa" firstAttribute="top" secondItem="w41-RH-ItF" secondAttribute="top" id="aDu-cr-250"/>
@@ -687,6 +688,7 @@
                                                             <color key="backgroundColor" systemColor="systemBackgroundColor"/>
                                                             <constraints>
                                                                 <constraint firstItem="n4s-6C-rZ0" firstAttribute="centerX" secondItem="ZLC-Iw-J6U" secondAttribute="centerX" constant="-16" id="DM9-XK-cap"/>
+                                                                <constraint firstItem="n4s-6C-rZ0" firstAttribute="width" secondItem="ZLC-Iw-J6U" secondAttribute="width" multiplier="0.936508" id="g0E-fe-I0y"/>
                                                                 <constraint firstItem="n4s-6C-rZ0" firstAttribute="top" secondItem="ZLC-Iw-J6U" secondAttribute="top" id="laT-9M-sbx"/>
                                                                 <constraint firstAttribute="height" constant="47" id="vtl-Jm-o2H"/>
                                                             </constraints>
@@ -709,6 +711,7 @@
                                                             </subviews>
                                                             <color key="backgroundColor" systemColor="systemBackgroundColor"/>
                                                             <constraints>
+                                                                <constraint firstItem="Gdh-W9-bsz" firstAttribute="width" secondItem="nUx-rA-K6Q" secondAttribute="width" multiplier="0.936508" id="bvc-YT-5YY"/>
                                                                 <constraint firstItem="Gdh-W9-bsz" firstAttribute="top" secondItem="nUx-rA-K6Q" secondAttribute="top" id="hMG-De-veO"/>
                                                                 <constraint firstItem="Gdh-W9-bsz" firstAttribute="centerX" secondItem="nUx-rA-K6Q" secondAttribute="centerX" constant="-16" id="rtR-Wo-D1D"/>
                                                                 <constraint firstAttribute="height" constant="47" id="zwI-5o-jAF"/>
@@ -733,6 +736,7 @@
                                                             <color key="backgroundColor" systemColor="systemBackgroundColor"/>
                                                             <constraints>
                                                                 <constraint firstItem="wim-XV-2Fz" firstAttribute="top" secondItem="8e5-1x-Vz5" secondAttribute="top" id="aH5-yg-9sJ"/>
+                                                                <constraint firstItem="wim-XV-2Fz" firstAttribute="width" secondItem="8e5-1x-Vz5" secondAttribute="width" multiplier="0.936508" id="iPa-AA-pAQ"/>
                                                                 <constraint firstAttribute="height" constant="47" id="m4X-m0-MwX"/>
                                                                 <constraint firstItem="wim-XV-2Fz" firstAttribute="centerX" secondItem="8e5-1x-Vz5" secondAttribute="centerX" constant="-16" id="wwG-vE-d9t"/>
                                                             </constraints>
@@ -756,6 +760,7 @@
                                                             <color key="backgroundColor" systemColor="systemBackgroundColor"/>
                                                             <constraints>
                                                                 <constraint firstItem="XLU-4V-e40" firstAttribute="centerX" secondItem="T0b-8y-S1J" secondAttribute="centerX" constant="-16" id="PXD-qp-5o2"/>
+                                                                <constraint firstItem="XLU-4V-e40" firstAttribute="width" secondItem="T0b-8y-S1J" secondAttribute="width" multiplier="0.936508" id="SV4-U6-MEB"/>
                                                                 <constraint firstItem="XLU-4V-e40" firstAttribute="top" secondItem="T0b-8y-S1J" secondAttribute="top" id="oIR-2O-9sj"/>
                                                                 <constraint firstAttribute="height" constant="47" id="yDp-8M-TL6"/>
                                                             </constraints>

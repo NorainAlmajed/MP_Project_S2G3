@@ -104,6 +104,9 @@ class NgoDetailsViewController: UIViewController {
         
         
 
+        // Buttons
+                styleActionButton(btnChatWithUs)
+                styleActionButton(btnDonateToNgo)
 
 
         // Do any additional setup after loading the view.
@@ -111,7 +114,11 @@ class NgoDetailsViewController: UIViewController {
     
     
     
-    
+    //For buttons radius
+        private func styleActionButton(_ button: UIButton) {
+            button.layer.cornerRadius = button.frame.height / 2
+            button.clipsToBounds = true
+        }
    
 
        

@@ -10,8 +10,9 @@ import UIKit
 class RaghadSection8TableViewCell: UITableViewCell {
     var onProceedTapped: (() -> Void)?
   
-
-    @IBAction func btnProceedToSchedulePickup(_ sender: Any) {
+    @IBOutlet weak var btnProceedToSchedulePickup: UIButton!
+    
+    @IBAction func btnProceedTapped(_ sender: Any) {
             onProceedTapped?()
         }
     
@@ -19,6 +20,10 @@ class RaghadSection8TableViewCell: UITableViewCell {
     override func awakeFromNib() {
         super.awakeFromNib()
         // Initialization code
+        
+        // SAFE: only apply radius if outlet exists
+        btnProceedToSchedulePickup?.layer.cornerRadius = 20
+        btnProceedToSchedulePickup?.clipsToBounds = true
     }
 
     override func setSelected(_ selected: Bool, animated: Bool) {
@@ -26,5 +31,7 @@ class RaghadSection8TableViewCell: UITableViewCell {
 
         // Configure the view for the selected state
     }
+
+
 
 }

@@ -31,8 +31,8 @@ class NotificationsViewController: UIViewController {
         title = "Notifications"
         
         // Sort notifications by date (newest first)
-        sortedNotifications = user.notifications?.sorted { $0.date > $1.date } ?? []
-        
+        sortedNotifications = user.notifications.sorted { $0.date > $1.date }
+
         // Set the data source and delegate for the collection view
         notificationsCollectionView.dataSource = self
         notificationsCollectionView.delegate = self

@@ -35,6 +35,8 @@ class DonationDetailsViewController: UIViewController, UITableViewDelegate, UITa
         navigationController?.setNavigationBarHidden(false, animated: animated)
         navigationController?.navigationBar.prefersLargeTitles = false
         title = "Donation Details"
+        
+        
     }
     
     // Number of sections

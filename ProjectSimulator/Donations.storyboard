@@ -27,15 +27,20 @@
                                     <segue destination="ONd-Xx-dnE" kind="show" id="4iq-ID-1XD"/>
                                 </connections>
                             </button>
+                            <view contentMode="scaleToFill" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="HbC-lh-L5Q">
+                                <rect key="frame" x="81" y="531" width="240" height="343"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                <color key="backgroundColor" systemColor="systemCyanColor"/>
+                            </view>
                         </subviews>
                         <viewLayoutGuide key="safeArea" id="PEB-9N-FAF"/>
-                        <color key="backgroundColor" systemColor="systemBackgroundColor"/>
+                        <color key="backgroundColor" systemColor="tableBackgroundColor"/>
                     </view>
                     <navigationItem key="navigationItem" id="CEE-sC-faL"/>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="D0S-GM-Gyu" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="215" y="1361"/>
+            <point key="canvasLocation" x="214.92537313432834" y="1360.6407322654461"/>
         </scene>
         <!--Donation View Controller-->
         <scene sceneID="3Oi-bC-LiY">
@@ -45,8 +50,48 @@
                         <rect key="frame" x="0.0" y="0.0" width="402" height="874"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
+                            <collectionView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" fixedFrame="YES" dataMode="prototypes" translatesAutoresizingMaskIntoConstraints="NO" id="gp7-84-YBG">
+                                <rect key="frame" x="0.0" y="176" width="402" height="39"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                <color key="backgroundColor" systemColor="systemBackgroundColor"/>
+                                <collectionViewFlowLayout key="collectionViewLayout" scrollDirection="horizontal" minimumLineSpacing="10" minimumInteritemSpacing="10" id="z2z-db-FZY">
+                                    <size key="itemSize" width="128" height="128"/>
+                                    <size key="headerReferenceSize" width="0.0" height="0.0"/>
+                                    <size key="footerReferenceSize" width="0.0" height="0.0"/>
+                                    <inset key="sectionInset" minX="0.0" minY="0.0" maxX="0.0" maxY="0.0"/>
+                                </collectionViewFlowLayout>
+                                <cells>
+                                    <collectionViewCell opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" insetsLayoutMarginsFromSafeArea="NO" reuseIdentifier="StatusCell" id="N6b-7f-fqL" customClass="StatusCollectionViewCell" customModule="ProjectSimulator" customModuleProvider="target">
+                                        <rect key="frame" x="0.0" y="-44.666666666666664" width="128" height="128"/>
+                                        <autoresizingMask key="autoresizingMask"/>
+                                        <collectionViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" insetsLayoutMarginsFromSafeArea="NO" id="THc-oE-qLW">
+                                            <rect key="frame" x="0.0" y="0.0" width="128" height="128"/>
+                                            <autoresizingMask key="autoresizingMask"/>
+                                            <subviews>
+                                                <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="CD5-3C-FUN">
+                                                    <rect key="frame" x="0.0" y="0.0" width="128" height="128"/>
+                                                    <constraints>
+                                                        <constraint firstAttribute="height" constant="39" id="Qjx-XS-lm1"/>
+                                                    </constraints>
+                                                    <state key="normal" title="Button"/>
+                                                    <buttonConfiguration key="configuration" style="filled" title="All"/>
+                                                </button>
+                                            </subviews>
+                                            <constraints>
+                                                <constraint firstItem="CD5-3C-FUN" firstAttribute="leading" secondItem="THc-oE-qLW" secondAttribute="leading" id="3Hj-qe-XZa"/>
+                                                <constraint firstAttribute="trailing" secondItem="CD5-3C-FUN" secondAttribute="trailing" id="DLM-aX-vT5"/>
+                                                <constraint firstAttribute="bottom" secondItem="CD5-3C-FUN" secondAttribute="bottom" id="Myf-kl-Ksn"/>
+                                                <constraint firstItem="CD5-3C-FUN" firstAttribute="top" secondItem="THc-oE-qLW" secondAttribute="top" id="vJc-bH-BZ0"/>
+                                            </constraints>
+                                        </collectionViewCellContentView>
+                                        <connections>
+                                            <outlet property="statusButton" destination="CD5-3C-FUN" id="b2n-Aq-nXD"/>
+                                        </connections>
+                                    </collectionViewCell>
+                                </cells>
+                            </collectionView>
                             <collectionView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" fixedFrame="YES" dataMode="prototypes" translatesAutoresizingMaskIntoConstraints="NO" id="kT3-WU-U2N">
-                                <rect key="frame" x="0.0" y="102" width="402" height="750"/>
+                                <rect key="frame" x="0.0" y="259" width="402" height="527"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <color key="backgroundColor" systemColor="systemBackgroundColor"/>
                                 <collectionViewFlowLayout key="collectionViewLayout" automaticEstimatedItemSize="YES" minimumLineSpacing="10" minimumInteritemSpacing="10" id="ses-KD-fH5">
@@ -142,6 +187,7 @@
                     </navigationItem>
                     <connections>
                         <outlet property="donationsCollectionView" destination="kT3-WU-U2N" id="N2g-ic-254"/>
+                        <outlet property="statusCollectionView" destination="gp7-84-YBG" id="19u-lU-z3E"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="UOy-tB-a25" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
@@ -834,6 +880,12 @@
             <color white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
         </systemColor>
         <systemColor name="systemBackgroundColor">
+            <color white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+        </systemColor>
+        <systemColor name="systemCyanColor">
+            <color red="0.1960784314" green="0.67843137249999996" blue="0.90196078430000004" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+        </systemColor>
+        <systemColor name="tableBackgroundColor">
             <color white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
         </systemColor>
     </resources>

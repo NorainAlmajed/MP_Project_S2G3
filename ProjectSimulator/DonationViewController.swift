@@ -12,6 +12,16 @@ class DonationViewController: UIViewController {
     // Outlet connected to the collection view in the storyboard
     @IBOutlet weak var donationsCollectionView: UICollectionView!
     
+    @IBOutlet weak var statusCollectionView: UICollectionView!
+    
+    let statuses = ["All", "Pending", "Accepted", "Collected", "Rejected", "Cancelled"]
+    var selectedIndex = 0
+
+    //Declaring arrays for filtering donations
+    var allDonations: [Donation] = []
+    var displayedDonations: [Donation] = []
+
+    
     
     private let noDonationsLabel: UILabel = {
         let label = UILabel()
@@ -44,6 +54,10 @@ class DonationViewController: UIViewController {
             Donation(donationID: 91475, ngo: ngo1, creationDate: Date().addingTimeInterval(-500), donor: user, address: Address(building: 1311, road: 3027, block: 430, flat: 402, area: "Karbabad", governorate: "Manama"), pickupDate: Date(), pickupTime: "12:00:00", foodImage: UIImage(named: "apples") ?? UIImage(), status: 2, Category: 7, quantity: 30, weight: nil, expiryDate: Date(), description: "Fresh red apples, locally grown and rich in flavor")
         ]
 
+        //Initializaing the donations list
+        allDonations = user.donations ?? []
+        displayedDonations = allDonations.sorted { $0.creationDate > $1.creationDate }
+
         
         // Sort donations by creationDate (newest first)
         user.donations?.sort { $0.creationDate > $1.creationDate }
@@ -51,17 +65,40 @@ class DonationViewController: UIViewController {
         // Set the screen title
         title = "Donations"
         
-        // Set the data source and delegate for the collection view
+        
+        
+        // Set the data source and delegate for the collection views
         donationsCollectionView.dataSource = self
         donationsCollectionView.delegate = self
         
-        // Configure the layout of the collection view
+        statusCollectionView.dataSource = self
+        statusCollectionView.delegate = self
+
+        
+        
+        // Configure the layout of the collection views
+        //Donation collection view
         let layout = UICollectionViewFlowLayout()
         layout.scrollDirection = .vertical          // vertical scrolling
         layout.minimumLineSpacing = 10              // space between cells
         donationsCollectionView.collectionViewLayout = layout
 
         donationsCollectionView.backgroundColor = self.view.backgroundColor
+        
+
+        //Statsu collection view
+        let layout2 = UICollectionViewFlowLayout()
+        layout2.scrollDirection = .horizontal
+        layout2.minimumLineSpacing = 8
+        layout2.estimatedItemSize = UICollectionViewFlowLayout.automaticSize
+        
+        // Add padding on left and right
+        layout2.sectionInset = UIEdgeInsets(top: 0, left: 8, bottom: 0, right: 8)
+
+            statusCollectionView.collectionViewLayout = layout2
+        
+
+        
         
         
         //Make the navigation bar color not white while scroling
@@ -99,21 +136,26 @@ class DonationViewController: UIViewController {
 
     
     override func viewDidLayoutSubviews() {
-        super.viewDidLayoutSubviews()    }
+        super.viewDidLayoutSubviews()
+        
+        
+    }
     
     
      //Prepare data for the destination VC
-        override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-            if segue.identifier == "showDonationDetails" {
-                let detailsVC = segue.destination as! DonationDetailsViewController
-    
-                if let indexPath = donationsCollectionView.indexPathsForSelectedItems?.first,
-                   let donation = user.donations?[indexPath.row] {
+    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
+        if segue.identifier == "showDonationDetails" {
+            if let detailsVC = segue.destination as? DonationDetailsViewController {
+                if let indexPath = donationsCollectionView.indexPathsForSelectedItems?.first {
+                    let donation = displayedDonations[indexPath.row]
                     detailsVC.donation = donation
                 }
-
+                
+                // <-- This line hides the bottom tab bar
+                detailsVC.hidesBottomBarWhenPushed = true
             }
         }
+    }
     
         //To let the title appear in a big form
         override func viewWillAppear(_ animated: Bool) {
@@ -130,29 +172,68 @@ class DonationViewController: UIViewController {
     
     
     
+    //method for filtering the donations
+    private func filterDonations() {
+        if selectedIndex == 0 {
+            displayedDonations = allDonations.sorted { $0.creationDate > $1.creationDate }
+        } else {
+            let statusToFilter = selectedIndex
+            displayedDonations = allDonations.filter { $0.status == statusToFilter }
+                .sorted { $0.creationDate > $1.creationDate }
+        }
+        donationsCollectionView.reloadData()
+        updateNoDonationsLabel()
+    }
+
+    
+    
+    
+    
 }
 
 extension DonationViewController: UICollectionViewDataSource {
     
-    // Return number of items to display (based on donations array)
+    // Return number of items to display (based on arrays)
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        return user.donations?.count ?? 0
+        if collectionView == statusCollectionView {
+            return statuses.count
+        } else { // donationsCollectionView
+            return displayedDonations.count
+        }
     }
+
 
     
     // Configure each collection view cell
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
-        let cell = donationsCollectionView.dequeueReusableCell(withReuseIdentifier: "DonationCollectionViewCell", for: indexPath) as! DonationCollectionViewCell
 
-        // Optional binding to safely unwrap donation
-        if let donation = user.donations?[indexPath.row] {
+        if collectionView == statusCollectionView {
+            let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "StatusCell", for: indexPath) as! StatusCollectionViewCell
+            cell.configure(title: statuses[indexPath.item], isSelected: indexPath.item == selectedIndex)
+
+            // Handle the tap
+            cell.onStatusTapped = { [weak self] in
+                guard let self = self else { return }
+                self.selectedIndex = indexPath.item
+                self.filterDonations()
+                self.statusCollectionView.reloadData()
+            }
+
+
+            return cell
+        } else { // donationsCollectionView
+            let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "DonationCollectionViewCell", for: indexPath) as! DonationCollectionViewCell
+            let donation = displayedDonations[indexPath.row]
             cell.setup(with: donation)
+
+            return cell
         }
-
-        return cell
     }
-
+    
+    
 }
+
+
 
 extension DonationViewController: UICollectionViewDelegateFlowLayout {
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {

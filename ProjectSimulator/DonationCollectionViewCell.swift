@@ -40,7 +40,7 @@ class DonationCollectionViewCell: UICollectionViewCell {
         donationLogoImageView.clipsToBounds = true
         
         // Set text labels
-        donationCategoryLbl.text = categoryName(for: donation.Category)
+        donationCategoryLbl.text = donation.Category
         donationIDLbl.text = "Donation #" + String(donation.donationID)
         if user.userType == 2 {
             donorNgoLbl.text = "NGO: " + donation.ngo.ngoName
@@ -109,19 +109,19 @@ class DonationCollectionViewCell: UICollectionViewCell {
 
     }
     
-    //Checking the category name 
-    private func categoryName(for category: Int) -> String {
-        switch category {
-        case 1: return "Bakery"
-        case 2: return "Dairy"
-        case 3: return "Produce"
-        case 4: return "Poultry"
-        case 5: return "Beverages"
-        case 6: return "Canned Food"
-        case 7: return "Others"
-        default: return "Unknown"
-        }
-    }
+//    //Checking the category name 
+//    private func categoryName(for category: Int) -> String {
+//        switch category {
+//        case 1: return "Bakery"
+//        case 2: return "Dairy"
+//        case 3: return "Produce"
+//        case 4: return "Poultry"
+//        case 5: return "Beverages"
+//        case 6: return "Canned Food"
+//        case 7: return "Others"
+//        default: return "Unknown"
+//        }
+//    }
 
     
 }

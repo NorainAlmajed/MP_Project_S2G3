@@ -133,6 +133,20 @@ class NotificationsViewController: UIViewController {
         // Show the confirmation alert
         self.present(confirmAlert, animated: true, completion: nil)
     }
+    
+    
+    //To hide the tab bar controller
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        tabBarController?.tabBar.isHidden = true
+    }
+
+    override func viewWillDisappear(_ animated: Bool) {
+        super.viewWillDisappear(animated)
+        tabBarController?.tabBar.isHidden = false
+    }
+
+    
 
 }
 

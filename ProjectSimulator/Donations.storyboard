@@ -51,7 +51,7 @@
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <collectionView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" dataMode="prototypes" translatesAutoresizingMaskIntoConstraints="NO" id="gp7-84-YBG">
-                                <rect key="frame" x="0.0" y="228" width="402" height="39"/>
+                                <rect key="frame" x="0.0" y="168" width="402" height="39"/>
                                 <color key="backgroundColor" systemColor="systemBackgroundColor"/>
                                 <constraints>
                                     <constraint firstAttribute="height" constant="39" id="hF1-JJ-avf"/>
@@ -94,7 +94,7 @@
                                 </cells>
                             </collectionView>
                             <collectionView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" dataMode="prototypes" translatesAutoresizingMaskIntoConstraints="NO" id="kT3-WU-U2N">
-                                <rect key="frame" x="0.0" y="275" width="402" height="511"/>
+                                <rect key="frame" x="0.0" y="215" width="402" height="571"/>
                                 <color key="backgroundColor" systemColor="systemBackgroundColor"/>
                                 <collectionViewFlowLayout key="collectionViewLayout" automaticEstimatedItemSize="YES" minimumLineSpacing="10" minimumInteritemSpacing="10" id="ses-KD-fH5">
                                     <size key="itemSize" width="376" height="124"/>
@@ -186,7 +186,7 @@
                         <constraints>
                             <constraint firstItem="kT3-WU-U2N" firstAttribute="top" secondItem="gp7-84-YBG" secondAttribute="bottom" constant="8" id="EVE-4D-Xiy"/>
                             <constraint firstItem="kT3-WU-U2N" firstAttribute="leading" secondItem="QTY-Mn-eyK" secondAttribute="leading" id="aEf-6q-dab"/>
-                            <constraint firstItem="gp7-84-YBG" firstAttribute="top" secondItem="y9S-wz-BIs" secondAttribute="top" constant="8" id="fgX-jb-gc4"/>
+                            <constraint firstItem="gp7-84-YBG" firstAttribute="top" secondItem="y9S-wz-BIs" secondAttribute="top" id="fgX-jb-gc4"/>
                             <constraint firstAttribute="trailing" secondItem="gp7-84-YBG" secondAttribute="trailing" id="jy0-oc-tPz"/>
                             <constraint firstItem="gp7-84-YBG" firstAttribute="leading" secondItem="QTY-Mn-eyK" secondAttribute="leading" id="nbu-rK-5Wo"/>
                             <constraint firstAttribute="trailing" secondItem="kT3-WU-U2N" secondAttribute="trailing" id="voY-dU-RH9"/>

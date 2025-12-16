@@ -194,7 +194,7 @@ extension Section3TableViewCell {
 
         // Update quantity, category, weight, expiration date
         quantityLbl.text = "\(donation.quantity)"
-        categoryLbl.text = categoryName(for: donation.Category)
+        categoryLbl.text = donation.Category
         
         //Update weight
         if let weight = donation.weight {

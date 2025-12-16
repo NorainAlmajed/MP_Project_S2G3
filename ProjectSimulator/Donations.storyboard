@@ -50,10 +50,12 @@
                         <rect key="frame" x="0.0" y="0.0" width="402" height="874"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <collectionView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" fixedFrame="YES" dataMode="prototypes" translatesAutoresizingMaskIntoConstraints="NO" id="gp7-84-YBG">
-                                <rect key="frame" x="0.0" y="176" width="402" height="39"/>
-                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                            <collectionView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" dataMode="prototypes" translatesAutoresizingMaskIntoConstraints="NO" id="gp7-84-YBG">
+                                <rect key="frame" x="0.0" y="228" width="402" height="39"/>
                                 <color key="backgroundColor" systemColor="systemBackgroundColor"/>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="39" id="hF1-JJ-avf"/>
+                                </constraints>
                                 <collectionViewFlowLayout key="collectionViewLayout" scrollDirection="horizontal" minimumLineSpacing="10" minimumInteritemSpacing="10" id="z2z-db-FZY">
                                     <size key="itemSize" width="128" height="128"/>
                                     <size key="headerReferenceSize" width="0.0" height="0.0"/>
@@ -73,6 +75,7 @@
                                                     <constraints>
                                                         <constraint firstAttribute="height" constant="39" id="Qjx-XS-lm1"/>
                                                     </constraints>
+                                                    <color key="tintColor" red="0.031072435879999999" green="0.39029296870000002" blue="0.10607049960000001" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
                                                     <state key="normal" title="Button"/>
                                                     <buttonConfiguration key="configuration" style="filled" title="All"/>
                                                 </button>
@@ -90,9 +93,8 @@
                                     </collectionViewCell>
                                 </cells>
                             </collectionView>
-                            <collectionView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" fixedFrame="YES" dataMode="prototypes" translatesAutoresizingMaskIntoConstraints="NO" id="kT3-WU-U2N">
-                                <rect key="frame" x="0.0" y="259" width="402" height="527"/>
-                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                            <collectionView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" dataMode="prototypes" translatesAutoresizingMaskIntoConstraints="NO" id="kT3-WU-U2N">
+                                <rect key="frame" x="0.0" y="275" width="402" height="511"/>
                                 <color key="backgroundColor" systemColor="systemBackgroundColor"/>
                                 <collectionViewFlowLayout key="collectionViewLayout" automaticEstimatedItemSize="YES" minimumLineSpacing="10" minimumInteritemSpacing="10" id="ses-KD-fH5">
                                     <size key="itemSize" width="376" height="124"/>
@@ -181,6 +183,15 @@
                         </subviews>
                         <viewLayoutGuide key="safeArea" id="y9S-wz-BIs"/>
                         <color key="backgroundColor" systemColor="systemBackgroundColor"/>
+                        <constraints>
+                            <constraint firstItem="kT3-WU-U2N" firstAttribute="top" secondItem="gp7-84-YBG" secondAttribute="bottom" constant="8" id="EVE-4D-Xiy"/>
+                            <constraint firstItem="kT3-WU-U2N" firstAttribute="leading" secondItem="QTY-Mn-eyK" secondAttribute="leading" id="aEf-6q-dab"/>
+                            <constraint firstItem="gp7-84-YBG" firstAttribute="top" secondItem="y9S-wz-BIs" secondAttribute="top" constant="8" id="fgX-jb-gc4"/>
+                            <constraint firstAttribute="trailing" secondItem="gp7-84-YBG" secondAttribute="trailing" id="jy0-oc-tPz"/>
+                            <constraint firstItem="gp7-84-YBG" firstAttribute="leading" secondItem="QTY-Mn-eyK" secondAttribute="leading" id="nbu-rK-5Wo"/>
+                            <constraint firstAttribute="trailing" secondItem="kT3-WU-U2N" secondAttribute="trailing" id="voY-dU-RH9"/>
+                            <constraint firstAttribute="bottom" secondItem="kT3-WU-U2N" secondAttribute="bottom" constant="88" id="xO0-5a-b3e"/>
+                        </constraints>
                     </view>
                     <navigationItem key="navigationItem" id="noD-Cb-a0a">
                         <barButtonItem key="backBarButtonItem" title=" " id="vFm-Uj-MJj"/>

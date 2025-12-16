@@ -20,6 +20,13 @@ class DonationViewController: UIViewController {
     //Declaring arrays for filtering donations
     var allDonations: [Donation] = []
     var displayedDonations: [Donation] = []
+    
+    //Adding a search controller property
+    private let searchController = UISearchController(searchResultsController: nil)
+    private var isSearchActive: Bool {
+        return searchController.isActive && !(searchController.searchBar.text?.isEmpty ?? true)
+    }
+
 
     
     
@@ -119,6 +126,15 @@ class DonationViewController: UIViewController {
         
         //Run the method
         updateNoDonationsLabel()
+        
+        // Setup Search Controller
+        searchController.searchResultsUpdater = self
+        searchController.obscuresBackgroundDuringPresentation = false
+        searchController.searchBar.placeholder = "Search donations..."
+        navigationItem.searchController = searchController
+        navigationItem.hidesSearchBarWhenScrolling = false
+        definesPresentationContext = true
+
 
     }
     
@@ -158,32 +174,57 @@ class DonationViewController: UIViewController {
     }
     
         //To let the title appear in a big form
-        override func viewWillAppear(_ animated: Bool) {
-            super.viewWillAppear(animated)
-                
-            navigationController?.setNavigationBarHidden(false, animated: animated)
-            navigationController?.navigationBar.prefersLargeTitles = true
-            navigationItem.largeTitleDisplayMode = .always
-            title = "Donations"
-            
-            // ← Add this line to refresh the collection view
-               donationsCollectionView.reloadData()
-        }
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        
+        navigationController?.setNavigationBarHidden(false, animated: animated)
+        navigationController?.navigationBar.prefersLargeTitles = true
+        navigationItem.largeTitleDisplayMode = .always
+        title = "Donations"
+        
+        // Remove the bottom shadow/line
+        let appearance = UINavigationBarAppearance()
+        appearance.configureWithOpaqueBackground()
+        appearance.backgroundColor = view.backgroundColor
+        appearance.shadowColor = .clear   // <-- This removes the grey line
+
+        navigationController?.navigationBar.standardAppearance = appearance
+        navigationController?.navigationBar.scrollEdgeAppearance = appearance
+        navigationController?.navigationBar.compactAppearance = appearance
+        
+        donationsCollectionView.reloadData()
+    }
+
     
     
     
     //method for filtering the donations
     private func filterDonations() {
-        if selectedIndex == 0 {
-            displayedDonations = allDonations.sorted { $0.creationDate > $1.creationDate }
-        } else {
+        // Start with all donations
+        var filtered = allDonations
+
+        // Filter by status if not "All"
+        if selectedIndex != 0 {
             let statusToFilter = selectedIndex
-            displayedDonations = allDonations.filter { $0.status == statusToFilter }
-                .sorted { $0.creationDate > $1.creationDate }
+            filtered = filtered.filter { $0.status == statusToFilter }
         }
+
+        // Filter by search text if active
+        if let searchText = searchController.searchBar.text, !searchText.isEmpty {
+            filtered = filtered.filter {
+                ($0.description?.lowercased() ?? "").contains(searchText.lowercased()) ||
+                $0.ngo.ngoName.lowercased().contains(searchText.lowercased())
+
+            }
+        }
+
+        // Sort by creation date (newest first)
+        displayedDonations = filtered.sorted { $0.creationDate > $1.creationDate }
+
         donationsCollectionView.reloadData()
         updateNoDonationsLabel()
     }
+
 
     
     
@@ -242,6 +283,13 @@ extension DonationViewController: UICollectionViewDelegateFlowLayout {
     
 }
 
+
+
+extension DonationViewController: UISearchResultsUpdating {
+    func updateSearchResults(for searchController: UISearchController) {
+        filterDonations()
+    }
+}
 
 
 

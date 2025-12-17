@@ -667,8 +667,15 @@
 //
 //  Created by Raghad Aleskafi on 13/12/2025.
 //
+//
+//  RaghadDonatoinFormViewController.swift
+//  ProjectSimulator
+//
+//  Created by Raghad Aleskafi on 13/12/2025.
+//
 
 import UIKit
+import PhotosUI   // optional if you switch to PHPicker later
 
 class RaghadDonatoinFormViewController: UIViewController,
                                         UITableViewDelegate,
@@ -677,6 +684,29 @@ class RaghadDonatoinFormViewController: UIViewController,
                                         UINavigationControllerDelegate,
                                         RaghadSection1TableViewCellDelegate,
                                         DonorSelectionDelegate {
+    func section1DidTapUploadImage(_ cell: RaghadSection1TableViewCell) {
+        // Show options to pick an image
+        let alert = UIAlertController(title: "Upload Image", message: nil, preferredStyle: .actionSheet)
+
+        alert.addAction(UIAlertAction(title: "Take Photo", style: .default) { [weak self] _ in
+            self?.openCamera()
+        })
+
+        alert.addAction(UIAlertAction(title: "Choose from Library", style: .default) { [weak self] _ in
+            self?.openPhotoLibrary()
+        })
+
+        alert.addAction(UIAlertAction(title: "Cancel", style: .cancel))
+
+        // iPad popover anchor
+        if let pop = alert.popoverPresentationController {
+            pop.sourceView = cell
+            pop.sourceRect = cell.bounds
+        }
+
+        present(alert, animated: true)
+    }
+
 
     // MARK: - State / Validation
     private var shouldShowDonorError = false
@@ -714,10 +744,11 @@ class RaghadDonatoinFormViewController: UIViewController,
         let tap = UITapGestureRecognizer(target: self, action: #selector(dismissKeyboard))
         tap.cancelsTouchesInView = false
         view.addGestureRecognizer(tap)
+
         donationFormTableview.keyboardDismissMode = .onDrag
         addDoneButtonOnKeyboard()
 
-        // Self-sizing cells (correct table view)
+        // Self-sizing cells (use the IBOutlet table, not `tableView`)
         donationFormTableview.estimatedRowHeight = 200
         donationFormTableview.rowHeight = UITableView.automaticDimension
 
@@ -743,8 +774,9 @@ class RaghadDonatoinFormViewController: UIViewController,
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int { 1 }
 
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+
         let section = indexPath.section
-        // If NOT admin, shift sections after 0 by +1
+        // If NOT admin, skip donor section by shifting sections after 0
         let adjustedSection = (!isAdminUser && section >= 1) ? section + 1 : section
 
         // Section 1 (Image)
@@ -773,6 +805,7 @@ class RaghadDonatoinFormViewController: UIViewController,
             let cell = tableView.dequeueReusableCell(withIdentifier: "Section3Cell", for: indexPath) as! RaghadSection3TableViewCell
             cell.selectionStyle = .none
             cell.configure(selected: selectedFoodCategory, isOpen: isFoodDropdownOpen, showError: shouldShowFoodCategoryError)
+
             cell.onToggleDropdown = { [weak self] open in
                 guard let self = self else { return }
                 self.isFoodDropdownOpen = open
@@ -792,18 +825,66 @@ class RaghadDonatoinFormViewController: UIViewController,
             }
             return cell
         }
+        
+        
+        
+        if adjustedSection == 3 {
+            let cell = tableView.dequeueReusableCell(withIdentifier: "Section4Cell", for: indexPath) as! RaghadSection4TableViewCell
+            cell.selectionStyle = .none
 
-        // Section 5 (Weight)
+            // ✅ restore saved value (prevents flipping back to 1)
+            let q = quantityValue ?? Int(cell.stepperQuantity.value)
+            cell.txtQuantity.text = "\(max(q, 1))"
+            cell.stepperQuantity.value = Double(max(q, 1))
+
+            // ✅ SAVE whenever user changes
+            cell.onQuantityChanged = { [weak self] value in
+                guard let self = self else { return }
+                self.quantityValue = value
+                self.shouldShowQuantityError = (value == nil || (value ?? 0) <= 0)
+            }
+
+            // ✅ show/hide error if you use it
+            cell.configure(showError: shouldShowQuantityError)
+
+            return cell
+        }
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+
+        // ⚖️ Section 5 (Weight)
         if adjustedSection == 4 {
             let cell = tableView.dequeueReusableCell(withIdentifier: "Section5Cell", for: indexPath) as! RaghadSection5TableViewCell
             cell.selectionStyle = .none
+
+            // ✅ RESTORE saved value so it does NOT flip on reload
+            if let w = weightValue {
+                cell.txtWeight.text = String(w)   // or "\(w)"
+            } else {
+                // keep it empty (optional field)
+                cell.txtWeight.text = ""
+            }
+
+            // 🔴 show / hide error
             cell.configure(showError: shouldShowWeightError)
+
+            // 🔁 receive updates
             cell.onWeightChanged = { [weak self] value, invalidFormat in
                 guard let self = self else { return }
                 self.weightValue = value
                 self.weightInvalidFormat = invalidFormat
                 self.shouldShowWeightError = invalidFormat
             }
+
             return cell
         }
 
@@ -827,7 +908,10 @@ class RaghadDonatoinFormViewController: UIViewController,
             let cell = tableView.dequeueReusableCell(withIdentifier: "Section8Cell", for: indexPath) as! RaghadSection8TableViewCell
             cell.selectionStyle = .none
             cell.onProceedTapped = { [weak self] in
-                self?.validateAndProceed()
+                guard let self = self else { return }
+                self.view.endEditing(true)   // ✅ HERE
+                self.validateAndProceed()
+               
             }
             return cell
         }
@@ -877,7 +961,7 @@ class RaghadDonatoinFormViewController: UIViewController,
         }
     }
 
-    // MARK: - Image Picking
+    // MARK: - Image Picking (UIImagePickerController)
     private func openCamera() {
         if UIImagePickerController.isSourceTypeAvailable(.camera) {
             openImagePicker(sourceType: .camera)
@@ -886,27 +970,44 @@ class RaghadDonatoinFormViewController: UIViewController,
         }
     }
     private func openPhotoLibrary() { openImagePicker(sourceType: .photoLibrary) }
+
     private func openImagePicker(sourceType: UIImagePickerController.SourceType) {
         let picker = UIImagePickerController()
-        picker.delegate = self
+        picker.delegate = self          // CRITICAL: so we receive the image
         picker.sourceType = sourceType
+        picker.allowsEditing = true     // optional crop
         present(picker, animated: true)
     }
-    func section1DidTapUploadImage(_ cell: RaghadSection1TableViewCell) {
-        let alert = UIAlertController(title: "Upload Image", message: nil, preferredStyle: .actionSheet)
-        alert.addAction(UIAlertAction(title: "Take Photo", style: .default) { _ in self.openCamera() })
-        alert.addAction(UIAlertAction(title: "Choose from Library", style: .default) { _ in self.openPhotoLibrary() })
-        alert.addAction(UIAlertAction(title: "Cancel", style: .cancel))
-        if let pop = alert.popoverPresentationController {
-            pop.sourceView = cell; pop.sourceRect = cell.bounds
+
+    // Picker callback — store and show the image
+    func imagePickerController(_ picker: UIImagePickerController,
+                               didFinishPickingMediaWithInfo info: [UIImagePickerController.InfoKey : Any]) {
+
+        let img = (info[.editedImage] as? UIImage) ?? (info[.originalImage] as? UIImage)
+
+        if let img = img {
+            selectedDonationImage = img
+            shouldShowImageError = false
+            // Reload only Section 0 (Image) so the UIImageView updates
+            UIView.performWithoutAnimation {
+                self.donationFormTableview.reloadSections(IndexSet(integer: 0), with: .none)
+            }
         }
-        present(alert, animated: true)
+
+        picker.dismiss(animated: true)
+    }
+
+    func imagePickerControllerDidCancel(_ picker: UIImagePickerController) {
+        picker.dismiss(animated: true)
     }
 
     // MARK: - Helpers
     /// Reads the Quantity from Section 4 cell (index 3). Falls back to cached `quantityValue`.
     private func getQuantityValue() -> Int? {
-        let indexPath = IndexPath(row: 0, section: 3)
+        // adjustedSection 3 = Quantity
+        let tableSection = isAdminUser ? 3 : 2   // ✅ IMPORTANT (admin shifts sections)
+        let indexPath = IndexPath(row: 0, section: tableSection)
+
         if let cell = donationFormTableview.cellForRow(at: indexPath) as? RaghadSection4TableViewCell {
             return cell.getQuantityValue()
         }
@@ -922,27 +1023,33 @@ class RaghadDonatoinFormViewController: UIViewController,
         let missingDonor = isAdminUser ? (selectedDonorName == nil) : false
         let missingFoodCategory = (selectedFoodCategory == nil)
 
-        // Quantity (Section 4)
+        // Quantity
         let qty = getQuantityValue() ?? 0
         let invalidQuantity = (qty <= 0)
 
-        // Weight (Section 5)
-        let invalidWeight = weightInvalidFormat || (weightValue == nil)
+        // Weight (optional, only format validation)
+        let invalidWeight = weightInvalidFormat
 
-        // Expiry (Section 6) — mark required (change to `false` if optional)
+        // Expiry
         let missingExpiry = (selectedExpiryDate == nil)
 
-        // 2) Flip error flags for cells
+        // 2) Flip error flags
         shouldShowImageError = missingImage
         shouldShowDonorError = missingDonor
         shouldShowFoodCategoryError = missingFoodCategory
         shouldShowQuantityError = invalidQuantity
         shouldShowWeightError = invalidWeight
-        // (Add an expiry error flag if your Section6 cell supports it)
 
-        // 3) Reload only affected sections (current table indices)
-        var sectionsToReload: [Int] = [0, 2, 3, 4, 5] // image, food, qty, weight, expiry
-        if isAdminUser { sectionsToReload.insert(1, at: 1) } // donor
+        // 3) Reload only affected sections (✅ correct indices)
+        let sectionsToReload: [Int]
+        if isAdminUser {
+            // [0] image, [1] donor, [2] food, [3] qty, [4] weight, [5] expiry
+            sectionsToReload = [0, 1, 2, 3, 4, 5]
+        } else {
+            // [0] image, [1] food, [2] qty, [3] weight, [4] expiry
+            sectionsToReload = [0, 1, 2, 3, 4]
+        }
+
         UIView.performWithoutAnimation {
             donationFormTableview.reloadSections(IndexSet(sectionsToReload), with: .none)
         }
@@ -953,6 +1060,16 @@ class RaghadDonatoinFormViewController: UIViewController,
         }
 
         // 5) All good → go next
-        performSegue(withIdentifier: "showSchedulePickup", sender: self)
+//        performSegue(withIdentifier: "showSchedulePickup", sender: self)
+        
+        let sb = UIStoryboard(name: "Raghad1", bundle: nil)
+        let vc = sb.instantiateViewController(withIdentifier: "SchedulePickupVC")
+        navigationController?.pushViewController(vc, animated: true)
+
+        
+        
+        
+        
     }
+
 }

@@ -753,7 +753,26 @@ class RaghadDonatoinFormViewController: UIViewController,
         donationFormTableview.rowHeight = UITableView.automaticDimension
 
         print("🔐 Current user:", user.username, " | 👤 Is Admin?", user.isAdmin)
+        
+        
+        
+        
+        //for the last elemnt button 👤  👤  👤  👤  👤  👤  👤  👤  👤  👤
+        let extra: CGFloat = view.safeAreaInsets.bottom + 40   // ✅ enough space for button
+           donationFormTableview.contentInset.bottom = extra
+           donationFormTableview.verticalScrollIndicatorInsets.bottom = extra
+
+           // ✅ also add a footer so you can always scroll past last cell
+           if donationFormTableview.tableFooterView == nil || donationFormTableview.tableFooterView?.frame.height != extra {
+               donationFormTableview.tableFooterView = UIView(frame: CGRect(x: 0, y: 0, width: 1, height: extra))
+           }
+        
+        
     }
+    
+    
+
+
 
     // MARK: - Keyboard helpers
     func addDoneButtonOnKeyboard() {
@@ -1066,9 +1085,6 @@ class RaghadDonatoinFormViewController: UIViewController,
         let vc = sb.instantiateViewController(withIdentifier: "SchedulePickupVC")
         navigationController?.pushViewController(vc, animated: true)
 
-        
-        
-        
         
     }
 

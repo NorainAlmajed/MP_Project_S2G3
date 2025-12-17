@@ -82,16 +82,6 @@ class DonationViewController: UIViewController {
         statusCollectionView.delegate = self
 
         
-        
-        // Configure the layout of the collection views
-        //Donation collection view
-        let layout = UICollectionViewFlowLayout()
-        layout.scrollDirection = .vertical          // vertical scrolling
-        layout.minimumLineSpacing = 10              // space between cells
-        donationsCollectionView.collectionViewLayout = layout
-
-        donationsCollectionView.backgroundColor = self.view.backgroundColor
-        
 
         //Statsu collection view
         let layout2 = UICollectionViewFlowLayout()
@@ -134,6 +124,10 @@ class DonationViewController: UIViewController {
         navigationItem.searchController = searchController
         navigationItem.hidesSearchBarWhenScrolling = false
         definesPresentationContext = true
+        
+        //For fixing the position of the search bar
+        searchController.searchBar.searchBarStyle = .minimal
+
 
         
         //Adding the filter button
@@ -144,7 +138,21 @@ class DonationViewController: UIViewController {
             action: #selector(filterButtonTapped)
         )
 
-        
+        //Setting the size of the cells
+        let layout = UICollectionViewFlowLayout()
+        layout.scrollDirection = .vertical
+        layout.minimumLineSpacing = 16
+
+        let isIPad = UIDevice.current.userInterfaceIdiom == .pad
+        layout.sectionInset = UIEdgeInsets(
+            top: 12,
+            left: isIPad ? 40 : 0,
+            bottom: 12,
+            right: isIPad ? 40 : 0
+        )
+
+        donationsCollectionView.collectionViewLayout = layout
+
         
     }
     
@@ -325,9 +333,27 @@ extension DonationViewController: UICollectionViewDataSource {
 
 
 extension DonationViewController: UICollectionViewDelegateFlowLayout {
-    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
-        return CGSize(width: 376, height: 124)
+    func collectionView(_ collectionView: UICollectionView,
+                        layout collectionViewLayout: UICollectionViewLayout,
+                        sizeForItemAt indexPath: IndexPath) -> CGSize {
+
+        // Status collection view → keep small horizontal cells
+        if collectionView == statusCollectionView {
+            return CGSize(width: 100, height: 36)
+        }
+
+        // Donations collection view
+        let isIPad = UIDevice.current.userInterfaceIdiom == .pad
+
+        // Side margins
+        let horizontalPadding: CGFloat = isIPad ? 80 : 16
+
+        let width = collectionView.bounds.width - horizontalPadding
+        let height: CGFloat = isIPad ? 150 : 124
+
+        return CGSize(width: width, height: height)
     }
+
     
 }
 

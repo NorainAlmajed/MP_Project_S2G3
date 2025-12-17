@@ -26,7 +26,60 @@ class DonationDetailsViewController: UIViewController, UITableViewDelegate, UITa
         // Set the navigation bar title
         self.title = "Donation Details"
         navigationController?.navigationBar.prefersLargeTitles = false
+        
+        //Export button
+        navigationItem.rightBarButtonItem = UIBarButtonItem(
+            image: UIImage(systemName: "square.and.arrow.up"),
+            style: .plain,
+            target: self,
+            action: #selector(exportTapped)
+        )
+
     }
+    
+    
+    
+    //For exporting data
+    @objc private func exportTapped() {
+        guard let donation = donation else { return }
+
+        let text = """
+        ==============================
+                DONATION REPORT
+        ==============================
+
+        Donation ID:     \(donation.donationID)
+        NGO Name:        \(donation.ngo.ngoName)
+        Donor Name:      \(donation.donor.username)
+        Category:        \(donation.Category)
+        Quantity:        \(donation.quantity)
+        Status:          \(statusText(for: donation.status))
+
+        Generated On:    \(DateFormatter.localizedString(
+                            from: Date(),
+                            dateStyle: .medium,
+                            timeStyle: .short
+                          ))
+
+        ------------------------------
+        ProjectSimulator App
+        """
+
+
+        let activityVC = UIActivityViewController(
+            activityItems: [text],
+            applicationActivities: nil
+        )
+
+        // REQUIRED for iPad
+        if let popover = activityVC.popoverPresentationController {
+            popover.barButtonItem = navigationItem.rightBarButtonItem
+        }
+
+        present(activityVC, animated: true)
+    }
+
+
     
     //To make the donation page title appear
     override func viewWillAppear(_ animated: Bool) {
@@ -535,6 +588,19 @@ class DonationDetailsViewController: UIViewController, UITableViewDelegate, UITa
         default: return UITableView.automaticDimension
         }
     }
+    
+    
+    private func statusText(for status: Int) -> String {
+        switch status {
+        case 1: return "Pending"
+        case 2: return "Accepted"
+        case 3: return "Collected"
+        case 4: return "Rejected"
+        case 5: return "Cancelled"
+        default: return "Unknown"
+        }
+    }
+
     
 }
 

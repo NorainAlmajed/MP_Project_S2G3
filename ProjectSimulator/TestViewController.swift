@@ -36,8 +36,39 @@ class DonationDetailsViewController: UIViewController, UITableViewDelegate, UITa
         navigationController?.navigationBar.prefersLargeTitles = false
         title = "Donation Details"
         
-        
+        // Remove default navigation bar shadow
+        navigationController?.navigationBar.shadowImage = UIImage()
+
+        // Avoid adding the line multiple times
+        navigationController?.navigationBar.subviews
+            .filter { $0.tag == 999 }
+            .forEach { $0.removeFromSuperview() }
+
+        // Add custom bottom line
+        let bottomLine = UIView()
+        bottomLine.tag = 999
+        bottomLine.backgroundColor = UIColor.systemGray4
+        bottomLine.translatesAutoresizingMaskIntoConstraints = false
+
+        navigationController?.navigationBar.addSubview(bottomLine)
+
+        NSLayoutConstraint.activate([
+            bottomLine.heightAnchor.constraint(equalToConstant: 1),
+            bottomLine.leadingAnchor.constraint(equalTo: navigationController!.navigationBar.leadingAnchor),
+            bottomLine.trailingAnchor.constraint(equalTo: navigationController!.navigationBar.trailingAnchor),
+            bottomLine.bottomAnchor.constraint(equalTo: navigationController!.navigationBar.bottomAnchor)
+        ])
     }
+
+    override func viewWillDisappear(_ animated: Bool) {
+        super.viewWillDisappear(animated)
+
+        navigationController?.navigationBar.subviews
+            .filter { $0.tag == 999 }
+            .forEach { $0.removeFromSuperview() }
+    }
+
+    
     
     // Number of sections
     func numberOfSections(in tableView: UITableView) -> Int {

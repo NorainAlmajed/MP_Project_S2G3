@@ -701,8 +701,6 @@ class DonationDetailsViewController: UIViewController, UITableViewDelegate, UITa
     
     //For PDF exporting
     private func buildDonationPDF(for donation: Donation) -> Data {
-        let reportText = buildDonationReport(for: donation)
-        
         let pdfMetaData = [
             kCGPDFContextCreator: "ProjectSimulator",
             kCGPDFContextAuthor: user.username,
@@ -714,8 +712,9 @@ class DonationDetailsViewController: UIViewController, UITableViewDelegate, UITa
         
         let pageWidth: CGFloat = 595.2
         let pageHeight: CGFloat = 841.8
-        let margin: CGFloat = 20
+        let margin: CGFloat = 40
         let imageMaxSize: CGFloat = 150
+        let lineSpacing: CGFloat = 6
         
         var isFirstPage = true
         
@@ -724,19 +723,72 @@ class DonationDetailsViewController: UIViewController, UITableViewDelegate, UITa
         let data = renderer.pdfData { context in
             var yPosition: CGFloat = margin
             
-            func drawLine(at y: CGFloat) {
+            let greenColor = UIColor(named: "greenCol") ?? UIColor.systemGreen
+            
+            func drawLine(at y: CGFloat, thickness: CGFloat = 1) {
                 let linePath = UIBezierPath()
                 linePath.move(to: CGPoint(x: margin, y: y))
                 linePath.addLine(to: CGPoint(x: pageWidth - margin, y: y))
-                UIColor.systemGray4.setStroke()
-                linePath.lineWidth = 1
+                greenColor.setStroke()
+                linePath.lineWidth = thickness
                 linePath.stroke()
             }
             
-            func drawPage(withText text: String) -> String? {
-                context.beginPage()
+            func drawHeader(_ text: String, y: inout CGFloat) {
+                let paragraphStyle = NSMutableParagraphStyle()
+                paragraphStyle.alignment = .left
+                paragraphStyle.lineSpacing = lineSpacing
                 
-                // Draw image centered at top of first page
+                let attributes: [NSAttributedString.Key: Any] = [
+                    .font: UIFont.boldSystemFont(ofSize: 16),
+                    .foregroundColor: greenColor,
+                    .paragraphStyle: paragraphStyle
+                ]
+                
+                let nsText = NSString(string: text)
+                let rect = CGRect(x: margin, y: y, width: pageWidth - 2 * margin, height: CGFloat.greatestFiniteMagnitude)
+                let size = nsText.boundingRect(with: CGSize(width: rect.width, height: CGFloat.greatestFiniteMagnitude),
+                                               options: [.usesLineFragmentOrigin, .usesFontLeading],
+                                               attributes: attributes,
+                                               context: nil)
+                nsText.draw(with: CGRect(x: margin, y: y, width: rect.width, height: size.height),
+                            options: [.usesLineFragmentOrigin, .usesFontLeading],
+                            attributes: attributes,
+                            context: nil)
+                y += size.height + 4
+                drawLine(at: y, thickness: 1.5)
+                y += 10
+            }
+            
+            func drawText(_ text: String, y: inout CGFloat, font: UIFont = UIFont.systemFont(ofSize: 12)) {
+                let paragraphStyle = NSMutableParagraphStyle()
+                paragraphStyle.alignment = .left
+                paragraphStyle.lineSpacing = lineSpacing
+                
+                let attributes: [NSAttributedString.Key: Any] = [
+                    .font: font,
+                    .foregroundColor: UIColor.label,
+                    .paragraphStyle: paragraphStyle
+                ]
+                
+                let nsText = NSString(string: text)
+                let rect = CGRect(x: margin, y: y, width: pageWidth - 2 * margin, height: CGFloat.greatestFiniteMagnitude)
+                let size = nsText.boundingRect(with: CGSize(width: rect.width, height: CGFloat.greatestFiniteMagnitude),
+                                               options: [.usesLineFragmentOrigin, .usesFontLeading],
+                                               attributes: attributes,
+                                               context: nil)
+                nsText.draw(with: CGRect(x: margin, y: y, width: rect.width, height: size.height),
+                            options: [.usesLineFragmentOrigin, .usesFontLeading],
+                            attributes: attributes,
+                            context: nil)
+                y += size.height + 8
+            }
+            
+            func drawPage() {
+                context.beginPage()
+                yPosition = margin
+                
+                // Draw centered image at top (first page)
                 if isFirstPage {
                     let foodImage = donation.foodImage
                     let aspectRatio = foodImage.size.width / foodImage.size.height
@@ -750,63 +802,94 @@ class DonationDetailsViewController: UIViewController, UITableViewDelegate, UITa
                     }
                     
                     let imageX = (pageWidth - imageWidth) / 2
-                    let imageRect = CGRect(x: imageX, y: yPosition, width: imageWidth, height: imageHeight)
-                    foodImage.draw(in: imageRect)
-                    
+                    foodImage.draw(in: CGRect(x: imageX, y: yPosition, width: imageWidth, height: imageHeight))
                     yPosition += imageHeight + 20
                     isFirstPage = false
-                } else {
+                }
+                
+                // Draw report title
+                let title = "DONATION REPORT"
+                let titleAttributes: [NSAttributedString.Key: Any] = [
+                    .font: UIFont.boldSystemFont(ofSize: 22),
+                    .foregroundColor: greenColor
+                ]
+                let titleSize = (title as NSString).size(withAttributes: titleAttributes)
+                let titleX = (pageWidth - titleSize.width) / 2
+                (title as NSString).draw(at: CGPoint(x: titleX, y: yPosition), withAttributes: titleAttributes)
+                yPosition += titleSize.height + 20
+                
+                // Section 1 - Basic Information
+                drawHeader("▶ BASIC INFORMATION", y: &yPosition)
+                
+                let dateFormatter = DateFormatter()
+                dateFormatter.dateStyle = .medium
+                
+                let createdDate = dateFormatter.string(from: donation.creationDate)
+                let pickupDate = dateFormatter.string(from: donation.pickupDate)
+                let expiryDate = dateFormatter.string(from: donation.expiryDate)
+                
+                drawText("Donation ID: \(donation.donationID)", y: &yPosition)
+                drawText("NGO Name: \(donation.ngo.ngoName)", y: &yPosition)
+                drawText("Donor Username: \(donation.donor.username)", y: &yPosition)
+                drawText("Created On: \(createdDate)", y: &yPosition)
+                drawText("Status: \(statusText(for: donation.status))", y: &yPosition)
+                
+                // Section 2 - Donation Details
+                drawHeader("▶ DONATION DETAILS", y: &yPosition)
+                drawText("Category: \(donation.Category)", y: &yPosition)
+                drawText("Quantity: \(donation.quantity)", y: &yPosition)
+                if let weight = donation.weight {
+                    drawText("Weight: \(weight) kg", y: &yPosition)
+                }
+                
+                if let description = donation.description, !description.isEmpty {
+                    drawText("Description: \(description)", y: &yPosition)
+                }
+                
+                // Section 3 - Pickup Info
+                drawHeader("▶ PICKUP INFORMATION", y: &yPosition)
+                drawText("Pickup Date: \(pickupDate)", y: &yPosition)
+                drawText("Pickup Time: \(donation.pickupTime)", y: &yPosition)
+                
+                // Section 4 - Address
+                drawHeader("▶ ADDRESS", y: &yPosition)
+                let address = donation.address
+                drawText("Building: \(address.building)", y: &yPosition)
+                drawText("Road: \(address.road)", y: &yPosition)
+                drawText("Block: \(address.block)", y: &yPosition)
+                drawText("Area: \(address.area)", y: &yPosition)
+                drawText("Governorate: \(address.governorate)", y: &yPosition)
+                if let flat = address.flat {
+                    drawText("Flat: \(flat)", y: &yPosition)
+                }
+                
+                // Section 5 - Expiry
+                drawHeader("▶ EXPIRY", y: &yPosition)
+                drawText("Expiry Date: \(expiryDate)", y: &yPosition)
+                
+                // Section 6 - Recurrence
+                if donation.recurrence > 0 {
+                    drawHeader("▶ RECURRENCE", y: &yPosition)
+                    drawText("Every \(donation.recurrence) days", y: &yPosition)
+                }
+                
+                // Footer dynamically placed
+                let footerHeight: CGFloat = 60
+                if yPosition + footerHeight > pageHeight - margin {
+                    context.beginPage()
                     yPosition = margin
                 }
-                
-                let paragraphStyle = NSMutableParagraphStyle()
-                paragraphStyle.alignment = .left // left-aligned text
-                
-                let attributes: [NSAttributedString.Key: Any] = [
-                    .font: UIFont.systemFont(ofSize: 12),
-                    .paragraphStyle: paragraphStyle
-                ]
-                
-                let lines = text.components(separatedBy: "\n")
-                
-                for line in lines {
-                    // If line is a separator like "-----" or "===" → draw full-width line
-                    if line.trimmingCharacters(in: .whitespacesAndNewlines).contains("---") || line.trimmingCharacters(in: .whitespacesAndNewlines).contains("===") {
-                        drawLine(at: yPosition + 6)
-                        yPosition += 12
-                        continue
-                    }
-                    
-                    let nsLine = NSString(string: line)
-                    let textRect = CGRect(x: margin, y: yPosition, width: pageWidth - 2 * margin, height: CGFloat.greatestFiniteMagnitude)
-                    let sizeThatFits = nsLine.boundingRect(
-                        with: CGSize(width: textRect.width, height: CGFloat.greatestFiniteMagnitude),
-                        options: [.usesLineFragmentOrigin, .usesFontLeading],
-                        attributes: attributes,
-                        context: nil
-                    )
-                    
-                    nsLine.draw(with: CGRect(x: margin, y: yPosition, width: pageWidth - 2 * margin, height: sizeThatFits.height),
-                                options: [.usesLineFragmentOrigin, .usesFontLeading],
-                                attributes: attributes,
-                                context: nil)
-                    
-                    yPosition += sizeThatFits.height + 4
-                }
-                
-                return nil
+                drawLine(at: yPosition)
+                yPosition += 8
+                drawText("Generated On: \(DateFormatter.localizedString(from: Date(), dateStyle: .medium, timeStyle: .short))", y: &yPosition)
+                drawText("ProjectSimulator App", y: &yPosition, font: UIFont.boldSystemFont(ofSize: 14))
             }
             
-            var remainingText: String? = reportText
-            while let text = remainingText {
-                remainingText = drawPage(withText: text)
-                yPosition = margin
-            }
+            drawPage()
         }
         
         return data
     }
-
 
 
 

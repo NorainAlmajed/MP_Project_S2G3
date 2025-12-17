@@ -6,6 +6,8 @@
 //
 
 import UIKit
+import PDFKit
+
 
 class DonationDetailsViewController: UIViewController, UITableViewDelegate, UITableViewDataSource {
     
@@ -155,17 +157,21 @@ class DonationDetailsViewController: UIViewController, UITableViewDelegate, UITa
     @objc private func exportTapped() {
         guard let donation = donation else { return }
 
-        let reportText = buildDonationReport(for: donation)
-
-        let activityVC = UIActivityViewController(
-            activityItems: [reportText],
-            applicationActivities: nil
-        )
-
+        // PDF
+        let pdfData = buildDonationPDF(for: donation)
+        let pdfURL = FileManager.default.temporaryDirectory.appendingPathComponent("DonationReport.pdf")
+        try? pdfData.write(to: pdfURL)
+        
+        // Plain text
+        let textReport = buildDonationReport(for: donation)
+        
+        // Share both
+        let activityVC = UIActivityViewController(activityItems: [textReport, pdfURL], applicationActivities: nil)
+        
         if let popover = activityVC.popoverPresentationController {
             popover.barButtonItem = navigationItem.rightBarButtonItem
         }
-
+        
         present(activityVC, animated: true)
     }
 
@@ -681,6 +687,7 @@ class DonationDetailsViewController: UIViewController, UITableViewDelegate, UITa
     }
     
     
+    //Setting the status
     private func statusText(for status: Int) -> String {
         switch status {
         case 1: return "Pending"
@@ -691,6 +698,40 @@ class DonationDetailsViewController: UIViewController, UITableViewDelegate, UITa
         default: return "Unknown"
         }
     }
+    
+    //For PDF exporting
+    private func buildDonationPDF(for donation: Donation) -> Data {
+        let reportText = buildDonationReport(for: donation)
+        
+        let pdfMetaData = [
+            kCGPDFContextCreator: "ProjectSimulator",
+            kCGPDFContextAuthor: user.username,
+            kCGPDFContextTitle: "Donation Report"
+        ]
+        
+        let format = UIGraphicsPDFRendererFormat()
+        format.documentInfo = pdfMetaData as [String: Any]
+        
+        let pageWidth = 595.2   // A4 width in points
+        let pageHeight = 841.8  // A4 height in points
+        let pageRect = CGRect(x: 0, y: 0, width: pageWidth, height: pageHeight)
+        
+        let renderer = UIGraphicsPDFRenderer(bounds: pageRect, format: format)
+        
+        let data = renderer.pdfData { context in
+            context.beginPage()
+            
+            let attributes: [NSAttributedString.Key: Any] = [
+                .font: UIFont.systemFont(ofSize: 12),
+                .foregroundColor: UIColor.black
+            ]
+            
+            reportText.draw(in: CGRect(x: 20, y: 20, width: pageRect.width - 40, height: pageRect.height - 40), withAttributes: attributes)
+        }
+        
+        return data
+    }
+
 
     
 }

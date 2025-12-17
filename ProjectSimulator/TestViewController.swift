@@ -700,6 +700,7 @@ class DonationDetailsViewController: UIViewController, UITableViewDelegate, UITa
     }
     
     //For PDF exporting
+    
     private func buildDonationPDF(for donation: Donation) -> Data {
         let reportText = buildDonationReport(for: donation)
         
@@ -712,25 +713,110 @@ class DonationDetailsViewController: UIViewController, UITableViewDelegate, UITa
         let format = UIGraphicsPDFRendererFormat()
         format.documentInfo = pdfMetaData as [String: Any]
         
-        let pageWidth = 595.2   // A4 width in points
-        let pageHeight = 841.8  // A4 height in points
-        let pageRect = CGRect(x: 0, y: 0, width: pageWidth, height: pageHeight)
+        let pageWidth: CGFloat = 595.2
+        let pageHeight: CGFloat = 841.8
+        let margin: CGFloat = 20
         
-        let renderer = UIGraphicsPDFRenderer(bounds: pageRect, format: format)
+        var isFirstPage = true // <-- Flag to draw image only once
+        
+        let renderer = UIGraphicsPDFRenderer(bounds: CGRect(x: 0, y: 0, width: pageWidth, height: pageHeight), format: format)
         
         let data = renderer.pdfData { context in
-            context.beginPage()
+            var yPosition: CGFloat = margin
             
-            let attributes: [NSAttributedString.Key: Any] = [
-                .font: UIFont.systemFont(ofSize: 12),
-                .foregroundColor: UIColor.black
-            ]
+            func drawPage(withText text: String) -> String? {
+                context.beginPage()
+                
+                // --- Draw Food Image ONLY on first page ---
+                if isFirstPage {
+                    let foodImage = donation.foodImage
+                    let maxWidth: CGFloat = 200
+                    let maxHeight: CGFloat = 200
+                    let aspectRatio = foodImage.size.width / foodImage.size.height
+                    var foodWidth = maxWidth
+                    var foodHeight = maxHeight
+                    
+                    if aspectRatio > 1 {
+                        foodHeight = maxWidth / aspectRatio
+                    } else {
+                        foodWidth = maxHeight * aspectRatio
+                    }
+                    
+                    let foodX = (pageWidth - foodWidth) / 2
+                    foodImage.draw(in: CGRect(x: foodX, y: yPosition, width: foodWidth, height: foodHeight))
+                    yPosition += foodHeight + 20
+                    
+                    isFirstPage = false // <-- make sure it never draws again
+                }
+                
+                let paragraphStyle = NSMutableParagraphStyle()
+                paragraphStyle.alignment = .center
+                
+                let attributes: [NSAttributedString.Key: Any] = [
+                    .font: UIFont.systemFont(ofSize: 12),
+                    .paragraphStyle: paragraphStyle
+                ]
+                
+                let textRect = CGRect(x: margin, y: yPosition, width: pageWidth - 2*margin, height: pageHeight - yPosition - margin)
+                let nsText = NSString(string: text)
+                let options: NSStringDrawingOptions = [.usesLineFragmentOrigin, .usesFontLeading]
+                
+                let sizeThatFits = nsText.boundingRect(
+                    with: CGSize(width: textRect.width, height: CGFloat.greatestFiniteMagnitude),
+                    options: options,
+                    attributes: attributes,
+                    context: nil
+                )
+                
+                if sizeThatFits.height <= textRect.height {
+                    nsText.draw(with: textRect, options: options, attributes: attributes, context: nil)
+                    return nil
+                } else {
+                    var lower = 0
+                    var upper = text.count
+                    var mid = 0
+                    var fitRange = NSRange(location: 0, length: 0)
+                    
+                    while lower < upper {
+                        mid = (lower + upper) / 2
+                        let substring = nsText.substring(to: mid) as NSString
+                        let rect = substring.boundingRect(
+                            with: CGSize(width: textRect.width, height: CGFloat.greatestFiniteMagnitude),
+                            options: options,
+                            attributes: attributes,
+                            context: nil
+                        )
+                        if rect.height <= textRect.height {
+                            fitRange = NSRange(location: 0, length: mid)
+                            lower = mid + 1
+                        } else {
+                            upper = mid
+                        }
+                    }
+                    
+                    let pageText = nsText.substring(with: fitRange)
+                    (pageText as NSString).draw(with: textRect, options: options, attributes: attributes, context: nil)
+                    
+                    let remainingRange = NSRange(location: fitRange.length, length: nsText.length - fitRange.length)
+                    return nsText.substring(with: remainingRange)
+                }
+            }
             
-            reportText.draw(in: CGRect(x: 20, y: 20, width: pageRect.width - 40, height: pageRect.height - 40), withAttributes: attributes)
+            var remainingText: String? = reportText
+            while let text = remainingText {
+                remainingText = drawPage(withText: text)
+                yPosition = margin
+            }
         }
         
         return data
     }
+
+
+
+
+
+
 
 
     

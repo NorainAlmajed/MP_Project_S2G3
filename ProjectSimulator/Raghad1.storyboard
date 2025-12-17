@@ -317,7 +317,7 @@
                                             <rect key="frame" x="0.0" y="0.0" width="393" height="130"/>
                                             <autoresizingMask key="autoresizingMask"/>
                                             <subviews>
-                                                <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="U68-HF-448">
+                                                <button opaque="NO" contentMode="scaleToFill" ambiguous="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="U68-HF-448">
                                                     <rect key="frame" x="19.666666666666657" y="73" width="354" height="39"/>
                                                     <state key="normal" title="Button"/>
                                                     <buttonConfiguration key="configuration" style="filled" title="Chat With Us">
@@ -327,7 +327,7 @@
                                                         <action selector="chatTapped:" destination="YeK-xs-9i3" eventType="touchUpInside" id="GJL-CD-UkN"/>
                                                     </connections>
                                                 </button>
-                                                <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Byz-rx-UJ1">
+                                                <button opaque="NO" contentMode="scaleToFill" ambiguous="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Byz-rx-UJ1">
                                                     <rect key="frame" x="19.666666666666657" y="26" width="354" height="39"/>
                                                     <state key="normal" title="Button"/>
                                                     <buttonConfiguration key="configuration" style="filled" title="Donate To This NGO">
@@ -493,20 +493,20 @@
                                         </connections>
                                     </tableViewCell>
                                     <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" insetsLayoutMarginsFromSafeArea="NO" selectionStyle="blue" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" reuseIdentifier="Section3Cell" id="g4Z-g0-YU6" customClass="RaghadSection3TableViewCell" customModule="ProjectSimulator" customModuleProvider="target">
-                                        <rect key="frame" x="0.0" y="413" width="393" height="117"/>
+                                        <rect key="frame" x="0.0" y="413" width="393" height="117.33333587646484"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="g4Z-g0-YU6" id="Ocu-2q-x5u">
-                                            <rect key="frame" x="0.0" y="0.0" width="393" height="117"/>
+                                            <rect key="frame" x="0.0" y="0.0" width="393" height="117.33333587646484"/>
                                             <autoresizingMask key="autoresizingMask"/>
                                             <subviews>
                                                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Food Category " textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Lh3-PW-yag">
-                                                    <rect key="frame" x="36" y="12" width="321" height="21"/>
+                                                    <rect key="frame" x="36" y="11.999999999999998" width="321" height="21.333333333333329"/>
                                                     <fontDescription key="fontDescription" type="boldSystem" pointSize="17"/>
                                                     <nil key="textColor"/>
                                                     <nil key="highlightedColor"/>
                                                 </label>
                                                 <tableView hidden="YES" clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" scrollEnabled="NO" dataMode="prototypes" style="plain" rowHeight="60" estimatedRowHeight="-1" sectionHeaderHeight="-1" estimatedSectionHeaderHeight="-1" sectionFooterHeight="-1" estimatedSectionFooterHeight="-1" translatesAutoresizingMaskIntoConstraints="NO" id="NiQ-4r-PH1">
-                                                    <rect key="frame" x="36" y="105" width="353" height="0.0"/>
+                                                    <rect key="frame" x="36" y="105.33333333333333" width="353" height="0.0"/>
                                                     <color key="backgroundColor" systemColor="systemBackgroundColor"/>
                                                     <constraints>
                                                         <constraint firstAttribute="height" id="Ejb-Zh-ft4"/>
@@ -514,7 +514,7 @@
                                                     <inset key="separatorInset" minX="0.0" minY="0.0" maxX="0.0" maxY="0.0"/>
                                                 </tableView>
                                                 <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="qdZ-gd-p4d">
-                                                    <rect key="frame" x="36" y="47" width="321" height="44"/>
+                                                    <rect key="frame" x="36" y="47.333333333333343" width="321" height="44"/>
                                                     <constraints>
                                                         <constraint firstAttribute="height" constant="44" id="rZc-Yf-giI"/>
                                                     </constraints>
@@ -560,7 +560,7 @@
                                         </connections>
                                     </tableViewCell>
                                     <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" insetsLayoutMarginsFromSafeArea="NO" selectionStyle="blue" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" reuseIdentifier="Section4Cell" rowHeight="104" id="yJh-qD-b86" customClass="RaghadSection4TableViewCell" customModule="ProjectSimulator" customModuleProvider="target">
-                                        <rect key="frame" x="0.0" y="530" width="393" height="104"/>
+                                        <rect key="frame" x="0.0" y="530.33333587646484" width="393" height="104"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="yJh-qD-b86" id="qzW-A4-cpU">
                                             <rect key="frame" x="0.0" y="0.0" width="393" height="104"/>
@@ -610,7 +610,7 @@
                                         </connections>
                                     </tableViewCell>
                                     <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" insetsLayoutMarginsFromSafeArea="NO" selectionStyle="blue" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" reuseIdentifier="Section5Cell" rowHeight="102" id="xO4-9F-Ge4" customClass="RaghadSection5TableViewCell" customModule="ProjectSimulator" customModuleProvider="target">
-                                        <rect key="frame" x="0.0" y="634" width="393" height="102"/>
+                                        <rect key="frame" x="0.0" y="634.33333587646484" width="393" height="102"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="xO4-9F-Ge4" id="RXc-ws-3cs">
                                             <rect key="frame" x="0.0" y="0.0" width="393" height="102"/>
@@ -652,25 +652,25 @@
                                         </connections>
                                     </tableViewCell>
                                     <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" insetsLayoutMarginsFromSafeArea="NO" selectionStyle="blue" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" reuseIdentifier="Section6Cell" rowHeight="93" id="7Or-6U-ZuP" customClass="RaghadSection6TableViewCell" customModule="ProjectSimulator" customModuleProvider="target">
-                                        <rect key="frame" x="0.0" y="736" width="393" height="93"/>
+                                        <rect key="frame" x="0.0" y="736.33333587646484" width="393" height="93"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="7Or-6U-ZuP" id="caA-PJ-MqH" customClass="RaghadSection6TableViewCell" customModule="ProjectSimulator" customModuleProvider="target">
                                             <rect key="frame" x="0.0" y="0.0" width="393" height="93"/>
                                             <autoresizingMask key="autoresizingMask"/>
                                             <subviews>
+                                                <textField opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="248" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" borderStyle="roundedRect" placeholder="DD/MM/YYYY" textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="7oz-jG-cmB">
+                                                    <rect key="frame" x="36" y="29" width="321" height="44"/>
+                                                    <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                                    <fontDescription key="fontDescription" type="system" pointSize="14"/>
+                                                    <textInputTraits key="textInputTraits"/>
+                                                </textField>
                                                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="Expiration Date" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="n4I-mD-5O9">
-                                                    <rect key="frame" x="36" y="1" width="125" height="21"/>
+                                                    <rect key="frame" x="36" y="0.0" width="124.66666666666669" height="21"/>
                                                     <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                                     <fontDescription key="fontDescription" type="boldSystem" pointSize="17"/>
                                                     <nil key="textColor"/>
                                                     <nil key="highlightedColor"/>
                                                 </label>
-                                                <textField opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="248" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" borderStyle="roundedRect" placeholder="DD/MM/YYYY" textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="7oz-jG-cmB">
-                                                    <rect key="frame" x="36" y="38" width="321" height="34"/>
-                                                    <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                                    <fontDescription key="fontDescription" type="system" pointSize="14"/>
-                                                    <textInputTraits key="textInputTraits"/>
-                                                </textField>
                                             </subviews>
                                             <connections>
                                                 <outlet property="txtExpiryDate" destination="7oz-jG-cmB" id="dwZ-dD-aND"/>
@@ -681,7 +681,7 @@
                                         </connections>
                                     </tableViewCell>
                                     <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" insetsLayoutMarginsFromSafeArea="NO" selectionStyle="blue" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" reuseIdentifier="Section7Cell" rowHeight="161" id="4sX-ce-udM" customClass="RaghadSection7TableViewCell" customModule="ProjectSimulator" customModuleProvider="target">
-                                        <rect key="frame" x="0.0" y="829" width="393" height="161"/>
+                                        <rect key="frame" x="0.0" y="829.33333587646484" width="393" height="161"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="4sX-ce-udM" id="jsg-4n-UDz">
                                             <rect key="frame" x="0.0" y="0.0" width="393" height="161"/>
@@ -729,14 +729,15 @@
                                         </connections>
                                     </tableViewCell>
                                     <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" insetsLayoutMarginsFromSafeArea="NO" selectionStyle="blue" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" reuseIdentifier="Section8Cell" rowHeight="62" id="a0H-e0-6SH" customClass="RaghadSection8TableViewCell" customModule="ProjectSimulator" customModuleProvider="target">
-                                        <rect key="frame" x="0.0" y="990" width="393" height="62"/>
+                                        <rect key="frame" x="0.0" y="990.33333587646484" width="393" height="62"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="a0H-e0-6SH" id="DsM-R6-emS" customClass="RaghadSection8TableViewCell" customModule="ProjectSimulator" customModuleProvider="target">
                                             <rect key="frame" x="0.0" y="0.0" width="393" height="62"/>
                                             <autoresizingMask key="autoresizingMask"/>
                                             <subviews>
-                                                <button opaque="NO" contentMode="scaleToFill" ambiguous="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="8ke-mX-f3b">
+                                                <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="8ke-mX-f3b">
                                                     <rect key="frame" x="19.666666666666657" y="16" width="354" height="39"/>
+                                                    <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                                     <state key="normal" title="Button"/>
                                                     <buttonConfiguration key="configuration" style="filled" title="Proceed To Schedule Pickup">
                                                         <color key="baseBackgroundColor" name="greenCol"/>
@@ -747,11 +748,6 @@
                                                     </connections>
                                                 </button>
                                             </subviews>
-                                            <constraints>
-                                                <constraint firstItem="8ke-mX-f3b" firstAttribute="centerX" secondItem="DsM-R6-emS" secondAttribute="centerX" id="IRc-q7-9AS"/>
-                                                <constraint firstItem="8ke-mX-f3b" firstAttribute="top" secondItem="DsM-R6-emS" secondAttribute="top" constant="16" id="fnJ-Yv-Zme"/>
-                                                <constraint firstItem="8ke-mX-f3b" firstAttribute="width" secondItem="DsM-R6-emS" secondAttribute="width" multiplier="0.900763" id="ytf-ep-cga"/>
-                                            </constraints>
                                         </tableViewCellContentView>
                                         <connections>
                                             <outlet property="btnProceedToSchedulePickup" destination="8ke-mX-f3b" id="Gbe-cF-8nx"/>
@@ -802,7 +798,7 @@
                                                 <label opaque="NO" multipleTouchEnabled="YES" contentMode="left" insetsLayoutMarginsFromSafeArea="NO" text="Title" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" id="ahN-Mb-mG1">
                                                     <rect key="frame" x="20" y="0.0" width="353" height="43.666667938232422"/>
                                                     <autoresizingMask key="autoresizingMask"/>
-                                                    <fontDescription key="fontDescription" type="system" pointSize="0.0"/>
+                                                    <fontDescription key="fontDescription" type="system" pointSize="12"/>
                                                     <nil key="textColor"/>
                                                     <nil key="highlightedColor"/>
                                                 </label>

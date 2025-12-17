@@ -7,130 +7,114 @@
 
 import UIKit
 
-class NgoDetailsViewController: UIViewController {
+//class NgoDetailsViewController: UIViewController {
+class NgoDetailsViewController: UIViewController, UITableViewDataSource, UITableViewDelegate {
 
     var selectedNgo: NGO?
-    @IBOutlet weak var lblMissionText: UILabel!
-    
-    @IBOutlet weak var lblMissionTxt: UILabel!
-    
-    @IBOutlet weak var lblNgoCategory: UILabel!
-    @IBOutlet weak var lblNgoName: UILabel!
-    @IBOutlet weak var misssionView: UIView!
-    
-    @IBOutlet weak var contactView: UIView!
-    
-    
-    
-    
-    @IBOutlet weak var img_logo: UIImageView!
-    @IBOutlet weak var lblContactNgo: UILabel!
-    @IBOutlet weak var btnPhoneLogo: UIButton!
-    @IBOutlet weak var lblPgoneNumber: UILabel!
-    @IBOutlet weak var lblEmail: UILabel!
-    @IBOutlet weak var btnEmailLogo: UIButton!
-    @IBOutlet weak var btnDonateToNgo: UIButton!
-    @IBOutlet weak var btnChatWithUs: UIButton!
-    
-    
 
     
-    
+    @IBOutlet weak var tableView: UITableView!
+
     override func viewDidLoad() {
         super.viewDidLoad()
-        self.title = "NGO Details"
-        // إزالة الظل الافتراضي (لو موجود)
-           navigationController?.navigationBar.shadowImage = UIImage()
+        title = "NGO Details"
 
-           // إنشاء خط مخصص أسفل الـ navigation bar
-           let bottomLine = UIView()
-           bottomLine.backgroundColor = UIColor.systemGray4
-           bottomLine.translatesAutoresizingMaskIntoConstraints = false
+        tableView.dataSource = self
+        tableView.delegate = self
 
-           navigationController?.navigationBar.addSubview(bottomLine)
+        tableView.separatorStyle = .none
+        tableView.rowHeight = UITableView.automaticDimension
+        tableView.estimatedRowHeight = 200
 
-           NSLayoutConstraint.activate([
-               bottomLine.heightAnchor.constraint(equalToConstant: 1),
-               bottomLine.leadingAnchor.constraint(equalTo: navigationController!.navigationBar.leadingAnchor),
-               bottomLine.trailingAnchor.constraint(equalTo: navigationController!.navigationBar.trailingAnchor),
-               bottomLine.bottomAnchor.constraint(equalTo: navigationController!.navigationBar.bottomAnchor)
-           ])
-       
-       
-        // Mission View styling
-            misssionView.backgroundColor = .white
-            misssionView.layer.cornerRadius = 16
-            misssionView.layer.borderWidth = 1
-            misssionView.layer.borderColor = UIColor.systemGray4.cgColor
-            misssionView.clipsToBounds = true
-        
-        // ✅📞 Contact View styling (same as Mission View)
-        contactView.backgroundColor = .white
-        contactView.layer.cornerRadius = 16
-        contactView.layer.borderWidth = 1
-        contactView.layer.borderColor=UIColor.systemGray4.cgColor
-        contactView.clipsToBounds = true
+        // Bottom line under navigation bar
+        navigationController?.navigationBar.shadowImage = UIImage()
 
-        
+        let bottomLine = UIView()
+        bottomLine.backgroundColor = UIColor.systemGray4
+        bottomLine.translatesAutoresizingMaskIntoConstraints = false
+        navigationController?.navigationBar.addSubview(bottomLine)
 
-        // Image View styling (same border)
-            img_logo.backgroundColor = .white
-            img_logo.layer.cornerRadius = 12
-            img_logo.layer.borderWidth = 1
-            img_logo.layer.borderColor = UIColor.systemGray4.cgColor
-            img_logo.clipsToBounds = true
-        
-        guard let ngo = selectedNgo else { return }
+        NSLayoutConstraint.activate([
+            bottomLine.heightAnchor.constraint(equalToConstant: 1),
+            bottomLine.leadingAnchor.constraint(equalTo: navigationController!.navigationBar.leadingAnchor),
+            bottomLine.trailingAnchor.constraint(equalTo: navigationController!.navigationBar.trailingAnchor),
+            bottomLine.bottomAnchor.constraint(equalTo: navigationController!.navigationBar.bottomAnchor)
+        ])
 
-        lblNgoName.text = ngo.name
-        lblNgoCategory.text = ngo.category
-        img_logo.image = ngo.photo
-        lblMissionText.text = ngo.mission
-        lblPgoneNumber.text = String(ngo.phoneNumber)
-        lblEmail.text = ngo.email
-      
-        
-        
+        // Hide back text
+        if #available(iOS 14.0, *) {
+            navigationItem.backButtonDisplayMode = .minimal
+        } else {
+            navigationItem.backBarButtonItem = UIBarButtonItem(title: "", style: .plain, target: nil, action: nil)
+        }
+    }
 
-    
+    // MARK: - TableView DataSource
 
-            // ✅⬅️🆕 Hide back button text for the NEXT screen (Donation Form)
-            if #available(iOS 14.0, *) {
-                navigationItem.backButtonDisplayMode = .minimal
-            } else {
-                navigationItem.backBarButtonItem = UIBarButtonItem(title: "", style: .plain, target: nil, action: nil)
+    func numberOfSections(in tableView: UITableView) -> Int { 1 }
+
+    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int { 4 }
+
+    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+
+        guard let ngo = selectedNgo else { return UITableViewCell() }
+
+        switch indexPath.row {
+
+        case 0:
+            let cell = tableView.dequeueReusableCell(withIdentifier: "NgoHeaderCell", for: indexPath) as! RaghadNgoDetailsHeaderTableViewCell
+            cell.configure(ngo: ngo)
+            cell.selectionStyle = .none
+            return cell
+
+        case 1:
+            let cell = tableView.dequeueReusableCell(withIdentifier: "NgoMissionCell", for: indexPath) as! RaghadNgoDetailsMissionTableViewCell
+            cell.configure(mission: ngo.mission)
+            cell.selectionStyle = .none
+            return cell
+
+        case 2:
+            let cell = tableView.dequeueReusableCell(withIdentifier: "NgoContactCell", for: indexPath) as! RaghadNgoDetailsContactTableViewCell
+            cell.configure(phone: ngo.phoneNumber, email: ngo.email)
+            cell.selectionStyle = .none
+            return cell
+
+        default:
+            let cell = tableView.dequeueReusableCell(withIdentifier: "NgoActionsCell", for: indexPath) as! RaghadNgoDetailsNgoActionsTableViewCell
+
+            cell.onDonateTapped = { [weak self] in
+                guard let self = self else { return }
+                self.performSegue(withIdentifier: "toDonationForm", sender: nil)
             }
 
-        
-        
+            cell.onChatTapped = {
+                // TODO: open chat page / action
+            }
 
-        // Buttons
-                styleActionButton(btnChatWithUs)
-                styleActionButton(btnDonateToNgo)
-
-
-        // Do any additional setup after loading the view.
-    }
-    
-    
-    
-    //For buttons radius
-        private func styleActionButton(_ button: UIButton) {
-            button.layer.cornerRadius = button.frame.height / 2
-            button.clipsToBounds = true
+            cell.selectionStyle = .none
+            return cell
         }
-   
+    }
 
-       
+    // MARK: - Row Heights (like your other page)
 
-    /*
+    func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
+        switch indexPath.row {
+        case 0: return 251                       // Header
+        case 1: return 211
+        case 2: return 155                      // Contact
+        case 3: return 130                      // Buttons
+        default: return UITableView.automaticDimension
+        }
+    }
+
     // MARK: - Navigation
 
-    // In a storyboard-based application, you will often want to do a little preparation before navigation
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-        // Get the new view controller using segue.destination.
-        // Pass the selected object to the new view controller.
+        if segue.identifier == "toDonationForm" {
+            // If you want to pass NGO to donation form, uncomment and change VC name if needed:
+            // let vc = segue.destination as! RaghadDonatoinFormViewController
+            // vc.selectedNgo = selectedNgo
+        }
     }
-    */
-
 }

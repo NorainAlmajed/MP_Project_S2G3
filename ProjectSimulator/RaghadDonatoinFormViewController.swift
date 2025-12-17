@@ -569,9 +569,10 @@ class RaghadDonatoinFormViewController: UIViewController,
         let missingImage = (selectedDonationImage == nil)      // 📸❌
         let missingDonor = isAdminUser ? (selectedDonorName == nil) : false
         // 👤❌
-        let invalidWeight = (weightValue == nil)   // ⚖️❌
-        shouldShowWeightError = invalidWeight
-        
+        // ✅ Weight OPTIONAL:
+            // invalid only when format is wrong
+            let invalidWeight = weightInvalidFormat
+
         
         let quantity = quantityValue
         let invalidQuantity = (quantity == nil || (quantity ?? 0) <= 0)
@@ -585,8 +586,7 @@ class RaghadDonatoinFormViewController: UIViewController,
         shouldShowImageError = missingImage
         shouldShowDonorError = missingDonor
         shouldShowQuantityError = invalidQuantity
-        shouldShowWeightError = invalidWeight
-        
+        shouldShowWeightError = invalidWeight   // ✅ only true when format wrong
         // 🔄 reload affected sections
         //        donationFormTableview.reloadSections(
         //            IndexSet([0, 1, 3, 4,5]),
@@ -624,11 +624,13 @@ class RaghadDonatoinFormViewController: UIViewController,
             
             return
         }
-        
-       
-        
-        
     }
+    
+    
+    
+    
+    
+    
     // ✅🟢 Proceed button action (connect this to your Proceed button)
     @IBAction func proceedTapped(_ sender: UIButton) {
         handleProceedTapped_TEST_ONLY()
@@ -638,14 +640,16 @@ class RaghadDonatoinFormViewController: UIViewController,
     private func validateAndProceed() {
         let missingImage = (selectedDonationImage == nil)
         let missingFoodCategory = (selectedFoodCategory == nil)
-        let invalidWeight = weightInvalidFormat   // 🛰️WEIGHT_OPTIONAL_VC
         let missingDonor = user.isAdmin && (selectedDonorName == nil)
-        
+
+        // ✅ Weight optional: only invalid if format wrong
+        let invalidWeight = weightInvalidFormat
+        shouldShowWeightError = invalidWeight
+
         if missingImage || missingFoodCategory || invalidWeight || missingDonor {
-            //    donationFormTableview.reloadData()❌❌❌❌❌❌❌❌❌
             return
         }
-        
+
         performSegue(withIdentifier: "showSchedulePickup", sender: self)
     }
 }

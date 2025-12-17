@@ -378,20 +378,39 @@ class RaghadDonatoinFormViewController: UIViewController,
     
     
     
+//    @objc private func openDonorList() {
+//        
+//        // ✅ make sure the storyboard name matches your file: Raghad1.storyboard
+//        let sb = UIStoryboard(name: "Raghad1", bundle: nil)
+//        
+//        // ✅ SAFE: if the ID is not set correctly, it will print and not crash
+//        guard let vc = sb.instantiateViewController(withIdentifier: "RaghadDonorListViewController") as? RaghadDonorListViewController else {
+//            print("❌ FIX STORYBOARD: In Raghad1.storyboard, set the donor list VC Storyboard ID to: RaghadDonorListViewController")
+//            return
+//        }
+//        
+//        vc.delegate = self
+//        let nav = UINavigationController(rootViewController: vc)
+//        present(nav, animated: true)
+//    }
+    
+    
+    
+    
     @objc private func openDonorList() {
-        
-        // ✅ make sure the storyboard name matches your file: Raghad1.storyboard
+
         let sb = UIStoryboard(name: "Raghad1", bundle: nil)
-        
-        // ✅ SAFE: if the ID is not set correctly, it will print and not crash
-        guard let vc = sb.instantiateViewController(withIdentifier: "RaghadDonorListViewController") as? RaghadDonorListViewController else {
-            print("❌ FIX STORYBOARD: In Raghad1.storyboard, set the donor list VC Storyboard ID to: RaghadDonorListViewController")
+
+        guard let vc = sb.instantiateViewController(
+            withIdentifier: "RaghadDonorListViewController"
+        ) as? RaghadDonorListViewController else {
+            print("❌ Storyboard ID not set correctly")
             return
         }
-        
+
         vc.delegate = self
-        let nav = UINavigationController(rootViewController: vc)
-        present(nav, animated: true)
+
+        navigationController?.pushViewController(vc, animated: true)
     }
     
     

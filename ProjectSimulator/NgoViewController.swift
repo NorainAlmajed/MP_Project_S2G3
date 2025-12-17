@@ -5,22 +5,26 @@
 //  Created by Raghad Aleskafi on 11/12/2025.
 //
 
+
+
 import UIKit
 
-class NgoViewController: UIViewController, UITableViewDelegate, UITableViewDataSource, UISearchResultsUpdating
-{
-   
-    
-
+class NgoViewController: UIViewController,
+                         UITableViewDelegate,
+                         UITableViewDataSource,
+                         UISearchBarDelegate {
 
     @IBOutlet weak var tableView: UITableView!
-    
-    
-    private let searchController = UISearchController(searchResultsController: nil)
+
+    // ✅ Your data
     private var shownNgos: [NGO] = []
     private var selectedCategory: String? = nil
-    
-    // ✅🆕 1) Empty state label (when there are no NGOs)
+
+    // ✅ Header UI (same style as Donor List)
+    private var searchBar: UISearchBar!
+    private var filterButton: UIButton!
+
+    // ✅ Empty state label
     private let noNgosLabel: UILabel = {
         let label = UILabel()
         label.text = "No NGOs available"
@@ -31,20 +35,21 @@ class NgoViewController: UIViewController, UITableViewDelegate, UITableViewDataS
         return label
     }()
 
-    
-    
-    
-    
-    
     override func viewDidLoad() {
         super.viewDidLoad()
-        
-        tableView.delegate = self
-        tableView.dataSource = self
+
         title = "Browse NGOs"
 
-        
-        // ✅🆕 3) Add empty label to the screen
+        tableView.delegate = self
+        tableView.dataSource = self
+
+        // ✅ Start list
+        shownNgos = arrNgo
+
+        // ✅ Add header (Search + Filter) UNDER the navigation bar (like Donor List)
+        setupHeaderSearchAndFilter()
+
+        // ✅ Empty label
         view.addSubview(noNgosLabel)
         noNgosLabel.translatesAutoresizingMaskIntoConstraints = false
         NSLayoutConstraint.activate([
@@ -52,127 +57,146 @@ class NgoViewController: UIViewController, UITableViewDelegate, UITableViewDataS
             noNgosLabel.centerYAnchor.constraint(equalTo: view.centerYAnchor)
         ])
 
-        // ✅🆕 4) Run the method once at start
         updateNoNgosLabel()
 
-        
+        // Remove default nav bar shadow
+        navigationController?.navigationBar.shadowImage = UIImage()
 
-          
+        // Add a bottom line under nav bar
+        let bottomLine = UIView()
+        bottomLine.backgroundColor = UIColor.systemGray4
+        bottomLine.translatesAutoresizingMaskIntoConstraints = false
+        navigationController?.navigationBar.addSubview(bottomLine)
 
-            // إزالة الخط الافتراضي (إن وُجد)
-            navigationController?.navigationBar.shadowImage = UIImage()
+        NSLayoutConstraint.activate([
+            bottomLine.heightAnchor.constraint(equalToConstant: 1),
+            bottomLine.leadingAnchor.constraint(equalTo: navigationController!.navigationBar.leadingAnchor),
+            bottomLine.trailingAnchor.constraint(equalTo: navigationController!.navigationBar.trailingAnchor),
+            bottomLine.bottomAnchor.constraint(equalTo: navigationController!.navigationBar.bottomAnchor)
+        ])
 
-            // خط أسفل الـ Navigation Bar
-            let bottomLine = UIView()
-            bottomLine.backgroundColor = UIColor.systemGray4
-            bottomLine.translatesAutoresizingMaskIntoConstraints = false
-
-            navigationController?.navigationBar.addSubview(bottomLine)
-
-            NSLayoutConstraint.activate([
-                bottomLine.heightAnchor.constraint(equalToConstant: 1),
-                bottomLine.leadingAnchor.constraint(equalTo: navigationController!.navigationBar.leadingAnchor),
-                bottomLine.trailingAnchor.constraint(equalTo: navigationController!.navigationBar.trailingAnchor),
-                bottomLine.bottomAnchor.constraint(equalTo: navigationController!.navigationBar.bottomAnchor)
-            ])
-        
-        
-        
-        
-        // ✅⬅️🆕 Hide back button text for the NEXT screen (NgoDetails)
-           if #available(iOS 14.0, *) {
-               navigationItem.backButtonDisplayMode = .minimal
-           } else {
-               navigationItem.backBarButtonItem = UIBarButtonItem(title: "", style: .plain, target: nil, action: nil)
-           }
-
-        
-    
-        
-        shownNgos = arrNgo
-        // ✅ iOS standard search in nav bar
-           searchController.searchResultsUpdater = self
-           searchController.obscuresBackgroundDuringPresentation = false
-           searchController.searchBar.placeholder = "Search NGOs"
-           navigationItem.searchController = searchController
-           navigationItem.hidesSearchBarWhenScrolling = false
-           definesPresentationContext = true
-
-           // ✅ iOS standard filter button on the right
-           navigationItem.rightBarButtonItem = UIBarButtonItem(
-               image: UIImage(systemName: "slider.horizontal.3"),
-               style: .plain,
-               target: self,
-               action: #selector(filterTapped)
-           )
-        
-        
-        
-        
-        
-        
-        
-        
-        
+        // ✅ Hide back button text for next screen
+        if #available(iOS 14.0, *) {
+            navigationItem.backButtonDisplayMode = .minimal
+        } else {
+            navigationItem.backBarButtonItem = UIBarButtonItem(title: "", style: .plain, target: nil, action: nil)
+        }
     }
-    
-    
-    // ✅🆕 5) Refresh the table + empty label whenever the page appears
+
+    // ✅ Helps iPad / rotation keep header width correct
+    override func viewDidLayoutSubviews() {
+        super.viewDidLayoutSubviews()
+        updateHeaderWidth()
+    }
+
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         applySearchAndFilter()
     }
-    
-    
-    func updateSearchResults(for searchController: UISearchController) {
+
+    // MARK: - Header (Search + Filter) like Donor List
+
+    private func setupHeaderSearchAndFilter() {
+        let container = UIView(frame: CGRect(x: 0, y: 0, width: view.bounds.width, height: 56))
+        container.backgroundColor = .systemBackground
+
+        let header = UIView()
+        header.translatesAutoresizingMaskIntoConstraints = false
+
+        // Search bar
+        searchBar = UISearchBar()
+        searchBar.placeholder = "Search NGOs"
+        searchBar.delegate = self
+        searchBar.autocapitalizationType = .none
+        searchBar.autocorrectionType = .no
+        searchBar.translatesAutoresizingMaskIntoConstraints = false
+
+        // Filter button
+        filterButton = UIButton(type: .system)
+        filterButton.setImage(UIImage(systemName: "slider.horizontal.3"), for: .normal)
+        filterButton.tintColor = .label
+        filterButton.translatesAutoresizingMaskIntoConstraints = false
+        filterButton.addTarget(self, action: #selector(filterTapped), for: .touchUpInside)
+
+        header.addSubview(searchBar)
+        header.addSubview(filterButton)
+        container.addSubview(header)
+
+        NSLayoutConstraint.activate([
+            header.leadingAnchor.constraint(equalTo: container.leadingAnchor),
+            header.trailingAnchor.constraint(equalTo: container.trailingAnchor),
+            header.topAnchor.constraint(equalTo: container.topAnchor),
+            header.bottomAnchor.constraint(equalTo: container.bottomAnchor),
+
+            searchBar.leadingAnchor.constraint(equalTo: header.leadingAnchor, constant: 8),
+            searchBar.topAnchor.constraint(equalTo: header.topAnchor, constant: 8),
+            searchBar.bottomAnchor.constraint(equalTo: header.bottomAnchor, constant: -8),
+
+            filterButton.leadingAnchor.constraint(equalTo: searchBar.trailingAnchor, constant: 8),
+            filterButton.trailingAnchor.constraint(equalTo: header.trailingAnchor, constant: -12),
+            filterButton.centerYAnchor.constraint(equalTo: searchBar.centerYAnchor),
+            filterButton.widthAnchor.constraint(equalToConstant: 40),
+            filterButton.heightAnchor.constraint(equalToConstant: 40)
+        ])
+
+        tableView.tableHeaderView = container
+    }
+
+    private func updateHeaderWidth() {
+        guard let header = tableView.tableHeaderView else { return }
+        let newWidth = tableView.bounds.width
+        if header.frame.width != newWidth {
+            header.frame.size.width = newWidth
+            tableView.tableHeaderView = header
+        }
+    }
+
+    // MARK: - SearchBar Delegate
+
+    func searchBar(_ searchBar: UISearchBar, textDidChange searchText: String) {
         applySearchAndFilter()
     }
-    
-    
+
+    func searchBarSearchButtonClicked(_ searchBar: UISearchBar) {
+        searchBar.resignFirstResponder()
+    }
+
+    // MARK: - TableView
+
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         return shownNgos.count
     }
-    
+
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: "NgoCell") as! NgoTableTableViewCell
         let data = shownNgos[indexPath.row]
         cell.setupCell(photo: data.photo, name: data.name, category: data.category)
         return cell
     }
-    
-//    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-//        let cell = tableView.dequeueReusableCell(withIdentifier: "NgoCell", for: indexPath) as! NgoTableTableViewCell
-//        let data = arrNgo[indexPath.row]
-//        cell.setupCell(photo: data.photo, name: data.name, category: data.category)
-//        return cell
-//    }
 
-    
-
-    
-    //to edit the height of the row 
-           func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
-            return 100
-        }
-    
-    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-       tableView.deselectRow(at: indexPath, animated: true) // added this  to deselect row
-        print("cell index = \(indexPath.row)") // to show the index of the cell
+    func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
+        return 100
     }
-    
+
+    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        tableView.deselectRow(at: indexPath, animated: true)
+        print("cell index = \(indexPath.row)")
+    }
+
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
         if segue.identifier == "showNgoDetails" {
             let vc = segue.destination as! NgoDetailsViewController
             if let indexPath = tableView.indexPathForSelectedRow {
-                vc.selectedNgo = shownNgos[indexPath.row]   // ✅ not arrNgo
+                vc.selectedNgo = shownNgos[indexPath.row]
             }
         }
     }
 
-    // ✅🆕 2) Show label if the list is empty
+    // MARK: - Empty State
+
     private func updateNoNgosLabel() {
-        let isSearching = !(searchController.searchBar.text ?? "").isEmpty
-            || selectedCategory != nil
+        let text = (searchBar?.text ?? "").trimmingCharacters(in: .whitespacesAndNewlines)
+        let isSearching = !text.isEmpty || selectedCategory != nil
 
         if shownNgos.isEmpty {
             noNgosLabel.text = isSearching ? "No results found" : "No NGOs available"
@@ -184,17 +208,14 @@ class NgoViewController: UIViewController, UITableViewDelegate, UITableViewDataS
         }
     }
 
-    
-    
-    //filter and search
+    // MARK: - Filter Button
+
     @objc private func filterTapped() {
-   
+        // TODO: your teammate will implement filter UI later
     }
-    
-    
-    
-    
-    
+
+    // MARK: - Apply Search + Filter
+
     private func applySearchAndFilter() {
         var result = arrNgo
 
@@ -203,16 +224,15 @@ class NgoViewController: UIViewController, UITableViewDelegate, UITableViewDataS
             result = result.filter { $0.category == cat }
         }
 
-        // search by name
-        let text = (searchController.searchBar.text ?? "")
+        // search by name/category
+        let text = (searchBar?.text ?? "")
             .trimmingCharacters(in: .whitespacesAndNewlines)
             .lowercased()
 
         if !text.isEmpty {
             result = result.filter { ngo in
-                let nameMatch = ngo.name.lowercased().contains(text)
-                let categoryMatch = ngo.category.lowercased().contains(text)
-                return nameMatch || categoryMatch   // ✅ match either
+                ngo.name.lowercased().contains(text) ||
+                ngo.category.lowercased().contains(text)
             }
         }
 
@@ -220,19 +240,9 @@ class NgoViewController: UIViewController, UITableViewDelegate, UITableViewDataS
         tableView.reloadData()
         updateNoNgosLabel()
     }
-
-    
-
-    
-    
-    
-    /*
-     // MARK: - Navigation
-     
-     // In a storyboard-based application, you will often want to do a little preparation before navigation
-     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-     // Get the new view controller using segue.destination.
-     // Pass the selected object to the new view controller.
-     }
-     */
 }
+//  NgoViewController.swift
+//  ProjectSimulator
+//
+//  Created by Raghad Aleskafi on 11/12/2025.
+//

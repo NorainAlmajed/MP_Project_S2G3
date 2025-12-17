@@ -38,46 +38,137 @@ class DonationDetailsViewController: UIViewController, UITableViewDelegate, UITa
     }
     
     
+    //Preparing data for exporting
+    private func buildDonationReport(for donation: Donation) -> String {
+        
+        let dateFormatter = DateFormatter()
+        dateFormatter.dateStyle = .medium
+        dateFormatter.timeStyle = .none
+        
+        let createdDate = dateFormatter.string(from: donation.creationDate)
+        let pickupDate = dateFormatter.string(from: donation.pickupDate)
+        let expiryDate = dateFormatter.string(from: donation.expiryDate)
+        
+        // Address formatting
+        var addressText = """
+        Building: \(donation.address.building)
+        Road: \(donation.address.road)
+        Block: \(donation.address.block)
+        Area: \(donation.address.area)
+        Governorate: \(donation.address.governorate)
+        """
+        
+        if let flat = donation.address.flat {
+            addressText += "\nFlat: \(flat)"
+        }
+        
+        // Optional fields
+        let weightText = donation.weight != nil ? "\(donation.weight!) kg" : nil
+        let descriptionText = donation.description?.trimmingCharacters(in: .whitespacesAndNewlines)
+        let rejectionReasonText = donation.rejectionReason?.trimmingCharacters(in: .whitespacesAndNewlines)
+        let recurrenceText = donation.recurrence > 0 ? "Every \(donation.recurrence) days" : nil
+        
+        var report = """
+        ====================================
+                DONATION REPORT
+        ====================================
+
+        ▶ BASIC INFORMATION
+        ------------------------------------
+        Donation ID:        \(donation.donationID)
+        NGO Name:           \(donation.ngo.ngoName)
+        Donor Username:    \(donation.donor.username)
+        Created On:        \(createdDate)
+        Status:            \(statusText(for: donation.status))
+
+        ▶ DONATION DETAILS
+        ------------------------------------
+        Category:          \(donation.Category)
+        Quantity:          \(donation.quantity)
+        """
+        
+        if let weightText {
+            report += "\nWeight:            \(weightText)"
+        }
+        
+        report += """
+
+        ▶ PICKUP INFORMATION
+        ------------------------------------
+        Pickup Date:       \(pickupDate)
+        Pickup Time:       \(donation.pickupTime)
+
+        ▶ ADDRESS
+        ------------------------------------
+        \(addressText)
+
+        ▶ EXPIRY
+        ------------------------------------
+        Expiry Date:       \(expiryDate)
+        """
+        
+        if let descriptionText, !descriptionText.isEmpty {
+            report += """
+
+            ▶ DESCRIPTION
+            ------------------------------------
+            \(descriptionText)
+            """
+        }
+        
+        if let rejectionReasonText, !rejectionReasonText.isEmpty {
+            report += """
+
+            ▶ REJECTION REASON
+            ------------------------------------
+            \(rejectionReasonText)
+            """
+        }
+        
+        if let recurrenceText {
+            report += """
+
+            ▶ RECURRENCE
+            ------------------------------------
+            \(recurrenceText)
+            """
+        }
+        
+        report += """
+
+        ====================================
+        Generated On: \(DateFormatter.localizedString(
+            from: Date(),
+            dateStyle: .medium,
+            timeStyle: .short
+        ))
+        ProjectSimulator App
+        ====================================
+        """
+        
+        return report
+    }
+
+    
     
     //For exporting data
     @objc private func exportTapped() {
         guard let donation = donation else { return }
 
-        let text = """
-        ==============================
-                DONATION REPORT
-        ==============================
-
-        Donation ID:     \(donation.donationID)
-        NGO Name:        \(donation.ngo.ngoName)
-        Donor Name:      \(donation.donor.username)
-        Category:        \(donation.Category)
-        Quantity:        \(donation.quantity)
-        Status:          \(statusText(for: donation.status))
-
-        Generated On:    \(DateFormatter.localizedString(
-                            from: Date(),
-                            dateStyle: .medium,
-                            timeStyle: .short
-                          ))
-
-        ------------------------------
-        ProjectSimulator App
-        """
-
+        let reportText = buildDonationReport(for: donation)
 
         let activityVC = UIActivityViewController(
-            activityItems: [text],
+            activityItems: [reportText],
             applicationActivities: nil
         )
 
-        // REQUIRED for iPad
         if let popover = activityVC.popoverPresentationController {
             popover.barButtonItem = navigationItem.rightBarButtonItem
         }
 
         present(activityVC, animated: true)
     }
+
 
 
     

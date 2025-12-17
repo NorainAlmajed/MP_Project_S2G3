@@ -137,9 +137,8 @@
                                                     <nil key="textColor"/>
                                                     <nil key="highlightedColor"/>
                                                 </label>
-                                                <view contentMode="scaleToFill" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="Jt3-hC-UEj">
+                                                <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Jt3-hC-UEj">
                                                     <rect key="frame" x="274" y="9" width="92" height="22"/>
-                                                    <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                                     <subviews>
                                                         <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="Pending" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="mKi-dI-O9T">
                                                             <rect key="frame" x="26" y="0.0" width="66" height="22"/>
@@ -155,9 +154,17 @@
                                                         </view>
                                                     </subviews>
                                                     <color key="backgroundColor" systemColor="systemBackgroundColor"/>
+                                                    <constraints>
+                                                        <constraint firstAttribute="width" constant="92" id="Cdj-pI-DY7"/>
+                                                        <constraint firstAttribute="height" constant="22" id="Ynn-Rv-C7f"/>
+                                                    </constraints>
                                                 </view>
                                             </subviews>
                                             <color key="backgroundColor" name="BeigeCol"/>
+                                            <constraints>
+                                                <constraint firstItem="Jt3-hC-UEj" firstAttribute="top" secondItem="eyq-WX-orn" secondAttribute="top" constant="9" id="ITb-Ba-nKP"/>
+                                                <constraint firstAttribute="trailing" secondItem="Jt3-hC-UEj" secondAttribute="trailing" constant="10" id="VUg-f6-h90"/>
+                                            </constraints>
                                         </collectionViewCellContentView>
                                         <size key="customSize" width="376" height="124"/>
                                         <connections>
@@ -341,7 +348,7 @@
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="-1" estimatedRowHeight="-1" sectionHeaderHeight="-1" estimatedSectionHeaderHeight="-1" sectionFooterHeight="-1" estimatedSectionFooterHeight="-1" translatesAutoresizingMaskIntoConstraints="NO" id="rQc-Um-iYH">
-                                <rect key="frame" x="0.0" y="168" width="402" height="589"/>
+                                <rect key="frame" x="0.0" y="220" width="402" height="537"/>
                                 <color key="backgroundColor" systemColor="systemBackgroundColor"/>
                                 <prototypes>
                                     <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" insetsLayoutMarginsFromSafeArea="NO" selectionStyle="blue" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" reuseIdentifier="Section1Cell" rowHeight="128" id="eHa-9Z-3fn" customClass="Section1TableViewCell" customModule="ProjectSimulator" customModuleProvider="target">

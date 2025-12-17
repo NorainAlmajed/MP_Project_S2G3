@@ -90,7 +90,7 @@ class DonationViewController: UIViewController {
         layout2.estimatedItemSize = UICollectionViewFlowLayout.automaticSize
         
         // Add padding on left and right
-        layout2.sectionInset = UIEdgeInsets(top: 0, left: 8, bottom: 0, right: 8)
+        layout2.sectionInset = UIEdgeInsets(top: 0, left: 16, bottom: 0, right: 16)
 
             statusCollectionView.collectionViewLayout = layout2
         

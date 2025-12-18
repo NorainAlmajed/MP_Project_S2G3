@@ -50,7 +50,7 @@ class UsersTableViewController: UITableViewController {
     // Override to support editing the table view.
     override func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCell.EditingStyle, forRowAt indexPath: IndexPath) {
         if editingStyle == .delete {
-            Confirmation(title: "Delete Confirmation", message: "Are you sure you want to remove User?"){
+            confirmation(title: "Delete Confirmation", message: "Are you sure you want to remove User?"){
                 self.users.remove(at: indexPath.row)
                 AppData.users.remove(at: indexPath.row)
                 tableView.deleteRows(at: [indexPath], with: .fade)
@@ -61,7 +61,16 @@ class UsersTableViewController: UITableViewController {
         }    
     }
     
-
+    func confirmation(title:String, message:String,confirmHandler: @escaping() ->Void){
+        let alert = UIAlertController(title: title, message: message, preferredStyle: .alert)
+        let confirm = UIAlertAction(title: "Confirm", style: .default){action in
+                confirmHandler()
+        }
+        let cancel = UIAlertAction(title: "Cancel", style: .cancel)
+        alert.addAction(confirm)
+        alert.addAction(cancel)
+        present(alert, animated: true)
+    }
     /*
     // Override to support rearranging the table view.
     override func tableView(_ tableView: UITableView, moveRowAt fromIndexPath: IndexPath, to: IndexPath) {

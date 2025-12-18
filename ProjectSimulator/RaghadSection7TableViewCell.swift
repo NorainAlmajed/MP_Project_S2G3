@@ -25,16 +25,35 @@ class RaghadSection7TableViewCell: UITableViewCell, UITextViewDelegate {
         override func awakeFromNib() {
             super.awakeFromNib()
 
-            txtDescription.layer.cornerRadius = 10
+//            txtDescription.layer.cornerRadius = 10
+//                txtDescription.layer.borderWidth = 1
+//                txtDescription.layer.borderColor = UIColor.systemGray4.cgColor
+//                txtDescription.textContainerInset = UIEdgeInsets(top: 10, left: 8, bottom: 10, right: 8)
+//
+//                txtDescription.delegate = self
+//
+//                setPlaceholder()
+//                updateCounter(currentCount: 0)
+//                addDoneButton()
+            
+            
+            
+            
+            // ✅ MATCH other input fields (Quantity / Weight / Expiration / Choose Donor)
                 txtDescription.layer.borderWidth = 1
                 txtDescription.layer.borderColor = UIColor.systemGray4.cgColor
+                txtDescription.layer.cornerRadius = 8
+                txtDescription.clipsToBounds = true
+                txtDescription.backgroundColor = .white
+
+                // Padding inside the text view
                 txtDescription.textContainerInset = UIEdgeInsets(top: 10, left: 8, bottom: 10, right: 8)
 
                 txtDescription.delegate = self
 
                 setPlaceholder()
                 updateCounter(currentCount: 0)
-                addDoneButton()
+                addDoneButton() 
             }
     
 

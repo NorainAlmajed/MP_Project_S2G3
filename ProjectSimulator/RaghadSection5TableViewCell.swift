@@ -26,6 +26,18 @@ class RaghadSection5TableViewCell: UITableViewCell {
             lblWeightError?.text = "Please enter a valid weight (e.g., 1 or 1.5)"
             txtWeight?.keyboardType = .decimalPad
             txtWeight?.inputAccessoryView = makeDoneToolbar()
+        
+        
+        
+        txtWeight.layer.borderWidth = 1
+           txtWeight.layer.borderColor = UIColor.systemGray4.cgColor
+           txtWeight.layer.cornerRadius = 8
+           txtWeight.clipsToBounds = true
+           txtWeight.backgroundColor = .white
+        
+        
+        
+        
         }
 
     func configure(showError: Bool) {   // 🧩WEIGHT_OPTIONAL_CELL

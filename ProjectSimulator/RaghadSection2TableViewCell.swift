@@ -20,13 +20,7 @@ class RaghadSection2TableViewCell: UITableViewCell {
     
     @IBOutlet weak var lblError: UILabel!
     
-    
-    
-    
-    
     @IBOutlet weak var lblChooseDonor: UILabel!
-    
-    
     @IBOutlet weak var btnChooseDonor2: UIButton!
     
     
@@ -70,51 +64,32 @@ class RaghadSection2TableViewCell: UITableViewCell {
         delegate?.section2DidTapChooseDonor(self)
     }
 
-    
-    
-    
-//    private func setupChooseDonorButton() {
-//           // Border
-//           btnChooseDonor2.layer.borderWidth = 1
-//           btnChooseDonor2.layer.borderColor = UIColor.systemGray4.cgColor
-//           btnChooseDonor2.layer.cornerRadius = 8
-//           btnChooseDonor2.clipsToBounds = true
-//
-//        
-//        // iOS button configuration
-//        var config = UIButton.Configuration.plain()
-//            config.title = "Select donor"
-//            config.baseForegroundColor = .systemGray
-//            config.contentInsets = NSDirectionalEdgeInsets(top: 0, leading: 12, bottom: 0, trailing: 12)
-//
-//            btnChooseDonor2.configuration = config
-//            btnChooseDonor2.contentHorizontalAlignment = .leading
-//       }
-//
-    
+  
     
     private func setupChooseDonorButton() {
-         // Border + shape
-         btnChooseDonor2.layer.borderWidth = 1
-         btnChooseDonor2.layer.borderColor = UIColor.systemGray4.cgColor
-         btnChooseDonor2.layer.cornerRadius = 8
-         btnChooseDonor2.clipsToBounds = true
 
-         // ✅ Use a configuration that supports background
-         var config = UIButton.Configuration.filled()
-         config.title = "Choose Donor"
-         config.baseForegroundColor = .systemGray
-         config.baseBackgroundColor = .systemGray6   // ✅ light background that stays visible
-         config.contentInsets = NSDirectionalEdgeInsets(top: 10, leading: 12, bottom: 10, trailing: 12)
+        // 1️⃣ Border like text fields
+        btnChooseDonor2.layer.borderWidth = 1
+        btnChooseDonor2.layer.borderColor = UIColor.systemGray4.cgColor
+        btnChooseDonor2.layer.cornerRadius = 8
+        btnChooseDonor2.clipsToBounds = true
 
-         // Optional: make the tap highlight look nice (not disappear)
-         config.background.cornerRadius = 8
+        // 2️⃣ Plain configuration = white background
+        var config = UIButton.Configuration.plain()
+        config.title = "Choose Donor"
+        config.baseForegroundColor = .systemGray
+        config.background.backgroundColor = .white   // ✅ same as textfield
+        config.contentInsets = NSDirectionalEdgeInsets(
+            top: 10,
+            leading: 12,
+            bottom: 10,
+            trailing: 12
+        )
 
-         btnChooseDonor2.configuration = config
-         btnChooseDonor2.contentHorizontalAlignment = .leading
-     }
-    
-    
+        btnChooseDonor2.configuration = config
+        btnChooseDonor2.contentHorizontalAlignment = .leading
+    }
+
 
 
     

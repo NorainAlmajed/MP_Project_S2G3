@@ -941,22 +941,75 @@ class RaghadDonatoinFormViewController: UIViewController,
         return cell
     }
 
-    // MARK: - Row Heights
+//    // MARK: - Row Heights
+//    func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
+//        let section = indexPath.section
+//        let adjustedSection = (!isAdminUser && section >= 1) ? section + 1 : section
+//        switch adjustedSection {
+//        case 0: return 237
+//        case 1: return 108
+//        case 2: return UITableView.automaticDimension
+//        case 3: return 109
+//        case 4: return 102
+//        case 5: return 93
+//        case 6: return 161
+//        case 7: return UITableView.automaticDimension // Proceed cell self-sizes
+//        default: return UITableView.automaticDimension
+//        }
+//    }
+//    
+//    
+    
+    
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
+
+        let isPad = UIDevice.current.userInterfaceIdiom == .pad
+
         let section = indexPath.section
         let adjustedSection = (!isAdminUser && section >= 1) ? section + 1 : section
+
         switch adjustedSection {
-        case 0: return 237
-        case 1: return 108
-        case 2: return UITableView.automaticDimension
-        case 3: return 109
-        case 4: return 102
-        case 5: return 93
-        case 6: return 161
-        case 7: return UITableView.automaticDimension // Proceed cell self-sizes
-        default: return UITableView.automaticDimension
+
+        case 0:
+            // 🟢 Image cell (make it bigger on iPad only)
+            return isPad ? 320 : 237
+
+        case 1:
+            return 108
+
+        case 2:
+            return UITableView.automaticDimension
+
+        case 3:
+            return 109
+
+        case 4:
+            return 102
+
+        case 5:
+            return 93
+
+        case 6:
+            return 161
+
+        case 7:
+            return UITableView.automaticDimension
+
+        default:
+            return UITableView.automaticDimension
         }
     }
+
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
 
     // MARK: - Donor List
     @objc private func openDonorList() {

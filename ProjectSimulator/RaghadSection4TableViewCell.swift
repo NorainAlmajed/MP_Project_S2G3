@@ -37,6 +37,46 @@ class RaghadSection4TableViewCell: UITableViewCell {
         // ✅🟡 2) Stepper limits (optional but recommended)
         stepperQuantity.minimumValue = 0
         stepperQuantity.maximumValue = 999
+        
+        
+        
+        
+        
+        txtQuantity.keyboardType = .numberPad
+            txtQuantity.inputAccessoryView = makeDoneToolbar()
+            txtQuantity.text = "1"
+            stepperQuantity.value = 1
+
+            // ✅ MATCH other input fields (Expiration / Choose Donor)
+            txtQuantity.layer.borderWidth = 1
+            txtQuantity.layer.borderColor = UIColor.systemGray4.cgColor
+            txtQuantity.layer.cornerRadius = 8
+            txtQuantity.clipsToBounds = true
+
+            // Error label
+            lblQuantityError.isHidden = true
+            lblQuantityError.text = "Please enter a valid quantity"
+
+            stepperQuantity.minimumValue = 0
+            stepperQuantity.maximumValue = 999
+
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
         }
     
     // ✅🟢 VC uses this to show / hide the quantity error label

@@ -384,7 +384,7 @@
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="-1" estimatedRowHeight="-1" sectionHeaderHeight="-1" estimatedSectionHeaderHeight="-1" sectionFooterHeight="-1" estimatedSectionFooterHeight="-1" translatesAutoresizingMaskIntoConstraints="NO" id="Tyd-Hf-QgX">
-                                <rect key="frame" x="0.0" y="0.0" width="402" height="934"/>
+                                <rect key="frame" x="0.0" y="0.0" width="402" height="934.00000000000011"/>
                                 <color key="backgroundColor" systemColor="systemBackgroundColor"/>
                                 <prototypes>
                                     <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" insetsLayoutMarginsFromSafeArea="NO" selectionStyle="blue" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" reuseIdentifier="Section1Cell" rowHeight="237" id="2HE-ca-9Zs" customClass="RaghadSection1TableViewCell" customModule="ProjectSimulator" customModuleProvider="target">
@@ -439,6 +439,8 @@
                                         </tableViewCellContentView>
                                         <connections>
                                             <outlet property="Donation_ImageView" destination="G7r-7p-J1F" id="pFY-QG-CxS"/>
+                                            <outlet property="imgHeightConstraint" destination="F5p-br-wXF" id="piN-9M-ir4"/>
+                                            <outlet property="imgWidthConstraint" destination="hNW-Nq-Z1X" id="Vbe-1E-Ybj"/>
                                             <outlet property="lblImageError" destination="jmj-ok-UVd" id="ea3-q6-ftu"/>
                                         </connections>
                                     </tableViewCell>

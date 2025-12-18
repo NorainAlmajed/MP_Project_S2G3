@@ -59,6 +59,16 @@ class RaghadSection6TableViewCell: UITableViewCell {
           setupDatePicker()
           setupToolbar()
           txtExpiryDate.addTarget(self, action: #selector(expiryEditingBegan), for: .editingDidBegin)
+        
+        txtExpiryDate.layer.borderWidth = 1
+        txtExpiryDate.layer.borderColor = UIColor.systemGray4.cgColor
+        txtExpiryDate.layer.cornerRadius = 8
+        txtExpiryDate.clipsToBounds = true
+        txtExpiryDate.backgroundColor = .white
+
+        
+        
+        
       
        }
         

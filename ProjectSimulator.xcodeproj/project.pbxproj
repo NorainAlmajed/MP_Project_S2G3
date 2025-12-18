@@ -79,6 +79,7 @@
 			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
 			membershipExceptions = (
 				Controllers/UsersTableViewController.swift,
+				Helpers/Alerts.swift,
 				Helpers/AppData.swift,
 				Helpers/Keys.swift,
 				Models/AppUser.swift,

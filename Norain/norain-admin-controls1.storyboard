@@ -64,7 +64,9 @@
                             <outlet property="delegate" destination="LHi-aI-hhi" id="2Jy-0T-ahs"/>
                         </connections>
                     </tableView>
-                    <navigationItem key="navigationItem" title="All Nourish Users" id="jac-eU-271"/>
+                    <navigationItem key="navigationItem" title="All Nourish Users" id="jac-eU-271">
+                        <barButtonItem key="rightBarButtonItem" systemItem="add" id="Y0n-qi-fBR"/>
+                    </navigationItem>
                 </tableViewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="sg9-XQ-SK6" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
             </objects>

@@ -9,7 +9,7 @@ import UIKit
 //Expiry date
 class RaghadSection6TableViewCell: UITableViewCell {
     
-    
+    @IBOutlet weak var lblExpiryTitle: UILabel!
     
     @IBOutlet weak var txtExpiryDate: UITextField!
     
@@ -23,17 +23,66 @@ class RaghadSection6TableViewCell: UITableViewCell {
     // ✅🟢 callback -> send chosen date to VC
     var onDateSelected: ((Date) -> Void)?
     
+    
+    /////🚘🚘🚘🚘🚘🚘🚘🚘🚘🚘🚘🚘
+    private var didSetupLayout = false
+    
+    
+    
+    
     override func awakeFromNib() {
         super.awakeFromNib()
+        
+        //        formatter.dateFormat = "dd/MM/yyyy"
+        //        setupDatePicker()
+        //        setupToolbar()
+        //
+        //        txtExpiryDate.addTarget(self, action: #selector(expiryEditingBegan), for: .editingDidBegin)
+        //        // ✅🟢 ADD
+        
+        
+//        print("✅ Section6 awakeFromNib, txtExpiryDate nil? \(txtExpiryDate == nil)")
+//        
+//        guard txtExpiryDate != nil else { return }  // prevents crash
+//        
+//        formatter.dateFormat = "dd/MM/yyyy"
+//        setupDatePicker()
+//        setupToolbar()
+//        txtExpiryDate.addTarget(self, action: #selector(expiryEditingBegan), for: .editingDidBegin)
+        
+        print("✅ Section6 awakeFromNib, txtExpiryDate nil? \(txtExpiryDate == nil)")
+          guard txtExpiryDate != nil, lblExpiryTitle != nil else { return }
 
-        formatter.dateFormat = "dd/MM/yyyy"
-        setupDatePicker()
-        setupToolbar()
+          setupLayoutIfNeeded()   // ✅ now safe
 
-        txtExpiryDate.addTarget(self, action: #selector(expiryEditingBegan), for: .editingDidBegin)
-        // ✅🟢 ADD
-    }
+          formatter.dateFormat = "dd/MM/yyyy"
+          setupDatePicker()
+          setupToolbar()
+          txtExpiryDate.addTarget(self, action: #selector(expiryEditingBegan), for: .editingDidBegin)
+      
+       }
+        
+   
+        
+        
+        
+        
+    
 
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
     
     // ✅🟢 VC calls this to show the correct date every reload
     func configure(date: Date?) {
@@ -123,6 +172,47 @@ class RaghadSection6TableViewCell: UITableViewCell {
 
         onDateSelected?(tomorrow) // ✅ save into VC too
     }
+
+    
+    
+    
+    //for the stack view🚘🚘🚘🚘🚘🚘🚘🚘🚘🚘
+    
+    private func setupLayoutIfNeeded() {
+        guard !didSetupLayout else { return }
+        didSetupLayout = true
+
+        lblExpiryTitle.translatesAutoresizingMaskIntoConstraints = false
+        txtExpiryDate.translatesAutoresizingMaskIntoConstraints = false
+
+        let stack = UIStackView(arrangedSubviews: [lblExpiryTitle, txtExpiryDate])
+        stack.axis = .vertical
+        stack.spacing = 8
+        stack.alignment = .fill
+        stack.distribution = .fill
+
+        contentView.addSubview(stack)
+        stack.translatesAutoresizingMaskIntoConstraints = false
+
+        NSLayoutConstraint.activate([
+            // Match Weight: leading = 36
+            stack.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 36),
+
+            // Match Weight: width = 0.816794 * superview width
+            stack.widthAnchor.constraint(equalTo: contentView.widthAnchor, multiplier: 0.816794),
+
+            // ✅ slightly higher (keep it nice)
+            stack.topAnchor.constraint(equalTo: contentView.topAnchor, constant: 8),
+
+            // ✅ MORE bottom space so it doesn't stick to the next cell
+            stack.bottomAnchor.constraint(equalTo: contentView.bottomAnchor, constant: -22),
+
+            // Match Weight-ish text field height
+            txtExpiryDate.heightAnchor.constraint(equalToConstant: 34)
+        ])
+    }
+
+
 
     
     

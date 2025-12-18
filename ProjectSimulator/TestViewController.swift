@@ -40,6 +40,18 @@ class DonationDetailsViewController: UIViewController, UITableViewDelegate, UITa
     }
     
     
+    //Triggering the excel import
+    @IBAction func exportDonation(_ sender: UIButton) {
+        guard let donation = donation else {
+            print("No donation available")
+            return
+        }
+        ExcelExporter.shareCSV(from: self, donation: donation)
+    }
+
+
+    
+    
     //Preparing data for exporting
     private func buildDonationReport(for donation: Donation) -> String {
         

@@ -6,10 +6,6 @@
 	objectVersion = 77;
 	objects = {
 
-/* Begin PBXBuildFile section */
-		5FEF8BFB2EDB8B59007D3A97 /* DonationDetailViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5FEF8BFA2EDB8B59007D3A97 /* DonationDetailViewController.swift */; };
-/* End PBXBuildFile section */
-
 /* Begin PBXContainerItemProxy section */
 		5FEF8B792EDA363A007D3A97 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
@@ -31,24 +27,92 @@
 		5FEF8B622EDA3636007D3A97 /* ProjectSimulator.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = ProjectSimulator.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		5FEF8B782EDA363A007D3A97 /* ProjectSimulatorTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = ProjectSimulatorTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		5FEF8B822EDA363A007D3A97 /* ProjectSimulatorUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = ProjectSimulatorUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
-		5FEF8BFA2EDB8B59007D3A97 /* DonationDetailViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DonationDetailViewController.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFileSystemSynchronizedBuildFileExceptionSet section */
-		5FEF8B8A2EDA363A007D3A97 /* Exceptions for "ProjectSimulator" folder in "ProjectSimulator" target */ = {
+		12BA7FB42EF37012002D936C /* Exceptions for "ProjectSimulator" folder in "ProjectSimulator" target */ = {
 			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
 			membershipExceptions = (
-				Info.plist,
+				"/Localized: LaunchScreen.storyboard",
+				"/Localized: Main.storyboard",
+				Address.swift,
+				AppDelegate.swift,
+				Assets.xcassets,
+				Donation.swift,
+				DonationCollectionViewCell.swift,
+				DonationDetailsViewController.swift,
+				DonationDetailViewController.swift,
+				Donations.storyboard,
+				DonationViewController.swift,
+				NotificationsCollectionViewCell.swift,
+				NotificationsViewController.swift,
+				SceneDelegate.swift,
+				ViewController.swift,
+				zahraafet1.storyboard,
 			);
 			target = 5FEF8B612EDA3636007D3A97 /* ProjectSimulator */;
+		};
+		12BA7FB52EF37012002D936C /* Exceptions for "ProjectSimulator" folder in "ProjectSimulatorUITests" target */ = {
+			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
+			membershipExceptions = (
+				"/Localized: LaunchScreen.storyboard",
+				"/Localized: Main.storyboard",
+				Address.swift,
+				AppDelegate.swift,
+				Assets.xcassets,
+				Donation.swift,
+				DonationCollectionViewCell.swift,
+				DonationDetailsViewController.swift,
+				DonationDetailViewController.swift,
+				Donations.storyboard,
+				DonationViewController.swift,
+				Info.plist,
+				NotificationsCollectionViewCell.swift,
+				NotificationsViewController.swift,
+				SceneDelegate.swift,
+				ViewController.swift,
+				zahraafet1.storyboard,
+			);
+			target = 5FEF8B812EDA363A007D3A97 /* ProjectSimulatorUITests */;
+		};
+		12BA7FB62EF3703E002D936C /* Exceptions for "Norain" folder in "ProjectSimulator" target */ = {
+			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
+			membershipExceptions = (
+				Controllers/UsersTableViewController.swift,
+				Helpers/AppData.swift,
+				Helpers/Keys.swift,
+				Models/AppUser.swift,
+				Models/Donor.swift,
+				Models/NGO.swift,
+				"norain-admin-controls1.storyboard",
+				Views/UserTableViewCell.swift,
+			);
+			target = 5FEF8B612EDA3636007D3A97 /* ProjectSimulator */;
+		};
+		12BA7FB72EF3703E002D936C /* Exceptions for "Norain" folder in "ProjectSimulatorUITests" target */ = {
+			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
+			membershipExceptions = (
+				"norain-admin-controls1.storyboard",
+			);
+			target = 5FEF8B812EDA363A007D3A97 /* ProjectSimulatorUITests */;
 		};
 /* End PBXFileSystemSynchronizedBuildFileExceptionSet section */
 
 /* Begin PBXFileSystemSynchronizedRootGroup section */
-		5FEF8B642EDA3636007D3A97 /* ProjectSimulator */ = {
+		12BA7F8F2EF37007002D936C /* Norain */ = {
 			isa = PBXFileSystemSynchronizedRootGroup;
 			exceptions = (
-				5FEF8B8A2EDA363A007D3A97 /* Exceptions for "ProjectSimulator" folder in "ProjectSimulator" target */,
+				12BA7FB62EF3703E002D936C /* Exceptions for "Norain" folder in "ProjectSimulator" target */,
+				12BA7FB72EF3703E002D936C /* Exceptions for "Norain" folder in "ProjectSimulatorUITests" target */,
+			);
+			path = Norain;
+			sourceTree = "<group>";
+		};
+		12BA7FA32EF37012002D936C /* ProjectSimulator */ = {
+			isa = PBXFileSystemSynchronizedRootGroup;
+			exceptions = (
+				12BA7FB42EF37012002D936C /* Exceptions for "ProjectSimulator" folder in "ProjectSimulator" target */,
+				12BA7FB52EF37012002D936C /* Exceptions for "ProjectSimulator" folder in "ProjectSimulatorUITests" target */,
 			);
 			path = ProjectSimulator;
 			sourceTree = "<group>";
@@ -93,8 +157,8 @@
 		5FEF8B592EDA3636007D3A97 = {
 			isa = PBXGroup;
 			children = (
-				5FEF8BFA2EDB8B59007D3A97 /* DonationDetailViewController.swift */,
-				5FEF8B642EDA3636007D3A97 /* ProjectSimulator */,
+				12BA7F8F2EF37007002D936C /* Norain */,
+				12BA7FA32EF37012002D936C /* ProjectSimulator */,
 				5FEF8B7B2EDA363A007D3A97 /* ProjectSimulatorTests */,
 				5FEF8B852EDA363A007D3A97 /* ProjectSimulatorUITests */,
 				5FEF8B632EDA3636007D3A97 /* Products */,
@@ -125,9 +189,6 @@
 			buildRules = (
 			);
 			dependencies = (
-			);
-			fileSystemSynchronizedGroups = (
-				5FEF8B642EDA3636007D3A97 /* ProjectSimulator */,
 			);
 			name = ProjectSimulator;
 			packageProductDependencies = (
@@ -173,6 +234,8 @@
 				5FEF8B842EDA363A007D3A97 /* PBXTargetDependency */,
 			);
 			fileSystemSynchronizedGroups = (
+				12BA7F8F2EF37007002D936C /* Norain */,
+				12BA7FA32EF37012002D936C /* ProjectSimulator */,
 				5FEF8B852EDA363A007D3A97 /* ProjectSimulatorUITests */,
 			);
 			name = ProjectSimulatorUITests;
@@ -194,6 +257,7 @@
 				TargetAttributes = {
 					5FEF8B612EDA3636007D3A97 = {
 						CreatedOnToolsVersion = 16.4;
+						LastSwiftMigration = 1640;
 					};
 					5FEF8B772EDA363A007D3A97 = {
 						CreatedOnToolsVersion = 16.4;
@@ -255,7 +319,6 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				5FEF8BFB2EDB8B59007D3A97 /* DonationDetailViewController.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -294,6 +357,7 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				GENERATE_INFOPLIST_FILE = YES;
@@ -311,6 +375,8 @@
 				PRODUCT_BUNDLE_IDENTIFIER = com.bignerdranch.ProjectSimulator;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_OBJC_BRIDGING_HEADER = "Norain/Views/ProjectSimulator-Bridging-Header.h";
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
 			};
@@ -321,6 +387,7 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				GENERATE_INFOPLIST_FILE = YES;
@@ -338,6 +405,7 @@
 				PRODUCT_BUNDLE_IDENTIFIER = com.bignerdranch.ProjectSimulator;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_OBJC_BRIDGING_HEADER = "Norain/Views/ProjectSimulator-Bridging-Header.h";
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
 			};

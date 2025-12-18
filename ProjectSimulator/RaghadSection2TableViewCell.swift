@@ -56,9 +56,7 @@ class RaghadSection2TableViewCell: UITableViewCell {
 
            btnChooseDonor2.configuration = config
        }
-   
-    
-    
+  
     // ✅ NEW: connect btnChooseDonor2 "Touch Up Inside" to this
     @IBAction func btnChooseDonorTapped(_ sender: Any) {
         delegate?.section2DidTapChooseDonor(self)
@@ -90,9 +88,6 @@ class RaghadSection2TableViewCell: UITableViewCell {
         btnChooseDonor2.contentHorizontalAlignment = .leading
     }
 
-
-
-    
 
     override func setSelected(_ selected: Bool, animated: Bool) {
         super.setSelected(selected, animated: animated)

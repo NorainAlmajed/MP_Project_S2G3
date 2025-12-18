@@ -10,12 +10,15 @@ class SignupViewController: UIViewController {
     @IBOutlet weak var passwordTextField: UITextField!
     @IBOutlet weak var confirmPasswordTextField: UITextField!
 
+    @IBAction func goToLoginTapped(_ sender: UIButton) {
+        performSegue(withIdentifier: "goToLogin", sender: self)
+    }
     override func viewDidLoad() {
         super.viewDidLoad()
     }
 
     @IBAction func registerButtonTapped(_ sender: UIButton) {
-
+        
         guard let email = emailTextField.text, !email.isEmpty else {
             showAlert(
                 title: "Missing Email",
@@ -23,7 +26,7 @@ class SignupViewController: UIViewController {
             )
             return
         }
-
+        
         guard let password = passwordTextField.text, !password.isEmpty else {
             showAlert(
                 title: "Missing Password",
@@ -31,7 +34,7 @@ class SignupViewController: UIViewController {
             )
             return
         }
-
+        
         guard let confirmPassword = confirmPasswordTextField.text,
               !confirmPassword.isEmpty else {
             showAlert(
@@ -40,7 +43,7 @@ class SignupViewController: UIViewController {
             )
             return
         }
-
+        
         guard password == confirmPassword else {
             showAlert(
                 title: "Password Mismatch",
@@ -48,7 +51,7 @@ class SignupViewController: UIViewController {
             )
             return
         }
-
+        
         guard password.count >= 6 else {
             showAlert(
                 title: "Weak Password",
@@ -56,9 +59,9 @@ class SignupViewController: UIViewController {
             )
             return
         }
-
+        
         Auth.auth().createUser(withEmail: email, password: password) { [weak self] authResult, error in
-
+            
             if let error = error {
                 self?.showAlert(
                     title: "Registration Failed",
@@ -66,7 +69,12 @@ class SignupViewController: UIViewController {
                 )
                 return
             }
-
+            
+            if let userID = authResult?.user.uid {
+                UserDefaults.standard.set(userID, forKey: "userID")
+            }
+            
+            // Go back to Login
             self?.navigationController?.popViewController(animated: true)
         }
     }

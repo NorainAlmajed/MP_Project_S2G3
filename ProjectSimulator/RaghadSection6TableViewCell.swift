@@ -66,27 +66,11 @@ class RaghadSection6TableViewCell: UITableViewCell {
         txtExpiryDate.clipsToBounds = true
         txtExpiryDate.backgroundColor = .white
 
-        
-        
-        
-      
-       }
+   }
         
    
         
-        
-        
-        
-    
 
-    
-    
-    
-    
-    
-    
-    
-    
     
     
     

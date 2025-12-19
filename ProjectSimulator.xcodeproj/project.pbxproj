@@ -44,6 +44,16 @@
 				DonationDetailViewController.swift,
 				Donations.storyboard,
 				DonationViewController.swift,
+				Norain/Controllers/EditUsersViewController.swift,
+				"Norain/Controllers/UsersTableViewController 2.swift",
+				Norain/Helpers/Alerts.swift,
+				Norain/Helpers/AppData.swift,
+				Norain/Helpers/Keys.swift,
+				Norain/Models/AppUser.swift,
+				Norain/Models/Donor.swift,
+				Norain/Models/NGO.swift,
+				"Norain/norain-admin-controls1.storyboard",
+				Norain/Views/UserTableViewCell.swift,
 				NotificationsCollectionViewCell.swift,
 				NotificationsViewController.swift,
 				SceneDelegate.swift,
@@ -56,7 +66,6 @@
 			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
 			membershipExceptions = (
 				"/Localized: LaunchScreen.storyboard",
-				"/Localized: Main.storyboard",
 				Address.swift,
 				AppDelegate.swift,
 				Assets.xcassets,
@@ -67,6 +76,7 @@
 				Donations.storyboard,
 				DonationViewController.swift,
 				Info.plist,
+				"Norain/norain-admin-controls1.storyboard",
 				NotificationsCollectionViewCell.swift,
 				NotificationsViewController.swift,
 				SceneDelegate.swift,
@@ -75,44 +85,21 @@
 			);
 			target = 5FEF8B812EDA363A007D3A97 /* ProjectSimulatorUITests */;
 		};
-		12BA7FB62EF3703E002D936C /* Exceptions for "Norain" folder in "ProjectSimulator" target */ = {
+		12D3B0CE2EF44FE000DD9EA7 /* Exceptions for "ProjectSimulator" folder in "ProjectSimulatorTests" target */ = {
 			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
 			membershipExceptions = (
-				Controllers/UsersTableViewController.swift,
-				Helpers/Alerts.swift,
-				Helpers/AppData.swift,
-				Helpers/Keys.swift,
-				Models/AppUser.swift,
-				Models/Donor.swift,
-				Models/NGO.swift,
-				"norain-admin-controls1.storyboard",
-				Views/UserTableViewCell.swift,
+				"/Localized: Main.storyboard",
 			);
-			target = 5FEF8B612EDA3636007D3A97 /* ProjectSimulator */;
-		};
-		12BA7FB72EF3703E002D936C /* Exceptions for "Norain" folder in "ProjectSimulatorUITests" target */ = {
-			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
-			membershipExceptions = (
-				"norain-admin-controls1.storyboard",
-			);
-			target = 5FEF8B812EDA363A007D3A97 /* ProjectSimulatorUITests */;
+			target = 5FEF8B772EDA363A007D3A97 /* ProjectSimulatorTests */;
 		};
 /* End PBXFileSystemSynchronizedBuildFileExceptionSet section */
 
 /* Begin PBXFileSystemSynchronizedRootGroup section */
-		12BA7F8F2EF37007002D936C /* Norain */ = {
-			isa = PBXFileSystemSynchronizedRootGroup;
-			exceptions = (
-				12BA7FB62EF3703E002D936C /* Exceptions for "Norain" folder in "ProjectSimulator" target */,
-				12BA7FB72EF3703E002D936C /* Exceptions for "Norain" folder in "ProjectSimulatorUITests" target */,
-			);
-			path = Norain;
-			sourceTree = "<group>";
-		};
 		12BA7FA32EF37012002D936C /* ProjectSimulator */ = {
 			isa = PBXFileSystemSynchronizedRootGroup;
 			exceptions = (
 				12BA7FB42EF37012002D936C /* Exceptions for "ProjectSimulator" folder in "ProjectSimulator" target */,
+				12D3B0CE2EF44FE000DD9EA7 /* Exceptions for "ProjectSimulator" folder in "ProjectSimulatorTests" target */,
 				12BA7FB52EF37012002D936C /* Exceptions for "ProjectSimulator" folder in "ProjectSimulatorUITests" target */,
 			);
 			path = ProjectSimulator;
@@ -158,7 +145,6 @@
 		5FEF8B592EDA3636007D3A97 = {
 			isa = PBXGroup;
 			children = (
-				12BA7F8F2EF37007002D936C /* Norain */,
 				12BA7FA32EF37012002D936C /* ProjectSimulator */,
 				5FEF8B7B2EDA363A007D3A97 /* ProjectSimulatorTests */,
 				5FEF8B852EDA363A007D3A97 /* ProjectSimulatorUITests */,
@@ -235,7 +221,6 @@
 				5FEF8B842EDA363A007D3A97 /* PBXTargetDependency */,
 			);
 			fileSystemSynchronizedGroups = (
-				12BA7F8F2EF37007002D936C /* Norain */,
 				12BA7FA32EF37012002D936C /* ProjectSimulator */,
 				5FEF8B852EDA363A007D3A97 /* ProjectSimulatorUITests */,
 			);
@@ -363,9 +348,11 @@
 				CURRENT_PROJECT_VERSION = 1;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = ProjectSimulator/Info.plist;
+				INFOPLIST_KEY_NSCameraUsageDescription = "This app wants to take pictures";
+				INFOPLIST_KEY_NSPhotoLibraryUsageDescription = "This app uses images";
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchStoryboardName = LaunchScreen;
-				INFOPLIST_KEY_UIMainStoryboardFile = Main;
+				INFOPLIST_KEY_UIMainStoryboardFile = "";
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
 				LD_RUNPATH_SEARCH_PATHS = (
@@ -376,7 +363,7 @@
 				PRODUCT_BUNDLE_IDENTIFIER = com.bignerdranch.ProjectSimulator;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_EMIT_LOC_STRINGS = YES;
-				SWIFT_OBJC_BRIDGING_HEADER = "Norain/Views/ProjectSimulator-Bridging-Header.h";
+				SWIFT_OBJC_BRIDGING_HEADER = "";
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
@@ -393,9 +380,11 @@
 				CURRENT_PROJECT_VERSION = 1;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = ProjectSimulator/Info.plist;
+				INFOPLIST_KEY_NSCameraUsageDescription = "This app wants to take pictures";
+				INFOPLIST_KEY_NSPhotoLibraryUsageDescription = "This app uses images";
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchStoryboardName = LaunchScreen;
-				INFOPLIST_KEY_UIMainStoryboardFile = Main;
+				INFOPLIST_KEY_UIMainStoryboardFile = "";
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
 				LD_RUNPATH_SEARCH_PATHS = (
@@ -406,7 +395,7 @@
 				PRODUCT_BUNDLE_IDENTIFIER = com.bignerdranch.ProjectSimulator;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_EMIT_LOC_STRINGS = YES;
-				SWIFT_OBJC_BRIDGING_HEADER = "Norain/Views/ProjectSimulator-Bridging-Header.h";
+				SWIFT_OBJC_BRIDGING_HEADER = "";
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
 			};

@@ -38,13 +38,24 @@ class UsersTableViewController: UITableViewController {
     }
     
 
-    /*
+    
     // Override to support conditional editing of the table view.
     override func tableView(_ tableView: UITableView, canEditRowAt indexPath: IndexPath) -> Bool {
-        // Return false if you do not want the specified item to be editable.
-        return true
+        let user = users[indexPath.row]
+            
+            //Logic for NGO
+            if let ngo = user as? NGO {
+                if ngo.IsPending{
+                    return false // Cannot edit if pending
+                } else if ngo.IsApproved || ngo.IsRejected {
+                    return true // Can edit if approved or rejected
+                }
+            }
+
+            // Default fallback
+            return true
     }
-    */
+    
 
     
     // Override to support editing the table view.

@@ -380,7 +380,6 @@
         <!--Yyy-->
         <scene sceneID="13u-RV-mHD">
             <objects>
-                <placeholder placeholderIdentifier="IBFirstResponder" id="qar-pC-2IJ" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
                 <viewController storyboardIdentifier="yyy" useStoryboardIdentifierAsRestorationIdentifier="YES" id="m3V-uM-TrH" customClass="yyy" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" ambiguous="YES" id="3hQ-gb-QJj">
                         <rect key="frame" x="0.0" y="0.0" width="393" height="1200"/>
@@ -539,6 +538,7 @@
                         <outlet property="usernameTextField" destination="lrF-vn-9jR" id="KBj-aY-alA"/>
                     </connections>
                 </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="qar-pC-2IJ" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
             </objects>
             <point key="canvasLocation" x="547" y="1344"/>
         </scene>

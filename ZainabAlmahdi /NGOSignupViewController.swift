@@ -1,7 +1,14 @@
+//
+//  NGOSignupViewController.swift
+//  ProjectSimulator
+//
+//  Created by BP-36-201-02 on 20/12/2025.
+//
+
 import UIKit
 import FirebaseAuth
 
-class SignupViewController: UIViewController {
+class NGOSignupViewController: UIViewController {
 
     @IBOutlet weak var usernameTextField: UITextField!
     @IBOutlet weak var nameTextField: UITextField!

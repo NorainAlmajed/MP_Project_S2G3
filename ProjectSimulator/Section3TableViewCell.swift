@@ -55,6 +55,11 @@ class Section3TableViewCell: UITableViewCell {
     
     @IBOutlet weak var rejectionSectionView: UIView!
     
+    @IBOutlet weak var foodImageHeightConstraint: NSLayoutConstraint!
+    
+    @IBOutlet weak var foodImageWidthConstraint: NSLayoutConstraint!
+
+    
     // Closure to notify the VC when buttons are tapped
         var onCancelTapped: (() -> Void)?
         var onAcceptTapped: (() -> Void)?
@@ -94,8 +99,8 @@ class Section3TableViewCell: UITableViewCell {
             styleActionButton(acceptBtn)
             styleActionButton(collectedBtn)
 
-        
-        
+        //Add iPad resizing logic
+        adjustImageSizeForDevice()
         
     }
     
@@ -121,8 +126,18 @@ class Section3TableViewCell: UITableViewCell {
     }
 
     
-    
-    
+    //Add iPad resizing logic
+    private func adjustImageSizeForDevice() {
+        let isPad = UIDevice.current.userInterfaceIdiom == .pad
+
+        if isPad {
+            // Bigger image on iPad
+            foodImageHeightConstraint.constant = 288
+            foodImageWidthConstraint.constant = 456
+        }
+        // iPhone → keep storyboard size
+    }
+
     
     
     

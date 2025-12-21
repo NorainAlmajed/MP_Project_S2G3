@@ -8,6 +8,7 @@
 
 /* Begin PBXBuildFile section */
 		5FEF8BFB2EDB8B59007D3A97 /* DonationDetailViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5FEF8BFA2EDB8B59007D3A97 /* DonationDetailViewController.swift */; };
+		7A5D74C22EF7F4FA000EF760 /* Cloudinary in Frameworks */ = {isa = PBXBuildFile; productRef = 7A5D74C12EF7F4FA000EF760 /* Cloudinary */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -70,6 +71,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				7A5D74C22EF7F4FA000EF760 /* Cloudinary in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -131,6 +133,7 @@
 			);
 			name = ProjectSimulator;
 			packageProductDependencies = (
+				7A5D74C12EF7F4FA000EF760 /* Cloudinary */,
 			);
 			productName = ProjectSimulator;
 			productReference = 5FEF8B622EDA3636007D3A97 /* ProjectSimulator.app */;
@@ -214,6 +217,9 @@
 			);
 			mainGroup = 5FEF8B592EDA3636007D3A97;
 			minimizedProjectReferenceProxies = 1;
+			packageReferences = (
+				7A5D74C02EF7F4FA000EF760 /* XCRemoteSwiftPackageReference "cloudinary_ios" */,
+			);
 			preferredProjectObjectVersion = 77;
 			productRefGroup = 5FEF8B632EDA3636007D3A97 /* Products */;
 			projectDirPath = "";
@@ -570,6 +576,25 @@
 			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
+
+/* Begin XCRemoteSwiftPackageReference section */
+		7A5D74C02EF7F4FA000EF760 /* XCRemoteSwiftPackageReference "cloudinary_ios" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/cloudinary/cloudinary_ios.git";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 5.2.4;
+			};
+		};
+/* End XCRemoteSwiftPackageReference section */
+
+/* Begin XCSwiftPackageProductDependency section */
+		7A5D74C12EF7F4FA000EF760 /* Cloudinary */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 7A5D74C02EF7F4FA000EF760 /* XCRemoteSwiftPackageReference "cloudinary_ios" */;
+			productName = Cloudinary;
+		};
+/* End XCSwiftPackageProductDependency section */
 	};
 	rootObject = 5FEF8B5A2EDA3636007D3A97 /* Project object */;
 }

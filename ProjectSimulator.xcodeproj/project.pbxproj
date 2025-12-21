@@ -8,6 +8,7 @@
 
 /* Begin PBXBuildFile section */
 		5FEF8BFB2EDB8B59007D3A97 /* DonationDetailViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5FEF8BFA2EDB8B59007D3A97 /* DonationDetailViewController.swift */; };
+		7A172A432EF6E3F300EA0746 /* Cloudinary in Frameworks */ = {isa = PBXBuildFile; productRef = 7A172A422EF6E3F300EA0746 /* Cloudinary */; };
 		BDD3182F2EEB7F9500880EFF /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = BDD3182E2EEB7F9500880EFF /* GoogleService-Info.plist */; };
 		BDD318302EEB7F9500880EFF /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = BDD3182E2EEB7F9500880EFF /* GoogleService-Info.plist */; };
 		BDD318312EEB7F9500880EFF /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = BDD3182E2EEB7F9500880EFF /* GoogleService-Info.plist */; };
@@ -118,6 +119,7 @@
 				BDD318342EEB815800880EFF /* FirebaseAnalytics in Frameworks */,
 				BDD318402EEB815800880EFF /* FirebaseMessaging in Frameworks */,
 				BDD3183A2EEB815800880EFF /* FirebaseCrashlytics in Frameworks */,
+				7A172A432EF6E3F300EA0746 /* Cloudinary in Frameworks */,
 				BDD318382EEB815800880EFF /* FirebaseCore in Frameworks */,
 				BDD318362EEB815800880EFF /* FirebaseAuth in Frameworks */,
 				BDD3183E2EEB815800880EFF /* FirebaseFirestore in Frameworks */,
@@ -150,6 +152,7 @@
 				5FEF8B642EDA3636007D3A97 /* ProjectSimulator */,
 				5FEF8B7B2EDA363A007D3A97 /* ProjectSimulatorTests */,
 				5FEF8B852EDA363A007D3A97 /* ProjectSimulatorUITests */,
+				7A172A412EF6E3F300EA0746 /* Frameworks */,
 				5FEF8B632EDA3636007D3A97 /* Products */,
 			);
 			sourceTree = "<group>";
@@ -162,6 +165,13 @@
 				5FEF8B822EDA363A007D3A97 /* ProjectSimulatorUITests.xctest */,
 			);
 			name = Products;
+			sourceTree = "<group>";
+		};
+		7A172A412EF6E3F300EA0746 /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			name = Frameworks;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -192,6 +202,7 @@
 				BDD3183B2EEB815800880EFF /* FirebaseDatabase */,
 				BDD3183D2EEB815800880EFF /* FirebaseFirestore */,
 				BDD3183F2EEB815800880EFF /* FirebaseMessaging */,
+				7A172A422EF6E3F300EA0746 /* Cloudinary */,
 			);
 			productName = ProjectSimulator;
 			productReference = 5FEF8B622EDA3636007D3A97 /* ProjectSimulator.app */;
@@ -277,6 +288,7 @@
 			minimizedProjectReferenceProxies = 1;
 			packageReferences = (
 				BDD318322EEB815800880EFF /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */,
+				7A172A3E2EF6E21600EA0746 /* XCRemoteSwiftPackageReference "cloudinary_ios" */,
 			);
 			preferredProjectObjectVersion = 77;
 			productRefGroup = 5FEF8B632EDA3636007D3A97 /* Products */;
@@ -639,6 +651,14 @@
 /* End XCConfigurationList section */
 
 /* Begin XCRemoteSwiftPackageReference section */
+		7A172A3E2EF6E21600EA0746 /* XCRemoteSwiftPackageReference "cloudinary_ios" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/cloudinary/cloudinary_ios.git";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 5.2.4;
+			};
+		};
 		BDD318322EEB815800880EFF /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/firebase/firebase-ios-sdk";
@@ -650,6 +670,11 @@
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
+		7A172A422EF6E3F300EA0746 /* Cloudinary */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 7A172A3E2EF6E21600EA0746 /* XCRemoteSwiftPackageReference "cloudinary_ios" */;
+			productName = Cloudinary;
+		};
 		BDD318332EEB815800880EFF /* FirebaseAnalytics */ = {
 			isa = XCSwiftPackageProductDependency;
 			package = BDD318322EEB815800880EFF /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */;

@@ -18,9 +18,12 @@ class UserTableViewCell: UITableViewCell {
         nameLbl.text = appUser.name
         emailLbl.text = appUser.email
         
+        
         if let donor = appUser as? Donor{
+            phoneOrStatusLbl.text = "Phone Number: "
             phoneOrStatusLbl.text = donor.phoneNumber.description
         }else if let ngo = appUser as? NGO{
+            
             if (ngo.IsPending){
                 phoneOrStatusLbl.text = "Pending"
                 phoneOrStatusLbl.textColor = .orangeCol

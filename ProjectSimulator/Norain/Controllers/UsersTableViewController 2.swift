@@ -41,35 +41,84 @@ class UsersTableViewController: UITableViewController {
     
     // Override to support conditional editing of the table view.
     override func tableView(_ tableView: UITableView, canEditRowAt indexPath: IndexPath) -> Bool {
-        let user = users[indexPath.row]
-            
-            //Logic for NGO
-            if let ngo = user as? NGO {
-                if ngo.IsPending{
-                    return false // Cannot edit if pending
-                } else if ngo.IsApproved || ngo.IsRejected {
-                    return true // Can edit if approved or rejected
-                }
-            }
-
             // Default fallback
             return true
     }
+    
+    override func tableView(_ tableView: UITableView, trailingSwipeActionsConfigurationForRowAt indexPath: IndexPath) -> UISwipeActionsConfiguration? {
+        
+        let user = users[indexPath.row]
+        let ngo = user as? NGO
+        
+        let storyboard = UIStoryboard(name: "norain-admin-controls1", bundle: nil)
+        let editVC = storyboard.instantiateViewController(withIdentifier: "EditUsersViewController") as! EditUsersViewController
+        let nav = UINavigationController(rootViewController: editVC)
+        
+
+        let editAction = UIContextualAction(style: .normal, title: "Edit") { (action, view, completionHandler) in
+            self.showDetailViewController(nav, sender: view)
+            completionHandler(true)
+        }
+        editAction.backgroundColor = .blueCol
+        
+        var actions: [UIContextualAction] = [editAction]
+        
+
+        if let ngo = ngo {
+            if ngo.IsPending {
+                // Show both Accept and Reject
+                actions.append(createAcceptAction(for: ngo, indexPath: indexPath))
+                actions.append(createRejectAction(for: ngo, indexPath: indexPath))
+            } else if ngo.IsRejected {
+                // Show only Accept
+                actions.append(createAcceptAction(for: ngo, indexPath: indexPath))
+            }
+        }
+        
+        let configuration = UISwipeActionsConfiguration(actions: actions)
+        return configuration
+    }
+
+    //create Accept Action
+    func createAcceptAction(for ngo: NGO, indexPath: IndexPath) -> UIContextualAction {
+        let action = UIContextualAction(style: .normal, title: "Accept") { (_, _, completionHandler) in
+            ngo.IsPending = false
+            ngo.IsApproved = true
+            ngo.IsRejected = false
+            self.tableView.reloadRows(at: [indexPath], with: .automatic)
+            completionHandler(true)
+        }
+        action.backgroundColor = .greenCol
+        return action
+    }
+
+    //create Reject Action
+    func createRejectAction(for ngo: NGO, indexPath: IndexPath) -> UIContextualAction {
+        let action = UIContextualAction(style: .normal, title: "Reject") { (_, _, completionHandler) in
+            ngo.IsPending = false
+            ngo.IsApproved = false
+            ngo.IsRejected = true
+            self.tableView.reloadRows(at: [indexPath], with: .automatic)
+            completionHandler(true)
+        }
+        action.backgroundColor = .redCol
+        return action
+    }
+
     
 
     
     // Override to support editing the table view.
     override func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCell.EditingStyle, forRowAt indexPath: IndexPath) {
         if editingStyle == .delete {
+            
             confirmation(title: "Delete Confirmation", message: "Are you sure you want to remove User?"){
                 self.users.remove(at: indexPath.row)
                 AppData.users.remove(at: indexPath.row)
                 tableView.deleteRows(at: [indexPath], with: .fade)
             }
 
-        } else if editingStyle == .insert {
-
-        }    
+        }
     }
     
     func confirmation(title:String, message:String,confirmHandler: @escaping() ->Void){

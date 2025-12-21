@@ -388,7 +388,7 @@
                                 <rect key="frame" x="0.0" y="0.0" width="393" height="1131"/>
                                 <subviews>
                                     <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="acR-Lt-2H8">
-                                        <rect key="frame" x="0.0" y="0.0" width="393" height="1200"/>
+                                        <rect key="frame" x="0.0" y="0.0" width="393" height="1300"/>
                                         <subviews>
                                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="Sign Up" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="hbd-57-Kte">
                                                 <rect key="frame" x="166" y="67" width="60" height="21"/>
@@ -482,7 +482,7 @@
                                                 <textInputTraits key="textInputTraits" secureTextEntry="YES" textContentType="new-password"/>
                                             </textField>
                                             <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="4aG-dJ-Ygw">
-                                                <rect key="frame" x="99" y="1057" width="206" height="39"/>
+                                                <rect key="frame" x="93" y="1158" width="206" height="39"/>
                                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                                 <state key="normal" title="Button"/>
                                                 <buttonConfiguration key="configuration" style="plain" title="Have an account? Login"/>
@@ -491,7 +491,7 @@
                                                 </connections>
                                             </button>
                                             <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="DfM-gv-5d5">
-                                                <rect key="frame" x="43" y="1119" width="307" height="39"/>
+                                                <rect key="frame" x="43" y="1219" width="307" height="39"/>
                                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                                 <state key="normal" title="Button"/>
                                                 <buttonConfiguration key="configuration" style="filled" title="Sign Up">
@@ -523,7 +523,7 @@
                                                 <nil key="highlightedColor"/>
                                             </label>
                                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="License Upload" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="905-XF-37p">
-                                                <rect key="frame" x="21" y="928" width="118" height="21"/>
+                                                <rect key="frame" x="137" y="928" width="118" height="21"/>
                                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                                 <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                                 <nil key="textColor"/>
@@ -541,10 +541,25 @@
                                                 <fontDescription key="fontDescription" type="system" pointSize="14"/>
                                                 <textInputTraits key="textInputTraits" textContentType="username"/>
                                             </textField>
+                                            <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="vUb-eh-Ayh">
+                                                <rect key="frame" x="77" y="957" width="240" height="128"/>
+                                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                                <rect key="contentStretch" x="0.0" y="0.0" width="1" height="0.0"/>
+                                            </imageView>
+                                            <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="DIv-S0-B1z">
+                                                <rect key="frame" x="132" y="1093" width="130" height="39"/>
+                                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                                <state key="normal" title="Button"/>
+                                                <buttonConfiguration key="configuration" style="filled" title="Upload image"/>
+                                                <connections>
+                                                    <action selector="uploadLicenseTapped:" destination="sHa-zn-Poc" eventType="touchUpInside" id="ZNo-N6-eHa"/>
+                                                </connections>
+                                            </button>
                                         </subviews>
                                         <color key="backgroundColor" systemColor="systemBackgroundColor"/>
                                         <constraints>
-                                            <constraint firstAttribute="height" constant="1200" id="IPz-4L-10I"/>
+                                            <constraint firstAttribute="height" constant="1300" id="AKw-fd-9Ki"/>
+                                            <constraint firstAttribute="height" relation="greaterThanOrEqual" constant="1300" id="sOO-4k-m75"/>
                                         </constraints>
                                     </view>
                                 </subviews>
@@ -579,6 +594,7 @@
                         <outlet property="confirmPasswordTextField" destination="SLp-W9-WfK" id="GKf-hv-dnl"/>
                         <outlet property="emailTextField" destination="1nS-01-feX" id="g0i-6G-cyB"/>
                         <outlet property="governorateTextField" destination="hih-CM-cjX" id="i5r-QX-T92"/>
+                        <outlet property="licenseImageView" destination="vUb-eh-Ayh" id="tWO-Yn-98y"/>
                         <outlet property="nameTextField" destination="KdP-Xl-Rof" id="3bz-vi-3KK"/>
                         <outlet property="passwordTextField" destination="N8Q-lP-SuI" id="7mo-8Z-4yh"/>
                         <outlet property="phoneNumberTextField" destination="f8r-Vl-q7c" id="6qk-U5-ncU"/>

@@ -8,7 +8,11 @@
 import UIKit
 import FirebaseAuth
 
-class NGOSignupViewController: UIViewController, UIPickerViewDelegate, UIPickerViewDataSource{
+class NGOSignupViewController: UIViewController,
+                              UIPickerViewDelegate,
+                              UIPickerViewDataSource,
+                              UIImagePickerControllerDelegate,
+                              UINavigationControllerDelegate {
     
     let causePicker = UIPickerView()
     let governoratePicker = UIPickerView()
@@ -37,8 +41,12 @@ class NGOSignupViewController: UIViewController, UIPickerViewDelegate, UIPickerV
     @IBOutlet weak var confirmPasswordTextField: UITextField!
     @IBOutlet weak var addressTextField: UITextField!
     @IBOutlet weak var causeTextField: UITextField!
-    
     @IBOutlet weak var governorateTextField: UITextField!
+    @IBOutlet weak var licenseImageView: UIImageView!
+    
+    @IBAction func uploadLicenseTapped(_ sender: Any) {
+        showImagePicker()
+    }
     
     @IBAction func goToLoginTapped(_ sender: UIButton) {
         navigationController?.popViewController(animated:true)
@@ -64,6 +72,31 @@ class NGOSignupViewController: UIViewController, UIPickerViewDelegate, UIPickerV
 
         addToolbar(to: causeTextField)
         addToolbar(to: governorateTextField)
+    }
+    
+    func showImagePicker() {
+        let picker = UIImagePickerController()
+        picker.delegate = self
+        picker.allowsEditing = true
+        picker.sourceType = .photoLibrary
+        present(picker, animated: true)
+    }
+    
+    func imagePickerController(
+        _ picker: UIImagePickerController,
+        didFinishPickingMediaWithInfo info: [UIImagePickerController.InfoKey : Any]
+    ) {
+        if let image = info[.editedImage] as? UIImage {
+            licenseImageView.image = image
+        } else if let image = info[.originalImage] as? UIImage {
+            licenseImageView.image = image
+        }
+
+        dismiss(animated: true)
+    }
+    
+    func imagePickerControllerDidCancel(_ picker: UIImagePickerController) {
+        dismiss(animated: true)
     }
     
     func numberOfComponents(in pickerView: UIPickerView) -> Int {
@@ -165,6 +198,14 @@ class NGOSignupViewController: UIViewController, UIPickerViewDelegate, UIPickerV
 
         guard let governorate = governorateTextField.text, !governorate.isEmpty else {
             showAlert(title: "Missing Governorate", message: "Please select a governorate.")
+            return
+        }
+        
+        guard let licenseImage = licenseImageView.image else {
+            showAlert(
+                title: "Missing License",
+                message: "Please upload your NGO license."
+            )
             return
         }
 

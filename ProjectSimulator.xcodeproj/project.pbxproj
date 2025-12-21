@@ -57,13 +57,7 @@
 			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
 			membershipExceptions = (
 				Authentication.storyboard,
-				Constants.swift,
-				DonorSignupViewController.swift,
-				HomeViewController.swift,
 				LoginViewController.swift,
-				NGOSignupViewController.swift,
-				RoleSelectionViewController.swift,
-				WelcomeViewController.swift,
 			);
 			target = 5FEF8B772EDA363A007D3A97 /* ProjectSimulatorTests */;
 		};
@@ -71,13 +65,7 @@
 			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
 			membershipExceptions = (
 				Authentication.storyboard,
-				Constants.swift,
-				DonorSignupViewController.swift,
-				HomeViewController.swift,
 				LoginViewController.swift,
-				NGOSignupViewController.swift,
-				RoleSelectionViewController.swift,
-				WelcomeViewController.swift,
 			);
 			target = 5FEF8B812EDA363A007D3A97 /* ProjectSimulatorUITests */;
 		};

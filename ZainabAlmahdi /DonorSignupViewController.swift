@@ -16,8 +16,8 @@ class DonorSignupViewController: UIViewController {
     @IBOutlet weak var emailTextField: UITextField!
     @IBOutlet weak var passwordTextField: UITextField!
     @IBOutlet weak var confirmPasswordTextField: UITextField!
-
-    @IBAction func goToLoginTapped(_ sender: UIButton) {
+    
+    @IBAction func loginButtonTapped(_ sender: UIButton) {
         performSegue(withIdentifier: "goToLogin", sender: self)
     }
     override func viewDidLoad() {

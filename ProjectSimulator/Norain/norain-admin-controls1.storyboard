@@ -155,7 +155,7 @@
                                     <textView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" textAlignment="natural" translatesAutoresizingMaskIntoConstraints="NO" id="sbg-AB-1RT">
                                         <rect key="frame" x="0.0" y="37.666666666666686" width="361" height="383"/>
                                         <color key="backgroundColor" systemColor="systemBackgroundColor"/>
-                                        <mutableString key="text">Lorem ipsum dolor sit er elit lamet, consectetaur cillium adipisicing pecu, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum. Nam liber te conscient to factor tum poen legum odioque civiuda.</mutableString>
+                                        <string key="text">Lorem ipsum dolor sit er elit lamet, consectetaur cillium adipisicing pecu, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum. Nam liber te conscient to factor tum poen legum odioque civiuda.</string>
                                         <color key="textColor" systemColor="labelColor"/>
                                         <fontDescription key="fontDescription" type="system" pointSize="14"/>
                                         <textInputTraits key="textInputTraits" autocapitalizationType="sentences"/>
@@ -475,48 +475,61 @@
             </objects>
             <point key="canvasLocation" x="2030" y="-13"/>
         </scene>
-        <!--View Controller-->
+        <!--Rejection Reason View Controller-->
         <scene sceneID="7Oi-dj-dam">
             <objects>
-                <viewController id="Slp-CZ-vfp" sceneMemberID="viewController">
+                <viewController title="Rejection Reason View Controller" id="Slp-CZ-vfp" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="iFG-CT-uMY">
                         <rect key="frame" x="0.0" y="0.0" width="393" height="783"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <navigationBar contentMode="scaleToFill" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="HqH-LP-a4N">
-                                <rect key="frame" x="0.0" y="0.0" width="393" height="44"/>
-                                <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMaxY="YES"/>
-                                <items>
-                                    <navigationItem title="Rejection Reason (Optional)" id="QZl-HI-pJR">
-                                        <barButtonItem key="rightBarButtonItem" systemItem="done" id="D5x-h5-IEG"/>
-                                    </navigationItem>
-                                </items>
-                            </navigationBar>
-                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="Rejection Reason" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="ca3-do-aqH">
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Rejection Reason" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="ca3-do-aqH">
                                 <rect key="frame" x="16" y="105" width="137" height="23"/>
-                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <fontDescription key="fontDescription" style="UICTFontTextStyleHeadline"/>
                                 <nil key="textColor"/>
                                 <nil key="highlightedColor"/>
                             </label>
-                            <textView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" fixedFrame="YES" textAlignment="natural" translatesAutoresizingMaskIntoConstraints="NO" id="VBm-Hq-80B">
-                                <rect key="frame" x="16" y="136" width="361" height="203"/>
-                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                            <textView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" textAlignment="natural" translatesAutoresizingMaskIntoConstraints="NO" id="VBm-Hq-80B">
+                                <rect key="frame" x="16" y="136" width="361" height="237"/>
                                 <color key="backgroundColor" systemColor="systemBackgroundColor"/>
                                 <string key="text">Lorem ipsum dolor sit er elit lamet, consectetaur cillium adipisicing pecu, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum. Nam liber te conscient to factor tum poen legum odioque civiuda.</string>
                                 <color key="textColor" systemColor="labelColor"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="14"/>
                                 <textInputTraits key="textInputTraits" autocapitalizationType="sentences"/>
                             </textView>
-                            <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="UKc-LN-KKN">
-                                <rect key="frame" x="121" y="397" width="151" height="39"/>
-                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="UKc-LN-KKN">
+                                <rect key="frame" x="121" y="431" width="151" height="39"/>
                                 <state key="normal" title="Button"/>
                                 <buttonConfiguration key="configuration" style="gray" title="Submit"/>
                             </button>
+                            <navigationBar contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="HqH-LP-a4N">
+                                <rect key="frame" x="0.0" y="0.0" width="393" height="56"/>
+                                <items>
+                                    <navigationItem title="Rejection Reason (Optional)" id="QZl-HI-pJR">
+                                        <barButtonItem key="rightBarButtonItem" systemItem="done" id="D5x-h5-IEG"/>
+                                    </navigationItem>
+                                </items>
+                            </navigationBar>
                         </subviews>
                         <viewLayoutGuide key="safeArea" id="SV4-tZ-Hou"/>
                         <color key="backgroundColor" systemColor="systemBackgroundColor"/>
+                        <constraints>
+                            <constraint firstItem="UKc-LN-KKN" firstAttribute="centerX" secondItem="VBm-Hq-80B" secondAttribute="centerX" id="01n-K1-CoR"/>
+                            <constraint firstItem="ca3-do-aqH" firstAttribute="leading" secondItem="iFG-CT-uMY" secondAttribute="leadingMargin" id="4rR-hU-ZgT"/>
+                            <constraint firstItem="HqH-LP-a4N" firstAttribute="centerX" secondItem="UKc-LN-KKN" secondAttribute="centerX" id="BYQ-AD-Tl4"/>
+                            <constraint firstItem="HqH-LP-a4N" firstAttribute="centerX" secondItem="iFG-CT-uMY" secondAttribute="centerX" id="PkT-jh-lPV"/>
+                            <constraint firstItem="UKc-LN-KKN" firstAttribute="top" secondItem="VBm-Hq-80B" secondAttribute="bottom" constant="58" id="T40-1j-89V"/>
+                            <constraint firstItem="HqH-LP-a4N" firstAttribute="leading" secondItem="SV4-tZ-Hou" secondAttribute="leading" id="YIp-YJ-5S8"/>
+                            <constraint firstItem="ca3-do-aqH" firstAttribute="top" secondItem="HqH-LP-a4N" secondAttribute="bottom" constant="49" id="a0c-Bd-yWh"/>
+                            <constraint firstItem="ca3-do-aqH" firstAttribute="top" secondItem="HqH-LP-a4N" secondAttribute="bottom" constant="49" id="ewL-Ua-8EU"/>
+                            <constraint firstItem="UKc-LN-KKN" firstAttribute="leading" secondItem="SV4-tZ-Hou" secondAttribute="leading" constant="121" id="gBN-ka-jFd"/>
+                            <constraint firstItem="HqH-LP-a4N" firstAttribute="centerX" secondItem="VBm-Hq-80B" secondAttribute="centerX" id="gk3-VB-TuW"/>
+                            <constraint firstItem="HqH-LP-a4N" firstAttribute="top" secondItem="iFG-CT-uMY" secondAttribute="top" id="jQf-Ax-8ia"/>
+                            <constraint firstItem="VBm-Hq-80B" firstAttribute="top" secondItem="ca3-do-aqH" secondAttribute="bottom" constant="8" id="oCY-iw-orc"/>
+                            <constraint firstItem="HqH-LP-a4N" firstAttribute="top" secondItem="iFG-CT-uMY" secondAttribute="top" id="qRm-IH-28G"/>
+                            <constraint firstItem="ca3-do-aqH" firstAttribute="leading" secondItem="VBm-Hq-80B" secondAttribute="leading" id="qrI-IW-CFP"/>
+                            <constraint firstItem="SV4-tZ-Hou" firstAttribute="bottom" secondItem="UKc-LN-KKN" secondAttribute="bottom" constant="313" id="vtM-VO-2ov"/>
+                        </constraints>
                     </view>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="UWf-as-685" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>

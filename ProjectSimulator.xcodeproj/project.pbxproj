@@ -58,7 +58,6 @@
 			membershipExceptions = (
 				Authentication.storyboard,
 				LoginViewController.swift,
-				SignupViewController.swift,
 			);
 			target = 5FEF8B772EDA363A007D3A97 /* ProjectSimulatorTests */;
 		};
@@ -67,7 +66,6 @@
 			membershipExceptions = (
 				Authentication.storyboard,
 				LoginViewController.swift,
-				SignupViewController.swift,
 			);
 			target = 5FEF8B812EDA363A007D3A97 /* ProjectSimulatorUITests */;
 		};

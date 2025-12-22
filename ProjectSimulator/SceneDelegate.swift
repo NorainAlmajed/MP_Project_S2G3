@@ -20,27 +20,25 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         setRootViewController()
         window?.makeKeyAndVisible()
         }
-        private func setRootViewController() {
-        let storyboard = UIStoryboard(name: "Main", bundle:
-        nil)
-        // Check if user ID exists in UserDefaults
-        if let userID = UserDefaults.standard.string(forKey:
-        UserDefaultsKeys.userID),
-        Auth.auth().currentUser != nil {
-        // User is logged in - show Home screen
-        if let homeVC =
-        storyboard.instantiateViewController(withIdentifier:
-        "HomeViewController") as? HomeViewController {
-        window?.rootViewController = homeVC
-        }
+    func setRootViewController() {
+
+        if Auth.auth().currentUser != nil {
+            // User logged in → Main storyboard
+            let authStoryboard = UIStoryboard(name: "Authentication", bundle: nil)
+            let homeVC = authStoryboard.instantiateViewController(
+                withIdentifier: "HomeViewController"
+            )
+            window?.rootViewController = homeVC
         } else {
-        if let loginVC =
-        storyboard.instantiateViewController(withIdentifier:
-        "LoginViewController") as? LoginViewController {
-        window?.rootViewController = loginVC
+            // User NOT logged in → Authentication storyboard
+            let authStoryboard = UIStoryboard(name: "Authentication", bundle: nil)
+            let loginVC = authStoryboard.instantiateViewController(
+                withIdentifier: "LoginViewController"
+            )
+            window?.rootViewController = loginVC
         }
-        }
-        }
+    }
+
         // Other SceneDelegate methods...
     }
 

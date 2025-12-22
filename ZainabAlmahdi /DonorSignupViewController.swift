@@ -1,7 +1,14 @@
+//
+//  DonorSignupViewController.swift
+//  ProjectSimulator
+//
+//  Created by BP-36-201-02 on 20/12/2025.
+//
+
 import UIKit
 import FirebaseAuth
 
-class SignupViewController: UIViewController {
+class DonorSignupViewController: UIViewController {
 
     @IBOutlet weak var usernameTextField: UITextField!
     @IBOutlet weak var nameTextField: UITextField!
@@ -9,8 +16,8 @@ class SignupViewController: UIViewController {
     @IBOutlet weak var emailTextField: UITextField!
     @IBOutlet weak var passwordTextField: UITextField!
     @IBOutlet weak var confirmPasswordTextField: UITextField!
-
-    @IBAction func goToLoginTapped(_ sender: UIButton) {
+    
+    @IBAction func loginButtonTapped(_ sender: UIButton) {
         performSegue(withIdentifier: "goToLogin", sender: self)
     }
     override func viewDidLoad() {
@@ -89,3 +96,4 @@ class SignupViewController: UIViewController {
         present(alert, animated: true)
     }
 }
+

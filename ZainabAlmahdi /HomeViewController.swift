@@ -31,8 +31,8 @@ class HomeViewController: UIViewController {
     }
 
     private func navigateToLogin() {
-        let storyboard = UIStoryboard(name: "Main", bundle: nil)
-        if let loginVC = storyboard.instantiateViewController(
+        let authStoryboard = UIStoryboard(name: "Authentication", bundle: nil)
+        if let loginVC = authStoryboard.instantiateViewController(
             withIdentifier: "LoginViewController"
         ) as? LoginViewController {
 
@@ -40,9 +40,7 @@ class HomeViewController: UIViewController {
             present(loginVC, animated: true)
         }
     }
-
-    // MARK: - Helper methods (LAB SUPPORT)
-
+    
     func checkIfUserIsLoggedIn() -> Bool {
         return Auth.auth().currentUser != nil
     }

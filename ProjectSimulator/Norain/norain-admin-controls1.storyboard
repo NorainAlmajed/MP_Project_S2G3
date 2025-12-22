@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="23727" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="23727" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="mxA-aF-9jl">
     <device id="retina6_12" orientation="portrait" appearance="light"/>
     <dependencies>
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="23721"/>
@@ -45,8 +45,41 @@
                                     </subviews>
                                 </tableViewCellContentView>
                             </tableViewCell>
+                            <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="default" indentationWidth="10" reuseIdentifier="NGOStatus" id="zIM-qc-oim">
+                                <rect key="frame" x="0.0" y="141.66666793823242" width="393" height="47.666667938232422"/>
+                                <autoresizingMask key="autoresizingMask"/>
+                                <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" preservesSuperviewLayoutMargins="YES" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="zIM-qc-oim" id="Ove-fD-xuo">
+                                    <rect key="frame" x="0.0" y="0.0" width="393" height="47.666667938232422"/>
+                                    <autoresizingMask key="autoresizingMask"/>
+                                    <subviews>
+                                        <stackView opaque="NO" contentMode="scaleToFill" fixedFrame="YES" spacing="8" translatesAutoresizingMaskIntoConstraints="NO" id="ET8-ey-ik5">
+                                            <rect key="frame" x="20" y="3.3333320617675781" width="310" height="38.333333333333336"/>
+                                            <subviews>
+                                                <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="LFd-2B-Aft">
+                                                    <rect key="frame" x="0.0" y="0.0" width="98" height="38.333333333333336"/>
+                                                    <color key="tintColor" name="greenCol"/>
+                                                    <state key="normal" title="Button"/>
+                                                    <buttonConfiguration key="configuration" style="filled" title="Pending"/>
+                                                </button>
+                                                <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="h1K-N4-pJu">
+                                                    <rect key="frame" x="106" y="0.0" width="98" height="38.333333333333336"/>
+                                                    <color key="tintColor" name="greenCol"/>
+                                                    <state key="normal" title="Button"/>
+                                                    <buttonConfiguration key="configuration" style="filled" title="Approved"/>
+                                                </button>
+                                                <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="goI-0K-GyM">
+                                                    <rect key="frame" x="212" y="0.0" width="98" height="38.333333333333336"/>
+                                                    <color key="tintColor" name="greenCol"/>
+                                                    <state key="normal" title="Button"/>
+                                                    <buttonConfiguration key="configuration" style="filled" title="Rejected"/>
+                                                </button>
+                                            </subviews>
+                                        </stackView>
+                                    </subviews>
+                                </tableViewCellContentView>
+                            </tableViewCell>
                             <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="default" accessoryType="disclosureIndicator" indentationWidth="10" reuseIdentifier="UserCell" rowHeight="120" id="fLJ-bc-juO" customClass="UserTableViewCell" customModule="ProjectSimulator" customModuleProvider="target">
-                                <rect key="frame" x="0.0" y="141.66666793823242" width="393" height="120"/>
+                                <rect key="frame" x="0.0" y="189.33333587646484" width="393" height="120"/>
                                 <autoresizingMask key="autoresizingMask"/>
                                 <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" preservesSuperviewLayoutMargins="YES" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="fLJ-bc-juO" id="wo9-TX-qbd">
                                     <rect key="frame" x="0.0" y="0.0" width="362.66666666666669" height="120"/>
@@ -85,9 +118,6 @@
                                     <outlet property="emailLbl" destination="izv-3Y-TXO" id="4v6-py-kLL"/>
                                     <outlet property="nameLbl" destination="DdE-A3-VSf" id="3p7-8V-L1Q"/>
                                     <outlet property="phoneOrStatusLbl" destination="z8c-GN-eBZ" id="yL1-Jc-9mA"/>
-                                    <segue destination="Omg-aE-SIU" kind="popoverPresentation" popoverAnchorView="fLJ-bc-juO" id="aTb-KV-PQ6">
-                                        <popoverArrowDirection key="popoverArrowDirection" up="YES" down="YES" left="YES" right="YES"/>
-                                    </segue>
                                 </connections>
                             </tableViewCell>
                         </prototypes>
@@ -102,18 +132,18 @@
                 </tableViewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="sg9-XQ-SK6" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="573" y="-13"/>
+            <point key="canvasLocation" x="571.75572519083971" y="-13.380281690140846"/>
         </scene>
         <!--Details-->
         <scene sceneID="ufK-hu-7aj">
             <objects>
                 <viewController title="Details" id="Omg-aE-SIU" customClass="UserDetailsViewController" customModule="ProjectSimulator" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="YhB-D2-Fqs">
-                        <rect key="frame" x="0.0" y="0.0" width="393" height="783"/>
+                        <rect key="frame" x="0.0" y="0.0" width="393" height="852"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <navigationBar contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="xxC-xL-yg7">
-                                <rect key="frame" x="0.0" y="3" width="393" height="56"/>
+                                <rect key="frame" x="0.0" y="74" width="393" height="44"/>
                                 <items>
                                     <navigationItem title="Details" id="G1D-Ie-Y3W">
                                         <barButtonItem key="rightBarButtonItem" systemItem="done" id="ZPd-PT-b4S"/>
@@ -121,7 +151,7 @@
                                 </items>
                             </navigationBar>
                             <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" alignment="top" spacing="8" translatesAutoresizingMaskIntoConstraints="NO" id="Ooc-NS-jiZ">
-                                <rect key="frame" x="186" y="87" width="121.66666666666669" height="86.666666666666686"/>
+                                <rect key="frame" x="186" y="146" width="121.66666666666669" height="86.666666666666686"/>
                                 <subviews>
                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Name" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="zHc-VW-AnJ">
                                         <rect key="frame" x="0.0" y="0.0" width="64" height="30"/>
@@ -144,7 +174,7 @@
                                 </subviews>
                             </stackView>
                             <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" distribution="fillProportionally" alignment="top" translatesAutoresizingMaskIntoConstraints="NO" id="QFn-eF-33P">
-                                <rect key="frame" x="16" y="261" width="361" height="420.66666666666674"/>
+                                <rect key="frame" x="16" y="261" width="361" height="421.66666666666674"/>
                                 <subviews>
                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Bio" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="iL7-gF-HXv">
                                         <rect key="frame" x="0.0" y="0.0" width="39" height="37.666666666666664"/>
@@ -153,7 +183,7 @@
                                         <nil key="highlightedColor"/>
                                     </label>
                                     <textView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" textAlignment="natural" translatesAutoresizingMaskIntoConstraints="NO" id="sbg-AB-1RT">
-                                        <rect key="frame" x="0.0" y="37.666666666666686" width="361" height="383"/>
+                                        <rect key="frame" x="0.0" y="37.666666666666686" width="361" height="384"/>
                                         <color key="backgroundColor" systemColor="systemBackgroundColor"/>
                                         <string key="text">Lorem ipsum dolor sit er elit lamet, consectetaur cillium adipisicing pecu, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum. Nam liber te conscient to factor tum poen legum odioque civiuda.</string>
                                         <color key="textColor" systemColor="labelColor"/>
@@ -163,7 +193,7 @@
                                 </subviews>
                             </stackView>
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="3kF-ax-tzq">
-                                <rect key="frame" x="29" y="524" width="335" height="112"/>
+                                <rect key="frame" x="29" y="524" width="335" height="113"/>
                                 <subviews>
                                     <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="tUa-HP-E9w">
                                         <rect key="frame" x="185" y="20" width="143" height="39"/>
@@ -183,9 +213,6 @@
                                         <buttonConfiguration key="configuration" style="filled" title="Reject"/>
                                         <connections>
                                             <action selector="rejectBtn:" destination="Omg-aE-SIU" eventType="touchUpInside" id="Bkw-Hr-BOo"/>
-                                            <segue destination="Slp-CZ-vfp" kind="popoverPresentation" popoverAnchorView="2vV-LF-RgL" id="FRR-3y-V8z">
-                                                <popoverArrowDirection key="popoverArrowDirection" up="YES" down="YES" left="YES" right="YES"/>
-                                            </segue>
                                         </connections>
                                     </button>
                                     <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="sLy-g3-fFV">
@@ -196,14 +223,13 @@
                                         <buttonConfiguration key="configuration" style="filled" title="Edit"/>
                                         <connections>
                                             <action selector="editBtn:" destination="Omg-aE-SIU" eventType="touchUpInside" id="PXG-Kg-P6H"/>
-                                            <segue destination="mxA-aF-9jl" kind="presentation" modalPresentationStyle="fullScreen" id="0oh-ge-L2a"/>
                                         </connections>
                                     </button>
                                 </subviews>
                                 <color key="backgroundColor" systemColor="systemBackgroundColor"/>
                             </view>
                             <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="Uq7-FY-Kid">
-                                <rect key="frame" x="16" y="87" width="162" height="166"/>
+                                <rect key="frame" x="16" y="146" width="162" height="107"/>
                                 <constraints>
                                     <constraint firstAttribute="width" constant="162" id="B9o-I3-Vh9"/>
                                 </constraints>
@@ -243,7 +269,7 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="bDp-YI-W53" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="1348.854961832061" y="-13.380281690140846"/>
+            <point key="canvasLocation" x="1260" y="-27"/>
         </scene>
         <!--Edit Users View Controller-->
         <scene sceneID="M6R-oT-Ejj">
@@ -293,7 +319,7 @@
                                             <constraint firstAttribute="width" constant="341" id="tBu-dc-F3J"/>
                                         </constraints>
                                         <color key="tintColor" systemColor="secondarySystemGroupedBackgroundColor"/>
-                                        <menu key="menu" title="Ngo Cause" id="Me1-A2-lp3">
+                                        <menu key="menu" title="Ngo Cause" identifier="btnCause" id="Me1-A2-lp3">
                                             <children>
                                                 <command title="NGO Cause" menuElementState="mixed" id="4os-UF-OnU"/>
                                                 <command title="Orphans" id="a2H-3b-0cy"/>
@@ -306,6 +332,9 @@
                                         </menu>
                                         <state key="normal" title="Cause"/>
                                         <buttonConfiguration key="configuration" style="filled" title="Cause"/>
+                                        <connections>
+                                            <action selector="btnCause:" destination="mxA-aF-9jl" eventType="touchUpInside" id="0Hd-ON-g9o"/>
+                                        </connections>
                                     </button>
                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Username" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="P6l-bF-upH">
                                         <rect key="frame" x="0.0" y="76.666666666666686" width="81.666666666666671" height="22.333333333333329"/>
@@ -468,7 +497,7 @@
                     <navigationItem key="navigationItem" id="gIm-9W-zyR"/>
                     <connections>
                         <outlet property="ImagePickerEditView" destination="EVD-OH-W9U" id="hdh-DX-hYo"/>
-                        <outlet property="ImageView" destination="EVD-OH-W9U" id="NQX-g1-Jwb"/>
+                        <outlet property="btnCause" destination="Me1-A2-lp3" id="yJh-IF-PPq"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="ZP5-lS-gqV" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
@@ -480,17 +509,17 @@
             <objects>
                 <viewController title="Rejection Reason View Controller" id="Slp-CZ-vfp" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="iFG-CT-uMY">
-                        <rect key="frame" x="0.0" y="0.0" width="393" height="783"/>
+                        <rect key="frame" x="0.0" y="0.0" width="393" height="852"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Rejection Reason" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="ca3-do-aqH">
-                                <rect key="frame" x="16" y="105" width="137" height="23"/>
+                                <rect key="frame" x="16" y="93" width="137" height="23"/>
                                 <fontDescription key="fontDescription" style="UICTFontTextStyleHeadline"/>
                                 <nil key="textColor"/>
                                 <nil key="highlightedColor"/>
                             </label>
                             <textView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" textAlignment="natural" translatesAutoresizingMaskIntoConstraints="NO" id="VBm-Hq-80B">
-                                <rect key="frame" x="16" y="136" width="361" height="237"/>
+                                <rect key="frame" x="16" y="124" width="361" height="250"/>
                                 <color key="backgroundColor" systemColor="systemBackgroundColor"/>
                                 <string key="text">Lorem ipsum dolor sit er elit lamet, consectetaur cillium adipisicing pecu, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum. Nam liber te conscient to factor tum poen legum odioque civiuda.</string>
                                 <color key="textColor" systemColor="labelColor"/>
@@ -498,12 +527,12 @@
                                 <textInputTraits key="textInputTraits" autocapitalizationType="sentences"/>
                             </textView>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="UKc-LN-KKN">
-                                <rect key="frame" x="121" y="431" width="151" height="39"/>
+                                <rect key="frame" x="121" y="432" width="151" height="39"/>
                                 <state key="normal" title="Button"/>
                                 <buttonConfiguration key="configuration" style="gray" title="Submit"/>
                             </button>
                             <navigationBar contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="HqH-LP-a4N">
-                                <rect key="frame" x="0.0" y="0.0" width="393" height="56"/>
+                                <rect key="frame" x="0.0" y="0.0" width="393" height="44"/>
                                 <items>
                                     <navigationItem title="Rejection Reason (Optional)" id="QZl-HI-pJR">
                                         <barButtonItem key="rightBarButtonItem" systemItem="done" id="D5x-h5-IEG"/>
@@ -539,6 +568,7 @@
         <!--Navigation Controller-->
         <scene sceneID="eZd-fU-mlR">
             <objects>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="hOR-xp-cfq" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
                 <navigationController id="PQh-kV-APZ" sceneMemberID="viewController">
                     <navigationBar key="navigationBar" contentMode="scaleToFill" id="NiL-tz-TL7">
                         <rect key="frame" x="0.0" y="118" width="393" height="44"/>
@@ -548,7 +578,6 @@
                         <segue destination="LHi-aI-hhi" kind="relationship" relationship="rootViewController" id="oST-bl-fcP"/>
                     </connections>
                 </navigationController>
-                <placeholder placeholderIdentifier="IBFirstResponder" id="hOR-xp-cfq" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
             </objects>
             <point key="canvasLocation" x="-288" y="8"/>
         </scene>

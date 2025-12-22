@@ -269,6 +269,7 @@
 			minimizedProjectReferenceProxies = 1;
 			packageReferences = (
 				BDD318322EEB815800880EFF /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */,
+				D45EA9832EF80973009261E1 /* XCRemoteSwiftPackageReference "cloudinary_ios" */,
 			);
 			preferredProjectObjectVersion = 77;
 			productRefGroup = 5FEF8B632EDA3636007D3A97 /* Products */;
@@ -637,6 +638,14 @@
 			requirement = {
 				kind = upToNextMajorVersion;
 				minimumVersion = 12.7.0;
+			};
+		};
+		D45EA9832EF80973009261E1 /* XCRemoteSwiftPackageReference "cloudinary_ios" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/cloudinary/cloudinary_ios.git";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 5.2.4;
 			};
 		};
 /* End XCRemoteSwiftPackageReference section */

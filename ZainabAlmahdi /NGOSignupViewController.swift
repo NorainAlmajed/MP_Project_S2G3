@@ -224,10 +224,15 @@ class NGOSignupViewController: UIViewController,
                 UserDefaults.standard.set(userID, forKey: "userID")
             }
 
-            if let sceneDelegate = UIApplication.shared.connectedScenes
-                .first?.delegate as? SceneDelegate {
-                sceneDelegate.setRootViewController()
-            }
+            //if let sceneDelegate = UIApplication.shared.connectedScenes
+                //.first?.delegate as? SceneDelegate {
+                //sceneDelegate.setRootViewController()
+            //}
+            
+            self?.showAlert(
+                title: "Success",
+                message: "Account created successfully!"
+            )
         }
     }
 

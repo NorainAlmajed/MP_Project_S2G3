@@ -352,18 +352,18 @@
         <!--Home View Controller-->
         <scene sceneID="YM8-Kw-eDk">
             <objects>
-                <viewController storyboardIdentifier="HomeViewController" useStoryboardIdentifierAsRestorationIdentifier="YES" id="u4r-Hv-ASR" customClass="HomeViewController" sceneMemberID="viewController">
+                <viewController storyboardIdentifier="HomeViewController" useStoryboardIdentifierAsRestorationIdentifier="YES" id="u4r-Hv-ASR" customClass="HomeViewController" customModule="ProjectSimulator" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="FCo-MS-bdm">
                         <rect key="frame" x="0.0" y="0.0" width="393" height="783"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="EWv-lm-u5Z">
-                                <rect key="frame" x="152" y="745" width="90" height="39"/>
+                            <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="GLC-kj-dOD">
+                                <rect key="frame" x="152" y="714" width="90" height="39"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <state key="normal" title="Button"/>
                                 <buttonConfiguration key="configuration" style="filled" title="Sign Out"/>
                                 <connections>
-                                    <action selector="signOutButtonTapped:" destination="u4r-Hv-ASR" eventType="touchUpInside" id="M5x-Ky-UeY"/>
+                                    <action selector="signOutButtonTapped:" destination="u4r-Hv-ASR" eventType="touchUpInside" id="FWb-R8-wqz"/>
                                 </connections>
                             </button>
                         </subviews>
@@ -381,11 +381,11 @@
             <objects>
                 <viewController storyboardIdentifier="NGOSignupViewController" id="sHa-zn-Poc" customClass="NGOSignupViewController" customModule="ProjectSimulator" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="9mn-wt-ZI6">
-                        <rect key="frame" x="0.0" y="0.0" width="393" height="1131"/>
+                        <rect key="frame" x="0.0" y="0.0" width="393" height="1062"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <scrollView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="FQz-DQ-Jd7">
-                                <rect key="frame" x="0.0" y="0.0" width="393" height="1131"/>
+                                <rect key="frame" x="0.0" y="0.0" width="393" height="1062"/>
                                 <subviews>
                                     <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="acR-Lt-2H8">
                                         <rect key="frame" x="0.0" y="0.0" width="393" height="1300"/>
@@ -499,6 +499,7 @@
                                                 </buttonConfiguration>
                                                 <connections>
                                                     <action selector="registerButtonTapped:" destination="sHa-zn-Poc" eventType="touchUpInside" id="PdX-JW-L15"/>
+                                                    <segue destination="u4r-Hv-ASR" kind="show" identifier="goToHome" id="Mi0-KS-GfJ"/>
                                                 </connections>
                                             </button>
                                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="Cause" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="eyp-Kt-YHQ">
@@ -587,7 +588,7 @@
                         </constraints>
                     </view>
                     <navigationItem key="navigationItem" id="nad-vn-SZT"/>
-                    <size key="freeformSize" width="393" height="1200"/>
+                    <size key="freeformSize" width="393" height="1131"/>
                     <connections>
                         <outlet property="addressTextField" destination="xFG-2H-Qme" id="xrQ-Mk-Ifh"/>
                         <outlet property="causeTextField" destination="eTI-DH-DPG" id="FZF-6Y-lO5"/>
@@ -603,11 +604,11 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="aNE-tZ-XSA" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="2797.709923664122" y="1238.7323943661972"/>
+            <point key="canvasLocation" x="3013" y="857"/>
         </scene>
     </scenes>
     <inferredMetricsTieBreakers>
-        <segue reference="1wA-jS-Yca"/>
+        <segue reference="OKC-LH-nhp"/>
         <segue reference="fsn-AO-KUL"/>
         <segue reference="4y4-Mk-3Hg"/>
     </inferredMetricsTieBreakers>

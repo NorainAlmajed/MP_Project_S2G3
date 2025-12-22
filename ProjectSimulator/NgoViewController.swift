@@ -170,7 +170,9 @@ class NgoViewController: UIViewController,
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: "NgoCell") as! NgoTableTableViewCell
         let data = shownNgos[indexPath.row]
-        cell.setupCell(photo: data.photo, name: data.name, category: data.category)
+       // cell.setupCell(photo: data.photo, name: data.name, category: data.category)
+        cell.setupCell(photoUrl: data.photo, name: data.name, category: data.category)
+
         return cell
     }
 

@@ -28,7 +28,7 @@ class RaghadSection4TableViewCell: UITableViewCell {
     // 🟢 NEW (keep references so we don’t add duplicates)
     private var iPadStepperTrailing: NSLayoutConstraint?
     private var iPadTxtToStepper: NSLayoutConstraint?
-
+    private var iPadTxtLeading: NSLayoutConstraint?
 
     private var txtHeightConstraint: NSLayoutConstraint?
     private var txtTrailingToStepperConstraint: NSLayoutConstraint?
@@ -183,11 +183,23 @@ class RaghadSection4TableViewCell: UITableViewCell {
 
         // ✅🟢 2) Stepper trailing aligned with other fields (same right line)
         if iPadStepperTrailing == nil {
-            let trailing = stepperQuantity.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -120)
+            let trailing = stepperQuantity.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -60)
             trailing.priority = .required
             trailing.isActive = true
             iPadStepperTrailing = trailing
         }
+        
+        
+        
+        // ✅🟢 2A) Equal left margin (match right margin)
+        if iPadTxtLeading == nil {
+            let leading = txtQuantity.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 60)
+            leading.priority = .required
+            leading.isActive = true
+            iPadTxtLeading = leading
+        }
+        
+        
 
         // ✅🟢 3) Remove the “gap”: make txtQuantity end right before stepper
         // (This is the main change you want)
@@ -211,10 +223,3 @@ class RaghadSection4TableViewCell: UITableViewCell {
          
    }
     
-//    override func setSelected(_ selected: Bool, animated: Bool) {
-//        super.setSelected(selected, animated: animated)
-
-        // Configure the view for the selected state
-//    }
-
-//}

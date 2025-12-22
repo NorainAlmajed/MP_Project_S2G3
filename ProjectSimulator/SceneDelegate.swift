@@ -17,27 +17,29 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         guard let windowScene = (scene as? UIWindowScene) else
         { return }
         window = UIWindow(windowScene: windowScene)
-        setRootViewController()
+//        setRootViewController()
+        let storyboard = UIStoryboard(name: "Donations", bundle: nil)
+            window?.rootViewController = storyboard.instantiateInitialViewController()
         window?.makeKeyAndVisible()
         }
-    func setRootViewController() {
-
-        if Auth.auth().currentUser != nil {
-            // User logged in → Main storyboard
-            let authStoryboard = UIStoryboard(name: "Authentication", bundle: nil)
-            let homeVC = authStoryboard.instantiateViewController(
-                withIdentifier: "HomeViewController"
-            )
-            window?.rootViewController = homeVC
-        } else {
-            // User NOT logged in → Authentication storyboard
-            let authStoryboard = UIStoryboard(name: "Authentication", bundle: nil)
-            let loginVC = authStoryboard.instantiateViewController(
-                withIdentifier: "LoginViewController"
-            )
-            window?.rootViewController = loginVC
-        }
-    }
+//    func setRootViewController() {
+//
+//        if Auth.auth().currentUser != nil {
+//            // User logged in → Main storyboard
+//            let authStoryboard = UIStoryboard(name: "Authentication", bundle: nil)
+//            let homeVC = authStoryboard.instantiateViewController(
+//                withIdentifier: "HomeViewController"
+//            )
+//            window?.rootViewController = homeVC
+//        } else {
+//            // User NOT logged in → Authentication storyboard
+//            let authStoryboard = UIStoryboard(name: "Authentication", bundle: nil)
+//            let loginVC = authStoryboard.instantiateViewController(
+//                withIdentifier: "LoginViewController"
+//            )
+//            window?.rootViewController = loginVC
+//        }
+//    }
 
         // Other SceneDelegate methods...
     }

@@ -7,7 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		5FEF8BFB2EDB8B59007D3A97 /* DonationDetailViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5FEF8BFA2EDB8B59007D3A97 /* DonationDetailViewController.swift */; };
+		48C4D03D2EF993110025325A /* Cloudinary in Frameworks */ = {isa = PBXBuildFile; productRef = 48C4D03C2EF993110025325A /* Cloudinary */; };
 		BDD3182F2EEB7F9500880EFF /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = BDD3182E2EEB7F9500880EFF /* GoogleService-Info.plist */; };
 		BDD318302EEB7F9500880EFF /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = BDD3182E2EEB7F9500880EFF /* GoogleService-Info.plist */; };
 		BDD318312EEB7F9500880EFF /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = BDD3182E2EEB7F9500880EFF /* GoogleService-Info.plist */; };
@@ -41,7 +41,6 @@
 		5FEF8B622EDA3636007D3A97 /* ProjectSimulator.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = ProjectSimulator.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		5FEF8B782EDA363A007D3A97 /* ProjectSimulatorTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = ProjectSimulatorTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		5FEF8B822EDA363A007D3A97 /* ProjectSimulatorUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = ProjectSimulatorUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
-		5FEF8BFA2EDB8B59007D3A97 /* DonationDetailViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DonationDetailViewController.swift; sourceTree = "<group>"; };
 		BDD3182E2EEB7F9500880EFF /* GoogleService-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -110,6 +109,7 @@
 				BDD318342EEB815800880EFF /* FirebaseAnalytics in Frameworks */,
 				BDD318402EEB815800880EFF /* FirebaseMessaging in Frameworks */,
 				BDD3183A2EEB815800880EFF /* FirebaseCrashlytics in Frameworks */,
+				48C4D03D2EF993110025325A /* Cloudinary in Frameworks */,
 				BDD318382EEB815800880EFF /* FirebaseCore in Frameworks */,
 				BDD318362EEB815800880EFF /* FirebaseAuth in Frameworks */,
 				BDD3183E2EEB815800880EFF /* FirebaseFirestore in Frameworks */,
@@ -133,15 +133,22 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		48C4D03B2EF993110025325A /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
 		5FEF8B592EDA3636007D3A97 = {
 			isa = PBXGroup;
 			children = (
 				BDD3182E2EEB7F9500880EFF /* GoogleService-Info.plist */,
-				5FEF8BFA2EDB8B59007D3A97 /* DonationDetailViewController.swift */,
 				D0FCA2B52EEEC14000D8AFFF /* ZainabAlmahdi  */,
 				5FEF8B642EDA3636007D3A97 /* ProjectSimulator */,
 				5FEF8B7B2EDA363A007D3A97 /* ProjectSimulatorTests */,
 				5FEF8B852EDA363A007D3A97 /* ProjectSimulatorUITests */,
+				48C4D03B2EF993110025325A /* Frameworks */,
 				5FEF8B632EDA3636007D3A97 /* Products */,
 			);
 			sourceTree = "<group>";
@@ -184,6 +191,7 @@
 				BDD3183B2EEB815800880EFF /* FirebaseDatabase */,
 				BDD3183D2EEB815800880EFF /* FirebaseFirestore */,
 				BDD3183F2EEB815800880EFF /* FirebaseMessaging */,
+				48C4D03C2EF993110025325A /* Cloudinary */,
 			);
 			productName = ProjectSimulator;
 			productReference = 5FEF8B622EDA3636007D3A97 /* ProjectSimulator.app */;
@@ -315,7 +323,6 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				5FEF8BFB2EDB8B59007D3A97 /* DonationDetailViewController.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -651,6 +658,11 @@
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
+		48C4D03C2EF993110025325A /* Cloudinary */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = D45EA9832EF80973009261E1 /* XCRemoteSwiftPackageReference "cloudinary_ios" */;
+			productName = Cloudinary;
+		};
 		BDD318332EEB815800880EFF /* FirebaseAnalytics */ = {
 			isa = XCSwiftPackageProductDependency;
 			package = BDD318322EEB815800880EFF /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */;

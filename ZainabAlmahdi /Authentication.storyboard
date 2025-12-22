@@ -332,7 +332,7 @@
                     </view>
                     <navigationItem key="navigationItem" id="i6J-RF-Aic"/>
                     <connections>
-                        <outlet property="confirmPasswordTextField" destination="mLN-Uf-nR1" id="36q-5A-hCk"/>
+                        <outlet property="confirmPasswordTextField" destination="mLN-Uf-nR1" id="H23-Dw-KBc"/>
                         <outlet property="emailTextField" destination="l9r-yd-6bG" id="b35-UQ-IGp"/>
                         <outlet property="nameTextField" destination="9Ry-HO-UXN" id="PEu-Pa-0sG"/>
                         <outlet property="passwordTextField" destination="RMh-QV-BIX" id="Ifl-TB-Zul"/>
@@ -607,13 +607,13 @@
         <scene sceneID="8ss-Kq-w4N">
             <objects>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="VTK-Bn-9Ff" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
-                <viewController useStoryboardIdentifierAsRestorationIdentifier="YES" id="7MC-nV-3Pw" customClass="SetupProfileViewController" customModule="ProjectSimulator" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController storyboardIdentifier="SetupProfileViewController" useStoryboardIdentifierAsRestorationIdentifier="YES" id="7MC-nV-3Pw" customClass="SetupProfileViewController" customModule="ProjectSimulator" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="0hZ-18-tZb">
-                        <rect key="frame" x="0.0" y="0.0" width="393" height="662"/>
+                        <rect key="frame" x="0.0" y="0.0" width="393" height="593"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <scrollView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="KHU-80-2Pw">
-                                <rect key="frame" x="0.0" y="0.0" width="393" height="662"/>
+                                <rect key="frame" x="0.0" y="0.0" width="393" height="593"/>
                                 <subviews>
                                     <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="rO6-vl-WS0">
                                         <rect key="frame" x="0.0" y="0.0" width="393" height="800"/>
@@ -722,7 +722,7 @@
                         </constraints>
                     </view>
                     <navigationItem key="navigationItem" id="Xe1-D4-c2N"/>
-                    <size key="freeformSize" width="393" height="731"/>
+                    <size key="freeformSize" width="393" height="662"/>
                     <connections>
                         <outlet property="bioTextView" destination="fdJ-6E-Esf" id="6uR-Yg-oRt"/>
                         <outlet property="fullNameTextField" destination="qvm-Cp-uyo" id="4TZ-Ey-srT"/>
@@ -731,7 +731,7 @@
                     </connections>
                 </viewController>
             </objects>
-            <point key="canvasLocation" x="3009.9236641221373" y="738.38028169014092"/>
+            <point key="canvasLocation" x="3009.9236641221373" y="762.67605633802816"/>
         </scene>
     </scenes>
     <inferredMetricsTieBreakers>

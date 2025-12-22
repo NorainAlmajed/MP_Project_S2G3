@@ -27,17 +27,45 @@ class NgoTableTableViewCell: UITableViewCell {
     
     
     
+//    func setupCell(photoUrl: String, name: String, category: String) {
+//
+//        lblNgoName.text = name
+//        lblCategory.text = category
+//
+//        imgNgoPhotot.contentMode = .scaleAspectFit
+//        imgNgoPhotot.clipsToBounds = true
+//
+//        // ✅ load from URL string
+//        imgNgoPhotot.setImageFromUrl(photoUrl, placeholder: UIImage(named: "placeholder"))
+//    }
+    
+    
+//    func setupCell(photoUrl: String, name: String, category: String) {
+//        lblNgoName.text = name
+//        lblCategory.text = category
+//
+//        imgNgoPhotot.setImageFromUrl(
+//            photoUrl,
+//            placeholder: UIImage(systemName: "photo")
+//        )
+//    }
     func setupCell(photoUrl: String, name: String, category: String) {
-
         lblNgoName.text = name
         lblCategory.text = category
 
-        imgNgoPhotot.contentMode = .scaleAspectFit
-        imgNgoPhotot.clipsToBounds = true
+        // ✅ make system icon gray (not blue)
+        imgNgoPhotot.tintColor = .systemGray3
 
-        // ✅ load from URL string
-        imgNgoPhotot.setImageFromUrl(photoUrl, placeholder: UIImage(named: "placeholder"))
+        let placeholder = UIImage(systemName: "photo")?
+            .withRenderingMode(.alwaysTemplate)
+
+        imgNgoPhotot.setImageFromUrl(
+            photoUrl,
+            placeholder: placeholder
+        )
     }
+
+
 
     override func prepareForReuse() {
         super.prepareForReuse()
@@ -49,5 +77,7 @@ class NgoTableTableViewCell: UITableViewCell {
 
         // Configure the view for the selected state
     }
+    
+   
 
 }

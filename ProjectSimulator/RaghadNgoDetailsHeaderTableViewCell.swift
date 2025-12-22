@@ -27,12 +27,27 @@ class RaghadNgoDetailsHeaderTableViewCell: UITableViewCell {
 //    }
     
     
+//    func configure(ngo: NGO) {
+//        lblNgoName.text = ngo.name
+//        lblNgoCategory.text = ngo.category
+//
+//        img_logo.contentMode = .scaleAspectFit
+//        img_logo.setImageFromUrl(ngo.photo, placeholder: UIImage(named: "placeholder"))
+//    }
+
     func configure(ngo: NGO) {
         lblNgoName.text = ngo.name
         lblNgoCategory.text = ngo.category
 
         img_logo.contentMode = .scaleAspectFit
-        img_logo.setImageFromUrl(ngo.photo, placeholder: UIImage(named: "placeholder"))
+        img_logo.tintColor = .systemGray3
+
+        let placeholder = UIImage(systemName: "photo")?
+            .withRenderingMode(.alwaysTemplate)
+
+        img_logo.setImageFromUrl(ngo.photo, placeholder: placeholder)
     }
 
+    
+    
 }

@@ -5,7 +5,7 @@
 //  Created by Raghad Aleskafi on 11/12/2025.
 //
 
-
+import FirebaseCore
 import FirebaseFirestore
 import UIKit
 
@@ -17,7 +17,10 @@ class NgoViewController: UIViewController,
     @IBOutlet weak var tableView: UITableView!
 
     // ✅ Your data
-    private var shownNgos: [NGO] = []
+    //private var shownNgos: [NGO] = []
+   // private var allNgos: [NGO] = []   // ✅ source of truth from Firebase
+    private var shownNgos: [NGO] = []   // ✅ what table shows
+    private var allNgos: [NGO] = []
     private var selectedCategory: String? = nil
 
     // ✅ Header UI (same style as Donor List)
@@ -38,6 +41,9 @@ class NgoViewController: UIViewController,
     override func viewDidLoad() {
         super.viewDidLoad()
 
+        print("🔥 Firebase Project ID:", FirebaseApp.app()?.options.projectID ?? "nil")
+        print("🔥 Firebase Google App ID:", FirebaseApp.app()?.options.googleAppID ?? "nil")
+        
         title = "Browse NGOs"
 
         tableView.delegate = self
@@ -45,7 +51,7 @@ class NgoViewController: UIViewController,
 
         // ✅ Start list
        // shownNgos = arrNgo
-        fetchNgosFromFirebase()
+       
 
         
         
@@ -97,6 +103,7 @@ class NgoViewController: UIViewController,
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         applySearchAndFilter()
+        fetchNgosFromFirebase()
     }
 
     // MARK: - Header (Search + Filter) like Donor List
@@ -224,7 +231,9 @@ class NgoViewController: UIViewController,
     // MARK: - Apply Search + Filter
 
     private func applySearchAndFilter() {
-        var result = arrNgo
+//        var result = arrNgo
+        var result = allNgos
+
 
         // category filter
         if let cat = selectedCategory {
@@ -251,50 +260,106 @@ class NgoViewController: UIViewController,
     
     
     
+//    private func fetchNgosFromFirebase() {
+//        let db = Firestore.firestore()
+//
+//        db.collection("ngos").getDocuments { [weak self] snapshot, error in
+//            guard let self = self else { return }
+//
+//            if let error = error {
+//                print("❌ Fetch NGOs failed:", error)
+//                return
+//            }
+//
+//            let docs = snapshot?.documents ?? []
+//
+//            let ngos: [NGO] = docs.compactMap { doc -> NGO? in
+//                let data = doc.data()
+//
+//                let name = data["organizationName"] as? String ?? data["name"] as? String ?? ""
+//                let category = data["category"] as? String ?? data["cause"] as? String ?? ""
+//                let mission = data["bio"] as? String ?? data["mission"] as? String ?? ""
+//                let email = data["email"] as? String ?? ""
+//                let phone = "\(data["phoneNumber"] ?? "")"
+//                let photoUrl = data["profileImageUrl"] as? String ?? ""
+//
+//                if name.isEmpty { return nil }
+//
+//                return NGO(
+//                    id: doc.documentID,
+//                    name: name,
+//                    category: category,
+//                    photo: photoUrl,
+//                    mission: mission,
+//                    phoneNumber: phone,
+//                    email: email
+//                )
+//            }
+//            
+//            
+//            
+//
+////            self.shownNgos = ngos
+////            self.applySearchAndFilter() // ✅ so search/filter works using Firebase list too
+////            self.tableView.reloadData()
+//            
+//            
+//            
+//        }
+//    }
+
+    
     private func fetchNgosFromFirebase() {
-        let db = Firestore.firestore()
+        print("🔥 Fetching NGOs from Firestore collection: users where role == 3")
 
-        db.collection("ngos").getDocuments { [weak self] snapshot, error in
-            guard let self = self else { return }
+        Firestore.firestore()
+            .collection("users")
+            .whereField("role", isEqualTo: 3)   // ✅ NGO role is number 3
+            .getDocuments { [weak self] snapshot, error in
+                guard let self = self else { return }
 
-            if let error = error {
-                print("❌ Fetch NGOs failed:", error)
-                return
+                if let error = error {
+                    print("❌ Fetch NGOs failed:", error.localizedDescription)
+                    self.allNgos = []
+                    self.applySearchAndFilter()
+                    return
+                }
+
+                let docs = snapshot?.documents ?? []
+                print("✅ Firestore returned docs count:", docs.count)
+
+                let ngos: [NGO] = docs.compactMap { doc -> NGO? in
+                    let data = doc.data()
+
+                    let name = data["organization_name"] as? String ?? ""
+                    let category = data["cause"] as? String ?? ""
+                    let mission = data["mission"] as? String ?? ""
+                    let email = data["email"] as? String ?? ""
+                    let phone = data["number"] as? String ?? ""
+                    let photoUrl = data["profile_image_url"] as? String ?? ""
+
+                    guard !name.isEmpty else { return nil }
+
+                    return NGO(
+                        id: doc.documentID,
+                        name: name,
+                        category: category,
+                        photo: photoUrl,
+                        mission: mission,
+                        phoneNumber: phone,
+                        email: email
+                    )
+                }
+
+                print("✅ Parsed NGOs count:", ngos.count)
+
+                self.allNgos = ngos
+                self.applySearchAndFilter()
+                self.tableView.reloadData()
+                self.updateNoNgosLabel()
             }
-
-            let docs = snapshot?.documents ?? []
-
-            let ngos: [NGO] = docs.compactMap { doc -> NGO? in
-                let data = doc.data()
-
-                let name = data["organizationName"] as? String ?? data["name"] as? String ?? ""
-                let category = data["category"] as? String ?? data["cause"] as? String ?? ""
-                let mission = data["bio"] as? String ?? data["mission"] as? String ?? ""
-                let email = data["email"] as? String ?? ""
-                let phone = "\(data["phoneNumber"] ?? "")"
-                let photoUrl = data["profileImageUrl"] as? String ?? ""
-
-                if name.isEmpty { return nil }
-
-                return NGO(
-                    id: doc.documentID,
-                    name: name,
-                    category: category,
-                    photo: photoUrl,
-                    mission: mission,
-                    phoneNumber: phone,
-                    email: email
-                )
-            }
-
-            self.shownNgos = ngos
-            self.applySearchAndFilter() // ✅ so search/filter works using Firebase list too
-            self.tableView.reloadData()
-        }
     }
 
-    
-    
     
     
 }

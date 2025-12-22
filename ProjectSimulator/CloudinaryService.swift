@@ -4,7 +4,7 @@ import Cloudinary
 
 class CloudinaryService {
 
-    let cloudName: String = "<your_cloudname>"
+    let cloudName: String = "duqn0m9ed"
     var uploadPreset: String = "Nourish_Bahrain_unsigned"
     var publicId: String = "<your_public_id>" //NEW - The public ID of the image to transform
 

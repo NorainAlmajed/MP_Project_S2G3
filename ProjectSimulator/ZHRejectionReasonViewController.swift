@@ -91,7 +91,7 @@ class ZHRejectionReasonViewController: UIViewController, UITextViewDelegate {
             if donation.donor.enableNotification {
                 donation.donor.notifications.append(Notification(
                     title: "Donation Rejected",
-                    description: "Donation #\(donation.donationID) has been rejected by \(donation.ngo.ngoName).",
+                    description: "Donation #\(donation.donationID) has been rejected by \(donation.ngo.fullName).",
                     date: currentDate
                 ))
             }

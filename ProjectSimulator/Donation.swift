@@ -9,7 +9,7 @@ import UIKit
 
 class Donation {
     let donationID: Int
-    var ngo: NGO
+    var ngo: User
     let creationDate: Date
     var donor: User
     var address: Address
@@ -27,13 +27,13 @@ class Donation {
     
     init(
             donationID: Int,
-            ngo: NGO,
+            ngo: User,
             creationDate: Date,
             donor: User,
             address: Address,
             pickupDate: Date,
             pickupTime: String,
-            foodImage: String,
+            foodImageUrl: String,
             status: Int,
             Category: String,
             quantity: Int,
@@ -50,7 +50,7 @@ class Donation {
             self.address = address
             self.pickupDate = pickupDate
             self.pickupTime = pickupTime
-            self.foodImageUrl = foodImage
+            self.foodImageUrl = foodImageUrl
             self.status = status
             self.Category = Category
             self.quantity = quantity

@@ -43,7 +43,7 @@ class ExcelExporter {
         let descriptionString = donation.description ?? "-"
         let recurrenceString = donation.recurrence > 0 ? "\(donation.recurrence)" : "None"
         
-        csvText += "\(donation.donationID),\(donation.ngo.ngoName),\(donation.donor.username),\(donation.Category),\(donation.quantity),\(weightString),\(dateFormatter.string(from: donation.pickupDate)),\(donation.pickupTime),\(dateFormatter.string(from: donation.expiryDate)),\(statusText),\(fullAddress),\(descriptionString),\(recurrenceString)\n"
+        csvText += "\(donation.donationID),\(donation.ngo.fullName),\(donation.donor.username),\(donation.Category),\(donation.quantity),\(weightString),\(dateFormatter.string(from: donation.pickupDate)),\(donation.pickupTime),\(dateFormatter.string(from: donation.expiryDate)),\(statusText),\(fullAddress),\(descriptionString),\(recurrenceString)\n"
         
         // Write CSV to file
         do {

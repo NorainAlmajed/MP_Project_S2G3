@@ -43,7 +43,7 @@ class DonationCollectionViewCell: UICollectionViewCell {
         donationCategoryLbl.text = donation.Category
         donationIDLbl.text = "Donation #" + String(donation.donationID)
         if user.userType == 2 {
-            donorNgoLbl.text = "NGO: " + donation.ngo.ngoName
+            donorNgoLbl.text = "NGO: " + donation.ngo.fullName
         } else {
             donorNgoLbl.text = "Donor: " + donation.donor.username
         }

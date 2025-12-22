@@ -90,7 +90,7 @@ class DonationDetailsViewController: UIViewController, UITableViewDelegate, UITa
         ▶ BASIC INFORMATION
         ------------------------------------
         Donation ID:        \(donation.donationID)
-        NGO Name:           \(donation.ngo.ngoName)
+        NGO Name:           \(donation.ngo.fullName)
         Donor Username:    \(donation.donor.username)
         Created On:        \(createdDate)
         Status:            \(statusText(for: donation.status))
@@ -441,7 +441,7 @@ class DonationDetailsViewController: UIViewController, UITableViewDelegate, UITa
                         if donation.donor.enableNotification {
                             donation.donor.notifications.append(Notification(
                                 title: "Donation Accepted",
-                                description: "Donation #\(self.donation?.donationID ?? 0) has been accepted by \(self.donation?.ngo.ngoName ?? "the NGO").",
+                                description: "Donation #\(self.donation?.donationID ?? 0) has been accepted by \(self.donation?.ngo.fullName ?? "the NGO").",
                                 date: currentDate
                             ))
                         }
@@ -565,7 +565,7 @@ class DonationDetailsViewController: UIViewController, UITableViewDelegate, UITa
                         if donation.donor.enableNotification {
                             donation.donor.notifications.append(Notification(
                                 title: "Donation Marked as Collected",
-                                description: "Donation #\(self.donation?.donationID ?? 0) has been marked as collected by \(self.donation?.ngo.ngoName ?? "the NGO").",
+                                description: "Donation #\(self.donation?.donationID ?? 0) has been marked as collected by \(self.donation?.ngo.fullName ?? "the NGO").",
                                 date: currentDate
                             ))
                         }
@@ -854,7 +854,7 @@ class DonationDetailsViewController: UIViewController, UITableViewDelegate, UITa
                 let expiryDate = dateFormatter.string(from: donation.expiryDate)
                 
                 drawText("Donation ID: \(donation.donationID)", y: &yPosition)
-                drawText("NGO Name: \(donation.ngo.ngoName)", y: &yPosition)
+                drawText("NGO Name: \(donation.ngo.fullName)", y: &yPosition)
                 drawText("Donor Username: \(donation.donor.username)", y: &yPosition)
                 drawText("Created On: \(createdDate)", y: &yPosition)
                 drawText("Status: \(statusText(for: donation.status))", y: &yPosition)

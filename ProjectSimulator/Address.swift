@@ -2,7 +2,7 @@
 //  Address.swift
 //  ProjectSimulator
 //
-//  Created by Fatema Mohamed Amin Jaafar Hasan Hubail on 29/11/2025.
+//  Created by Zahraa Hubail on 29/11/2025.
 //
 
 import UIKit
@@ -30,6 +30,7 @@ struct User {
     var donations: [Donation]?
     let userType: Int
     var enableNotification: Bool = true
+    var profile_img: String? = ""
 }
 
 var userNotifications: [Notification] = [

@@ -34,9 +34,8 @@
                         <rect key="frame" x="0.0" y="0.0" width="393" height="852"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <collectionView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" fixedFrame="YES" dataMode="prototypes" translatesAutoresizingMaskIntoConstraints="NO" id="kT3-WU-U2N">
-                                <rect key="frame" x="0.0" y="162" width="393" height="690"/>
-                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                            <collectionView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" dataMode="prototypes" translatesAutoresizingMaskIntoConstraints="NO" id="kT3-WU-U2N">
+                                <rect key="frame" x="0.0" y="162" width="393" height="573"/>
                                 <color key="backgroundColor" systemColor="systemBackgroundColor"/>
                                 <collectionViewFlowLayout key="collectionViewLayout" automaticEstimatedItemSize="YES" minimumLineSpacing="10" minimumInteritemSpacing="10" id="ses-KD-fH5">
                                     <size key="itemSize" width="376" height="124"/>
@@ -52,7 +51,7 @@
                                             <rect key="frame" x="0.0" y="0.0" width="376" height="124"/>
                                             <autoresizingMask key="autoresizingMask"/>
                                             <subviews>
-                                                <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" image="basket" translatesAutoresizingMaskIntoConstraints="NO" id="D2o-gt-5et">
+                                                <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="D2o-gt-5et">
                                                     <rect key="frame" x="21" y="32" width="60" height="60"/>
                                                     <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                                 </imageView>
@@ -125,6 +124,12 @@
                         </subviews>
                         <viewLayoutGuide key="safeArea" id="y9S-wz-BIs"/>
                         <color key="backgroundColor" systemColor="systemBackgroundColor"/>
+                        <constraints>
+                            <constraint firstItem="kT3-WU-U2N" firstAttribute="leading" secondItem="y9S-wz-BIs" secondAttribute="leading" id="4MX-sO-O0K"/>
+                            <constraint firstItem="y9S-wz-BIs" firstAttribute="trailing" secondItem="kT3-WU-U2N" secondAttribute="trailing" id="aS1-Qi-yrg"/>
+                            <constraint firstItem="y9S-wz-BIs" firstAttribute="bottom" secondItem="kT3-WU-U2N" secondAttribute="bottom" id="guV-5X-y6Y"/>
+                            <constraint firstItem="kT3-WU-U2N" firstAttribute="top" secondItem="y9S-wz-BIs" secondAttribute="top" id="pqW-JH-qPU"/>
+                        </constraints>
                     </view>
                     <navigationItem key="navigationItem" id="noD-Cb-a0a">
                         <barButtonItem key="backBarButtonItem" title=" " id="vFm-Uj-MJj"/>
@@ -135,7 +140,7 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="UOy-tB-a25" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="2084.7328244274809" y="598.59154929577471"/>
+            <point key="canvasLocation" x="2074.0458015267177" y="598.59154929577471"/>
         </scene>
         <!--Donation Details View Controller-->
         <scene sceneID="IL0-QX-xgI">
@@ -145,109 +150,38 @@
                         <rect key="frame" x="0.0" y="0.0" width="393" height="852"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <scrollView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="3Xg-J9-CW0">
-                                <rect key="frame" x="0.0" y="214" width="393" height="894"/>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="Hello" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="kVp-Tc-e3Q">
+                                <rect key="frame" x="175" y="338" width="39" height="21"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                <subviews>
-                                    <view contentMode="scaleToFill" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="jJr-4a-2Nd">
-                                        <rect key="frame" x="0.0" y="0.0" width="393" height="894"/>
-                                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                        <subviews>
-                                            <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" image="KarranaCharity" translatesAutoresizingMaskIntoConstraints="NO" id="hgQ-m6-bex">
-                                                <rect key="frame" x="20" y="21" width="86" height="86"/>
-                                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                            </imageView>
-                                            <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" image="Location" translatesAutoresizingMaskIntoConstraints="NO" id="qjN-k4-5GU">
-                                                <rect key="frame" x="20" y="183" width="86" height="86"/>
-                                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                            </imageView>
-                                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="Karrana Charity Society" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="RXt-cX-fzr">
-                                                <rect key="frame" x="130" y="21" width="184" height="20"/>
-                                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                                <fontDescription key="fontDescription" type="boldSystem" pointSize="16"/>
-                                                <nil key="textColor"/>
-                                                <nil key="highlightedColor"/>
-                                            </label>
-                                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="23/10/2025, 9:08 AM" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="9e0-OD-aa8">
-                                                <rect key="frame" x="130" y="50" width="146" height="18"/>
-                                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                                <fontDescription key="fontDescription" type="system" pointSize="15"/>
-                                                <nil key="textColor"/>
-                                                <nil key="highlightedColor"/>
-                                            </label>
-                                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="Donation #91475" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="gCg-yo-5ze">
-                                                <rect key="frame" x="130" y="74" width="118" height="18"/>
-                                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                                <fontDescription key="fontDescription" type="system" pointSize="15"/>
-                                                <nil key="textColor"/>
-                                                <nil key="highlightedColor"/>
-                                            </label>
-                                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="Pickup Schedule &amp; Location" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="ehR-NZ-iKv">
-                                                <rect key="frame" x="130" y="139" width="215" height="20"/>
-                                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                                <fontDescription key="fontDescription" type="boldSystem" pointSize="16"/>
-                                                <nil key="textColor"/>
-                                                <nil key="highlightedColor"/>
-                                            </label>
-                                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="Donor: zahraa.hubail" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="20r-2c-ISK">
-                                                <rect key="frame" x="130" y="168" width="142" height="18"/>
-                                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                                <fontDescription key="fontDescription" type="system" pointSize="15"/>
-                                                <nil key="textColor"/>
-                                                <nil key="highlightedColor"/>
-                                            </label>
-                                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="Karbabad, Manama Governorate" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="c5s-J1-wvo">
-                                                <rect key="frame" x="130" y="242" width="222" height="18"/>
-                                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                                <fontDescription key="fontDescription" type="system" pointSize="15"/>
-                                                <nil key="textColor"/>
-                                                <nil key="highlightedColor"/>
-                                            </label>
-                                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="Date: 28/10/2025, 9AM - 11AM" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="wuz-06-rXf">
-                                                <rect key="frame" x="130" y="266" width="210" height="18"/>
-                                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                                <fontDescription key="fontDescription" type="system" pointSize="15"/>
-                                                <nil key="textColor"/>
-                                                <nil key="highlightedColor"/>
-                                            </label>
-                                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="Building 1311, Flat 230, Road 3027, Block 430" textAlignment="natural" lineBreakMode="tailTruncation" numberOfLines="2" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="lYz-hY-27z">
-                                                <rect key="frame" x="130" y="192" width="184" height="44"/>
-                                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                                <fontDescription key="fontDescription" type="system" pointSize="15"/>
-                                                <nil key="textColor"/>
-                                                <nil key="highlightedColor"/>
-                                            </label>
-                                            <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" image="apples" translatesAutoresizingMaskIntoConstraints="NO" id="biy-vC-S23">
-                                                <rect key="frame" x="13" y="351" width="367" height="230"/>
-                                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                            </imageView>
-                                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="Donation Summary" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="TbB-ct-1ep">
-                                                <rect key="frame" x="13" y="323" width="149" height="20"/>
-                                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                                <fontDescription key="fontDescription" type="boldSystem" pointSize="16"/>
-                                                <nil key="textColor"/>
-                                                <nil key="highlightedColor"/>
-                                            </label>
-                                        </subviews>
-                                        <color key="backgroundColor" systemColor="systemBackgroundColor"/>
-                                    </view>
-                                </subviews>
-                                <viewLayoutGuide key="contentLayoutGuide" id="XrC-lb-5OJ"/>
-                                <viewLayoutGuide key="frameLayoutGuide" id="ZAl-OZ-LRK"/>
-                            </scrollView>
+                                <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                <nil key="textColor"/>
+                                <nil key="highlightedColor"/>
+                            </label>
                         </subviews>
                         <viewLayoutGuide key="safeArea" id="5nd-8S-oJ7"/>
                         <color key="backgroundColor" systemColor="systemBackgroundColor"/>
                     </view>
                     <navigationItem key="navigationItem" id="BLi-ap-tPQ"/>
-                    <size key="freeformSize" width="393" height="852"/>
-                    <connections>
-                        <outlet property="donationAddressLbl" destination="lYz-hY-27z" id="yjc-Km-uiF"/>
-                    </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="pRL-Jv-Gfc" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="2081.679389312977" y="1408.4507042253522"/>
+            <point key="canvasLocation" x="1147" y="1372"/>
+        </scene>
+        <!--View Controller-->
+        <scene sceneID="tLT-JD-FXf">
+            <objects>
+                <viewController id="KvD-Px-lJ4" sceneMemberID="viewController">
+                    <view key="view" contentMode="scaleToFill" id="fJe-bj-69Q">
+                        <rect key="frame" x="0.0" y="0.0" width="393" height="852"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <viewLayoutGuide key="safeArea" id="2zf-Jc-Uz6"/>
+                        <color key="backgroundColor" systemColor="systemBackgroundColor"/>
+                    </view>
+                    <tabBarItem key="tabBarItem" title="" image="person.crop.circle.fill" catalog="system" id="kqA-l4-AGj"/>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="VvB-RA-XTS" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="2904.5801526717555" y="626.76056338028172"/>
         </scene>
         <!--Tab Bar Controller-->
         <scene sceneID="8z8-yA-v5M">
@@ -262,7 +196,7 @@
                     <connections>
                         <segue destination="0RG-3O-N3q" kind="relationship" relationship="viewControllers" id="tUP-gL-b2c"/>
                         <segue destination="2Im-2I-44S" kind="relationship" relationship="viewControllers" id="vcz-ww-u5z"/>
-                        <segue destination="ONd-Xx-dnE" kind="relationship" relationship="viewControllers" id="2PQ-ph-uWV"/>
+                        <segue destination="KvD-Px-lJ4" kind="relationship" relationship="viewControllers" id="WGe-cm-nZZ"/>
                     </connections>
                 </tabBarController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="fhp-bx-aMj" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
@@ -292,453 +226,13 @@
             </objects>
             <point key="canvasLocation" x="1147.3282442748091" y="598.59154929577471"/>
         </scene>
-        <!--Item-->
-        <scene sceneID="FXS-Nl-rQ8">
-            <objects>
-                <viewController id="ONd-Xx-dnE" customClass="NotificationsViewController" customModule="ProjectSimulator" customModuleProvider="target" sceneMemberID="viewController">
-                    <view key="view" contentMode="scaleToFill" id="XbZ-JR-NSe">
-                        <rect key="frame" x="0.0" y="0.0" width="393" height="852"/>
-                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
-                        <subviews>
-                            <collectionView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" dataMode="prototypes" translatesAutoresizingMaskIntoConstraints="NO" id="nOs-IT-aoS">
-                                <rect key="frame" x="0.0" y="118" width="393" height="617"/>
-                                <color key="backgroundColor" systemColor="systemBackgroundColor"/>
-                                <collectionViewFlowLayout key="collectionViewLayout" automaticEstimatedItemSize="YES" minimumLineSpacing="10" minimumInteritemSpacing="10" id="Jxl-AI-rdu">
-                                    <size key="itemSize" width="376" height="124"/>
-                                    <size key="headerReferenceSize" width="0.0" height="0.0"/>
-                                    <size key="footerReferenceSize" width="0.0" height="0.0"/>
-                                    <inset key="sectionInset" minX="0.0" minY="0.0" maxX="0.0" maxY="0.0"/>
-                                </collectionViewFlowLayout>
-                                <cells>
-                                    <collectionViewCell opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" reuseIdentifier="NotificationsCollectionViewCell" id="5gq-cm-st1" customClass="NotificationsCollectionViewCell" customModule="ProjectSimulator" customModuleProvider="target">
-                                        <rect key="frame" x="8.6666666666666661" y="0.0" width="376" height="124"/>
-                                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                        <collectionViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" insetsLayoutMarginsFromSafeArea="NO" id="ctD-oY-J7I">
-                                            <rect key="frame" x="0.0" y="0.0" width="376" height="124"/>
-                                            <autoresizingMask key="autoresizingMask"/>
-                                            <subviews>
-                                                <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" image="Notification" translatesAutoresizingMaskIntoConstraints="NO" id="ycz-JV-jOx">
-                                                    <rect key="frame" x="21" y="32" width="60" height="60"/>
-                                                    <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                                </imageView>
-                                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="NGO Awaiting Approval" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="qIU-Dp-gYL">
-                                                    <rect key="frame" x="104" y="14" width="181" height="20"/>
-                                                    <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                                    <fontDescription key="fontDescription" type="boldSystem" pointSize="16"/>
-                                                    <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-                                                    <nil key="highlightedColor"/>
-                                                </label>
-                                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="18/10/2025 12:02 PM" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="eQs-9o-JQk">
-                                                    <rect key="frame" x="104" y="97" width="179" height="14"/>
-                                                    <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                                    <fontDescription key="fontDescription" type="system" pointSize="11"/>
-                                                    <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-                                                    <nil key="highlightedColor"/>
-                                                </label>
-                                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="alnoor.association has just signed up and is awaiting your verification." textAlignment="natural" lineBreakMode="tailTruncation" numberOfLines="2" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="83e-Qi-dSl">
-                                                    <rect key="frame" x="104" y="39" width="264" height="47"/>
-                                                    <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                                    <fontDescription key="fontDescription" type="system" pointSize="14"/>
-                                                    <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-                                                    <nil key="highlightedColor"/>
-                                                </label>
-                                            </subviews>
-                                            <color key="backgroundColor" name="greenCol"/>
-                                        </collectionViewCellContentView>
-                                        <size key="customSize" width="376" height="124"/>
-                                        <connections>
-                                            <outlet property="containerView" destination="ctD-oY-J7I" id="rAM-Zc-QJb"/>
-                                            <outlet property="notificationDateLbl" destination="eQs-9o-JQk" id="RQk-dS-yrn"/>
-                                            <outlet property="notificationDescriptionLbl" destination="83e-Qi-dSl" id="B3q-GK-Nh6"/>
-                                            <outlet property="notificationLogoImageView" destination="ycz-JV-jOx" id="pCK-EY-Unh"/>
-                                            <outlet property="notificationTitleLbl" destination="qIU-Dp-gYL" id="6Ox-fO-DlP"/>
-                                        </connections>
-                                    </collectionViewCell>
-                                </cells>
-                            </collectionView>
-                        </subviews>
-                        <viewLayoutGuide key="safeArea" id="V6U-qm-Joc"/>
-                        <color key="backgroundColor" systemColor="systemBackgroundColor"/>
-                        <constraints>
-                            <constraint firstItem="nOs-IT-aoS" firstAttribute="top" secondItem="V6U-qm-Joc" secondAttribute="top" id="4T2-w1-9uZ"/>
-                            <constraint firstItem="nOs-IT-aoS" firstAttribute="leading" secondItem="V6U-qm-Joc" secondAttribute="leading" id="AHF-Xb-GBH"/>
-                            <constraint firstItem="V6U-qm-Joc" firstAttribute="bottom" secondItem="nOs-IT-aoS" secondAttribute="bottom" id="EkZ-sf-Xoh"/>
-                            <constraint firstItem="V6U-qm-Joc" firstAttribute="trailing" secondItem="nOs-IT-aoS" secondAttribute="trailing" id="tmi-eN-PIW"/>
-                        </constraints>
-                    </view>
-                    <tabBarItem key="tabBarItem" title="Item" id="03O-FV-Tkk"/>
-                    <navigationItem key="navigationItem" id="Lf7-FI-keF">
-                        <barButtonItem key="backBarButtonItem" title=" " id="4bu-kU-4L7"/>
-                    </navigationItem>
-                    <connections>
-                        <outlet property="notificationsCollectionView" destination="nOs-IT-aoS" id="GnW-FX-Lvi"/>
-                    </connections>
-                </viewController>
-                <placeholder placeholderIdentifier="IBFirstResponder" id="EeH-xd-fAs" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
-            </objects>
-            <point key="canvasLocation" x="3022" y="599"/>
-        </scene>
-        <!--Donation Details View Controller-->
-        <scene sceneID="jw6-Og-X5B">
-            <objects>
-                <viewController id="Eji-z2-NUD" customClass="DonationDetailsViewController" customModule="ProjectSimulator" customModuleProvider="target" sceneMemberID="viewController">
-                    <view key="view" contentMode="scaleToFill" id="GGo-rA-xYC">
-                        <rect key="frame" x="0.0" y="0.0" width="393" height="852"/>
-                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
-                        <subviews>
-                            <scrollView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="poS-o1-ADT">
-                                <rect key="frame" x="0.0" y="-124" width="393" height="1100"/>
-                                <subviews>
-                                    <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="cyb-Lh-Uee">
-                                        <rect key="frame" x="0.0" y="0.0" width="393" height="1100"/>
-                                        <subviews>
-                                            <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" image="KarranaCharity" translatesAutoresizingMaskIntoConstraints="NO" id="Xyt-b1-Y3u">
-                                                <rect key="frame" x="20" y="21" width="86" height="86"/>
-                                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                            </imageView>
-                                            <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" image="Location" translatesAutoresizingMaskIntoConstraints="NO" id="8Sf-SM-Vx3">
-                                                <rect key="frame" x="20" y="183" width="86" height="86"/>
-                                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                            </imageView>
-                                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="Karrana Charity Society" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="tkP-Aa-2UG">
-                                                <rect key="frame" x="130" y="21" width="184" height="20"/>
-                                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                                <fontDescription key="fontDescription" type="boldSystem" pointSize="16"/>
-                                                <nil key="textColor"/>
-                                                <nil key="highlightedColor"/>
-                                            </label>
-                                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="23/10/2025, 9:08 AM" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="AI5-Da-5Hh">
-                                                <rect key="frame" x="130" y="50" width="146" height="18"/>
-                                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                                <fontDescription key="fontDescription" type="system" pointSize="15"/>
-                                                <nil key="textColor"/>
-                                                <nil key="highlightedColor"/>
-                                            </label>
-                                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="Donation #91475" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="8oq-W7-ENH">
-                                                <rect key="frame" x="130" y="74" width="118" height="18"/>
-                                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                                <fontDescription key="fontDescription" type="system" pointSize="15"/>
-                                                <nil key="textColor"/>
-                                                <nil key="highlightedColor"/>
-                                            </label>
-                                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="Pickup Schedule &amp; Location" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="WK4-Pf-MYt">
-                                                <rect key="frame" x="130" y="139" width="215" height="20"/>
-                                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                                <fontDescription key="fontDescription" type="boldSystem" pointSize="16"/>
-                                                <nil key="textColor"/>
-                                                <nil key="highlightedColor"/>
-                                            </label>
-                                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="Donor: zahraa.hubail" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="jCN-Zd-ChE">
-                                                <rect key="frame" x="130" y="168" width="142" height="18"/>
-                                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                                <fontDescription key="fontDescription" type="system" pointSize="15"/>
-                                                <nil key="textColor"/>
-                                                <nil key="highlightedColor"/>
-                                            </label>
-                                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="Karbabad, Manama Governorate" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="xV3-Hb-rrx">
-                                                <rect key="frame" x="130" y="242" width="222" height="18"/>
-                                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                                <fontDescription key="fontDescription" type="system" pointSize="15"/>
-                                                <nil key="textColor"/>
-                                                <nil key="highlightedColor"/>
-                                            </label>
-                                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="Date: 28/10/2025, 9AM - 11AM" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="eGn-up-3df">
-                                                <rect key="frame" x="130" y="266" width="210" height="18"/>
-                                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                                <fontDescription key="fontDescription" type="system" pointSize="15"/>
-                                                <nil key="textColor"/>
-                                                <nil key="highlightedColor"/>
-                                            </label>
-                                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="Building 1311, Flat 230, Road 3027, Block 430" textAlignment="natural" lineBreakMode="tailTruncation" numberOfLines="2" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="uon-nT-etQ">
-                                                <rect key="frame" x="130" y="192" width="184" height="44"/>
-                                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                                <fontDescription key="fontDescription" type="system" pointSize="15"/>
-                                                <nil key="textColor"/>
-                                                <nil key="highlightedColor"/>
-                                            </label>
-                                            <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" image="apples" translatesAutoresizingMaskIntoConstraints="NO" id="Z9h-Pf-8qs">
-                                                <rect key="frame" x="13" y="351" width="367" height="230"/>
-                                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                            </imageView>
-                                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="Donation Summary" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="SIP-hs-SaN">
-                                                <rect key="frame" x="13" y="323" width="149" height="20"/>
-                                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                                <fontDescription key="fontDescription" type="boldSystem" pointSize="16"/>
-                                                <nil key="textColor"/>
-                                                <nil key="highlightedColor"/>
-                                            </label>
-                                        </subviews>
-                                        <color key="backgroundColor" systemColor="systemBackgroundColor"/>
-                                        <constraints>
-                                            <constraint firstAttribute="height" constant="1100" id="kQJ-9D-edj"/>
-                                        </constraints>
-                                    </view>
-                                </subviews>
-                                <constraints>
-                                    <constraint firstItem="LjW-IK-aaR" firstAttribute="bottom" secondItem="cyb-Lh-Uee" secondAttribute="bottom" id="0Rz-My-Men"/>
-                                    <constraint firstItem="cyb-Lh-Uee" firstAttribute="trailing" secondItem="LjW-IK-aaR" secondAttribute="trailing" id="251-yj-odT"/>
-                                    <constraint firstAttribute="trailing" secondItem="cyb-Lh-Uee" secondAttribute="trailing" id="2Cz-yE-W1B"/>
-                                    <constraint firstItem="cyb-Lh-Uee" firstAttribute="top" secondItem="LjW-IK-aaR" secondAttribute="top" id="Uw7-Ga-Dip"/>
-                                    <constraint firstItem="cyb-Lh-Uee" firstAttribute="width" secondItem="LjW-IK-aaR" secondAttribute="width" id="Wk1-Jf-ZyI"/>
-                                    <constraint firstAttribute="bottom" secondItem="cyb-Lh-Uee" secondAttribute="bottom" id="c5B-Xf-61S"/>
-                                    <constraint firstItem="cyb-Lh-Uee" firstAttribute="leading" secondItem="poS-o1-ADT" secondAttribute="leading" id="fTF-v1-REh"/>
-                                    <constraint firstItem="cyb-Lh-Uee" firstAttribute="top" secondItem="poS-o1-ADT" secondAttribute="top" id="kR5-kp-JTn"/>
-                                    <constraint firstItem="cyb-Lh-Uee" firstAttribute="leading" secondItem="LjW-IK-aaR" secondAttribute="leading" id="p2F-al-mT6"/>
-                                </constraints>
-                                <viewLayoutGuide key="contentLayoutGuide" id="mai-z8-qtU"/>
-                                <viewLayoutGuide key="frameLayoutGuide" id="LjW-IK-aaR"/>
-                            </scrollView>
-                        </subviews>
-                        <viewLayoutGuide key="safeArea" id="iWM-nZ-iFi"/>
-                        <color key="backgroundColor" systemColor="systemBackgroundColor"/>
-                        <constraints>
-                            <constraint firstItem="poS-o1-ADT" firstAttribute="centerY" secondItem="GGo-rA-xYC" secondAttribute="centerY" id="RBM-Ll-j7g"/>
-                            <constraint firstItem="poS-o1-ADT" firstAttribute="leading" secondItem="iWM-nZ-iFi" secondAttribute="leading" id="c89-Yr-qkE"/>
-                            <constraint firstItem="poS-o1-ADT" firstAttribute="centerX" secondItem="GGo-rA-xYC" secondAttribute="centerX" id="mVO-Vd-DnQ"/>
-                        </constraints>
-                    </view>
-                    <navigationItem key="navigationItem" id="nDB-m3-AT6"/>
-                    <size key="freeformSize" width="393" height="852"/>
-                    <connections>
-                        <outlet property="donationAddressLbl" destination="uon-nT-etQ" id="nqW-vH-2GU"/>
-                    </connections>
-                </viewController>
-                <placeholder placeholderIdentifier="IBFirstResponder" id="vE5-JJ-wLP" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
-            </objects>
-            <point key="canvasLocation" x="2944.2748091603053" y="1455.6338028169014"/>
-        </scene>
-        <!--Donation Details View Controller-->
-        <scene sceneID="cG2-QR-GbS">
-            <objects>
-                <viewController id="WvE-kn-Zg7" customClass="DonationDetailsViewController" customModule="ProjectSimulator" customModuleProvider="target" sceneMemberID="viewController">
-                    <view key="view" contentMode="scaleToFill" id="euk-zQ-rDR">
-                        <rect key="frame" x="0.0" y="0.0" width="393" height="852"/>
-                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
-                        <subviews>
-                            <scrollView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Ans-Fp-FpK">
-                                <rect key="frame" x="0.0" y="0.0" width="393" height="852"/>
-                                <subviews>
-                                    <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="VR1-za-HED">
-                                        <rect key="frame" x="0.0" y="0.0" width="393" height="1100"/>
-                                        <subviews>
-                                            <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" image="KarranaCharity" translatesAutoresizingMaskIntoConstraints="NO" id="Dm8-sN-0Eu">
-                                                <rect key="frame" x="20" y="21" width="86" height="86"/>
-                                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                            </imageView>
-                                            <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" image="Location" translatesAutoresizingMaskIntoConstraints="NO" id="DFr-g2-Arm">
-                                                <rect key="frame" x="20" y="183" width="86" height="86"/>
-                                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                            </imageView>
-                                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="Karrana Charity Society" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="wd3-h7-l8s">
-                                                <rect key="frame" x="130" y="21" width="184" height="20"/>
-                                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                                <fontDescription key="fontDescription" type="boldSystem" pointSize="16"/>
-                                                <nil key="textColor"/>
-                                                <nil key="highlightedColor"/>
-                                            </label>
-                                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="23/10/2025, 9:08 AM" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="J8o-9f-C5C">
-                                                <rect key="frame" x="130" y="50" width="146" height="18"/>
-                                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                                <fontDescription key="fontDescription" type="system" pointSize="15"/>
-                                                <nil key="textColor"/>
-                                                <nil key="highlightedColor"/>
-                                            </label>
-                                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="Donation #91475" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Bfo-gn-8gD">
-                                                <rect key="frame" x="130" y="74" width="118" height="18"/>
-                                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                                <fontDescription key="fontDescription" type="system" pointSize="15"/>
-                                                <nil key="textColor"/>
-                                                <nil key="highlightedColor"/>
-                                            </label>
-                                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="Pickup Schedule &amp; Location" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="NCe-bg-oSY">
-                                                <rect key="frame" x="130" y="139" width="215" height="20"/>
-                                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                                <fontDescription key="fontDescription" type="boldSystem" pointSize="16"/>
-                                                <nil key="textColor"/>
-                                                <nil key="highlightedColor"/>
-                                            </label>
-                                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="Donor: zahraa.hubail" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Bzg-Ih-Dga">
-                                                <rect key="frame" x="130" y="168" width="142" height="18"/>
-                                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                                <fontDescription key="fontDescription" type="system" pointSize="15"/>
-                                                <nil key="textColor"/>
-                                                <nil key="highlightedColor"/>
-                                            </label>
-                                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="Karbabad, Manama Governorate" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="0i4-co-oWW">
-                                                <rect key="frame" x="130" y="242" width="222" height="18"/>
-                                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                                <fontDescription key="fontDescription" type="system" pointSize="15"/>
-                                                <nil key="textColor"/>
-                                                <nil key="highlightedColor"/>
-                                            </label>
-                                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="Date: 28/10/2025, 9AM - 11AM" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="GUx-kD-XGT">
-                                                <rect key="frame" x="130" y="266" width="210" height="18"/>
-                                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                                <fontDescription key="fontDescription" type="system" pointSize="15"/>
-                                                <nil key="textColor"/>
-                                                <nil key="highlightedColor"/>
-                                            </label>
-                                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="Building 1311, Flat 230, Road 3027, Block 430" textAlignment="natural" lineBreakMode="tailTruncation" numberOfLines="2" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="SFf-eq-FQv">
-                                                <rect key="frame" x="130" y="192" width="184" height="44"/>
-                                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                                <fontDescription key="fontDescription" type="system" pointSize="15"/>
-                                                <nil key="textColor"/>
-                                                <nil key="highlightedColor"/>
-                                            </label>
-                                            <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" image="apples" translatesAutoresizingMaskIntoConstraints="NO" id="v6X-RC-RPn">
-                                                <rect key="frame" x="13" y="351" width="367" height="230"/>
-                                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                            </imageView>
-                                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="Donation Summary" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="jLM-wN-wd5">
-                                                <rect key="frame" x="13" y="323" width="149" height="20"/>
-                                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                                <fontDescription key="fontDescription" type="boldSystem" pointSize="16"/>
-                                                <nil key="textColor"/>
-                                                <nil key="highlightedColor"/>
-                                            </label>
-                                        </subviews>
-                                        <color key="backgroundColor" systemColor="systemBackgroundColor"/>
-                                        <constraints>
-                                            <constraint firstAttribute="height" constant="1100" id="SWX-yl-erz"/>
-                                        </constraints>
-                                    </view>
-                                </subviews>
-                                <constraints>
-                                    <constraint firstItem="VR1-za-HED" firstAttribute="top" secondItem="8uo-6E-L3N" secondAttribute="top" id="J1y-Cn-LKW"/>
-                                    <constraint firstItem="VR1-za-HED" firstAttribute="bottom" secondItem="8uo-6E-L3N" secondAttribute="bottom" id="ORO-A4-0RS"/>
-                                    <constraint firstItem="VR1-za-HED" firstAttribute="trailing" secondItem="8uo-6E-L3N" secondAttribute="trailing" id="Uf9-gC-cBX"/>
-                                    <constraint firstItem="VR1-za-HED" firstAttribute="centerX" secondItem="Ans-Fp-FpK" secondAttribute="centerX" id="mHV-ez-LDy"/>
-                                    <constraint firstItem="VR1-za-HED" firstAttribute="leading" secondItem="8uo-6E-L3N" secondAttribute="leading" id="yco-WW-TJ9"/>
-                                </constraints>
-                                <viewLayoutGuide key="contentLayoutGuide" id="8uo-6E-L3N"/>
-                                <viewLayoutGuide key="frameLayoutGuide" id="lLE-kj-Dyk"/>
-                            </scrollView>
-                        </subviews>
-                        <viewLayoutGuide key="safeArea" id="Mc2-xk-Ns6"/>
-                        <color key="backgroundColor" systemColor="systemBackgroundColor"/>
-                        <constraints>
-                            <constraint firstAttribute="bottom" secondItem="Ans-Fp-FpK" secondAttribute="bottom" id="ZjH-Tn-P4e"/>
-                            <constraint firstItem="Ans-Fp-FpK" firstAttribute="leading" secondItem="Mc2-xk-Ns6" secondAttribute="leading" id="dO5-b9-Es6"/>
-                            <constraint firstItem="Ans-Fp-FpK" firstAttribute="trailing" secondItem="Mc2-xk-Ns6" secondAttribute="trailing" id="nyG-iF-cy1"/>
-                            <constraint firstItem="Ans-Fp-FpK" firstAttribute="top" secondItem="euk-zQ-rDR" secondAttribute="top" id="wKJ-Oh-Vwk"/>
-                        </constraints>
-                    </view>
-                    <navigationItem key="navigationItem" id="k96-bq-ng0"/>
-                    <size key="freeformSize" width="393" height="852"/>
-                    <connections>
-                        <outlet property="donationAddressLbl" destination="SFf-eq-FQv" id="H0m-Ge-QiP"/>
-                    </connections>
-                </viewController>
-                <placeholder placeholderIdentifier="IBFirstResponder" id="ugl-GT-RpI" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
-            </objects>
-            <point key="canvasLocation" x="3994.6564885496182" y="598.59154929577471"/>
-        </scene>
-        <!--View Controller-->
-        <scene sceneID="8pR-Ow-BRR">
-            <objects>
-                <viewController id="k3D-iT-gNG" sceneMemberID="viewController">
-                    <view key="view" contentMode="scaleToFill" id="U4M-WQ-dmB">
-                        <rect key="frame" x="0.0" y="0.0" width="393" height="1100"/>
-                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
-                        <subviews>
-                            <scrollView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="m1Y-eo-maS">
-                                <rect key="frame" x="0.0" y="0.0" width="393" height="1100"/>
-                                <subviews>
-                                    <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="HLw-ZC-f22">
-                                        <rect key="frame" x="0.0" y="0.0" width="393" height="1100"/>
-                                        <subviews>
-                                            <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="-1" estimatedRowHeight="-1" sectionHeaderHeight="-1" estimatedSectionHeaderHeight="-1" sectionFooterHeight="-1" estimatedSectionFooterHeight="-1" translatesAutoresizingMaskIntoConstraints="NO" id="ARW-4A-IaQ">
-                                                <rect key="frame" x="0.0" y="0.0" width="393" height="1100"/>
-                                                <color key="backgroundColor" systemColor="systemBackgroundColor"/>
-                                                <prototypes>
-                                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" insetsLayoutMarginsFromSafeArea="NO" selectionStyle="blue" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" reuseIdentifier="donationDetailsCell" rowHeight="128" id="9N9-wR-PBa">
-                                                        <rect key="frame" x="0.0" y="50" width="393" height="128"/>
-                                                        <autoresizingMask key="autoresizingMask"/>
-                                                        <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="9N9-wR-PBa" id="h0P-XR-AZb">
-                                                            <rect key="frame" x="0.0" y="0.0" width="393" height="128"/>
-                                                            <autoresizingMask key="autoresizingMask"/>
-                                                            <subviews>
-                                                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="Karrana Charity Society" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="uhk-7r-lJZ">
-                                                                    <rect key="frame" x="147" y="36" width="184" height="20"/>
-                                                                    <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                                                    <fontDescription key="fontDescription" type="boldSystem" pointSize="16"/>
-                                                                    <nil key="textColor"/>
-                                                                    <nil key="highlightedColor"/>
-                                                                </label>
-                                                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="23/10/2025, 9:08 AM" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="3oc-Ek-EXE">
-                                                                    <rect key="frame" x="150" y="64" width="146" height="18"/>
-                                                                    <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                                                    <fontDescription key="fontDescription" type="system" pointSize="15"/>
-                                                                    <nil key="textColor"/>
-                                                                    <nil key="highlightedColor"/>
-                                                                </label>
-                                                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="Donation #91475" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="yVn-ob-DYk">
-                                                                    <rect key="frame" x="147" y="81" width="118" height="18"/>
-                                                                    <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                                                    <fontDescription key="fontDescription" type="system" pointSize="15"/>
-                                                                    <nil key="textColor"/>
-                                                                    <nil key="highlightedColor"/>
-                                                                </label>
-                                                                <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" image="KarranaCharity" translatesAutoresizingMaskIntoConstraints="NO" id="UKP-5m-FkQ">
-                                                                    <rect key="frame" x="30" y="21" width="86" height="86"/>
-                                                                    <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                                                </imageView>
-                                                            </subviews>
-                                                        </tableViewCellContentView>
-                                                    </tableViewCell>
-                                                </prototypes>
-                                            </tableView>
-                                        </subviews>
-                                        <color key="backgroundColor" systemColor="systemBackgroundColor"/>
-                                        <constraints>
-                                            <constraint firstAttribute="height" constant="1100" id="Cka-1p-gbl"/>
-                                            <constraint firstItem="ARW-4A-IaQ" firstAttribute="leading" secondItem="HLw-ZC-f22" secondAttribute="leading" id="Icj-E3-yMW"/>
-                                            <constraint firstItem="ARW-4A-IaQ" firstAttribute="top" secondItem="HLw-ZC-f22" secondAttribute="top" id="TSY-VN-kSn"/>
-                                            <constraint firstAttribute="bottom" secondItem="ARW-4A-IaQ" secondAttribute="bottom" id="tGX-NV-wFX"/>
-                                            <constraint firstAttribute="trailing" secondItem="ARW-4A-IaQ" secondAttribute="trailing" id="vdg-lQ-BvB"/>
-                                        </constraints>
-                                    </view>
-                                </subviews>
-                                <constraints>
-                                    <constraint firstItem="HLw-ZC-f22" firstAttribute="bottom" secondItem="tbW-tb-J33" secondAttribute="bottom" id="FQM-XW-PkO"/>
-                                    <constraint firstItem="HLw-ZC-f22" firstAttribute="leading" secondItem="tbW-tb-J33" secondAttribute="leading" id="UZu-am-83W"/>
-                                    <constraint firstItem="HLw-ZC-f22" firstAttribute="top" secondItem="tbW-tb-J33" secondAttribute="top" id="b6Q-zf-bBq"/>
-                                    <constraint firstItem="HLw-ZC-f22" firstAttribute="width" secondItem="q01-ST-OXl" secondAttribute="width" id="f8m-gS-PZK"/>
-                                    <constraint firstItem="HLw-ZC-f22" firstAttribute="trailing" secondItem="tbW-tb-J33" secondAttribute="trailing" id="tvt-bG-UW1"/>
-                                </constraints>
-                                <viewLayoutGuide key="contentLayoutGuide" id="tbW-tb-J33"/>
-                                <viewLayoutGuide key="frameLayoutGuide" id="q01-ST-OXl"/>
-                            </scrollView>
-                        </subviews>
-                        <viewLayoutGuide key="safeArea" id="Lga-RD-tc0"/>
-                        <color key="backgroundColor" systemColor="systemBackgroundColor"/>
-                        <constraints>
-                            <constraint firstItem="m1Y-eo-maS" firstAttribute="leading" secondItem="Lga-RD-tc0" secondAttribute="leading" id="61e-5M-kcO"/>
-                            <constraint firstItem="m1Y-eo-maS" firstAttribute="trailing" secondItem="Lga-RD-tc0" secondAttribute="trailing" id="Hrd-qH-ogG"/>
-                            <constraint firstAttribute="bottom" secondItem="m1Y-eo-maS" secondAttribute="bottom" id="i6u-Ga-Keu"/>
-                            <constraint firstItem="m1Y-eo-maS" firstAttribute="top" secondItem="U4M-WQ-dmB" secondAttribute="top" id="tIu-sS-l2x"/>
-                        </constraints>
-                    </view>
-                    <size key="freeformSize" width="393" height="1100"/>
-                </viewController>
-                <placeholder placeholderIdentifier="IBFirstResponder" id="AZF-dE-ULb" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
-            </objects>
-            <point key="canvasLocation" x="4808.3969465648852" y="614.78873239436621"/>
-        </scene>
     </scenes>
     <resources>
-        <image name="KarranaCharity" width="927" height="929"/>
-        <image name="Location" width="1200" height="1200"/>
-        <image name="Notification" width="500" height="500"/>
-        <image name="apples" width="736" height="984"/>
-        <image name="basket" width="1200" height="1200"/>
         <image name="heart.text.clipboard.fill" catalog="system" width="103" height="128"/>
         <image name="house.fill" catalog="system" width="128" height="104"/>
+        <image name="person.crop.circle.fill" catalog="system" width="128" height="123"/>
         <namedColor name="BeigeCol">
             <color red="0.97254901960784312" green="0.8901960784313725" blue="0.74901960784313726" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
-        </namedColor>
-        <namedColor name="greenCol">
-            <color red="0.070588235294117646" green="0.38823529411764707" blue="0.070588235294117646" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
         </namedColor>
         <namedColor name="orangeCol">
             <color red="0.99607843137254903" green="0.45490196078431372" blue="0.12156862745098039" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>

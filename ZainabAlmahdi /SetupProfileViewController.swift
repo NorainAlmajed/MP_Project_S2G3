@@ -107,7 +107,7 @@ class SetupProfileViewController: UIViewController,
         // Navigate to Home
         if let sceneDelegate = UIApplication.shared.connectedScenes
             .first?.delegate as? SceneDelegate {
-            sceneDelegate.setRootViewController()
+//            sceneDelegate.setRootViewController()
         }
     }
 

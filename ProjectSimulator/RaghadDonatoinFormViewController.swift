@@ -674,6 +674,8 @@
 //  Created by Raghad Aleskafi on 13/12/2025.
 //
 
+
+import Cloudinary   // add this at the top of the file
 import UIKit
 import PhotosUI   // optional if you switch to PHPicker later
 
@@ -687,27 +689,27 @@ class RaghadDonatoinFormViewController: UIViewController,
     func section1DidTapUploadImage(_ cell: RaghadSection1TableViewCell) {
         // Show options to pick an image
         let alert = UIAlertController(title: "Upload Image", message: nil, preferredStyle: .actionSheet)
-
+        
         alert.addAction(UIAlertAction(title: "Take Photo", style: .default) { [weak self] _ in
             self?.openCamera()
         })
-
+        
         alert.addAction(UIAlertAction(title: "Choose from Library", style: .default) { [weak self] _ in
             self?.openPhotoLibrary()
         })
-
+        
         alert.addAction(UIAlertAction(title: "Cancel", style: .cancel))
-
+        
         // iPad popover anchor
         if let pop = alert.popoverPresentationController {
             pop.sourceView = cell
             pop.sourceRect = cell.bounds
         }
-
+        
         present(alert, animated: true)
     }
     var selectedNgo: NGO?
-
+    
     // MARK: - State / Validation
     private var shouldShowDonorError = false
     private var shouldShowImageError = false
@@ -717,41 +719,50 @@ class RaghadDonatoinFormViewController: UIViewController,
     private var weightInvalidFormat = false
     private var shouldShowWeightError = false
     private var selectedExpiryDate: Date?
-
+    
     private var isAdminUser: Bool { user.isAdmin }
-
+    
     // Dropdown (Food Category)
     private var selectedFoodCategory: String? = nil
     private var isFoodDropdownOpen: Bool = false
     private var shouldShowFoodCategoryError = false
-
+    
     // Image + Donor
     @IBOutlet weak var donationFormTableview: UITableView!
     private var selectedDonationImage: UIImage?
     private var selectedDonorName: String?
-
+    
+    
+    private let cloudinaryService = CloudinaryService()
+    
+    private var uploadedDonationImageUrl: String?   // ✅ Cloudinary URL after upload
+    private var isUploadingImage = false            // ✅ block proceed while uploading
+    
+    
+    
+    
     // MARK: - Lifecycle
     override func viewDidLoad() {
         super.viewDidLoad()
-
+        
         donationFormTableview.separatorStyle = .none
         donationFormTableview.delegate = self
         donationFormTableview.dataSource = self
-
+        
         title = "Donation Form"
         navigationController?.navigationBar.prefersLargeTitles = false
-
+        
         let tap = UITapGestureRecognizer(target: self, action: #selector(dismissKeyboard))
         tap.cancelsTouchesInView = false
         view.addGestureRecognizer(tap)
-
+        
         donationFormTableview.keyboardDismissMode = .onDrag
         addDoneButtonOnKeyboard()
-
+        
         // Self-sizing cells (use the IBOutlet table, not `tableView`)
         donationFormTableview.estimatedRowHeight = 200
         donationFormTableview.rowHeight = UITableView.automaticDimension
-
+        
         print("🔐 Current user:", user.username, " | 👤 Is Admin?", user.isAdmin)
         
         
@@ -759,21 +770,21 @@ class RaghadDonatoinFormViewController: UIViewController,
         
         //for the last elemnt button 👤  👤  👤  👤  👤  👤  👤  👤  👤  👤
         let extra: CGFloat = view.safeAreaInsets.bottom + 40   // ✅ enough space for button
-           donationFormTableview.contentInset.bottom = extra
-           donationFormTableview.verticalScrollIndicatorInsets.bottom = extra
-
-           // ✅ also add a footer so you can always scroll past last cell
-           if donationFormTableview.tableFooterView == nil || donationFormTableview.tableFooterView?.frame.height != extra {
-               donationFormTableview.tableFooterView = UIView(frame: CGRect(x: 0, y: 0, width: 1, height: extra))
-           }
+        donationFormTableview.contentInset.bottom = extra
+        donationFormTableview.verticalScrollIndicatorInsets.bottom = extra
+        
+        // ✅ also add a footer so you can always scroll past last cell
+        if donationFormTableview.tableFooterView == nil || donationFormTableview.tableFooterView?.frame.height != extra {
+            donationFormTableview.tableFooterView = UIView(frame: CGRect(x: 0, y: 0, width: 1, height: extra))
+        }
         
         
     }
     
     
-
-
-
+    
+    
+    
     // MARK: - Keyboard helpers
     func addDoneButtonOnKeyboard() {
         let toolbar = UIToolbar()
@@ -787,17 +798,17 @@ class RaghadDonatoinFormViewController: UIViewController,
     }
     @objc func dismissKeyboard() { view.endEditing(true) }
     @objc func doneButtonTapped() { view.endEditing(true) }
-
+    
     // MARK: - Table DataSource
     func numberOfSections(in tableView: UITableView) -> Int { isAdminUser ? 8 : 7 }
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int { 1 }
-
+    
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-
+        
         let section = indexPath.section
         // If NOT admin, skip donor section by shifting sections after 0
         let adjustedSection = (!isAdminUser && section >= 1) ? section + 1 : section
-
+        
         // Section 1 (Image)
         if adjustedSection == 0 {
             let cell = tableView.dequeueReusableCell(withIdentifier: "Section1Cell", for: indexPath) as! RaghadSection1TableViewCell
@@ -808,7 +819,7 @@ class RaghadDonatoinFormViewController: UIViewController,
             cell.lblImageError.text = "Please upload an image"
             return cell
         }
-
+        
         // Section 2 (Donor) — admin only
         if adjustedSection == 1 {
             let cell = tableView.dequeueReusableCell(withIdentifier: "Section2Cell", for: indexPath) as! RaghadSection2TableViewCell
@@ -818,13 +829,13 @@ class RaghadDonatoinFormViewController: UIViewController,
             cell.btnChooseDonor2.addTarget(self, action: #selector(openDonorList), for: .touchUpInside)
             return cell
         }
-
+        
         // Section 3 (Food Category)
         if adjustedSection == 2 {
             let cell = tableView.dequeueReusableCell(withIdentifier: "Section3Cell", for: indexPath) as! RaghadSection3TableViewCell
             cell.selectionStyle = .none
             cell.configure(selected: selectedFoodCategory, isOpen: isFoodDropdownOpen, showError: shouldShowFoodCategoryError)
-
+            
             cell.onToggleDropdown = { [weak self] open in
                 guard let self = self else { return }
                 self.isFoodDropdownOpen = open
@@ -850,22 +861,22 @@ class RaghadDonatoinFormViewController: UIViewController,
         if adjustedSection == 3 {
             let cell = tableView.dequeueReusableCell(withIdentifier: "Section4Cell", for: indexPath) as! RaghadSection4TableViewCell
             cell.selectionStyle = .none
-
+            
             // ✅ restore saved value (prevents flipping back to 1)
             let q = quantityValue ?? Int(cell.stepperQuantity.value)
             cell.txtQuantity.text = "\(max(q, 1))"
             cell.stepperQuantity.value = Double(max(q, 1))
-
+            
             // ✅ SAVE whenever user changes
             cell.onQuantityChanged = { [weak self] value in
                 guard let self = self else { return }
                 self.quantityValue = value
                 self.shouldShowQuantityError = (value == nil || (value ?? 0) <= 0)
             }
-
+            
             // ✅ show/hide error if you use it
             cell.configure(showError: shouldShowQuantityError)
-
+            
             return cell
         }
         
@@ -879,12 +890,12 @@ class RaghadDonatoinFormViewController: UIViewController,
         
         
         
-
+        
         // ⚖️ Section 5 (Weight)
         if adjustedSection == 4 {
             let cell = tableView.dequeueReusableCell(withIdentifier: "Section5Cell", for: indexPath) as! RaghadSection5TableViewCell
             cell.selectionStyle = .none
-
+            
             // ✅ RESTORE saved value so it does NOT flip on reload
             if let w = weightValue {
                 cell.txtWeight.text = String(w)   // or "\(w)"
@@ -892,10 +903,10 @@ class RaghadDonatoinFormViewController: UIViewController,
                 // keep it empty (optional field)
                 cell.txtWeight.text = ""
             }
-
+            
             // 🔴 show / hide error
             cell.configure(showError: shouldShowWeightError)
-
+            
             // 🔁 receive updates
             cell.onWeightChanged = { [weak self] value, invalidFormat in
                 guard let self = self else { return }
@@ -903,10 +914,10 @@ class RaghadDonatoinFormViewController: UIViewController,
                 self.weightInvalidFormat = invalidFormat
                 self.shouldShowWeightError = invalidFormat
             }
-
+            
             return cell
         }
-
+        
         // Section 6 (Expiry)
         if adjustedSection == 5 {
             let cell = tableView.dequeueReusableCell(withIdentifier: "Section6Cell", for: indexPath) as! RaghadSection6TableViewCell
@@ -921,7 +932,7 @@ class RaghadDonatoinFormViewController: UIViewController,
             }
             return cell
         }
-
+        
         // Section 8 (Proceed button)
         if adjustedSection == 7 {
             let cell = tableView.dequeueReusableCell(withIdentifier: "Section8Cell", for: indexPath) as! RaghadSection8TableViewCell
@@ -930,76 +941,75 @@ class RaghadDonatoinFormViewController: UIViewController,
                 guard let self = self else { return }
                 self.view.endEditing(true)   // ✅ HERE
                 self.validateAndProceed()
-               
+                
             }
             return cell
         }
-
+        
         // Fallback
         let cell = tableView.dequeueReusableCell(withIdentifier: "Section\(adjustedSection + 1)Cell", for: indexPath)
         cell.selectionStyle = .none
         return cell
     }
-
-//    // MARK: - Row Heights
-//    func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
-//        let section = indexPath.section
-//        let adjustedSection = (!isAdminUser && section >= 1) ? section + 1 : section
-//        switch adjustedSection {
-//        case 0: return 237
-//        case 1: return 108
-//        case 2: return UITableView.automaticDimension
-//        case 3: return 109
-//        case 4: return 102
-//        case 5: return 93
-//        case 6: return 161
-//        case 7: return UITableView.automaticDimension // Proceed cell self-sizes
-//        default: return UITableView.automaticDimension
-//        }
-//    }
-//    
-//    
+    
+    //    // MARK: - Row Heights
+    //    func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
+    //        let section = indexPath.section
+    //        let adjustedSection = (!isAdminUser && section >= 1) ? section + 1 : section
+    //        switch adjustedSection {
+    //        case 0: return 237
+    //        case 1: return 108
+    //        case 2: return UITableView.automaticDimension
+    //        case 3: return 109
+    //        case 4: return 102
+    //        case 5: return 93
+    //        case 6: return 161
+    //        case 7: return UITableView.automaticDimension // Proceed cell self-sizes
+    //        default: return UITableView.automaticDimension
+    //        }
+    //    }
+    //
+    //
     
     
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
-
+        
         let isPad = UIDevice.current.userInterfaceIdiom == .pad
-
+        
         let section = indexPath.section
         let adjustedSection = (!isAdminUser && section >= 1) ? section + 1 : section
-
+        
         switch adjustedSection {
-
+            
         case 0:
             // 🟢 Image cell (make it bigger on iPad only)
             return isPad ? 320 : 237
-
+            
         case 1:
             return 108
-
+            
         case 2:
             return UITableView.automaticDimension
-
+            
         case 3:
             return 109
-
+            
         case 4:
             return 102
-
+            
         case 5:
             return 93
-
+            
         case 6:
             return 161
-
+            
         case 7:
             return UITableView.automaticDimension
-
+            
         default:
             return UITableView.automaticDimension
         }
     }
-
     
     
     
@@ -1010,7 +1020,8 @@ class RaghadDonatoinFormViewController: UIViewController,
     
     
     
-
+    
+    
     // MARK: - Donor List
     @objc private func openDonorList() {
         let sb = UIStoryboard(name: "Raghad1", bundle: nil)
@@ -1021,7 +1032,7 @@ class RaghadDonatoinFormViewController: UIViewController,
         vc.delegate = self
         navigationController?.pushViewController(vc, animated: true)
     }
-
+    
     // MARK: - DonorSelectionDelegate
     func didSelectDonor(name: String) {
         selectedDonorName = name
@@ -1032,7 +1043,7 @@ class RaghadDonatoinFormViewController: UIViewController,
             donationFormTableview.reloadData()
         }
     }
-
+    
     // MARK: - Image Picking (UIImagePickerController)
     private func openCamera() {
         if UIImagePickerController.isSourceTypeAvailable(.camera) {
@@ -1042,7 +1053,7 @@ class RaghadDonatoinFormViewController: UIViewController,
         }
     }
     private func openPhotoLibrary() { openImagePicker(sourceType: .photoLibrary) }
-
+    
     private func openImagePicker(sourceType: UIImagePickerController.SourceType) {
         let picker = UIImagePickerController()
         picker.delegate = self          // CRITICAL: so we receive the image
@@ -1050,28 +1061,133 @@ class RaghadDonatoinFormViewController: UIViewController,
         picker.allowsEditing = true     // optional crop
         present(picker, animated: true)
     }
+    
+    //    // Picker callback — store and show the image
+    //    func imagePickerController(_ picker: UIImagePickerController,
+    //                               didFinishPickingMediaWithInfo info: [UIImagePickerController.InfoKey : Any]) {
+    //
+    //        let img = (info[.editedImage] as? UIImage) ?? (info[.originalImage] as? UIImage)
+    //
+    //        if let img = img {
+    //            selectedDonationImage = img
+    //            shouldShowImageError = false
+    //            // Reload only Section 0 (Image) so the UIImageView updates
+    //            UIView.performWithoutAnimation {
+    //                self.donationFormTableview.reloadSections(IndexSet(integer: 0), with: .none)
+    //            }
+    //        }
+    //
+    //        picker.dismiss(animated: true)
+    //    }
+    //
+    //    func imagePickerControllerDidCancel(_ picker: UIImagePickerController) {
+    //        picker.dismiss(animated: true)
+    //    }
+    
+    
+    
+    
+    
+    
+    //    func imagePickerController(_ picker: UIImagePickerController,
+    //                               didFinishPickingMediaWithInfo info: [UIImagePickerController.InfoKey : Any]) {
+    //
+    //        let img = (info[.editedImage] as? UIImage) ?? (info[.originalImage] as? UIImage)
+    //
+    //        guard let img = img else {
+    //            picker.dismiss(animated: true)
+    //            return
+    //        }
+    //
+    //        // 1) Show selected image immediately in UI
+    //        selectedDonationImage = img
+    //        shouldShowImageError = false
+    //        UIView.performWithoutAnimation {
+    //            self.donationFormTableview.reloadSections(IndexSet(integer: 0), with: .none)
+    //        }
+    //
+    //        picker.dismiss(animated: true)
+    //
+    //        // 2) Upload to Cloudinary
+    //        isUploadingImage = true
+    //        uploadedDonationImageUrl = nil
+    //
+    //        // (Optional) quick user feedback
+    //        self.showUploadingAlert()
+    //
+    //        cloudinaryService.uploadImage(img) { [weak self] url in
+    //            guard let self = self else { return }
+    //            self.isUploadingImage = false
+    //            self.hideUploadingAlert()
+    //
+    //            if let url = url, !url.isEmpty {
+    //                self.uploadedDonationImageUrl = url
+    //                print("✅ Cloudinary uploaded URL:", url)
+    //            } else {
+    //                self.uploadedDonationImageUrl = nil
+    //                print("❌ Cloudinary upload failed")
+    //
+    //                // If upload fails, keep the image but block proceeding (safer)
+    //                self.shouldShowImageError = true
+    //                UIView.performWithoutAnimation {
+    //                    self.donationFormTableview.reloadSections(IndexSet(integer: 0), with: .none)
+    //                }
+    //
+    //                self.showSimpleAlert(title: "Upload Failed", message: "Please try selecting the image again.")
+    //            }
+    //        }
+    //    }
+    
+    
+    
+    
+    func imagePickerController(
+        _ picker: UIImagePickerController,
+        didFinishPickingMediaWithInfo info: [UIImagePickerController.InfoKey : Any]
+    ) {
+        picker.dismiss(animated: true)
 
-    // Picker callback — store and show the image
-    func imagePickerController(_ picker: UIImagePickerController,
-                               didFinishPickingMediaWithInfo info: [UIImagePickerController.InfoKey : Any]) {
+        let image =
+            (info[.editedImage] as? UIImage) ??
+            (info[.originalImage] as? UIImage)
 
-        let img = (info[.editedImage] as? UIImage) ?? (info[.originalImage] as? UIImage)
+        guard let img = image else { return }
 
-        if let img = img {
-            selectedDonationImage = img
-            shouldShowImageError = false
-            // Reload only Section 0 (Image) so the UIImageView updates
-            UIView.performWithoutAnimation {
-                self.donationFormTableview.reloadSections(IndexSet(integer: 0), with: .none)
-            }
+        // ✅ 1) Save image in VC state
+        selectedDonationImage = img
+        shouldShowImageError = false
+
+        // ✅ 2) Reload ONLY the image section
+        UIView.performWithoutAnimation {
+            self.donationFormTableview.reloadSections(IndexSet(integer: 0), with: .none)
         }
 
-        picker.dismiss(animated: true)
+        // ✅ 3) Upload to Cloudinary
+        isUploadingImage = true
+        uploadedDonationImageUrl = nil
+
+        cloudinaryService.uploadImage(img) { [weak self] url in
+            guard let self = self else { return }
+
+            self.isUploadingImage = false
+            self.uploadedDonationImageUrl = url
+
+            print("✅ CLOUDINARY IMAGE URL:", url ?? "nil")
+
+            if url == nil {
+                self.shouldShowImageError = true
+                self.showSimpleAlert(
+                    title: "Upload Failed",
+                    message: "Please try selecting the image again."
+                )
+            }
+        }
     }
 
-    func imagePickerControllerDidCancel(_ picker: UIImagePickerController) {
-        picker.dismiss(animated: true)
-    }
+    
+    
+    
+    
 
     // MARK: - Helpers
     /// Reads the Quantity from Section 4 cell (index 3). Falls back to cached `quantityValue`.
@@ -1092,6 +1208,9 @@ class RaghadDonatoinFormViewController: UIViewController,
 
         // 1) Compute validity
         let missingImage = (selectedDonationImage == nil)
+        let missingUploadedUrl = (uploadedDonationImageUrl == nil)
+
+        
         let missingDonor = isAdminUser ? (selectedDonorName == nil) : false
         let missingFoodCategory = (selectedFoodCategory == nil)
 
@@ -1126,10 +1245,50 @@ class RaghadDonatoinFormViewController: UIViewController,
             donationFormTableview.reloadSections(IndexSet(sectionsToReload), with: .none)
         }
 
+//        // 4) Block navigation on any error
+//        if missingImage || missingFoodCategory || invalidQuantity || invalidWeight || missingExpiry || missingDonor {
+//            return
+//        }
+//        
+//        
+        
+        
         // 4) Block navigation on any error
-        if missingImage || missingFoodCategory || invalidQuantity || invalidWeight || missingExpiry || missingDonor {
+
+        // ⛔ Still uploading to Cloudinary
+        if isUploadingImage {
+            showSimpleAlert(
+                title: "Uploading Image",
+                message: "Please wait until the image upload finishes."
+            )
             return
         }
+
+        // ⛔ Image selected but not uploaded yet
+       
+
+        if missingImage ||
+           missingUploadedUrl ||
+           missingFoodCategory ||
+           invalidQuantity ||
+           invalidWeight ||
+           missingExpiry ||
+           missingDonor {
+
+            if missingUploadedUrl && !missingImage {
+                showSimpleAlert(
+                    title: "Image Not Uploaded",
+                    message: "Please wait or try selecting the image again."
+                )
+            }
+
+            return
+        }
+
+        
+        
+        
+        
 
         // 5) All good → go next
 //        performSegue(withIdentifier: "showSchedulePickup", sender: self)
@@ -1140,5 +1299,27 @@ class RaghadDonatoinFormViewController: UIViewController,
 
         
     }
+    
+    
+    
+    private var uploadingAlert: UIAlertController?
+
+    private func showUploadingAlert() {
+        let alert = UIAlertController(title: "Uploading...", message: "Please wait", preferredStyle: .alert)
+        uploadingAlert = alert
+        present(alert, animated: true)
+    }
+
+    private func hideUploadingAlert() {
+        uploadingAlert?.dismiss(animated: true)
+        uploadingAlert = nil
+    }
+
+    private func showSimpleAlert(title: String, message: String) {
+        let a = UIAlertController(title: title, message: message, preferredStyle: .alert)
+        a.addAction(UIAlertAction(title: "OK", style: .default))
+        present(a, animated: true)
+    }
+
 
 }

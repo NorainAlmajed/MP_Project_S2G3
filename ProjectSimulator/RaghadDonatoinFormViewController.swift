@@ -706,7 +706,7 @@ class RaghadDonatoinFormViewController: UIViewController,
 
         present(alert, animated: true)
     }
-
+    var selectedNgo: NGO?
 
     // MARK: - State / Validation
     private var shouldShowDonorError = false

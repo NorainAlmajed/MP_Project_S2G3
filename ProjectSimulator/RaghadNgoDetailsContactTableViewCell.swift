@@ -30,8 +30,14 @@ class RaghadNgoDetailsContactTableViewCell: UITableViewCell {
                contactView.clipsToBounds = true
            }
 
-           func configure(phone: Int, email: String) {
-               lblPgoneNumber.text = "\(phone)"
-               lblEmail.text = email
-           }
+//           func configure(phone: Int, email: String) {
+//               lblPgoneNumber.text = "\(phone)"
+//               lblEmail.text = email
+//           }
+    
+    
+    func configure(phone: String, email: String) {
+        lblPgoneNumber.text = phone
+        lblEmail.text = email
+    }
        }

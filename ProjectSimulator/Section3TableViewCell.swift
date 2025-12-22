@@ -225,7 +225,7 @@ extension Section3TableViewCell {
             // All other cases → everything stays hidden
         
         // Update the food image
-        foodImageView.image = donation.foodImage
+        foodImageView.loadImage(from: donation.foodImageUrl)
 
         // Update quantity, category, weight, expiration date
         quantityLbl.text = "\(donation.quantity)"

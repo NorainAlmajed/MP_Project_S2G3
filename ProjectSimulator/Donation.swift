@@ -15,7 +15,7 @@ class Donation {
     var address: Address
     var pickupDate: Date
     var pickupTime: String
-    var foodImage: UIImage
+    var foodImageUrl: String
     var status: Int
     var Category: String
     var quantity: Int
@@ -33,7 +33,7 @@ class Donation {
             address: Address,
             pickupDate: Date,
             pickupTime: String,
-            foodImage: UIImage,
+            foodImage: String,
             status: Int,
             Category: String,
             quantity: Int,
@@ -50,7 +50,7 @@ class Donation {
             self.address = address
             self.pickupDate = pickupDate
             self.pickupTime = pickupTime
-            self.foodImage = foodImage
+            self.foodImageUrl = foodImage
             self.status = status
             self.Category = Category
             self.quantity = quantity

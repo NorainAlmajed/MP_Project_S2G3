@@ -802,20 +802,33 @@ class DonationDetailsViewController: UIViewController, UITableViewDelegate, UITa
                 
                 // Draw centered image at top (first page)
                 if isFirstPage {
-                    let foodImage = donation.foodImage
-                    let aspectRatio = foodImage.size.width / foodImage.size.height
-                    var imageWidth = imageMaxSize
-                    var imageHeight = imageMaxSize
-                    
-                    if aspectRatio > 1 {
-                        imageHeight = imageMaxSize / aspectRatio
-                    } else {
-                        imageWidth = imageMaxSize * aspectRatio
+                    if let foodImage = loadImageSync(from: donation.foodImageUrl) {
+
+                        let aspectRatio = foodImage.size.width / foodImage.size.height
+
+                        var imageWidth = imageMaxSize
+                        var imageHeight = imageMaxSize
+
+                        if aspectRatio > 1 {
+                            imageHeight = imageMaxSize / aspectRatio
+                        } else {
+                            imageWidth = imageMaxSize * aspectRatio
+                        }
+
+                        let imageX = (pageWidth - imageWidth) / 2
+
+                        foodImage.draw(
+                            in: CGRect(
+                                x: imageX,
+                                y: yPosition,
+                                width: imageWidth,
+                                height: imageHeight
+                            )
+                        )
+
+                        yPosition += imageHeight + 20
                     }
-                    
-                    let imageX = (pageWidth - imageWidth) / 2
-                    foodImage.draw(in: CGRect(x: imageX, y: yPosition, width: imageWidth, height: imageHeight))
-                    yPosition += imageHeight + 20
+
                     isFirstPage = false
                 }
                 
@@ -905,6 +918,19 @@ class DonationDetailsViewController: UIViewController, UITableViewDelegate, UITa
 
 
 
+    private func loadImageSync(from urlString: String) -> UIImage? {
+        guard let url = URL(string: urlString) else {
+            return nil
+        }
+
+        do {
+            let data = try Data(contentsOf: url)
+            return UIImage(data: data)
+        } catch {
+            print("Failed to load image from URL:", error)
+            return nil
+        }
+    }
 
 
 

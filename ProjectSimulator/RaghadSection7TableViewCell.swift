@@ -10,7 +10,7 @@ import UIKit
 class RaghadSection7TableViewCell: UITableViewCell, UITextViewDelegate {
 
     
-    @IBOutlet weak var lblWeightError: UILabel!   // 🔴 error label
+    @IBOutlet weak var lblWeightError: UILabel!   //  error label
 
     var onWeightChanged: ((Double?) -> Void)?     // ⚖️ send value to
     
@@ -25,21 +25,9 @@ class RaghadSection7TableViewCell: UITableViewCell, UITextViewDelegate {
         override func awakeFromNib() {
             super.awakeFromNib()
 
-//            txtDescription.layer.cornerRadius = 10
-//                txtDescription.layer.borderWidth = 1
-//                txtDescription.layer.borderColor = UIColor.systemGray4.cgColor
-//                txtDescription.textContainerInset = UIEdgeInsets(top: 10, left: 8, bottom: 10, right: 8)
-//
-//                txtDescription.delegate = self
-//
-//                setPlaceholder()
-//                updateCounter(currentCount: 0)
-//                addDoneButton()
+
             
-            
-            
-            
-            // ✅ MATCH other input fields (Quantity / Weight / Expiration / Choose Donor)
+            //  MATCH other input fields (Quantity / Weight / Expiration / Choose Donor)
                 txtDescription.layer.borderWidth = 1
                 txtDescription.layer.borderColor = UIColor.systemGray4.cgColor
                 txtDescription.layer.cornerRadius = 8
@@ -85,17 +73,64 @@ class RaghadSection7TableViewCell: UITableViewCell, UITextViewDelegate {
     }
 
     
+//    func textView(_ textView: UITextView,
+//                  shouldChangeTextIn range: NSRange,
+//                  replacementText text: String) -> Bool {
+//
+//        // If placeholder is showing, treat current text as empty
+//        let currentText = (textView.textColor == .systemGray3) ? "" : (textView.text ?? "")
+//        let updatedText = (currentText as NSString).replacingCharacters(in: range, with: text)
+//
+//        updateCounter(currentCount: updatedText.count)
+//        return updatedText.count <= maxCharacters
+//    }
+    
+    
+    
     func textView(_ textView: UITextView,
                   shouldChangeTextIn range: NSRange,
                   replacementText text: String) -> Bool {
 
-        // If placeholder is showing, treat current text as empty
-        let currentText = (textView.textColor == .systemGray3) ? "" : (textView.text ?? "")
-        let updatedText = (currentText as NSString).replacingCharacters(in: range, with: text)
+        // Treat placeholder as empty
+        let existing = (textView.textColor == .systemGray3) ? "" : (textView.text ?? "")
 
-        updateCounter(currentCount: updatedText.count)
-        return updatedText.count <= maxCharacters
+        // Build the would-be text after the change
+        guard let stringRange = Range(range, in: existing) else { return false }
+        let updated = existing.replacingCharacters(in: stringRange, with: text)
+
+        // Enforce hard limit (90 characters)
+        if updated.count > maxCharacters {
+            // Optional: allow partial paste up to 90
+            if text.count > 1 { // paste case
+                let allowed = maxCharacters - existing.count + (existing[stringRange].count)
+                if allowed > 0 {
+                    let prefix = String(text.prefix(allowed))
+                    textView.text = existing.replacingCharacters(in: stringRange, with: prefix)
+                    updateCounter(currentCount: textView.text.count)
+                }
+            }
+            return false
+        }
+
+        updateCounter(currentCount: updated.count)
+        return true
     }
+
+    
+    
+    func textViewDidChange(_ textView: UITextView) {
+        // If placeholder is active, don't count it
+        if textView.textColor == .systemGray3 { return }
+
+        if textView.text.count > maxCharacters {
+            textView.text = String(textView.text.prefix(maxCharacters))
+        }
+        updateCounter(currentCount: textView.text.count)
+    }
+
+    
+    
+    
 
 
     

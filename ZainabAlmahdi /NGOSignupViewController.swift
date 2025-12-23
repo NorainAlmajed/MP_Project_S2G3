@@ -18,8 +18,7 @@ class NGOSignupViewController: UIViewController,
                               UIPickerViewDataSource,
                               UIImagePickerControllerDelegate,
                               UINavigationControllerDelegate {
-
-    // MARK: - Pickers
+    
     let causePicker = UIPickerView()
     let governoratePicker = UIPickerView()
 
@@ -39,7 +38,6 @@ class NGOSignupViewController: UIViewController,
         "Northern Governorate"
     ]
 
-    // MARK: - Outlets
     @IBOutlet weak var usernameTextField: UITextField!
     @IBOutlet weak var nameTextField: UITextField!
     @IBOutlet weak var phoneNumberTextField: UITextField!
@@ -51,7 +49,6 @@ class NGOSignupViewController: UIViewController,
     @IBOutlet weak var governorateTextField: UITextField!
     @IBOutlet weak var licenseImageView: UIImageView!
 
-    // MARK: - Lifecycle
     override func viewDidLoad() {
         super.viewDidLoad()
 
@@ -72,13 +69,11 @@ class NGOSignupViewController: UIViewController,
         addToolbar(to: causeTextField)
         addToolbar(to: governorateTextField)
     }
-
-    // MARK: - Navigation
+    
         @IBAction func goToLoginTapped(_ sender: UIButton) {
             dismiss(animated: true)
         }
 
-    // MARK: - Image Picker
     @IBAction func uploadLicenseTapped(_ sender: Any) {
         let picker = UIImagePickerController()
         picker.delegate = self
@@ -103,7 +98,6 @@ class NGOSignupViewController: UIViewController,
         dismiss(animated: true)
     }
 
-    // MARK: - Picker delegates
     func numberOfComponents(in pickerView: UIPickerView) -> Int { 1 }
 
     func pickerView(_ pickerView: UIPickerView, numberOfRowsInComponent component: Int) -> Int {
@@ -122,7 +116,6 @@ class NGOSignupViewController: UIViewController,
         }
     }
 
-    // MARK: - Toolbar
     func addToolbar(to textField: UITextField) {
         let toolbar = UIToolbar()
         toolbar.sizeToFit()
@@ -142,7 +135,6 @@ class NGOSignupViewController: UIViewController,
         view.endEditing(true)
     }
 
-    // MARK: - Register
     @IBAction func registerButtonTapped(_ sender: UIButton) {
         guard validateInputs() else { return }
         createNGOAccount()
@@ -226,7 +218,6 @@ class NGOSignupViewController: UIViewController,
         }
     }
 
-    // MARK: - Alert
     func showAlert(title: String, message: String) {
         let alert = UIAlertController(title: title, message: message, preferredStyle: .alert)
         alert.addAction(UIAlertAction(title: "OK", style: .default))

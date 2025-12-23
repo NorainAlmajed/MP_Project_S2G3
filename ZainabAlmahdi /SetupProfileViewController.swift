@@ -11,20 +11,22 @@ import FirebaseFirestore
 
 class SetupProfileViewController: UIViewController,
                                   UIImagePickerControllerDelegate,
-                                  UINavigationControllerDelegate {
+                                  UINavigationControllerDelegate, UITextViewDelegate {
 
     @IBOutlet weak var profileImageView: UIImageView!
     @IBOutlet weak var fullNameTextField: UITextField!
     @IBOutlet weak var bioTextView: UITextView!
     @IBOutlet weak var notificationsSwitch: UISwitch!
-
-    var userRole: String?   // "NGO" or "Donor"
+    @IBOutlet weak var bioCounterLabel: UILabel!
+    
+    var userRole: String?
 
     override func viewDidLoad() {
         super.viewDidLoad()
+        bioTextView.delegate = self
+        bioCounterLabel.text = "0 / 240"
     }
 
-    // MARK: - Notifications Toggle
     @IBAction func notificationSwitchChanged(_ sender: UISwitch) {
 
         if sender.isOn == false {
@@ -103,7 +105,7 @@ class SetupProfileViewController: UIViewController,
         db.collection("users").document(uid).updateData([
             "full_name": fullName,
             "bio": bioTextView.text ?? "",
-            "notifications_enabled": notificationsSwitch,
+            "notifications_enabled": notificationsEnabled,
             "profile_image_url": profileImageUrl,
             "profile_completed": true
         ]) { [weak self] error in
@@ -119,7 +121,6 @@ class SetupProfileViewController: UIViewController,
         }
     }
 
-    // MARK: - Routing
     func routeToDashboard() {
         guard let role = userRole else { return }
 
@@ -138,7 +139,6 @@ class SetupProfileViewController: UIViewController,
         }
     }
 
-    // MARK: - Alert
     func showAlert(title: String, message: String) {
         let alert = UIAlertController(
             title: title,
@@ -147,5 +147,27 @@ class SetupProfileViewController: UIViewController,
         )
         alert.addAction(UIAlertAction(title: "OK", style: .default))
         present(alert, animated: true)
+    }
+    
+    func textViewDidChange(_ textView: UITextView) {
+        let currentCount = textView.text.count
+        let maxCount = 240
+
+        if currentCount > maxCount {
+            textView.text = String(textView.text.prefix(maxCount))
+        }
+
+        bioCounterLabel.text = "\(textView.text.count) / 240"
+    }
+    
+    func textView(_ textView: UITextView,
+                  shouldChangeTextIn range: NSRange,
+                  replacementText text: String) -> Bool {
+
+        let currentText = textView.text ?? ""
+        guard let stringRange = Range(range, in: currentText) else { return false }
+
+        let updatedText = currentText.replacingCharacters(in: stringRange, with: text)
+        return updatedText.count <= 240
     }
 }

@@ -13,18 +13,22 @@ class LoginViewController: UIViewController {
 
     @IBOutlet weak var emailTextField: UITextField!
     @IBOutlet weak var passwordTextField: UITextField!
+    @IBOutlet weak var loginButton: UIButton!
 
     override func viewDidLoad() {
         super.viewDidLoad()
     }
-    
+
+    override func viewDidLayoutSubviews() {
+        super.viewDidLayoutSubviews()
+        styleActionButton(loginButton)
+    }
 
     @IBAction func signupButtonTapped(_ sender: UIButton) {
         performSegue(withIdentifier: "goToRoleSelection", sender: self)
     }
 
     @IBAction func forgotPasswordTapped(_ sender: UIButton) {
-
         guard let email = emailTextField.text, !email.isEmpty else {
             showAlert(
                 title: "Email Required",
@@ -70,9 +74,14 @@ class LoginViewController: UIViewController {
             self.routeUserByRole(uid: uid)
         }
     }
+    
+    enum UserRole: String {
+        case admin = "1"
+        case ngo = "2"
+        case donor = "3"
+    }
 
     func routeUserByRole(uid: String) {
-
         let db = Firestore.firestore()
 
         db.collection("users").document(uid).getDocument { [weak self] snapshot, error in
@@ -83,14 +92,30 @@ class LoginViewController: UIViewController {
                 return
             }
 
-            let role = snapshot?.data()?["role"] as? String ?? "donor"
+            guard
+                let roleString = snapshot?.data()?["role"] as? String,
+                let role = UserRole(rawValue: roleString)
+            else {
+                self.showAlert(title: "Error", message: "Invalid user role.")
+                return
+            }
 
-            if role == "ngo" {
+            switch role {
+            case .admin:
+                self.goToAdminHome()
+            case .ngo:
                 self.goToNGOHome()
-            } else {
+            case .donor:
                 self.goToDonorHome()
             }
         }
+    }
+    
+    func goToAdminHome() {
+        let vc = UIStoryboard(name: "Main", bundle: nil)
+            .instantiateViewController(withIdentifier: "AdminHomeViewController")
+        vc.modalPresentationStyle = .fullScreen
+        present(vc, animated: true)
     }
 
     func goToNGOHome() {
@@ -115,5 +140,10 @@ class LoginViewController: UIViewController {
         )
         alert.addAction(UIAlertAction(title: "OK", style: .default))
         present(alert, animated: true)
+    }
+
+    private func styleActionButton(_ button: UIButton) {
+        button.layer.cornerRadius = button.frame.height / 2
+        button.clipsToBounds = true
     }
 }

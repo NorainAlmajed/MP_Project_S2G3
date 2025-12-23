@@ -19,17 +19,14 @@ class DonorSignupViewController: UIViewController {
     @IBOutlet weak var passwordTextField: UITextField!
     @IBOutlet weak var confirmPasswordTextField: UITextField!
 
-    // MARK: - Lifecycle
     override func viewDidLoad() {
         super.viewDidLoad()
     }
 
-    // MARK: - Navigation
     @IBAction func goToLoginTapped(_ sender: UIButton) {
         dismiss(animated: true)
     }
 
-    // MARK: - Register
     @IBAction func registerButtonTapped(_ sender: UIButton) {
         guard validateInputs() else { return }
         createDonorAccount()

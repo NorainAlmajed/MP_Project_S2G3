@@ -29,6 +29,7 @@ class Donation {
     var recurrence: Int
 
     init(
+        firestoreID: String,
         donationID: Int,
         ngo: User,
         creationDate: Timestamp,
@@ -46,6 +47,7 @@ class Donation {
         rejectionReason: String? = nil,
         recurrence: Int = 0
     ) {
+        self.firestoreID = firestoreID
         self.donationID = donationID
         self.ngo = ngo
         self.creationDate = creationDate

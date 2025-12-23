@@ -88,7 +88,7 @@ class DonationDetailsViewController: UIViewController, UITableViewDelegate, UITa
             ▶ BASIC INFORMATION
             ------------------------------------
             Donation ID:        \(donation.donationID)
-            NGO Name:           \(donation.ngo.fullName)
+            NGO Name:           \(donation.ngo.organization_name)
             Donor Username:     \(donation.donor.username)
             Created On:         \(createdDate)
             Status:             \(statusText(for: donation.status))
@@ -243,51 +243,83 @@ class DonationDetailsViewController: UIViewController, UITableViewDelegate, UITa
                     )
                     alert.addAction(UIAlertAction(title: "Cancel", style: .cancel))
                     alert.addAction(UIAlertAction(title: "Yes", style: .default) { _ in
-                        guard let firestoreID = donation.firestoreID else { return }
+                        guard let donation = self.donation, let firestoreID = donation.firestoreID else {
+                            print("No donation or firestoreID")
+                            return
+                        }
+
                         let donationRef = Firestore.firestore().collection("Donation").document(firestoreID)
                         donationRef.updateData(["status": 5]) { error in
-                            if let error = error { print(error); return }
-
-                            let currentDate = Date()
-                            if currentUser.role == 1 { // Admin
-                                if donation.donor.enableNotification {
-                                    Firestore.firestore().collection("notifications").addDocument(data: [
-                                        "title": "Donation Accepted",
-                                        "description": "Donation #\(donation.donationID) has been accepted by the admin.",
-                                        "userID": donation.donor.userID,
-                                        "donationID": donation.donationID,
-                                        "date": currentDate
-                                    ])
-                                }
-                                if donation.ngo.enableNotification {
-                                    Firestore.firestore().collection("notifications").addDocument(data: [
-                                        "title": "Donation Accepted",
-                                        "description": "Donation #\(donation.donationID) has been accepted by the admin.",
-                                        "userID": donation.ngo.userID,
-                                        "donationID": donation.donationID,
-                                        "date": currentDate
-                                    ])
-                                }
-                            } else if currentUser.role == 3 { // NGO
-                                if donation.donor.enableNotification {
-                                    Firestore.firestore().collection("notifications").addDocument(data: [
-                                        "title": "Donation Accepted",
-                                        "description": "Donation #\(donation.donationID) has been accepted by \(currentUser.username).",
-                                        "userID": donation.donor.userID,
-                                        "donationID": donation.donationID,
-                                        "date": currentDate
-                                    ])
-                                }
+                            if let error = error {
+                                print("Error updating donation status: \(error.localizedDescription)")
+                                return
                             }
 
+                            // Update the local donation object
+                            donation.status = 5
+
+                            // =========================
+                            // NOTIFICATIONS LOGIC START
+                            // =========================
+                            let currentDate = Date()
+
+                            if let currentUser = self.currentUser {
+                                switch currentUser.role {
+                                case 1: // Admin: notify both donor and NGO
+                                    // Donor notification
+                                    if donation.donor.enableNotification {
+                                        Firestore.firestore().collection("Notification").addDocument(data: [
+                                            "title": "Donation Canceled",
+                                            "description": "Donation #\(donation.donationID) has been canceled by the admin.",
+                                            "userID": donation.donor.userID,
+                                            "date": currentDate
+                                        ])
+                                    }
+                                    // NGO notification
+                                    if donation.ngo.enableNotification {
+                                        Firestore.firestore().collection("Notification").addDocument(data: [
+                                            "title": "Donation Canceled",
+                                            "description": "Donation #\(donation.donationID) has been canceled by the admin.",
+                                            "userID": donation.ngo.userID,
+                                            "date": currentDate
+                                        ])
+                                    }
+
+                                case 2: // Donor: notify only NGO
+                                    if donation.ngo.enableNotification {
+                                        Firestore.firestore().collection("Notification").addDocument(data: [
+                                            "title": "Donation Canceled",
+                                            "description": "Donation #\(donation.donationID) has been canceled by \(donation.donor.username).",
+                                            "userID": donation.ngo.userID,
+                                            "date": currentDate
+                                        ])
+                                    }
+
+                                default:
+                                    break
+                                }
+                            }
+                            // =========================
+                            // NOTIFICATIONS LOGIC END
+                            // =========================
+
+                            // Reload table to reflect the new status
                             self.donationTableview.reloadData()
-                            let successAlert = UIAlertController(title: "Success", message: "The donation has been cancelled successfully", preferredStyle: .alert)
+
+                            // Show success message
+                            let successAlert = UIAlertController(
+                                title: "Success",
+                                message: "The donation has been cancelled successfully",
+                                preferredStyle: .alert
+                            )
                             successAlert.addAction(UIAlertAction(title: "Dismiss", style: .default))
                             self.present(successAlert, animated: true)
                         }
                     })
                     self.present(alert, animated: true)
                 }
+
+
 
                 // Accept button
                 cell.onAcceptTapped = { [weak self] in
@@ -441,24 +473,42 @@ class DonationDetailsViewController: UIViewController, UITableViewDelegate, UITa
             }
         }
 
-        private func buildDonationPDF(for donation: Donation) -> Data {
-            let pdfMetaData = [
-                kCGPDFContextCreator: "ProjectSimulator",
-                kCGPDFContextAuthor: currentUser?.username ?? "Unknown",
-                kCGPDFContextTitle: "Donation Report"
+    private func buildDonationPDF(for donation: Donation) -> Data {
+        let pdfMetaData = [
+            kCGPDFContextCreator: "ProjectSimulator",
+            kCGPDFContextAuthor: currentUser?.username ?? "Unknown",
+            kCGPDFContextTitle: "Donation Report"
+        ]
+        let format = UIGraphicsPDFRendererFormat()
+        format.documentInfo = pdfMetaData as [String: Any]
+        
+        let pageWidth: CGFloat = 595.2
+        let pageHeight: CGFloat = 841.8
+        let margin: CGFloat = 40
+        
+        let renderer = UIGraphicsPDFRenderer(bounds: CGRect(x: 0, y: 0, width: pageWidth, height: pageHeight), format: format)
+        
+        let data = renderer.pdfData { context in
+            context.beginPage()
+            
+            let reportText = buildDonationReport(for: donation)
+            
+            let paragraphStyle = NSMutableParagraphStyle()
+            paragraphStyle.lineBreakMode = .byWordWrapping
+            paragraphStyle.alignment = .left
+            
+            let attributes: [NSAttributedString.Key: Any] = [
+                .font: UIFont.systemFont(ofSize: 12),
+                .paragraphStyle: paragraphStyle
             ]
-            let format = UIGraphicsPDFRendererFormat()
-            format.documentInfo = pdfMetaData as [String: Any]
-            let pageWidth: CGFloat = 595.2
-            let pageHeight: CGFloat = 841.8
-            let margin: CGFloat = 40
-
-            let renderer = UIGraphicsPDFRenderer(bounds: CGRect(x: 0, y: 0, width: pageWidth, height: pageHeight), format: format)
-            let data = renderer.pdfData { context in
-                // PDF content generation (your previous logic)
-            }
-            return data
+            
+            let textRect = CGRect(x: margin, y: margin, width: pageWidth - 2 * margin, height: pageHeight - 2 * margin)
+            reportText.draw(in: textRect, withAttributes: attributes)
         }
+        
+        return data
+    }
+
     }
 
 

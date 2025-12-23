@@ -319,12 +319,15 @@ class DonationViewController: UIViewController {
                 return
             }
 
-            guard let documents = snapshot?.documents else { return }
+            guard let documents = snapshot?.documents else {
+                print("No donations found")
+                return
+            }
 
             self.allDonations = documents.compactMap { doc -> Donation? in
                 let data = doc.data()
 
-                // Safely unwrap all required fields
+                // Safely unwrap required fields
                 guard
                     let ngoRef = data["ngo"] as? DocumentReference,
                     let donorRef = data["donor"] as? DocumentReference,
@@ -341,7 +344,7 @@ class DonationViewController: UIViewController {
                     return nil
                 }
 
-                // Try to get users
+                // Fetch users from cached list
                 guard let ngo = self.getUser(by: ngoRef.documentID),
                       let donor = self.getUser(by: donorRef.documentID)
                 else {
@@ -349,16 +352,18 @@ class DonationViewController: UIViewController {
                     return nil
                 }
 
-                let address = Address(building: 0, road: 0, block: 0, flat: nil, area: "", governorate: "")
-                let donationID = doc.documentID // or data["donationID"] as? String
+                // Firestore auto-generated ID
+                let firestoreID = data["firestoreID"] as? String ?? doc.documentID
 
-                guard let donationID = data["donationID"] as? Int else {
-                    print("Skipping donation \(doc.documentID) because donationID is missing")
-                    return nil
-                }
+                // User-friendly numeric donationID
+                let donationID = data["donationID"] as? Int ?? 0
+
+                // Temporary placeholder address if your data doesn't have it
+                let address = Address(building: 0, road: 0, block: 0, flat: nil, area: "", governorate: "")
 
                 return Donation(
-                    donationID: donationID,  // use the numeric ID from Firestore
+                    firestoreID: firestoreID,       // <--- this is the one for all Firestore ops
+                    donationID: donationID,         // <--- only for display
                     ngo: ngo,
                     creationDate: creationTimestamp,
                     donor: donor,
@@ -375,7 +380,6 @@ class DonationViewController: UIViewController {
                     rejectionReason: data["rejectionReason"] as? String,
                     recurrence: data["recurrence"] as? Int ?? 0
                 )
-
             }
 
             self.displayedDonations = self.allDonations.sorted { $0.creationDate.dateValue() > $1.creationDate.dateValue() }
@@ -383,6 +387,7 @@ class DonationViewController: UIViewController {
             self.updateNoDonationsLabel()
         }
     }
+
 
 
 

@@ -26,6 +26,9 @@ class RaghadSection2TableViewCell: UITableViewCell {
     
     
     
+    
+    
+    
     override func awakeFromNib() {
         super.awakeFromNib()
         setupChooseDonorButton()

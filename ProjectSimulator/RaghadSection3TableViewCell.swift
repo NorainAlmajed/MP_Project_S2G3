@@ -245,8 +245,36 @@ class RaghadSection3TableViewCell: UITableViewCell, UITableViewDelegate, UITable
     func configure(selected: String?, isOpen: Bool, showError: Bool) {
 
         // 🔴 Error UI
-        lblFoodCategoryError.text = "Please choose a food category"
-        lblFoodCategoryError.textColor = .systemRed
+//        lblFoodCategoryError.text = "Please choose a food category"
+//        lblFoodCategoryError.textColor = .systemRed
+        
+        // 🔴 Error UI (iPad only indent)
+
+        let text = "Please choose a food category"
+
+        if UIDevice.current.userInterfaceIdiom == .pad {
+            let p = NSMutableParagraphStyle()
+            p.firstLineHeadIndent = 45   // keep the same number you liked on iPad
+
+            lblFoodCategoryError.attributedText = NSAttributedString(
+                string: text,
+                attributes: [
+                    .foregroundColor: UIColor.systemRed,
+                    .paragraphStyle: p
+                ]
+            )
+        } else {
+            // iPhone = back to normal (your old behavior)
+            lblFoodCategoryError.attributedText = nil
+            lblFoodCategoryError.text = text
+            lblFoodCategoryError.textColor = .systemRed
+        }
+
+        //lblFoodCategoryError.attributedText = attributed
+
+        
+        
+        
 
         lblFoodCategoryError.isHidden = !showError
         foodCategoryErrorHeight.constant = showError ? 18 : 0   // 🔴📏 IMPORTANT
@@ -274,14 +302,7 @@ class RaghadSection3TableViewCell: UITableViewCell, UITableViewDelegate, UITable
         contentView.layoutIfNeeded() // 🧱✅ keeps layout stable
     }
 
-    
-    
-    
-    
-    
-    
-    
-    
+   
     
 }
     

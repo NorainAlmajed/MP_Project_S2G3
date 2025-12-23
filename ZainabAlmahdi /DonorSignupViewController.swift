@@ -11,6 +11,7 @@ import FirebaseFirestore
 
 class DonorSignupViewController: UIViewController {
 
+    // MARK: - Outlets
     @IBOutlet weak var usernameTextField: UITextField!
     @IBOutlet weak var nameTextField: UITextField!
     @IBOutlet weak var phoneNumberTextField: UITextField!
@@ -18,46 +19,67 @@ class DonorSignupViewController: UIViewController {
     @IBOutlet weak var passwordTextField: UITextField!
     @IBOutlet weak var confirmPasswordTextField: UITextField!
 
+    // MARK: - Lifecycle
     override func viewDidLoad() {
         super.viewDidLoad()
-        
-        print("Firebase test:", Auth.auth())
     }
 
-    @IBAction func loginButtonTapped(_ sender: UIButton) {
-        performSegue(withIdentifier: "goToLogin", sender: self)
+    // MARK: - Navigation
+    @IBAction func goToLoginTapped(_ sender: UIButton) {
+        dismiss(animated: true)
     }
 
+    // MARK: - Register
     @IBAction func registerButtonTapped(_ sender: UIButton) {
+        guard validateInputs() else { return }
+        createDonorAccount()
+    }
 
-        guard let email = emailTextField.text, !email.isEmpty else {
+    // MARK: - Validation
+    func validateInputs() -> Bool {
+
+        let email = emailTextField.text?
+            .trimmingCharacters(in: .whitespacesAndNewlines) ?? ""
+
+        let password = passwordTextField.text?
+            .trimmingCharacters(in: .whitespacesAndNewlines) ?? ""
+
+        let confirm = confirmPasswordTextField.text?
+            .trimmingCharacters(in: .whitespacesAndNewlines) ?? ""
+
+        guard !email.isEmpty else {
             showAlert(title: "Missing Email", message: "Please enter an email address.")
-            return
+            return false
         }
 
-        guard let password = passwordTextField.text, !password.isEmpty else {
+        guard !password.isEmpty else {
             showAlert(title: "Missing Password", message: "Please enter a password.")
-            return
+            return false
         }
 
-        guard let confirmPassword = confirmPasswordTextField.text,
-              !confirmPassword.isEmpty else {
-            showAlert(title: "Missing Confirmation", message: "Please confirm your password.")
-            return
-        }
-
-        guard password == confirmPassword else {
+        guard password == confirm else {
             showAlert(title: "Password Mismatch", message: "Passwords do not match.")
-            return
+            return false
         }
 
         guard password.count >= 6 else {
             showAlert(title: "Weak Password", message: "Password must be at least 6 characters long.")
-            return
+            return false
         }
 
-        Auth.auth().createUser(withEmail: email, password: password) { [weak self] authResult, error in
+        return true
+    }
 
+    // MARK: - Firebase Auth
+    func createDonorAccount() {
+
+        let email = emailTextField.text!
+            .trimmingCharacters(in: .whitespacesAndNewlines)
+
+        let password = passwordTextField.text!
+            .trimmingCharacters(in: .whitespacesAndNewlines)
+
+        Auth.auth().createUser(withEmail: email, password: password) { [weak self] result, error in
             guard let self = self else { return }
 
             if let error = error {
@@ -65,33 +87,38 @@ class DonorSignupViewController: UIViewController {
                 return
             }
 
-            guard let uid = authResult?.user.uid else { return }
-
-            // Create Firestore user document
-            let db = Firestore.firestore()
-            db.collection("users").document(uid).setData([
-                "role": "Donor",
-                "profileCompleted": false,
-                "createdAt": Timestamp()
-            ]) { error in
-
-                if let error = error {
-                    self.showAlert(title: "Error", message: error.localizedDescription)
-                    return
-                }
-
-                // Go to setup profile
-                let storyboard = UIStoryboard(name: "Authentication", bundle: nil)
-                let setupVC = storyboard.instantiateViewController(
-                    withIdentifier: "SetupProfileViewController"
-                ) as! SetupProfileViewController
-
-                setupVC.userRole = "Donor"
-                self.navigationController?.pushViewController(setupVC, animated: true)
-            }
+            guard let uid = result?.user.uid else { return }
+            self.saveDonorToFirestore(uid: uid, email: email)
         }
     }
 
+    // MARK: - Firestore
+    func saveDonorToFirestore(uid: String, email: String) {
+
+        let db = Firestore.firestore()
+
+        db.collection("users").document(uid).setData([
+            "role": "donor",
+            "username": usernameTextField.text?.trimmingCharacters(in: .whitespacesAndNewlines) ?? "",
+            "name": nameTextField.text?.trimmingCharacters(in: .whitespacesAndNewlines) ?? "",
+            "phoneNumber": phoneNumberTextField.text?.trimmingCharacters(in: .whitespacesAndNewlines) ?? "",
+            "email": email,
+            "createdAt": Timestamp()
+        ]) { error in
+
+            if let error = error {
+                self.showAlert(title: "Error", message: error.localizedDescription)
+                return
+            }
+
+            let vc = UIStoryboard(name: "Main", bundle: nil)
+                .instantiateViewController(withIdentifier: "DonorHomeViewController")
+            vc.modalPresentationStyle = .fullScreen
+            self.present(vc, animated: true)
+        }
+    }
+
+    // MARK: - Alert
     func showAlert(title: String, message: String) {
         let alert = UIAlertController(
             title: title,

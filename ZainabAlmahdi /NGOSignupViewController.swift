@@ -9,12 +9,17 @@ import UIKit
 import FirebaseAuth
 import FirebaseFirestore
 
+import UIKit
+import FirebaseAuth
+import FirebaseFirestore
+
 class NGOSignupViewController: UIViewController,
                               UIPickerViewDelegate,
                               UIPickerViewDataSource,
                               UIImagePickerControllerDelegate,
                               UINavigationControllerDelegate {
-    
+
+    // MARK: - Pickers
     let causePicker = UIPickerView()
     let governoratePicker = UIPickerView()
 
@@ -34,6 +39,7 @@ class NGOSignupViewController: UIViewController,
         "Northern Governorate"
     ]
 
+    // MARK: - Outlets
     @IBOutlet weak var usernameTextField: UITextField!
     @IBOutlet weak var nameTextField: UITextField!
     @IBOutlet weak var phoneNumberTextField: UITextField!
@@ -45,6 +51,7 @@ class NGOSignupViewController: UIViewController,
     @IBOutlet weak var governorateTextField: UITextField!
     @IBOutlet weak var licenseImageView: UIImageView!
 
+    // MARK: - Lifecycle
     override func viewDidLoad() {
         super.viewDidLoad()
 
@@ -66,11 +73,13 @@ class NGOSignupViewController: UIViewController,
         addToolbar(to: governorateTextField)
     }
 
-    @IBAction func uploadLicenseTapped(_ sender: Any) {
-        showImagePicker()
-    }
+    // MARK: - Navigation
+        @IBAction func goToLoginTapped(_ sender: UIButton) {
+            dismiss(animated: true)
+        }
 
-    func showImagePicker() {
+    // MARK: - Image Picker
+    @IBAction func uploadLicenseTapped(_ sender: Any) {
         let picker = UIImagePickerController()
         picker.delegate = self
         picker.allowsEditing = true
@@ -94,6 +103,7 @@ class NGOSignupViewController: UIViewController,
         dismiss(animated: true)
     }
 
+    // MARK: - Picker delegates
     func numberOfComponents(in pickerView: UIPickerView) -> Int { 1 }
 
     func pickerView(_ pickerView: UIPickerView, numberOfRowsInComponent component: Int) -> Int {
@@ -112,6 +122,7 @@ class NGOSignupViewController: UIViewController,
         }
     }
 
+    // MARK: - Toolbar
     func addToolbar(to textField: UITextField) {
         let toolbar = UIToolbar()
         toolbar.sizeToFit()
@@ -131,40 +142,50 @@ class NGOSignupViewController: UIViewController,
         view.endEditing(true)
     }
 
+    // MARK: - Register
     @IBAction func registerButtonTapped(_ sender: UIButton) {
+        guard validateInputs() else { return }
+        createNGOAccount()
+    }
+
+
+    func validateInputs() -> Bool {
 
         guard let email = emailTextField.text, !email.isEmpty else {
-            showAlert(title: "Missing Email", message: "Please enter an email address.")
-            return
+            showAlert(title: "Missing Email", message: "Please enter an email.")
+            return false
         }
 
         guard let password = passwordTextField.text, !password.isEmpty else {
             showAlert(title: "Missing Password", message: "Please enter a password.")
-            return
+            return false
         }
 
-        guard let confirmPassword = confirmPasswordTextField.text, !confirmPassword.isEmpty else {
-            showAlert(title: "Missing Confirmation", message: "Please confirm your password.")
-            return
-        }
-
-        guard password == confirmPassword else {
+        guard let confirm = confirmPasswordTextField.text,
+              password == confirm else {
             showAlert(title: "Password Mismatch", message: "Passwords do not match.")
-            return
+            return false
         }
 
         guard password.count >= 6 else {
-            showAlert(title: "Weak Password", message: "Password must be at least 6 characters long.")
-            return
+            showAlert(title: "Weak Password", message: "Password must be at least 6 characters.")
+            return false
         }
 
         guard licenseImageView.image != nil else {
-            showAlert(title: "Missing License", message: "Please upload your NGO license.")
-            return
+            showAlert(title: "Missing License", message: "Please upload license.")
+            return false
         }
 
-        Auth.auth().createUser(withEmail: email, password: password) { [weak self] authResult, error in
+        return true
+    }
 
+    func createNGOAccount() {
+
+        let email = emailTextField.text!
+        let password = passwordTextField.text!
+
+        Auth.auth().createUser(withEmail: email, password: password) { [weak self] result, error in
             guard let self = self else { return }
 
             if let error = error {
@@ -172,33 +193,40 @@ class NGOSignupViewController: UIViewController,
                 return
             }
 
-            guard let uid = authResult?.user.uid else { return }
-
-            // Create firestore user document
-            let db = Firestore.firestore()
-            db.collection("users").document(uid).setData([
-                "role": "NGO",
-                "profileCompleted": false,
-                "createdAt": Timestamp()
-            ]) { error in
-
-                if let error = error {
-                    self.showAlert(title: "Error", message: error.localizedDescription)
-                    return
-                }
-
-                // ➡️ GO TO SETUP PROFILE
-                let storyboard = UIStoryboard(name: "Authentication", bundle: nil)
-                let setupVC = storyboard.instantiateViewController(
-                    withIdentifier: "SetupProfileViewController"
-                ) as! SetupProfileViewController
-
-                setupVC.userRole = "NGO"
-                self.navigationController?.pushViewController(setupVC, animated: true)
-            }
+            guard let uid = result?.user.uid else { return }
+            self.saveNGOToFirestore(uid: uid)
         }
     }
 
+    func saveNGOToFirestore(uid: String) {
+
+        let db = Firestore.firestore()
+
+        db.collection("users").document(uid).setData([
+            "role": "ngo",
+            "email": emailTextField.text ?? "",
+            "username": usernameTextField.text ?? "",
+            "organizationName": nameTextField.text ?? "",
+            "phoneNumber": phoneNumberTextField.text ?? "",
+            "address": addressTextField.text ?? "",
+            "cause": causeTextField.text ?? "",
+            "governorate": governorateTextField.text ?? "",
+            "createdAt": Timestamp()
+        ]) { error in
+
+            if let error = error {
+                self.showAlert(title: "Error", message: error.localizedDescription)
+                return
+            }
+
+            let vc = UIStoryboard(name: "Main", bundle: nil)
+                .instantiateViewController(withIdentifier: "NGOHomeViewController")
+            vc.modalPresentationStyle = .fullScreen
+            self.present(vc, animated: true)
+        }
+    }
+
+    // MARK: - Alert
     func showAlert(title: String, message: String) {
         let alert = UIAlertController(title: title, message: message, preferredStyle: .alert)
         alert.addAction(UIAlertAction(title: "OK", style: .default))

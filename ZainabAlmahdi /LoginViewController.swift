@@ -17,6 +17,7 @@ class LoginViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
     }
+    
 
     @IBAction func signupButtonTapped(_ sender: UIButton) {
         performSegue(withIdentifier: "goToRoleSelection", sender: self)
@@ -25,8 +26,10 @@ class LoginViewController: UIViewController {
     @IBAction func forgotPasswordTapped(_ sender: UIButton) {
 
         guard let email = emailTextField.text, !email.isEmpty else {
-            showAlert(title: "Email Required",
-                      message: "Please enter your email to reset your password.")
+            showAlert(
+                title: "Email Required",
+                message: "Please enter your email to reset your password."
+            )
             return
         }
 
@@ -36,15 +39,17 @@ class LoginViewController: UIViewController {
                 return
             }
 
-            self?.showAlert(title: "Email Sent",
-                            message: "A password reset link has been sent to your email.")
+            self?.showAlert(
+                title: "Email Sent",
+                message: "A password reset link has been sent to your email."
+            )
         }
     }
 
     @IBAction func loginButtonTapped(_ sender: UIButton) {
 
         guard let email = emailTextField.text, !email.isEmpty else {
-            showAlert(title: "Missing Email", message: "Please enter your email address.")
+            showAlert(title: "Missing Email", message: "Please enter your email.")
             return
         }
 
@@ -53,8 +58,7 @@ class LoginViewController: UIViewController {
             return
         }
 
-        Auth.auth().signIn(withEmail: email, password: password) { [weak self] authResult, error in
-
+        Auth.auth().signIn(withEmail: email, password: password) { [weak self] result, error in
             guard let self = self else { return }
 
             if let error = error {
@@ -62,19 +66,16 @@ class LoginViewController: UIViewController {
                 return
             }
 
-            guard let uid = authResult?.user.uid else { return }
-
-            self.handleFirestoreRouting(uid: uid)
+            let uid = result!.user.uid
+            self.routeUserByRole(uid: uid)
         }
     }
 
-    // 🔥 FIRESTORE ROUTING LOGIC
-    func handleFirestoreRouting(uid: String) {
+    func routeUserByRole(uid: String) {
 
         let db = Firestore.firestore()
 
         db.collection("users").document(uid).getDocument { [weak self] snapshot, error in
-
             guard let self = self else { return }
 
             if let error = error {
@@ -82,59 +83,37 @@ class LoginViewController: UIViewController {
                 return
             }
 
-            guard let data = snapshot?.data() else {
-                self.showAlert(title: "Error", message: "User data not found.")
-                return
-            }
+            let role = snapshot?.data()?["role"] as? String ?? "donor"
 
-            let role = data["role"] as? String ?? ""
-            let profileCompleted = data["profileCompleted"] as? Bool ?? false
-
-            if profileCompleted == false {
-                self.goToSetupProfile(role: role)
+            if role == "ngo" {
+                self.goToNGOHome()
             } else {
-                self.routeToDashboard(role: role)
+                self.goToDonorHome()
             }
         }
     }
 
-    // ➡️ Setup Profile
-    func goToSetupProfile(role: String) {
-        let storyboard = UIStoryboard(name: "Authentication", bundle: nil)
-        let setupVC = storyboard.instantiateViewController(
-            withIdentifier: "SetupProfileViewController"
-        ) as! SetupProfileViewController
-
-        setupVC.userRole = role
-        navigationController?.pushViewController(setupVC, animated: true)
+    func goToNGOHome() {
+        let vc = UIStoryboard(name: "Main", bundle: nil)
+            .instantiateViewController(withIdentifier: "NGOHomeViewController")
+        vc.modalPresentationStyle = .fullScreen
+        present(vc, animated: true)
     }
 
-    // ➡️ Dashboard (handled by teammate)
-    func routeToDashboard(role: String) {
-        let storyboard = UIStoryboard(name: "Main", bundle: nil)
-
-        let identifier: String
-        if role == "NGO" {
-            identifier = "NGOHomeViewController"
-        } else {
-            identifier = "DonorHomeViewController"
-        }
-
-        let homeVC = storyboard.instantiateViewController(withIdentifier: identifier)
-
-        if let sceneDelegate = UIApplication.shared.connectedScenes
-            .first?.delegate as? SceneDelegate {
-            sceneDelegate.window?.rootViewController = homeVC
-            sceneDelegate.window?.makeKeyAndVisible()
-        }
+    func goToDonorHome() {
+        let vc = UIStoryboard(name: "Main", bundle: nil)
+            .instantiateViewController(withIdentifier: "DonorHomeViewController")
+        vc.modalPresentationStyle = .fullScreen
+        present(vc, animated: true)
     }
 
     func showAlert(title: String, message: String) {
-        let alert = UIAlertController(title: title,
-                                      message: message,
-                                      preferredStyle: .alert)
+        let alert = UIAlertController(
+            title: title,
+            message: message,
+            preferredStyle: .alert
+        )
         alert.addAction(UIAlertAction(title: "OK", style: .default))
         present(alert, animated: true)
     }
 }
-

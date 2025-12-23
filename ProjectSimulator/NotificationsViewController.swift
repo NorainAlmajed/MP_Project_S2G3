@@ -14,6 +14,8 @@ class NotificationsViewController: UIViewController {
     // Outlet connected to the collection view in the storyboard
     @IBOutlet weak var notificationsCollectionView: UICollectionView!
     
+    
+
         // MARK: - Properties
         let db = Firestore.firestore()
         var currentUser: User?
@@ -35,7 +37,6 @@ class NotificationsViewController: UIViewController {
             super.viewDidLoad()
 
             title = "Notifications"
-
             notificationsCollectionView.dataSource = self
             notificationsCollectionView.delegate = self
 
@@ -80,7 +81,6 @@ class NotificationsViewController: UIViewController {
         private func setupNoNotificationsLabel() {
             view.addSubview(noNotificationsLabel)
             noNotificationsLabel.translatesAutoresizingMaskIntoConstraints = false
-
             NSLayoutConstraint.activate([
                 noNotificationsLabel.centerXAnchor.constraint(equalTo: view.centerXAnchor),
                 noNotificationsLabel.centerYAnchor.constraint(equalTo: view.centerYAnchor)
@@ -89,7 +89,7 @@ class NotificationsViewController: UIViewController {
 
         // MARK: - Firebase
         func fetchCurrentUser(completion: @escaping (Bool) -> Void) {
-            let tempUserID = "dlqHfZoVwh50p3Aexu1A" // TEMP user (same as Donation VC)
+            let tempUserID = "dlqHfZoVwh50p3Aexu1A" // Replace with a valid user ID
 
             db.collection("users").document(tempUserID).getDocument { [weak self] snapshot, error in
                 if let error = error {
@@ -101,15 +101,19 @@ class NotificationsViewController: UIViewController {
                 guard let data = snapshot?.data(),
                       let username = data["username"] as? String,
                       let role = data["role"] as? Int else {
+                    print("❌ User data missing or invalid")
                     completion(false)
                     return
                 }
 
                 self?.currentUser = User(
                     userID: tempUserID,
+                    fullName: data["fullName"] as? String,
                     username: username,
                     role: role,
-                    profile_image_url: data["profile_img"] as? String
+                    enableNotification: data["enableNotification"] as? Bool ?? true,
+                    profile_image_url: data["profile_image_url"] as? String,
+                    organization_name: data["organization_name"] as? String
                 )
 
                 completion(true)
@@ -122,7 +126,7 @@ class NotificationsViewController: UIViewController {
                 return
             }
 
-            db.collection("notifications")
+            db.collection("Notification")
                 .order(by: "date", descending: true)
                 .getDocuments { [weak self] snapshot, error in
                     guard let self = self else { return }
@@ -139,18 +143,23 @@ class NotificationsViewController: UIViewController {
                         return
                     }
 
+                    // Map all notifications
                     self.sortedNotifications = documents.compactMap { doc -> Notification? in
                         let data = doc.data()
 
                         guard
-                            let userID = data["userID"] as? String,
-                            userID == currentUser.userID,
                             let title = data["title"] as? String,
                             let description = data["description"] as? String,
                             let timestamp = data["date"] as? Timestamp
                         else {
+                            print("❌ Skipped notification: \(data)")
                             return nil
                         }
+
+                        let userID = data["userID"] as? String ?? ""
+
+                        // Optional: filter by current user
+                        // if userID != currentUser.userID { return nil }
 
                         return Notification(
                             title: title,
@@ -224,7 +233,7 @@ class NotificationsViewController: UIViewController {
         ) -> UICollectionViewCell {
 
             let cell = collectionView.dequeueReusableCell(
-                withReuseIdentifier: "NotificationCollectionViewCell",
+                withReuseIdentifier: "NotificationsCollectionViewCell",
                 for: indexPath
             ) as! NotificationsCollectionViewCell
 
@@ -242,7 +251,6 @@ class NotificationsViewController: UIViewController {
             layout collectionViewLayout: UICollectionViewLayout,
             sizeForItemAt indexPath: IndexPath
         ) -> CGSize {
-
             let width = collectionView.bounds.width - 32
             return CGSize(width: width, height: 90)
         }

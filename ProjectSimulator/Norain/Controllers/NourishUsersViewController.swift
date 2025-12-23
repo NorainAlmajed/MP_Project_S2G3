@@ -22,6 +22,7 @@ class NourishUsersViewController: UIViewController,UITableViewDelegate,UITableVi
         super.viewDidLoad()
         
         self.displayedUsers = self.users
+        setButtonsHidden(false)
         self.usersTableView.reloadData()
         
         usersTableView.delegate = self
@@ -29,31 +30,31 @@ class NourishUsersViewController: UIViewController,UITableViewDelegate,UITableVi
         
     }
     
+    
+    
     @IBAction func SegDidChange(_ sender: UISegmentedControl) {
         switch sender.selectedSegmentIndex {
         case 1:
             // NGO Segment selected
             displayedUsers = users.filter({ $0 is NGO })
-            setButtonsHidden(false) // Show buttons
+            setButtonsHidden(true) // Show buttons
             
         case 2:
             // Donor Segment selected
             displayedUsers = users.filter({ $0 is Donor })
-            setButtonsHidden(true) // Hide buttons
+            setButtonsHidden(false) // Hide buttons
             
         case 0:
             // All
             displayedUsers = users
-            setButtonsHidden(true) // Hide buttons
+            setButtonsHidden(false) // Hide buttons
             
         case UISegmentedControl.noSegment:
-            // NO segment is chosen (-1)
-            displayedUsers = [] // Or show all, depending on your needs
-            setButtonsHidden(true) // Hide buttons
+                    setButtonsHidden(false) // Hide buttons
             
         default:
             // Handles any other unexpected index
-            setButtonsHidden(true)
+            setButtonsHidden(false)
         }
         
         usersTableView.reloadData()
@@ -61,17 +62,32 @@ class NourishUsersViewController: UIViewController,UITableViewDelegate,UITableVi
     
     
     func setButtonsHidden(_ hidden: Bool) {
-        btnPending.isHidden = hidden
-        btnApproved.isHidden = hidden
-        btnRejected.isHidden = hidden
+        btnPending.isHidden = !hidden
+        btnApproved.isHidden = !hidden
+        btnRejected.isHidden = !hidden
         
         // Also toggle interaction to be safe
-        btnPending.isEnabled = !hidden
-        btnApproved.isEnabled = !hidden
-        btnRejected.isEnabled = !hidden
+        btnPending.isEnabled = hidden
+        btnApproved.isEnabled = hidden
+        btnRejected.isEnabled = hidden
     }
-
     
+    
+    @IBAction func btnPendingFilter(_ sender: Any) {
+        displayedUsers = users.compactMap { $0 as? NGO }.filter { $0.IsPending }
+        usersTableView.reloadData()
+    }
+    
+    @IBAction func btnApprovedFilter(_ sender: Any) {
+        displayedUsers = users.compactMap { $0 as? NGO }.filter { $0.IsApproved }
+        usersTableView.reloadData()
+    }
+    
+    
+    @IBAction func btnRejectedFilter(_ sender: Any) {
+        displayedUsers = users.compactMap { $0 as? NGO }.filter { $0.IsRejected }
+        usersTableView.reloadData()
+    }
     
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {

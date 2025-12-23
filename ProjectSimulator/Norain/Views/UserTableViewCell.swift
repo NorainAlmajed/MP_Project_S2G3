@@ -17,6 +17,8 @@ class UserTableViewCell: UITableViewCell {
     
     @IBOutlet weak var statusLbl: UILabel!
     
+    
+    
     func configure(appUser:AppUser){
         nameLbl.text = appUser.name
         emailLbl.text = appUser.email

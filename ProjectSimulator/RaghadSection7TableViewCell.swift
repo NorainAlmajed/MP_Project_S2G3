@@ -14,6 +14,10 @@ class RaghadSection7TableViewCell: UITableViewCell, UITextViewDelegate {
 
     var onWeightChanged: ((Double?) -> Void)?     // ⚖️ send value to
     
+    // 🟣 BEGIN EDIT CALLBACK
+    var onBeginEditing: (() -> Void)?
+
+    
     @IBOutlet weak var lblCounter: UILabel!
     private let maxCharacters = 90
     
@@ -63,6 +67,8 @@ class RaghadSection7TableViewCell: UITableViewCell, UITextViewDelegate {
             textView.textColor = .label
             updateCounter(currentCount: 0)
         }
+        onBeginEditing?()
+
     }
 
 

@@ -1,36 +1,39 @@
-import UIKit
+import Foundation
+import FirebaseFirestore
 
 struct NGO {
-    let name: String
-    let type: String
-    let logoName: String
-}
+    let id: String
+    let organizationName: String
+    let cause: String
+    let mission: String
+    let email: String
+    let number: String
+    let profileImageURL: String
+    let role: Int
 
-// Safe test data
-let recommendedNGOs: [NGO] = [
-    NGO(
-        name: "Abrar Family Welfare Charity Association",
-        type: "Charity",
-        logoName: "AlabrarCharity"
-    ),
-    NGO(
-        name: "Karrana Charity Society",
-        type: "Charity",
-        logoName: "KarranaCharity"
-    ),
-    NGO(
-        name: "Aali Social Charity Society",
-        type: "Charity",
-        logoName: "AaliCharity"
-    ),
-    NGO(
-        name: "Manama Charity Society",
-        type: "Charity",
-        logoName: "manamaCharity"
-    ),
-    NGO(
-        name: "Tree Of Life Social Charity Society",
-        type: "Orphans",
-        logoName: "treeOfLife"
-    )
-]
+    init?(document: QueryDocumentSnapshot) {
+        let data = document.data()
+
+        // role can come as Int or as NSNumber depending on how you stored it
+        let roleValue: Int
+        if let r = data["role"] as? Int {
+            roleValue = r
+        } else if let r = data["role"] as? NSNumber {
+            roleValue = r.intValue
+        } else {
+            return nil
+        }
+
+        // Only accept NGOs
+        guard roleValue == 3 else { return nil }
+
+        self.id = document.documentID
+        self.organizationName = data["organization_name"] as? String ?? "Unknown NGO"
+        self.cause = data["cause"] as? String ?? "Charity"
+        self.mission = data["mission"] as? String ?? ""
+        self.email = data["email"] as? String ?? ""
+        self.number = data["number"] as? String ?? ""
+        self.profileImageURL = data["profile_image_url"] as? String ?? ""
+        self.role = roleValue
+    }
+}

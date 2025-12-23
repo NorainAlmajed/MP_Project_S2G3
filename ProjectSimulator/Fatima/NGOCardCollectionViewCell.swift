@@ -20,13 +20,16 @@ class NGOCardCollectionViewCell: UICollectionViewCell {
 
 
     func configure(with ngo: NGO) {
-        ngoNameLabel.text = ngo.name
-        ngoTypeLabel.text = ngo.type
+        ngoNameLabel.text = ngo.organizationName
+        ngoTypeLabel.text = ngo.cause
 
-        ngoImageView.image =
-            UIImage(named: ngo.logoName)
-            ?? UIImage(systemName: "building.2")
+        // Image placeholder for now
+        ngoImageView.image = UIImage(systemName: "building.2")
+
+        // Later, when profile_image_url is available:
+        // loadImage(from: ngo.profileImageURL)
     }
+
     override func layoutSubviews() {
         super.layoutSubviews()
 

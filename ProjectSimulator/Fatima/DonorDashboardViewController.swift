@@ -1,5 +1,6 @@
 import UIKit
 import FirebaseAuth
+import FirebaseFirestore
 
 // MARK: Impact Model (derived data)
 struct ImpactData {
@@ -11,6 +12,9 @@ struct ImpactData {
 class DonorDashboardViewController: UIViewController {
     private var currentUserName: String = "there"
     private var currentUserID: String?
+    private let db = Firestore.firestore()
+    private var ngosFromFirestore: [NGO] = []
+    private var ngosListener: ListenerRegistration?
 
     // MARK: Section indexes
     private let WELCOME_SECTION = 0
@@ -34,7 +38,46 @@ class DonorDashboardViewController: UIViewController {
         mainTableView.separatorStyle = .none
 
         setupEllipsisMenu()
+        startListeningForNGOs()
+        
+
     }
+    private func startListeningForNGOs() {
+        // Stop old listener if exists (important to avoid duplicates)
+        ngosListener?.remove()
+
+        ngosListener = db.collection("users")
+            .whereField("role", isEqualTo: 3)
+            .addSnapshotListener { [weak self] snapshot, error in
+                guard let self = self else { return }
+
+                if let error = error {
+                    print("❌ Firestore NGO fetch error:", error.localizedDescription)
+                    return
+                }
+
+                guard let snapshot = snapshot else {
+                    print("⚠️ No snapshot returned")
+                    return
+                }
+
+                let ngos: [NGO] = snapshot.documents.compactMap { doc in
+                    NGO(document: doc)
+                }
+
+                self.ngosFromFirestore = ngos
+
+                // Reload only the NGO section (fast + smooth)
+                DispatchQueue.main.async {
+                    self.mainTableView.reloadSections(IndexSet(integer: self.NGOS_SECTION), with: .none)
+                }
+            }
+    }
+    // MARK: - Cleanup
+        deinit {
+            ngosListener?.remove()
+            print("🧹 DonorDashboardViewController deinitialized")
+        }
     private func loadCurrentUser() {
         guard let user = Auth.auth().currentUser else {
             return
@@ -129,16 +172,32 @@ extension DonorDashboardViewController: UITableViewDataSource, UITableViewDelega
     func tableView(_ tableView: UITableView,
                    heightForRowAt indexPath: IndexPath) -> CGFloat {
 
+        let isPad = traitCollection.userInterfaceIdiom == .pad
+
         switch indexPath.section {
-        case WELCOME_SECTION: return 80
-        case QUICK_ACTIONS_SECTION: return 80
-        case IMPACT_TRACKER_SECTION: return 140
-        case GRAPH_SECTION: return 200
-        case NGOS_SECTION: return 220
-        case DONATIONS_SECTION: return 200
-        default: return 100
+        case WELCOME_SECTION:
+            return isPad ? 120 : 80
+
+        case QUICK_ACTIONS_SECTION:
+            return isPad ? 110 : 80
+
+        case IMPACT_TRACKER_SECTION:
+            return isPad ? 180 : 140
+
+        case GRAPH_SECTION:
+            return isPad ? 260 : 200
+
+        case NGOS_SECTION:
+            return isPad ? 280 : 220
+
+        case DONATIONS_SECTION:
+            return isPad ? 260 : 200
+
+        default:
+            return 100
         }
     }
+
 
     func tableView(_ tableView: UITableView,
                    cellForRowAt indexPath: IndexPath) -> UITableViewCell {
@@ -195,25 +254,27 @@ extension DonorDashboardViewController: UITableViewDataSource, UITableViewDelega
             cell.selectionStyle = .none
             return cell
         }
-        if indexPath.section == NGOS_SECTION {
-            let cell = tableView.dequeueReusableCell(
-                withIdentifier: "RecommendedNGOsCell",
-                for: indexPath
-            ) as! RecommendedNGOsTableViewCell
+            if indexPath.section == NGOS_SECTION {
+                let cell = tableView.dequeueReusableCell(
+                    withIdentifier: "RecommendedNGOsCell",
+                    for: indexPath
+                ) as! RecommendedNGOsTableViewCell
 
-            cell.configure(with: recommendedNGOs)
+                cell.configure(with: ngosFromFirestore)
 
-            cell.onSeeAllTapped = {
-                print("Go to NGO discovery page")
+                cell.onSeeAllTapped = {
+                    print("Go to NGO discovery page")
+                }
+
+                cell.onNGOSelected = { ngo in
+                    print("Open NGO page: \(ngo.organizationName)")
+                }
+
+                cell.selectionStyle = .none
+                return cell
             }
 
-            cell.onNGOSelected = { ngo in
-                print("Open NGO page: \(ngo.name)")
-            }
-
-            cell.selectionStyle = .none
-            return cell
-        }
+        
 
         // MARK: - Placeholder sections
         let cell = UITableViewCell()
@@ -224,4 +285,5 @@ extension DonorDashboardViewController: UITableViewDataSource, UITableViewDelega
 
         return cell
     }
+    
 }

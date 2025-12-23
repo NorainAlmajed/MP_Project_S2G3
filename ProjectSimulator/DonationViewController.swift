@@ -324,7 +324,11 @@ class DonationViewController: UIViewController {
                 return
             }
 
-            self.allDonations = documents.compactMap { doc -> Donation? in
+            self.allDonations.removeAll() // Clear previous data
+
+            let group = DispatchGroup() // For async fetching of addresses
+
+            for doc in documents {
                 let data = doc.data()
 
                 // Safely unwrap required fields
@@ -341,7 +345,7 @@ class DonationViewController: UIViewController {
                     let expiryTimestamp = data["expiryDate"] as? Timestamp
                 else {
                     print("Skipping donation document \(doc.documentID) due to missing fields")
-                    return nil
+                    continue
                 }
 
                 // Fetch users from cached list
@@ -349,7 +353,7 @@ class DonationViewController: UIViewController {
                       let donor = self.getUser(by: donorRef.documentID)
                 else {
                     print("Skipping donation document \(doc.documentID) because NGO or donor not found")
-                    return nil
+                    continue
                 }
 
                 // Firestore auto-generated ID
@@ -358,35 +362,63 @@ class DonationViewController: UIViewController {
                 // User-friendly numeric donationID
                 let donationID = data["donationID"] as? Int ?? 0
 
-                // Temporary placeholder address if your data doesn't have it
-                let address = Address(building: 0, road: 0, block: 0, flat: nil, area: "", governorate: "")
+                // Fetch address reference
+                if let addressRef = data["address"] as? DocumentReference {
+                    group.enter() // Start async task
 
-                return Donation(
-                    firestoreID: firestoreID,       // <--- this is the one for all Firestore ops
-                    donationID: donationID,         // <--- only for display
-                    ngo: ngo,
-                    creationDate: creationTimestamp,
-                    donor: donor,
-                    address: address,
-                    pickupDate: pickupTimestamp,
-                    pickupTime: pickupTime,
-                    foodImageUrl: foodImageUrl,
-                    status: status,
-                    category: category,
-                    quantity: quantity,
-                    weight: data["weight"] as? Double,
-                    expiryDate: expiryTimestamp,
-                    description: data["description"] as? String,
-                    rejectionReason: data["rejectionReason"] as? String,
-                    recurrence: data["recurrence"] as? Int ?? 0
-                )
+                    addressRef.getDocument { addressSnapshot, error in
+                        defer { group.leave() } // Ensure group leave
+
+                        guard let addressData = addressSnapshot?.data(), error == nil else {
+                            print("Failed to fetch address for donation \(donationID)")
+                            return
+                        }
+
+                        let address = Address(
+                            building: addressData["building"] as? Int ?? 0,
+                            road: addressData["road"] as? Int ?? 0,
+                            block: addressData["block"] as? Int ?? 0,
+                            flat: addressData["flat"] as? Int,
+                            area: addressData["area"] as? String ?? "",
+                            governorate: addressData["governorate"] as? String ?? ""
+                        )
+
+                        let donation = Donation(
+                            firestoreID: firestoreID,
+                            donationID: donationID,
+                            ngo: ngo,
+                            creationDate: creationTimestamp,
+                            donor: donor,
+                            address: address,
+                            pickupDate: pickupTimestamp,
+                            pickupTime: pickupTime,
+                            foodImageUrl: foodImageUrl,
+                            status: status,
+                            category: category,
+                            quantity: quantity,
+                            weight: data["weight"] as? Double,
+                            expiryDate: expiryTimestamp,
+                            description: data["description"] as? String,
+                            rejectionReason: data["rejectionReason"] as? String,
+                            recurrence: data["recurrence"] as? Int ?? 0
+                        )
+
+                        self.allDonations.append(donation)
+                    }
+                }
             }
 
-            self.displayedDonations = self.allDonations.sorted { $0.creationDate.dateValue() > $1.creationDate.dateValue() }
-            self.donationsCollectionView.reloadData()
-            self.updateNoDonationsLabel()
+            // Once all addresses are fetched, update displayedDonations and reload
+            group.notify(queue: .main) {
+                self.displayedDonations = self.allDonations.sorted {
+                    $0.creationDate.dateValue() > $1.creationDate.dateValue()
+                }
+                self.donationsCollectionView.reloadData()
+                self.updateNoDonationsLabel()
+            }
         }
     }
+
 
 
 

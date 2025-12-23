@@ -107,7 +107,7 @@ class Section3TableViewCell: UITableViewCell {
             styleActionButton(acceptBtn)
             styleActionButton(collectedBtn)
 
-        //Add iPad resizing logic.
+        //Add iPad resizing logic
         adjustImageSizeForDevice()
         
     }

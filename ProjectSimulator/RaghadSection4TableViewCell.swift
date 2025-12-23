@@ -80,7 +80,7 @@ class RaghadSection4TableViewCell: UITableViewCell {
             txtQuantity.text = "1"
             stepperQuantity.value = 1
 
-            // ✅ MATCH other input fields (Expiration / Choose Donor)
+        // ✅ MATCH other input fields (Expiration / Choose Donor)
             txtQuantity.layer.borderWidth = 1
             txtQuantity.layer.borderColor = UIColor.systemGray4.cgColor
             txtQuantity.layer.cornerRadius = 8
@@ -175,63 +175,7 @@ class RaghadSection4TableViewCell: UITableViewCell {
             onQuantityChanged?(value)    // ✅ notify VC: valid
         }
     
-    
-    //for the ipad sizing
-//    private func setupIPadAlignmentIfNeeded() {
-//        guard UIDevice.current.userInterfaceIdiom == .pad else { return }
-//        guard !didSetupIPadAlignment else { return }
-//        didSetupIPadAlignment = true
-//
-//        // ✅🟢 1) Weaken ONLY the storyboard width/proportional-width constraint on txtQuantity
-//        // This is what causes the big white space.
-//        for c in contentView.constraints {
-//            let first = c.firstItem as AnyObject?
-//            let second = c.secondItem as AnyObject?
-//
-//            let touchesTxt = (first === txtQuantity || second === txtQuantity)
-//
-//            // ✅ Any width constraint that touches txtQuantity -> weaken it on iPad
-//            if touchesTxt && (c.firstAttribute == .width || c.secondAttribute == .width) {
-//                c.priority = .defaultLow      // 🟢 let txtQuantity expand
-//            }
-//        }
-//
-//        // ✅🟢 2) Stepper trailing aligned with other fields (same right line)
-//        if iPadStepperTrailing == nil {
-//            let trailing = stepperQuantity.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -60)
-//            trailing.priority = .required
-//            trailing.isActive = true
-//            iPadStepperTrailing = trailing
-//        }
-//        
-//        
-//        
-//        // ✅🟢 2A) Equal left margin (match right margin)
-//        if iPadTxtLeading == nil {
-//            let leading = txtQuantity.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 60)
-//            leading.priority = .required
-//            leading.isActive = true
-//            iPadTxtLeading = leading
-//        }
-//        
-//        
-//
-//        // ✅🟢 3) Remove the “gap”: make txtQuantity end right before stepper
-//        // (This is the main change you want)
-//        if iPadTxtToStepper == nil {
-//            let gap = txtQuantity.trailingAnchor.constraint(equalTo: stepperQuantity.leadingAnchor, constant: -10) // 🟢 smaller gap
-//            gap.priority = .required
-//            gap.isActive = true
-//            iPadTxtToStepper = gap
-//        }
-//
-//        // ✅🟢 4) Keep them vertically aligned (safe)
-//        stepperQuantity.centerYAnchor.constraint(equalTo: txtQuantity.centerYAnchor).isActive = true
-//
-//        // Optional: tiny scale
-//        stepperQuantity.transform = CGAffineTransform(scaleX: 1.06, y: 1.06)
-//    }
-
+  
            
            
     private func setupIPadAlignmentIfNeeded() {

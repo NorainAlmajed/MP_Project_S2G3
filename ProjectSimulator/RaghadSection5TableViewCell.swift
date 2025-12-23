@@ -23,7 +23,7 @@ class RaghadSection5TableViewCell: UITableViewCell {
      
 
             lblWeightError?.isHidden = true
-            lblWeightError?.text = "Please enter a valid weight (e.g., 1 or 1.5)"
+            lblWeightError?.text = "Please enter a valid weight"
             txtWeight?.keyboardType = .decimalPad
             txtWeight?.inputAccessoryView = makeDoneToolbar()
         
@@ -40,12 +40,27 @@ class RaghadSection5TableViewCell: UITableViewCell {
         
         }
 
+//    func configure(showError: Bool) {   // 🧩WEIGHT_OPTIONAL_CELL
+//        lblWeightError.isHidden = !showError
+//        if showError {
+//            lblWeightError.text = "Invalid weight format. Use 1 or 1.5"
+//        }
+//    }
+    
+    
     func configure(showError: Bool) {   // 🧩WEIGHT_OPTIONAL_CELL
         lblWeightError.isHidden = !showError
+
         if showError {
-            lblWeightError.text = "Invalid weight format. Use 1 or 1.5"
+            let isIPad = UIDevice.current.userInterfaceIdiom == .pad
+            applyWeightErrorText(isIPad: isIPad)
+        } else {
+            lblWeightError.attributedText = nil
         }
     }
+
+    
+    
     // ✅ Accepts: "1", "1.5", "0.5", "10.25"
     // ❌ Rejects: ".", "1.", ".5", "1..2", letters, negative
     private func parseWeight() -> (value: Double?, invalidFormat: Bool) {   // 🧩WEIGHT_OPTIONAL_CELL
@@ -97,4 +112,27 @@ class RaghadSection5TableViewCell: UITableViewCell {
     @objc private func doneTapped() {
         txtWeight.resignFirstResponder()
     }
+    
+    
+    private func applyWeightErrorText(isIPad: Bool) {
+        let text = "Please enter a valid weight"
+
+        if isIPad {
+            let p = NSMutableParagraphStyle()
+            p.firstLineHeadIndent = 45   // ✅ SAME NUMBER as Food Category iPad indent
+
+            lblWeightError.attributedText = NSAttributedString(
+                string: text,
+                attributes: [
+                    .foregroundColor: UIColor.systemRed,
+                    .paragraphStyle: p
+                ]
+            )
+        } else {
+            lblWeightError.attributedText = nil
+            lblWeightError.text = text
+            lblWeightError.textColor = .systemRed
+        }
+    }
+
 }

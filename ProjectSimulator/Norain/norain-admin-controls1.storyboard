@@ -10,43 +10,6 @@
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
     <scenes>
-        <!--Navigation Controller-->
-        <scene sceneID="9Zr-zq-k7e">
-            <objects>
-                <navigationController id="2sz-9A-mZS" sceneMemberID="viewController">
-                    <navigationBar key="navigationBar" contentMode="scaleToFill" id="c72-Br-4Ie">
-                        <rect key="frame" x="0.0" y="118" width="393" height="44"/>
-                        <autoresizingMask key="autoresizingMask"/>
-                    </navigationBar>
-                    <connections>
-                        <segue destination="LHi-aI-hhi" kind="relationship" relationship="rootViewController" id="Afx-L4-b95"/>
-                    </connections>
-                </navigationController>
-                <placeholder placeholderIdentifier="IBFirstResponder" id="gvc-OK-z2L" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
-            </objects>
-            <point key="canvasLocation" x="-956" y="-70"/>
-        </scene>
-        <!--All Nourish users-->
-        <scene sceneID="auq-4d-bIy">
-            <objects>
-                <tableViewController title="All Nourish users" id="LHi-aI-hhi" customClass="UsersTableViewController" customModule="ProjectSimulator" customModuleProvider="target" sceneMemberID="viewController">
-                    <tableView key="view" clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="-1" estimatedRowHeight="-1" sectionHeaderHeight="-1" estimatedSectionHeaderHeight="-1" sectionFooterHeight="-1" estimatedSectionFooterHeight="-1" id="y78-wH-ZY4">
-                        <rect key="frame" x="0.0" y="0.0" width="393" height="852"/>
-                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
-                        <color key="backgroundColor" systemColor="systemBackgroundColor"/>
-                        <connections>
-                            <outlet property="dataSource" destination="LHi-aI-hhi" id="qBA-at-dnF"/>
-                            <outlet property="delegate" destination="LHi-aI-hhi" id="2Jy-0T-ahs"/>
-                        </connections>
-                    </tableView>
-                    <navigationItem key="navigationItem" title="All Nourish Users" id="oaI-d0-x1a">
-                        <barButtonItem key="rightBarButtonItem" systemItem="add" id="JCg-Tp-HQK"/>
-                    </navigationItem>
-                </tableViewController>
-                <placeholder placeholderIdentifier="IBFirstResponder" id="sg9-XQ-SK6" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
-            </objects>
-            <point key="canvasLocation" x="-179.38931297709922" y="-70.422535211267615"/>
-        </scene>
         <!--NourishUsersViewController-->
         <scene sceneID="8f6-od-nE9">
             <objects>
@@ -62,9 +25,6 @@
                                     <constraint firstAttribute="height" constant="44" id="bBN-AM-k9F"/>
                                 </constraints>
                                 <textInputTraits key="textInputTraits"/>
-                                <connections>
-                                    <outlet property="delegate" destination="LHi-aI-hhi" id="wdQ-IE-qq6"/>
-                                </connections>
                             </searchBar>
                             <segmentedControl opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="top" segmentControlStyle="plain" translatesAutoresizingMaskIntoConstraints="NO" id="fNR-H3-Dna">
                                 <rect key="frame" x="22" y="217" width="349" height="32"/>
@@ -73,9 +33,13 @@
                                     <constraint firstAttribute="height" constant="31" id="nn0-KE-R2d"/>
                                 </constraints>
                                 <segments>
+                                    <segment title="All"/>
                                     <segment title="NGOs"/>
                                     <segment title="Donors"/>
                                 </segments>
+                                <connections>
+                                    <action selector="SegDidChange:" destination="Fwt-11-JKb" eventType="valueChanged" id="T7c-aD-Fmj"/>
+                                </connections>
                             </segmentedControl>
                             <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="-1" estimatedRowHeight="-1" sectionHeaderHeight="-1" estimatedSectionHeaderHeight="-1" sectionFooterHeight="-1" estimatedSectionFooterHeight="-1" translatesAutoresizingMaskIntoConstraints="NO" id="WZl-2V-5u6">
                                 <rect key="frame" x="0.0" y="329" width="393" height="523"/>
@@ -158,11 +122,13 @@
                             <navigationBar contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="0qi-Jn-NsE">
                                 <rect key="frame" x="0.0" y="118" width="393" height="44"/>
                                 <constraints>
+                                    <constraint firstAttribute="height" relation="greaterThanOrEqual" constant="44" id="L49-5Q-QSw"/>
+                                    <constraint firstAttribute="width" constant="393" id="hry-vX-0JX"/>
                                     <constraint firstAttribute="height" constant="44" id="r6R-4j-IuZ"/>
                                 </constraints>
                                 <items>
-                                    <navigationItem title="All Nourish Users" id="MIf-2b-ZPO">
-                                        <barButtonItem key="rightBarButtonItem" systemItem="done" id="Spw-93-Kz7"/>
+                                    <navigationItem title="Nourish Users" id="MIf-2b-ZPO">
+                                        <barButtonItem key="rightBarButtonItem" systemItem="add" id="Spw-93-Kz7"/>
                                     </navigationItem>
                                 </items>
                             </navigationBar>
@@ -171,36 +137,48 @@
                                 <subviews>
                                     <button opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="249" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="LFd-2B-Aft">
                                         <rect key="frame" x="0.0" y="0.0" width="98" height="38.333333333333336"/>
-                                        <color key="backgroundColor" name="greenCol"/>
                                         <constraints>
                                             <constraint firstAttribute="width" constant="98" id="4xU-FA-98U"/>
                                             <constraint firstAttribute="height" constant="38.329999999999998" id="UuV-PD-5Hg"/>
                                         </constraints>
                                         <color key="tintColor" name="greenCol"/>
                                         <state key="normal" title="Button"/>
-                                        <buttonConfiguration key="configuration" style="filled" title="Pending"/>
+                                        <buttonConfiguration key="configuration" style="filled" title="Pending">
+                                            <backgroundConfiguration key="background" cornerRadius="8">
+                                                <color key="backgroundColor" name="greenCol"/>
+                                                <color key="strokeColor" name="greenCol"/>
+                                            </backgroundConfiguration>
+                                        </buttonConfiguration>
                                     </button>
                                     <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="h1K-N4-pJu">
                                         <rect key="frame" x="106" y="0.0" width="98" height="38.333333333333336"/>
-                                        <color key="backgroundColor" name="greenCol"/>
                                         <constraints>
                                             <constraint firstAttribute="height" constant="38.329999999999998" id="96b-cK-FBy"/>
                                             <constraint firstAttribute="width" constant="98" id="Z7x-F2-Aw6"/>
                                         </constraints>
                                         <color key="tintColor" name="greenCol"/>
                                         <state key="normal" title="Button"/>
-                                        <buttonConfiguration key="configuration" style="filled" title="Approved"/>
+                                        <buttonConfiguration key="configuration" style="filled" title="Approved">
+                                            <backgroundConfiguration key="background">
+                                                <color key="backgroundColor" name="greenCol"/>
+                                                <color key="strokeColor" name="greenCol"/>
+                                            </backgroundConfiguration>
+                                        </buttonConfiguration>
                                     </button>
                                     <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="goI-0K-GyM">
                                         <rect key="frame" x="212" y="0.0" width="98" height="38.333333333333336"/>
-                                        <color key="backgroundColor" name="greenCol"/>
                                         <constraints>
                                             <constraint firstAttribute="width" constant="98" id="ikx-M3-t4i"/>
                                             <constraint firstAttribute="height" constant="38.329999999999998" id="kba-gw-Jq7"/>
                                         </constraints>
                                         <color key="tintColor" name="greenCol"/>
                                         <state key="normal" title="Button"/>
-                                        <buttonConfiguration key="configuration" style="filled" title="Rejected"/>
+                                        <buttonConfiguration key="configuration" style="filled" title="Rejected">
+                                            <backgroundConfiguration key="background">
+                                                <color key="backgroundColor" name="greenCol"/>
+                                                <color key="strokeColor" name="greenCol"/>
+                                            </backgroundConfiguration>
+                                        </buttonConfiguration>
                                     </button>
                                 </subviews>
                                 <constraints>
@@ -232,12 +210,17 @@
                         </constraints>
                     </view>
                     <connections>
+                        <outlet property="SearchBar" destination="kCS-FM-0iJ" id="Tun-VG-IUG"/>
+                        <outlet property="btnApproved" destination="h1K-N4-pJu" id="MOT-wJ-sYn"/>
+                        <outlet property="btnPending" destination="LFd-2B-Aft" id="zus-he-hNw"/>
+                        <outlet property="btnRejected" destination="goI-0K-GyM" id="qga-gF-ECd"/>
+                        <outlet property="segmentUsers" destination="fNR-H3-Dna" id="Lsw-In-QvT"/>
                         <outlet property="usersTableView" destination="WZl-2V-5u6" id="0op-hU-fLG"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="Gu6-5O-ay5" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="487.78625954198469" y="-85.211267605633807"/>
+            <point key="canvasLocation" x="-259" y="-165"/>
         </scene>
         <!--Details-->
         <scene sceneID="ufK-hu-7aj">
@@ -374,7 +357,7 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="bDp-YI-W53" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="1260" y="-27"/>
+            <point key="canvasLocation" x="411" y="-165"/>
         </scene>
         <!--Edit Users View Controller-->
         <scene sceneID="M6R-oT-Ejj">
@@ -427,7 +410,7 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="ZP5-lS-gqV" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="2030" y="-13"/>
+            <point key="canvasLocation" x="1065" y="-165"/>
         </scene>
         <!--Rejection Reason View Controller-->
         <scene sceneID="7Oi-dj-dam">
@@ -465,7 +448,7 @@
                                 </items>
                             </navigationBar>
                             <stackView opaque="NO" contentMode="scaleToFill" fixedFrame="YES" axis="vertical" distribution="equalSpacing" alignment="top" spacing="8" translatesAutoresizingMaskIntoConstraints="NO" id="J8o-xl-BcR">
-                                <rect key="frame" x="36" y="326.99999999999994" width="341" height="722.66666666666652"/>
+                                <rect key="frame" x="36" y="327" width="341" height="722.66666666666652"/>
                                 <subviews>
                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Cause" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="wbS-ma-GLT">
                                         <rect key="frame" x="0.0" y="0.0" width="50" height="22.333333333333332"/>
@@ -662,7 +645,7 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="UWf-as-685" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="2703" y="-13"/>
+            <point key="canvasLocation" x="1702" y="-165"/>
         </scene>
     </scenes>
     <resources>

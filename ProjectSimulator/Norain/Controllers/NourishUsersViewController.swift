@@ -10,25 +10,78 @@ import UIKit
 class NourishUsersViewController: UIViewController,UITableViewDelegate,UITableViewDataSource {
     
     var users = AppData.users
-    
+    var displayedUsers = AppData.users
+    @IBOutlet weak var searchBar: UISearchBar!
     @IBOutlet weak var usersTableView: UITableView!
+    @IBOutlet weak var segmentUsers: UISegmentedControl!
+    @IBOutlet weak var btnPending: UIButton!
+    @IBOutlet weak var btnApproved: UIButton!
+    @IBOutlet weak var btnRejected: UIButton!
     
     override func viewDidLoad() {
         super.viewDidLoad()
         
+        self.displayedUsers = self.users
+        self.usersTableView.reloadData()
+        
         usersTableView.delegate = self
         usersTableView.dataSource = self
-        // Do any additional setup after loading the view.
+        
     }
-   
+    
+    @IBAction func SegDidChange(_ sender: UISegmentedControl) {
+        switch sender.selectedSegmentIndex {
+        case 1:
+            // NGO Segment selected
+            displayedUsers = users.filter({ $0 is NGO })
+            setButtonsHidden(false) // Show buttons
+            
+        case 2:
+            // Donor Segment selected
+            displayedUsers = users.filter({ $0 is Donor })
+            setButtonsHidden(true) // Hide buttons
+            
+        case 0:
+            // All
+            displayedUsers = users
+            setButtonsHidden(true) // Hide buttons
+            
+        case UISegmentedControl.noSegment:
+            // NO segment is chosen (-1)
+            displayedUsers = [] // Or show all, depending on your needs
+            setButtonsHidden(true) // Hide buttons
+            
+        default:
+            // Handles any other unexpected index
+            setButtonsHidden(true)
+        }
+        
+        usersTableView.reloadData()
+    }
+    
+    
+    func setButtonsHidden(_ hidden: Bool) {
+        btnPending.isHidden = hidden
+        btnApproved.isHidden = hidden
+        btnRejected.isHidden = hidden
+        
+        // Also toggle interaction to be safe
+        btnPending.isEnabled = !hidden
+        btnApproved.isEnabled = !hidden
+        btnRejected.isEnabled = !hidden
+    }
+
+    
+    
+    
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return users.count
+        return displayedUsers.count
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = usersTableView.dequeueReusableCell(withIdentifier: Cell.UserCell.rawValue, for: indexPath) as! UserTableViewCell
 
-        let user = users[indexPath.row]
+        let user = displayedUsers[indexPath.row]
         cell.configure(appUser: user)
         return cell
     }

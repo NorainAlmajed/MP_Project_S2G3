@@ -100,36 +100,6 @@ class RaghadSection5TableViewCell: UITableViewCell {
     }
 
  
-    
-// 
-//    private func makeDoneToolbar() -> UIToolbar {
-//        let toolbar = UIToolbar()
-//        toolbar.sizeToFit()
-//        let flex = UIBarButtonItem(barButtonSystemItem: .flexibleSpace, target: nil, action: nil)
-//        let done = UIBarButtonItem(title: "Done", style: .done, target: self, action: #selector(doneTapped))
-//        toolbar.items = [flex, done]
-//        return toolbar
-//    }
-//
-    
-    
-//    private func makeDoneToolbar() -> UIToolbar {
-//        let toolbar = UIToolbar()
-//        toolbar.translatesAutoresizingMaskIntoConstraints = false   // ✅
-//        toolbar.sizeToFit()                                        // ✅
-//
-//        let flex = UIBarButtonItem(barButtonSystemItem: .flexibleSpace,
-//                                   target: nil,
-//                                   action: nil)
-//
-//        let done = UIBarButtonItem(title: "Done",
-//                                   style: .done,
-//                                   target: self,
-//                                   action: #selector(doneTapped))
-//
-//        toolbar.items = [flex, done]
-//        return toolbar
-//    }
 
     
     

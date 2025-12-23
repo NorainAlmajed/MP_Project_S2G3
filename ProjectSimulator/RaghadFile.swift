@@ -6,6 +6,7 @@
 //
 
 import UIKit
+import Foundation
 
 
 struct NGO//THIS IS THE NAME OF THE STRUCT

@@ -88,17 +88,7 @@ class RaghadSection7TableViewCell: UITableViewCell, UITextViewDelegate {
     }
 
     
-//    func textView(_ textView: UITextView,
-//                  shouldChangeTextIn range: NSRange,
-//                  replacementText text: String) -> Bool {
-//
-//        // If placeholder is showing, treat current text as empty
-//        let currentText = (textView.textColor == .systemGray3) ? "" : (textView.text ?? "")
-//        let updatedText = (currentText as NSString).replacingCharacters(in: range, with: text)
-//
-//        updateCounter(currentCount: updatedText.count)
-//        return updatedText.count <= maxCharacters
-//    }
+
     
     
     

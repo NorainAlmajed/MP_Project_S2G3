@@ -11,6 +11,7 @@
 //  ProjectSimulator
 //
 
+import FirebaseFirestore
 import UIKit
 
 protocol DonorSelectionDelegate: AnyObject {
@@ -25,7 +26,11 @@ class RaghadDonorListViewController: UIViewController,
     @IBOutlet weak var tableView: UITableView!
     
     // ✅ Your donors list
-    private let donors: [User] = users
+//    private let donors: [User] = users
+    
+    private var donors: [User] = []
+    private var donorListener: ListenerRegistration?
+
     
     weak var delegate: DonorSelectionDelegate?
     
@@ -69,6 +74,8 @@ class RaghadDonorListViewController: UIViewController,
         
         // ✅ add search + filter under nav bar
         setupHeaderSearchAndFilter()
+        fetchDonorsFromFirestore()
+
     }
     
     // MARK: - Header (Search + Filter)
@@ -164,4 +171,88 @@ class RaghadDonorListViewController: UIViewController,
     
     @objc private func filterTapped() {
     }
+    
+    
+    
+    
+    
+    
+    private func fetchDonorsFromFirestore() {
+        let db = Firestore.firestore()
+
+        // ✅ Real-time listener (auto updates if new donors added)
+        donorListener = db.collection("users")
+            .whereField("role", isEqualTo: 2) // ✅ donor role
+            .addSnapshotListener { [weak self] snapshot, error in
+                guard let self = self else { return }
+
+                if let error = error {
+                    print("❌ Firestore donor fetch error: \(error.localizedDescription)")
+                    // ✅ Safe fallback: keep existing data (no crash)
+                    return
+                }
+
+                guard let documents = snapshot?.documents else {
+                    print("⚠️ No donor documents found")
+                    self.donors = []
+                    self.filteredDonors = []
+                    self.tableView.reloadData()
+                    return
+                }
+
+                // ✅ Map Firestore -> User struct safely
+                let fetched: [User] = documents.compactMap { doc in
+                    let data = doc.data()
+
+                    // username can be missing, so we guard
+                    guard let username = data["username"] as? String else { return nil }
+
+                    // role might come as Int or Double depending on how it was saved
+                    let roleInt: Int
+                    if let r = data["role"] as? Int {
+                        roleInt = r
+                    } else if let r = data["role"] as? Double {
+                        roleInt = Int(r)
+                    } else {
+                        roleInt = 0
+                    }
+
+                    return User(username: username, userType: roleInt)
+                }
+                .sorted { $0.username.lowercased() < $1.username.lowercased() } // ✅ nice ordering
+
+                self.donors = fetched
+
+                // ✅ Keep your search logic working:
+                // If search bar is empty -> show all donors
+                let currentSearch = self.searchBar?.text?
+                    .trimmingCharacters(in: .whitespacesAndNewlines)
+                    .lowercased() ?? ""
+
+                if currentSearch.isEmpty {
+                    self.filteredDonors = self.donors
+                } else {
+                    self.filteredDonors = self.donors.filter {
+                        $0.username.lowercased().contains(currentSearch)
+                    }
+                }
+
+                // ✅ reset selection when list updates (prevents wrong checkmark)
+                self.selectedIndex = nil
+
+                DispatchQueue.main.async {
+                    self.tableView.reloadData()
+                }
+
+                print("✅ Donors loaded from Firestore: \(self.donors.count)")
+            }
+    }
+
+    deinit {
+        donorListener?.remove()
+    }
+    
+    
+    
+    
 }

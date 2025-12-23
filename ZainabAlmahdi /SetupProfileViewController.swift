@@ -101,11 +101,11 @@ class SetupProfileViewController: UIViewController,
 
         let db = Firestore.firestore()
         db.collection("users").document(uid).updateData([
-            "fullName": fullName,
-            "bio": bio,
-            "notificationsEnabled": notificationsEnabled,
-            "profileImageUrl": profileImageUrl,
-            "profileCompleted": true
+            "full_name": fullName,
+            "bio": bioTextView.text ?? "",
+            "notifications_enabled": notificationsSwitch,
+            "profile_image_url": profileImageUrl,
+            "profile_completed": true
         ]) { [weak self] error in
 
             guard let self = self else { return }

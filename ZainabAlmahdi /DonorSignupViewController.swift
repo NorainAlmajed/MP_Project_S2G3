@@ -101,9 +101,9 @@ class DonorSignupViewController: UIViewController {
             "role": "donor",
             "username": usernameTextField.text?.trimmingCharacters(in: .whitespacesAndNewlines) ?? "",
             "name": nameTextField.text?.trimmingCharacters(in: .whitespacesAndNewlines) ?? "",
-            "phoneNumber": phoneNumberTextField.text?.trimmingCharacters(in: .whitespacesAndNewlines) ?? "",
+            "phone_number": phoneNumberTextField.text?.trimmingCharacters(in: .whitespacesAndNewlines) ?? "",
             "email": email,
-            "createdAt": Timestamp()
+            "created_at": Timestamp()
         ]) { error in
 
             if let error = error {

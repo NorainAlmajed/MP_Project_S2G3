@@ -172,6 +172,40 @@ class RaghadSection6TableViewCell: UITableViewCell {
     
     //for the stack view🚘🚘🚘🚘🚘🚘🚘🚘🚘🚘
     
+//    private func setupLayoutIfNeeded() {
+//        guard !didSetupLayout else { return }
+//        didSetupLayout = true
+//
+//        lblExpiryTitle.translatesAutoresizingMaskIntoConstraints = false
+//        txtExpiryDate.translatesAutoresizingMaskIntoConstraints = false
+//
+//        let stack = UIStackView(arrangedSubviews: [lblExpiryTitle, txtExpiryDate])
+//        stack.axis = .vertical
+//        stack.spacing = 8
+//        stack.alignment = .fill
+//        stack.distribution = .fill
+//
+//        contentView.addSubview(stack)
+//        stack.translatesAutoresizingMaskIntoConstraints = false
+//
+//        NSLayoutConstraint.activate([
+//            // Match Weight: leading = 36
+//            stack.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 36),
+//
+//            // Match Weight: width = 0.816794 * superview width
+//            stack.widthAnchor.constraint(equalTo: contentView.widthAnchor, multiplier: 0.816794),
+//
+//            // ✅ slightly higher (keep it nice)
+//            stack.topAnchor.constraint(equalTo: contentView.topAnchor, constant: 8),
+//
+//            // ✅ MORE bottom space so it doesn't stick to the next cell
+//            stack.bottomAnchor.constraint(equalTo: contentView.bottomAnchor, constant: -22),
+//
+//            // Match Weight-ish text field height
+//            txtExpiryDate.heightAnchor.constraint(equalToConstant: 34)
+//        ])
+//    }
+    
     private func setupLayoutIfNeeded() {
         guard !didSetupLayout else { return }
         didSetupLayout = true
@@ -188,23 +222,31 @@ class RaghadSection6TableViewCell: UITableViewCell {
         contentView.addSubview(stack)
         stack.translatesAutoresizingMaskIntoConstraints = false
 
+        // ---- CHANGE START: use same margins as other fields on iPad ----
+        let isPad = UIDevice.current.userInterfaceIdiom == .pad
+
+        // These should match what you liked in Quantity.
+        // If your other fields start at 36, keep 36. If you moved them, use same number here.
+        let leftInset: CGFloat = isPad ? 80 : 36
+        let rightInset: CGFloat = isPad ? 80 : 36
+        // ---- CHANGE END ----
+
         NSLayoutConstraint.activate([
-            // Match Weight: leading = 36
-            stack.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 36),
+            stack.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: leftInset),
 
-            // Match Weight: width = 0.816794 * superview width
-            stack.widthAnchor.constraint(equalTo: contentView.widthAnchor, multiplier: 0.816794),
+            // ---- CHANGE START: DO NOT use width multiplier on iPad ----
+            isPad
+                ? stack.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -rightInset)
+                : stack.widthAnchor.constraint(equalTo: contentView.widthAnchor, multiplier: 0.816794),
+            // ---- CHANGE END ----
 
-            // ✅ slightly higher (keep it nice)
             stack.topAnchor.constraint(equalTo: contentView.topAnchor, constant: 8),
-
-            // ✅ MORE bottom space so it doesn't stick to the next cell
             stack.bottomAnchor.constraint(equalTo: contentView.bottomAnchor, constant: -22),
 
-            // Match Weight-ish text field height
             txtExpiryDate.heightAnchor.constraint(equalToConstant: 34)
         ])
     }
+
 
 
 

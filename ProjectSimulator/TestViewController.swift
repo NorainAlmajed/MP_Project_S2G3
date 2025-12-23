@@ -320,53 +320,93 @@ class DonationDetailsViewController: UIViewController, UITableViewDelegate, UITa
                 }
 
 
+                
+                
+                
+                
+                
 
                 // Accept button
                 cell.onAcceptTapped = { [weak self] in
                     guard let self = self else { return }
-                    let alert = UIAlertController(title: "Confirmation", message: "Are you sure you want to accept the donation?", preferredStyle: .alert)
+                    let alert = UIAlertController(
+                        title: "Confirmation",
+                        message: "Are you sure you want to accept the donation?",
+                        preferredStyle: .alert
+                    )
                     alert.addAction(UIAlertAction(title: "Cancel", style: .cancel))
                     alert.addAction(UIAlertAction(title: "Yes", style: .default) { _ in
-                        guard let firestoreID = donation.firestoreID else { return }
+                        guard let donation = self.donation, let firestoreID = donation.firestoreID else {
+                            print("No donation or firestoreID")
+                            return
+                        }
+
                         let donationRef = Firestore.firestore().collection("Donation").document(firestoreID)
                         donationRef.updateData(["status": 2]) { error in
-                            if let error = error { print(error); return }
-
-                            let currentDate = Date()
-                            if currentUser.role == 1 { // Admin
-                                if donation.donor.enableNotification {
-                                    Firestore.firestore().collection("notifications").addDocument(data: [
-                                        "title": "Donation Accepted",
-                                        "description": "Donation #\(donation.donationID) has been accepted by the admin.",
-                                        "userID": donation.donor.userID,
-                                        "donationID": donation.donationID,
-                                        "date": currentDate
-                                    ])
-                                }
-                                if donation.ngo.enableNotification {
-                                    Firestore.firestore().collection("notifications").addDocument(data: [
-                                        "title": "Donation Accepted",
-                                        "description": "Donation #\(donation.donationID) has been accepted by the admin.",
-                                        "userID": donation.ngo.userID,
-                                        "donationID": donation.donationID,
-                                        "date": currentDate
-                                    ])
-                                }
-                            } else if currentUser.role == 3 {
-                                if donation.donor.enableNotification {
-                                    Firestore.firestore().collection("notifications").addDocument(data: [
-                                        "title": "Donation Accepted",
-                                        "description": "Donation #\(donation.donationID) has been accepted by \(currentUser.username).",
-                                        "userID": donation.donor.userID,
-                                        "donationID": donation.donationID,
-                                        "date": currentDate
-                                    ])
-                                }
+                            if let error = error {
+                                print("Error updating donation status: \(error.localizedDescription)")
+                                return
                             }
 
+                            // Update the local donation object
                             donation.status = 2
+
+                            // =========================
+                            // NOTIFICATIONS LOGIC START
+                            // =========================
+                            let currentDate = Date()
+
+                            if let currentUser = self.currentUser {
+                                switch currentUser.role {
+                                case 1: // Admin: notify both donor and NGO
+                                    // Donor notification
+                                    if donation.donor.enableNotification {
+                                        Firestore.firestore().collection("Notification").addDocument(data: [
+                                            "title": "Donation Accepted",
+                                            "description": "Donation #\(donation.donationID) has been accepted by the admin.",
+                                            "userID": donation.donor.userID,
+                                            "date": currentDate
+                                        ])
+                                    }
+                                    // NGO notification
+                                    if donation.ngo.enableNotification {
+                                        Firestore.firestore().collection("Notification").addDocument(data: [
+                                            "title": "Donation Accepted",
+                                            "description": "Donation #\(donation.donationID) has been accepted by the admin.",
+                                            "userID": donation.ngo.userID,
+                                            "date": currentDate
+                                        ])
+                                    }
+
+                           
+
+                                case 3: // NGO: notify only donor
+                                    if donation.donor.enableNotification {
+                                        Firestore.firestore().collection("Notification").addDocument(data: [
+                                            "title": "Donation Accepted",
+                                            "description": "Donation #\(donation.donationID) has been accepted by \(String(describing: currentUser.organization_name)).",
+                                            "userID": donation.donor.userID,
+                                            "date": currentDate
+                                        ])
+                                    }
+
+                                default:
+                                    break
+                                }
+                            }
+                            // =========================
+                            // NOTIFICATIONS LOGIC END
+                            // =========================
+
+                            // Reload table to reflect the new status
                             self.donationTableview.reloadData()
-                            let successAlert = UIAlertController(title: "Success", message: "The donation has been accepted successfully", preferredStyle: .alert)
+
+                            // Show success message
+                            let successAlert = UIAlertController(
+                                title: "Success",
+                                message: "The donation has been accepted successfully",
+                                preferredStyle: .alert
+                            )
                             successAlert.addAction(UIAlertAction(title: "Dismiss", style: .default))
                             self.present(successAlert, animated: true)
                         }
@@ -374,52 +414,91 @@ class DonationDetailsViewController: UIViewController, UITableViewDelegate, UITa
                     self.present(alert, animated: true)
                 }
 
+
+                
+                
+                
+                
+                
                 // Collected button
                 cell.onCollectedTapped = { [weak self] in
                     guard let self = self else { return }
-                    let alert = UIAlertController(title: "Confirmation", message: "Are you sure you want to mark the donation as collected?", preferredStyle: .alert)
+                    let alert = UIAlertController(
+                        title: "Confirmation",
+                        message: "Are you sure you want to mark the donation as collected?",
+                        preferredStyle: .alert
+                    )
                     alert.addAction(UIAlertAction(title: "Cancel", style: .cancel))
                     alert.addAction(UIAlertAction(title: "Yes", style: .default) { _ in
-                        guard let firestoreID = donation.firestoreID else { return }
+                        guard let donation = self.donation, let firestoreID = donation.firestoreID else {
+                            print("No donation or firestoreID")
+                            return
+                        }
+
                         let donationRef = Firestore.firestore().collection("Donation").document(firestoreID)
                         donationRef.updateData(["status": 3]) { error in
-                            if let error = error { print(error); return }
-
-                            let currentDate = Date()
-                            if currentUser.role == 1 {
-                                if donation.donor.enableNotification {
-                                    Firestore.firestore().collection("notifications").addDocument(data: [
-                                        "title": "Donation Marked as Collected",
-                                        "description": "Donation #\(donation.donationID) has been marked as collected by the admin.",
-                                        "userID": donation.donor.userID,
-                                        "donationID": donation.donationID,
-                                        "date": currentDate
-                                    ])
-                                }
-                                if donation.ngo.enableNotification {
-                                    Firestore.firestore().collection("notifications").addDocument(data: [
-                                        "title": "Donation Marked as Collected",
-                                        "description": "Donation #\(donation.donationID) has been marked as collected by the admin.",
-                                        "userID": donation.ngo.userID,
-                                        "donationID": donation.donationID,
-                                        "date": currentDate
-                                    ])
-                                }
-                            } else if currentUser.role == 3 {
-                                if donation.donor.enableNotification {
-                                    Firestore.firestore().collection("notifications").addDocument(data: [
-                                        "title": "Donation Marked as Collected",
-                                        "description": "Donation #\(donation.donationID) has been marked as collected by \(currentUser.username).",
-                                        "userID": donation.donor.userID,
-                                        "donationID": donation.donationID,
-                                        "date": currentDate
-                                    ])
-                                }
+                            if let error = error {
+                                print("Error updating donation status: \(error.localizedDescription)")
+                                return
                             }
 
+                            // Update the local donation object
                             donation.status = 3
+
+                            // =========================
+                            // NOTIFICATIONS LOGIC START
+                            // =========================
+                            let currentDate = Date()
+
+                            if let currentUser = self.currentUser {
+                                switch currentUser.role {
+                                case 1: // Admin: notify both donor and NGO
+                                    // Donor notification
+                                    if donation.donor.enableNotification {
+                                        Firestore.firestore().collection("Notification").addDocument(data: [
+                                            "title": "Donation Marked as Collected",
+                                            "description": "Donation #\(donation.donationID) has been marked as collected by the admin.",
+                                            "userID": donation.donor.userID,
+                                            "date": currentDate
+                                        ])
+                                    }
+                                    // NGO notification
+                                    if donation.ngo.enableNotification {
+                                        Firestore.firestore().collection("Notification").addDocument(data: [
+                                            "title": "Donation Marked as Collected",
+                                            "description": "Donation #\(donation.donationID) has been marked as collected by the admin.",
+                                            "userID": donation.ngo.userID,
+                                            "date": currentDate
+                                        ])
+                                    }
+
+                                case 3: // NGO: notify only donor
+                                    if donation.donor.enableNotification {
+                                        Firestore.firestore().collection("Notification").addDocument(data: [
+                                            "title": "Donation Marked as Collected",
+                                            "description": "Donation #\(donation.donationID) has been marked as collected by \(currentUser.organization_name ?? "the NGO").",
+                                            "userID": donation.donor.userID,
+                                            "date": currentDate
+                                        ])
+                                    }
+
+                                default:
+                                    break
+                                }
+                            }
+                            // =========================
+                            // NOTIFICATIONS LOGIC END
+                            // =========================
+
+                            // Reload table to reflect the new status
                             self.donationTableview.reloadData()
-                            let successAlert = UIAlertController(title: "Success", message: "The donation has been marked collected successfully", preferredStyle: .alert)
+
+                            // Show success message
+                            let successAlert = UIAlertController(
+                                title: "Success",
+                                message: "The donation has been marked collected successfully",
+                                preferredStyle: .alert
+                            )
                             successAlert.addAction(UIAlertAction(title: "Dismiss", style: .default))
                             self.present(successAlert, animated: true)
                         }
@@ -427,6 +506,9 @@ class DonationDetailsViewController: UIViewController, UITableViewDelegate, UITa
                     self.present(alert, animated: true)
                 }
 
+                
+                
+                
                 // Reject button
                 cell.onRejectTapped = { [weak self] in
                     guard let self = self else { return }
@@ -453,6 +535,9 @@ class DonationDetailsViewController: UIViewController, UITableViewDelegate, UITa
             }
         }
 
+    
+    
+    
         func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
             switch indexPath.section {
             case 0: return 128

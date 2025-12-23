@@ -58,7 +58,7 @@ class DonationCollectionViewCell: UICollectionViewCell {
         donationIDLbl.text = "Donation #\(donation.donationID)"
 
         if currentUser.role == 2 {
-            donorNgoLbl.text = "NGO: " + (donation.ngo.fullName ?? donation.ngo.username)
+            donorNgoLbl.text = "NGO: " + (donation.ngo.organization_name ?? donation.ngo.username)
         } else {
             donorNgoLbl.text = "Donor: " + (donation.donor.fullName ?? donation.donor.username)
         }

@@ -45,7 +45,7 @@ class Section1TableViewCell: UITableViewCell {
         func setup(with donation: Donation) {
 
             // NGO name
-            ngoNameLbl.text = donation.ngo.fullName ?? donation.ngo.username
+            ngoNameLbl.text = donation.ngo.organization_name ?? donation.ngo.username
 
             // Donation ID (YOUR numeric ID – untouched)
             donationIDLbl.text = "Donation #\(donation.donationID)"

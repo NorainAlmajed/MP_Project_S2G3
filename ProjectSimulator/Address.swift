@@ -31,6 +31,7 @@ struct User {
     let role: Int                   // 1=admin, 2=donor, 3=NGO
     var enableNotification: Bool = true
     var profile_image_url: String? = ""
+    var organization_name: String?
 }
 
 

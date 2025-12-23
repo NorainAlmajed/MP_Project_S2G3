@@ -222,67 +222,76 @@ class DonationViewController: UIViewController {
         }
 
         // MARK: - Firebase
-        func fetchCurrentUser(completion: @escaping (Bool) -> Void) {
-            let tempUserID = "dlqHfZoVwh50p3Aexu1A" // temporary user
+    func fetchCurrentUser(completion: @escaping (Bool) -> Void) {
+        let tempUserID = "dlqHfZoVwh50p3Aexu1A" // temporary user
 
-            db.collection("users").document(tempUserID).getDocument { [weak self] snapshot, error in
-                if let error = error {
-                    print("Error fetching user: \(error)")
-                    completion(false)
-                    return
-                }
-                guard let data = snapshot?.data(),
-                      let username = data["username"] as? String,
-                      let role = data["role"] as? Int
-                else {
-                    print("User data missing or invalid")
-                    completion(false)
-                    return
-                }
+        db.collection("users").document(tempUserID).getDocument { [weak self] snapshot, error in
+            if let error = error {
+                print("Error fetching user: \(error)")
+                completion(false)
+                return
+            }
+            guard let data = snapshot?.data(),
+                  let username = data["username"] as? String,
+                  let role = data["role"] as? Int
+            else {
+                print("User data missing or invalid")
+                completion(false)
+                return
+            }
 
-                self?.currentUser = User(
-                    userID: tempUserID,
+            self?.currentUser = User(
+                userID: tempUserID,
+                fullName: data["fullName"] as? String,
+                username: username,
+                role: role,
+                enableNotification: data["enableNotification"] as? Bool ?? true,
+                profile_image_url: data["profile_image_url"] as? String,
+                organization_name: data["organization_name"] as? String
+            )
+
+            completion(true)
+        }
+    }
+
+    func fetchAllUsers(completion: @escaping () -> Void) {
+        db.collection("users").getDocuments { [weak self] snapshot, error in
+            guard let self = self else { return }
+
+            if let error = error {
+                print("❌ Error fetching users:", error)
+                completion()
+                return
+            }
+
+            guard let documents = snapshot?.documents else {
+                print("❌ No user documents found")
+                completion()
+                return
+            }
+
+            self.allUsers = documents.compactMap { doc -> User? in
+                let data = doc.data()
+                guard let username = data["username"] as? String,
+                      let role = data["role"] as? Int else { return nil }
+
+                return User(
+                    userID: doc.documentID,
+                    fullName: data["fullName"] as? String,
                     username: username,
                     role: role,
-                    profile_image_url: data["profile_image_url"] as? String
+                    enableNotification: data["enableNotification"] as? Bool ?? true,
+                    profile_image_url: data["profile_image_url"] as? String,
+                    organization_name: data["organization_name"] as? String
                 )
-                completion(true)
+
             }
+
+            print("Users loaded:", self.allUsers.count)
+            completion()
         }
+    }
 
-        func fetchAllUsers(completion: @escaping () -> Void) {
-            db.collection("users").getDocuments { [weak self] snapshot, error in
-                guard let self = self else { return }
-
-                if let error = error {
-                    print("❌ Error fetching users:", error)
-                    completion()
-                    return
-                }
-
-                guard let documents = snapshot?.documents else {
-                    print("❌ No user documents found")
-                    completion()
-                    return
-                }
-
-                self.allUsers = documents.compactMap { doc -> User? in
-                    let data = doc.data()
-                    guard let username = data["username"] as? String,
-                          let role = data["role"] as? Int else { return nil }
-                    return User(
-                        userID: doc.documentID,
-                        username: username,
-                        role: role,
-                        profile_image_url: data["profile_image_url"] as? String // correct field name
-                    )
-                }
-
-
-                print("Users loaded:", self.allUsers.count)
-                completion()
-            }
-        }
 
     func fetchDonations() {
         guard let currentUser = currentUser else {

@@ -1,4 +1,5 @@
 import UIKit
+import FirebaseAuth
 
 // MARK: Impact Model (derived data)
 struct ImpactData {
@@ -8,6 +9,8 @@ struct ImpactData {
 }
 
 class DonorDashboardViewController: UIViewController {
+    private var currentUserName: String = "there"
+    private var currentUserID: String?
 
     // MARK: Section indexes
     private let WELCOME_SECTION = 0
@@ -22,18 +25,52 @@ class DonorDashboardViewController: UIViewController {
     // MARK: Lifecycle
     override func viewDidLoad() {
         super.viewDidLoad()
+            print("✅ DonorDashboardViewController loaded")
+        print("mainTableView is nil:", mainTableView == nil)
 
+        loadCurrentUser()
         mainTableView.delegate = self
         mainTableView.dataSource = self
         mainTableView.separatorStyle = .none
 
         setupEllipsisMenu()
     }
+    private func loadCurrentUser() {
+        guard let user = Auth.auth().currentUser else {
+            return
+        }
+
+        // Save user ID
+        currentUserID = user.uid
+
+        // Try Firebase display name
+        if let name = user.displayName, !name.isEmpty {
+            currentUserName = name
+        }
+        // Fallback: derive name from email
+        else if let email = user.email {
+            let nameFromEmail = email
+                .components(separatedBy: "@")
+                .first ?? "there"
+            currentUserName = nameFromEmail.capitalized
+        }
+        // Final fallback
+        else {
+            currentUserName = "there"
+        }
+
+        mainTableView.reloadSections(
+            IndexSet(integer: WELCOME_SECTION),
+            with: .none
+        )
+    }
+
 
     // MARK: - Impact calculation (CORE LOGIC)
     private var impactData: ImpactData {
         calculateImpact(from: donations)
     }
+   
 
     private func calculateImpact(from donations: [Donation]) -> ImpactData {
 
@@ -113,7 +150,7 @@ extension DonorDashboardViewController: UITableViewDataSource, UITableViewDelega
             cell.selectionStyle = .none
 
             let label = UILabel()
-            label.text = "Hi Zahraa, thank you for your generosity!"
+            label.text = "Hi \(currentUserName), thank you for your generosity!"
             label.font = .boldSystemFont(ofSize: 20)
             label.numberOfLines = 0
             label.translatesAutoresizingMaskIntoConstraints = false

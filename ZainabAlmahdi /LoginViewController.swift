@@ -73,7 +73,12 @@ class LoginViewController: UIViewController {
             }
 
             // Navigate to home screen
-            self?.performSegue(withIdentifier: "goToHome", sender: sender)
+            // temp for Fatima
+            self?.switchToDashboard()
+
+
+            // temp commented
+            //self?.performSegue(withIdentifier: "goToHome", sender: sender)
         }
     }
 
@@ -86,4 +91,22 @@ class LoginViewController: UIViewController {
         alert.addAction(UIAlertAction(title: "OK", style: .default))
         present(alert, animated: true)
     }
+    // For Fatima, Temp to move to dashboard
+    private func switchToDashboard() {
+        guard let sceneDelegate = UIApplication.shared.connectedScenes
+            .first?.delegate as? SceneDelegate else {
+            return
+        }
+
+        let storyboard = UIStoryboard(name: "DonorDashboard_Fatima", bundle: nil)
+
+        // IMPORTANT: load the TAB BAR CONTROLLER
+        let tabBarController = storyboard.instantiateInitialViewController()
+
+        sceneDelegate.window?.rootViewController = tabBarController
+        sceneDelegate.window?.makeKeyAndVisible()
+    }
+
+
+
 }

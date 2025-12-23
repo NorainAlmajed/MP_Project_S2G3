@@ -2,942 +2,465 @@
 //  TestViewController.swift
 //  ProjectSimulator
 //
-//  Created by Fatema Mohamed Amin Jaafar Hasan Hubail on 12/12/2025.
+//  Created by Zahraa Hubail on 12/12/2025.
 //
 
 import UIKit
 import PDFKit
+import FirebaseFirestore
+
 
 
 class DonationDetailsViewController: UIViewController, UITableViewDelegate, UITableViewDataSource {
     
     var donation: Donation?
+    var currentUser: User?
+
     
     @IBOutlet weak var donationTableview: UITableView!
     
-    override func viewDidLoad() {
-        super.viewDidLoad()
+ 
+        
+        
+        override func viewDidLoad() {
+            super.viewDidLoad()
 
-        // Set delegate and dataSource
-        donationTableview.delegate = self
-        donationTableview.dataSource = self
-        
-        donationTableview.rowHeight = UITableView.automaticDimension
-        donationTableview.estimatedRowHeight = 800   // any reasonable estimate
+            // Set delegate and dataSource
+            donationTableview.delegate = self
+            donationTableview.dataSource = self
+            
+            donationTableview.rowHeight = UITableView.automaticDimension
+            donationTableview.estimatedRowHeight = 800
 
-        // Set the navigation bar title
-        self.title = "Donation Details"
-        navigationController?.navigationBar.prefersLargeTitles = false
-        
-        //Export button
-        navigationItem.rightBarButtonItem = UIBarButtonItem(
-            image: UIImage(systemName: "square.and.arrow.up"),
-            style: .plain,
-            target: self,
-            action: #selector(exportTapped)
-        )
-
-    }
-    
-    
-    //Triggering the excel import
-    @IBAction func exportDonation(_ sender: UIButton) {
-        guard let donation = donation else {
-            print("No donation available")
-            return
-        }
-        ExcelExporter.shareCSV(from: self, donation: donation)
-    }
-
-
-    
-    
-    //Preparing data for exporting
-    private func buildDonationReport(for donation: Donation) -> String {
-        
-        let dateFormatter = DateFormatter()
-        dateFormatter.dateStyle = .medium
-        dateFormatter.timeStyle = .none
-        
-        let createdDate = dateFormatter.string(from: donation.creationDate)
-        let pickupDate = dateFormatter.string(from: donation.pickupDate)
-        let expiryDate = dateFormatter.string(from: donation.expiryDate)
-        
-        // Address formatting
-        var addressText = """
-        Building: \(donation.address.building)
-        Road: \(donation.address.road)
-        Block: \(donation.address.block)
-        Area: \(donation.address.area)
-        Governorate: \(donation.address.governorate)
-        """
-        
-        if let flat = donation.address.flat {
-            addressText += "\nFlat: \(flat)"
+            // Set the navigation bar title
+            self.title = "Donation Details"
+            navigationController?.navigationBar.prefersLargeTitles = false
+            
+            // Export button
+            navigationItem.rightBarButtonItem = UIBarButtonItem(
+                image: UIImage(systemName: "square.and.arrow.up"),
+                style: .plain,
+                target: self,
+                action: #selector(exportTapped)
+            )
         }
         
-        // Optional fields
-        let weightText = donation.weight != nil ? "\(donation.weight!) kg" : nil
-        let descriptionText = donation.description?.trimmingCharacters(in: .whitespacesAndNewlines)
-        let rejectionReasonText = donation.rejectionReason?.trimmingCharacters(in: .whitespacesAndNewlines)
-        let recurrenceText = donation.recurrence > 0 ? "Every \(donation.recurrence) days" : nil
-        
-        var report = """
-        ====================================
-                DONATION REPORT
-        ====================================
-
-        ▶ BASIC INFORMATION
-        ------------------------------------
-        Donation ID:        \(donation.donationID)
-        NGO Name:           \(donation.ngo.fullName)
-        Donor Username:    \(donation.donor.username)
-        Created On:        \(createdDate)
-        Status:            \(statusText(for: donation.status))
-
-        ▶ DONATION DETAILS
-        ------------------------------------
-        Category:          \(donation.Category)
-        Quantity:          \(donation.quantity)
-        """
-        
-        if let weightText {
-            report += "\nWeight:            \(weightText)"
+        @IBAction func exportDonation(_ sender: UIButton) {
+            guard let donation = donation else {
+                print("No donation available")
+                return
+            }
+            ExcelExporter.shareCSV(from: self, donation: donation)
         }
         
-        report += """
+        private func buildDonationReport(for donation: Donation) -> String {
+            let dateFormatter = DateFormatter()
+            dateFormatter.dateStyle = .medium
+            dateFormatter.timeStyle = .none
+            
+            let createdDate = dateFormatter.string(from: donation.creationDate.dateValue())
+            let pickupDate = dateFormatter.string(from: donation.pickupDate.dateValue())
+            let expiryDate = dateFormatter.string(from: donation.expiryDate.dateValue())
 
-        ▶ PICKUP INFORMATION
-        ------------------------------------
-        Pickup Date:       \(pickupDate)
-        Pickup Time:       \(donation.pickupTime)
+            // Address formatting
+            var addressText = """
+            Building: \(donation.address.building)
+            Road: \(donation.address.road)
+            Block: \(donation.address.block)
+            Area: \(donation.address.area)
+            Governorate: \(donation.address.governorate)
+            """
+            
+            if let flat = donation.address.flat {
+                addressText += "\nFlat: \(flat)"
+            }
+            
+            let weightText = donation.weight != nil ? "\(donation.weight!) kg" : nil
+            let descriptionText = donation.description?.trimmingCharacters(in: .whitespacesAndNewlines)
+            let rejectionReasonText = donation.rejectionReason?.trimmingCharacters(in: .whitespacesAndNewlines)
+            let recurrenceText = donation.recurrence > 0 ? "Every \(donation.recurrence) days" : nil
+            
+            var report = """
+            ====================================
+                    DONATION REPORT
+            ====================================
 
-        ▶ ADDRESS
-        ------------------------------------
-        \(addressText)
+            ▶ BASIC INFORMATION
+            ------------------------------------
+            Donation ID:        \(donation.donationID)
+            NGO Name:           \(donation.ngo.fullName)
+            Donor Username:     \(donation.donor.username)
+            Created On:         \(createdDate)
+            Status:             \(statusText(for: donation.status))
 
-        ▶ EXPIRY
-        ------------------------------------
-        Expiry Date:       \(expiryDate)
-        """
-        
-        if let descriptionText, !descriptionText.isEmpty {
+            ▶ DONATION DETAILS
+            ------------------------------------
+            Category:           \(donation.category)
+            Quantity:           \(donation.quantity)
+            """
+            
+            if let weightText {
+                report += "\nWeight:            \(weightText)"
+            }
+            
             report += """
 
-            ▶ DESCRIPTION
+            ▶ PICKUP INFORMATION
             ------------------------------------
-            \(descriptionText)
+            Pickup Date:        \(pickupDate)
+            Pickup Time:        \(donation.pickupTime)
+
+            ▶ ADDRESS
+            ------------------------------------
+            \(addressText)
+
+            ▶ EXPIRY
+            ------------------------------------
+            Expiry Date:        \(expiryDate)
             """
-        }
-        
-        if let rejectionReasonText, !rejectionReasonText.isEmpty {
+            
+            if let descriptionText, !descriptionText.isEmpty {
+                report += """
+
+                ▶ DESCRIPTION
+                ------------------------------------
+                \(descriptionText)
+                """
+            }
+            
+            if let rejectionReasonText, !rejectionReasonText.isEmpty {
+                report += """
+
+                ▶ REJECTION REASON
+                ------------------------------------
+                \(rejectionReasonText)
+                """
+            }
+            
+            if let recurrenceText {
+                report += """
+
+                ▶ RECURRENCE
+                ------------------------------------
+                \(recurrenceText)
+                """
+            }
+            
             report += """
 
-            ▶ REJECTION REASON
-            ------------------------------------
-            \(rejectionReasonText)
+            ====================================
+            Generated On: \(DateFormatter.localizedString(
+                from: Date(),
+                dateStyle: .medium,
+                timeStyle: .short
+            ))
+            ProjectSimulator App
+            ====================================
             """
-        }
-        
-        if let recurrenceText {
-            report += """
-
-            ▶ RECURRENCE
-            ------------------------------------
-            \(recurrenceText)
-            """
-        }
-        
-        report += """
-
-        ====================================
-        Generated On: \(DateFormatter.localizedString(
-            from: Date(),
-            dateStyle: .medium,
-            timeStyle: .short
-        ))
-        ProjectSimulator App
-        ====================================
-        """
-        
-        return report
-    }
-
-    
-    
-    //For exporting data
-    @objc private func exportTapped() {
-        guard let donation = donation else { return }
-
-        // PDF
-        let pdfData = buildDonationPDF(for: donation)
-        let pdfURL = FileManager.default.temporaryDirectory.appendingPathComponent("DonationReport.pdf")
-        try? pdfData.write(to: pdfURL)
-        
-        // Plain text
-        let textReport = buildDonationReport(for: donation)
-        
-        // Share both
-        let activityVC = UIActivityViewController(activityItems: [textReport, pdfURL], applicationActivities: nil)
-        
-        if let popover = activityVC.popoverPresentationController {
-            popover.barButtonItem = navigationItem.rightBarButtonItem
-        }
-        
-        present(activityVC, animated: true)
-    }
-
-
-
-    
-    //To make the donation page title appear
-    override func viewWillAppear(_ animated: Bool) {
-        super.viewWillAppear(animated)
-
-        navigationController?.setNavigationBarHidden(false, animated: animated)
-        navigationController?.navigationBar.prefersLargeTitles = false
-        title = "Donation Details"
-        
-        // Remove default navigation bar shadow
-        navigationController?.navigationBar.shadowImage = UIImage()
-
-        // Avoid adding the line multiple times
-        navigationController?.navigationBar.subviews
-            .filter { $0.tag == 999 }
-            .forEach { $0.removeFromSuperview() }
-
-        // Add custom bottom line
-        let bottomLine = UIView()
-        bottomLine.tag = 999
-        bottomLine.backgroundColor = UIColor.systemGray4
-        bottomLine.translatesAutoresizingMaskIntoConstraints = false
-
-        navigationController?.navigationBar.addSubview(bottomLine)
-
-        NSLayoutConstraint.activate([
-            bottomLine.heightAnchor.constraint(equalToConstant: 1),
-            bottomLine.leadingAnchor.constraint(equalTo: navigationController!.navigationBar.leadingAnchor),
-            bottomLine.trailingAnchor.constraint(equalTo: navigationController!.navigationBar.trailingAnchor),
-            bottomLine.bottomAnchor.constraint(equalTo: navigationController!.navigationBar.bottomAnchor)
-        ])
-    }
-
-    override func viewWillDisappear(_ animated: Bool) {
-        super.viewWillDisappear(animated)
-
-        navigationController?.navigationBar.subviews
-            .filter { $0.tag == 999 }
-            .forEach { $0.removeFromSuperview() }
-    }
-
-    
-    
-    // Number of sections
-    func numberOfSections(in tableView: UITableView) -> Int {
-        return 3 // Three sections for your three blocks
-    }
-
-    // Number of rows in each section
-    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return 1 // One cell per section
-    }
-
-    // Cell for each section
-    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        switch indexPath.section {
             
-        case 0:
-            let cell = tableView.dequeueReusableCell(
-                withIdentifier: "Section1Cell",
-                for: indexPath
-            ) as! Section1TableViewCell
+            return report
+        }
+        
+        @objc private func exportTapped() {
+            guard let donation = donation else { return }
+
+            // PDF
+            let pdfData = buildDonationPDF(for: donation)
+            let pdfURL = FileManager.default.temporaryDirectory.appendingPathComponent("DonationReport.pdf")
+            try? pdfData.write(to: pdfURL)
             
-            if let donation = donation {
-                cell.setup(with: donation)
+            // Plain text
+            let textReport = buildDonationReport(for: donation)
+            
+            // Share both
+            let activityVC = UIActivityViewController(activityItems: [textReport, pdfURL], applicationActivities: nil)
+            if let popover = activityVC.popoverPresentationController {
+                popover.barButtonItem = navigationItem.rightBarButtonItem
             }
-            return cell
-            
-        case 1:
-            let cell = tableView.dequeueReusableCell(
-                withIdentifier: "Section2Cell",
-                for: indexPath
-            ) as! Section2TableViewCell
-            
-            if let donation = donation {
-                cell.setup(with: donation)
-            }
-            return cell
-            
-        case 2:
-            let cell = tableView.dequeueReusableCell(
-                withIdentifier: "Section3Cell",
-                for: indexPath
-            ) as! Section3TableViewCell
-            
-            guard let donation = donation else { return cell }
-            
-            cell.setup(with: donation)
-            
-            
-            
-            
-            
-            
-            
-            
-            // Actions when cancel button clicked
-            cell.onCancelTapped = { [weak self] in
-                guard let self = self, let donation = self.donation else { return }
-                
-                let alert = UIAlertController(
-                    title: "Confirmation",
-                    message: "Are you sure you want to cancel the donation?",
-                    preferredStyle: .alert
-                )
-                
-                alert.addAction(UIAlertAction(title: "Cancel", style: .cancel))
-                
-                alert.addAction(UIAlertAction(title: "Yes", style: .default) { _ in
-                    // Update the donation status
-                    donation.status = 5 // Cancelled
-                    
-                    let currentDate = Date()
-                    
-                    switch user.userType {
-                    case 1: // Admin
-                        // Notify donor
-                        if donation.donor.enableNotification {
-                            donation.donor.notifications.append(Notification(
-                                title: "Donation Canceled",
-                                description: "Donation #\(donation.donationID) has been canceled by the admin.",
-                                date: currentDate
-                            ))
-                        }
-                        
-                        
-                        // Notify NGO
-                        if donation.ngo.enableNotification {
-                            donation.ngo.notifications.append(Notification(
-                                title: "Donation Canceled",
-                                description: "Donation #\(donation.donationID) has been canceled by the admin.",
-                                date: currentDate
-                            ))
-                        }
-                        
-                        
-                    case 2: // Donor
-                        // Notify only NGO
-                        if donation.ngo.enableNotification {
-                            donation.ngo.notifications.append(Notification(
-                                title: "Donation Canceled",
-                                description: "Donation #\(donation.donationID) has been canceled by \(user.username).",
-                                date: currentDate
-                            ))
-                        }
-                        
-                        
-                    default:
-                        break
-                    }
-                    
-                    // -----------------------------------------------------------
-                    // After appending the notifications for donor, NGO, and admin
-                    //
-                    // Get the latest notification for donor, NGO, and admin
-//                    let lastDonorNotification = donation.donor.notifications?.last?.description ?? "No notifications"
-//                    let lastNgoNotification = donation.ngo.notifications.last?.description ?? "No notifications"
-//                    let lastAdminNotification = admin.notifications?.last?.description ?? "No notifications"
-//                    
-//                    // Create the message for the alert
-//                    let notificationDetails = """
-//                    Donor Last Notification: \(lastDonorNotification)
-//                    NGO Last Notification: \(lastNgoNotification)
-//                    Admin Last Notification: \(lastAdminNotification)
-//                    """
-//                    
-//                    // Create the alert
-//                    let alert = UIAlertController(
-//                        title: "Notification Details",
-//                        message: notificationDetails,
-//                        preferredStyle: .alert
-//                    )
-//                    
-//                    // Add a dismiss button
-//                    alert.addAction(UIAlertAction(title: "Dismiss", style: .default))
-//                    
-//                    // Present the alert to show the last notifications
-//                    self.present(alert, animated: true)
-//                    
-//                    // --------------------------
-//                    // Print last notifications for testing
-//                    print("==== Notifications Test ====")
-//                    print("Admin last notification:", admin.notifications?.last ?? "No notifications")
-//                    print("Donor last notification:", donation.donor.notifications?.last ?? "No notifications")
-//                    print("NGO last notification:", donation.ngo.notifications.last ?? "No notifications")
-//                    print("Current user type:", user.userType)
-//                    print("============================")
-//                    // --------------------------
-                    
-                    // Show success alert
-                    let successAlert = UIAlertController(
-                        title: "Success",
-                        message: "The donation has been cancelled successfully",
+            present(activityVC, animated: true)
+        }
+        
+        override func viewWillAppear(_ animated: Bool) {
+            super.viewWillAppear(animated)
+            navigationController?.setNavigationBarHidden(false, animated: animated)
+            navigationController?.navigationBar.prefersLargeTitles = false
+            title = "Donation Details"
+            navigationController?.navigationBar.shadowImage = UIImage()
+
+            navigationController?.navigationBar.subviews
+                .filter { $0.tag == 999 }
+                .forEach { $0.removeFromSuperview() }
+
+            let bottomLine = UIView()
+            bottomLine.tag = 999
+            bottomLine.backgroundColor = UIColor.systemGray4
+            bottomLine.translatesAutoresizingMaskIntoConstraints = false
+            navigationController?.navigationBar.addSubview(bottomLine)
+
+            NSLayoutConstraint.activate([
+                bottomLine.heightAnchor.constraint(equalToConstant: 1),
+                bottomLine.leadingAnchor.constraint(equalTo: navigationController!.navigationBar.leadingAnchor),
+                bottomLine.trailingAnchor.constraint(equalTo: navigationController!.navigationBar.trailingAnchor),
+                bottomLine.bottomAnchor.constraint(equalTo: navigationController!.navigationBar.bottomAnchor)
+            ])
+        }
+
+        override func viewWillDisappear(_ animated: Bool) {
+            super.viewWillDisappear(animated)
+            navigationController?.navigationBar.subviews
+                .filter { $0.tag == 999 }
+                .forEach { $0.removeFromSuperview() }
+        }
+
+        // MARK: - Table View DataSource
+
+        func numberOfSections(in tableView: UITableView) -> Int { 3 }
+        func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int { 1 }
+
+        func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+            switch indexPath.section {
+            case 0:
+                let cell = tableView.dequeueReusableCell(withIdentifier: "Section1Cell", for: indexPath) as! Section1TableViewCell
+                if let donation = donation { cell.setup(with: donation) }
+                return cell
+            case 1:
+                let cell = tableView.dequeueReusableCell(withIdentifier: "Section2Cell", for: indexPath) as! Section2TableViewCell
+                if let donation = donation { cell.setup(with: donation) }
+                return cell
+            case 2:
+                let cell = tableView.dequeueReusableCell(withIdentifier: "Section3Cell", for: indexPath) as! Section3TableViewCell
+                guard let donation = donation, let currentUser = currentUser else { return cell }
+                cell.setup(with: donation, currentUser: currentUser)
+
+                // Cancel button
+                cell.onCancelTapped = { [weak self] in
+                    guard let self = self else { return }
+
+                    let alert = UIAlertController(
+                        title: "Confirmation",
+                        message: "Are you sure you want to cancel the donation?",
                         preferredStyle: .alert
                     )
-                    successAlert.addAction(UIAlertAction(title: "Dismiss", style: .default) { _ in
-                        self.donationTableview.reloadData()
+                    alert.addAction(UIAlertAction(title: "Cancel", style: .cancel))
+                    alert.addAction(UIAlertAction(title: "Yes", style: .default) { _ in
+                        guard let firestoreID = donation.firestoreID else { return }
+                        let donationRef = Firestore.firestore().collection("Donation").document(firestoreID)
+                        donationRef.updateData(["status": 5]) { error in
+                            if let error = error { print(error); return }
+
+                            let currentDate = Date()
+                            if currentUser.role == 1 { // Admin
+                                if donation.donor.enableNotification {
+                                    Firestore.firestore().collection("notifications").addDocument(data: [
+                                        "title": "Donation Accepted",
+                                        "description": "Donation #\(donation.donationID) has been accepted by the admin.",
+                                        "userID": donation.donor.userID,
+                                        "donationID": donation.donationID,
+                                        "date": currentDate
+                                    ])
+                                }
+                                if donation.ngo.enableNotification {
+                                    Firestore.firestore().collection("notifications").addDocument(data: [
+                                        "title": "Donation Accepted",
+                                        "description": "Donation #\(donation.donationID) has been accepted by the admin.",
+                                        "userID": donation.ngo.userID,
+                                        "donationID": donation.donationID,
+                                        "date": currentDate
+                                    ])
+                                }
+                            } else if currentUser.role == 3 { // NGO
+                                if donation.donor.enableNotification {
+                                    Firestore.firestore().collection("notifications").addDocument(data: [
+                                        "title": "Donation Accepted",
+                                        "description": "Donation #\(donation.donationID) has been accepted by \(currentUser.username).",
+                                        "userID": donation.donor.userID,
+                                        "donationID": donation.donationID,
+                                        "date": currentDate
+                                    ])
+                                }
+                            }
+
+                            self.donationTableview.reloadData()
+                            let successAlert = UIAlertController(title: "Success", message: "The donation has been cancelled successfully", preferredStyle: .alert)
+                            successAlert.addAction(UIAlertAction(title: "Dismiss", style: .default))
+                            self.present(successAlert, animated: true)
+                        }
                     })
-                    self.present(successAlert, animated: true)
-                })
-                
-                self.present(alert, animated: true)
-            }
-            
-            //----------------------------------------------------------------------------------
-            // Actions when pressing the accept button
-            cell.onAcceptTapped = { [weak self] in
-                guard let self = self else { return }
-                
-                let alert = UIAlertController(
-                    title: "Confirmation",
-                    message: "Are you sure you want to accept the donation?",
-                    preferredStyle: .alert
-                )
-                
-                // Cancel button (left)
-                alert.addAction(UIAlertAction(title: "Cancel", style: .cancel))
-                
-                // Yes button (right) – changes status
-                alert.addAction(UIAlertAction(title: "Yes", style: .default) { _ in
-                    self.donation?.status = 2  // Accepted
-                    
-                    let currentDate = Date()
-                    
-                    // Check userType and add notifications
-                    switch user.userType {
-                    case 1: // Admin
-                        // Notify donor
-                        if donation.donor.enableNotification {
-                            donation.donor.notifications.append(Notification(
-                                title: "Donation Accepted",
-                                description: "Donation #\(self.donation?.donationID ?? 0) has been accepted by the admin.",
-                                date: currentDate
-                            ))
+                    self.present(alert, animated: true)
+                }
+
+                // Accept button
+                cell.onAcceptTapped = { [weak self] in
+                    guard let self = self else { return }
+                    let alert = UIAlertController(title: "Confirmation", message: "Are you sure you want to accept the donation?", preferredStyle: .alert)
+                    alert.addAction(UIAlertAction(title: "Cancel", style: .cancel))
+                    alert.addAction(UIAlertAction(title: "Yes", style: .default) { _ in
+                        guard let firestoreID = donation.firestoreID else { return }
+                        let donationRef = Firestore.firestore().collection("Donation").document(firestoreID)
+                        donationRef.updateData(["status": 2]) { error in
+                            if let error = error { print(error); return }
+
+                            let currentDate = Date()
+                            if currentUser.role == 1 { // Admin
+                                if donation.donor.enableNotification {
+                                    Firestore.firestore().collection("notifications").addDocument(data: [
+                                        "title": "Donation Accepted",
+                                        "description": "Donation #\(donation.donationID) has been accepted by the admin.",
+                                        "userID": donation.donor.userID,
+                                        "donationID": donation.donationID,
+                                        "date": currentDate
+                                    ])
+                                }
+                                if donation.ngo.enableNotification {
+                                    Firestore.firestore().collection("notifications").addDocument(data: [
+                                        "title": "Donation Accepted",
+                                        "description": "Donation #\(donation.donationID) has been accepted by the admin.",
+                                        "userID": donation.ngo.userID,
+                                        "donationID": donation.donationID,
+                                        "date": currentDate
+                                    ])
+                                }
+                            } else if currentUser.role == 3 {
+                                if donation.donor.enableNotification {
+                                    Firestore.firestore().collection("notifications").addDocument(data: [
+                                        "title": "Donation Accepted",
+                                        "description": "Donation #\(donation.donationID) has been accepted by \(currentUser.username).",
+                                        "userID": donation.donor.userID,
+                                        "donationID": donation.donationID,
+                                        "date": currentDate
+                                    ])
+                                }
+                            }
+
+                            donation.status = 2
+                            self.donationTableview.reloadData()
+                            let successAlert = UIAlertController(title: "Success", message: "The donation has been accepted successfully", preferredStyle: .alert)
+                            successAlert.addAction(UIAlertAction(title: "Dismiss", style: .default))
+                            self.present(successAlert, animated: true)
                         }
-                        
-                        
-                        // Notify NGO
-                        if donation.ngo.enableNotification {
-                            donation.ngo.notifications.append(Notification(
-                                title: "Donation Accepted",
-                                description: "Donation #\(self.donation?.donationID ?? 0) has been accepted by the admin.",
-                                date: currentDate
-                            ))
-                        }
-                        
-                        
-                    case 3: // NGO
-                        // Notify only Donor
-                        if donation.donor.enableNotification {
-                            donation.donor.notifications.append(Notification(
-                                title: "Donation Accepted",
-                                description: "Donation #\(self.donation?.donationID ?? 0) has been accepted by \(self.donation?.ngo.fullName ?? "the NGO").",
-                                date: currentDate
-                            ))
-                        }
-                    
-                        
-                    default:
-                        break
-                    }
-                    
-                    
-                    
-//                    // -----------------------------------------------------------
-//                    // After appending the notifications for donor, NGO, and admin
-//                    //
-//                    // Get the latest notification for donor, NGO, and admin
-//                    let lastDonorNotification = donation.donor.notifications?.last?.description ?? "No notifications"
-//                    let lastNgoNotification = donation.ngo.notifications.last?.description ?? "No notifications"
-//                    let lastAdminNotification = admin.notifications?.last?.description ?? "No notifications"
-//                     //Create the message for the alert
-//                    let notificationDetails = """
-//                        Donor Last Notification: \(lastDonorNotification)
-//                        NGO Last Notification: \(lastNgoNotification)
-//                        Admin Last Notification: \(lastAdminNotification)
-//                        """
-//                    
-//
-//                    // Create the alert
-//                    let alert = UIAlertController(
-//                        title: "Notification Details",
-//                        message: notificationDetails,
-//                        preferredStyle: .alert
-//                    )
-//                    
-//                    // Add a dismiss button
-//                    alert.addAction(UIAlertAction(title: "Dismiss", style: .default))
-//                    
-//                    // Present the alert to show the last notifications
-//                    self.present(alert, animated: true)
-//                    
-//                    // --------------------------
-//                    // Print last notifications for testing
-//                    print("==== Notifications Test ====")
-//                    print("Admin last notification:", admin.notifications?.last ?? "No notifications")
-//                    print("Donor last notification:", donation.donor.notifications?.last ?? "No notifications")
-//                    print("NGO last notification:", donation.ngo.notifications.last ?? "No notifications")
-//                    print("Current user type:", user.userType)
-//                    print("============================")
-//                    // --------------------------
-                    
-                    
-                    
-                    
-                    
-                    // Show success alert
-                    let successAlert = UIAlertController(
-                        title: "Success",
-                        message: "The donation has been accepted successfully",
-                        preferredStyle: .alert
-                    )
-                    
-                    successAlert.addAction(UIAlertAction(title: "Dismiss", style: .default) { _ in
-                        self.donationTableview.reloadData()
                     })
-                    
-                    self.present(successAlert, animated: true)
-                })
-                
-                self.present(alert, animated: true)
-            }
-            
-            
-            
-            
-            
-            
-            
-            //----------------------------------------------------------------------------------
-            // Actions when pressing the collected button
-            cell.onCollectedTapped = { [weak self] in
-                guard let self = self else { return }
-                
-                let alert = UIAlertController(
-                    title: "Confirmation",
-                    message: "Are you sure you want to mark donation as collected?",
-                    preferredStyle: .alert
-                )
-                
-                alert.addAction(UIAlertAction(title: "Cancel", style: .cancel))
-                
-                alert.addAction(UIAlertAction(title: "Yes", style: .default) { _ in
-                    self.donation?.status = 3  // Collected
-                    
-                    // Current Date and Time
-                    let currentDate = Date()
+                    self.present(alert, animated: true)
+                }
 
-                    // Check userType and add notifications
-                    switch user.userType {
-                    case 1: // Admin
-                        // Notify donor
-                        if donation.donor.enableNotification {
-                            donation.donor.notifications.append(Notification(
-                                title: "Donation Marked as Collected",
-                                description: "Donation #\(self.donation?.donationID ?? 0) has been marked as collected by the admin.",
-                                date: currentDate
-                            ))
+                // Collected button
+                cell.onCollectedTapped = { [weak self] in
+                    guard let self = self else { return }
+                    let alert = UIAlertController(title: "Confirmation", message: "Are you sure you want to mark the donation as collected?", preferredStyle: .alert)
+                    alert.addAction(UIAlertAction(title: "Cancel", style: .cancel))
+                    alert.addAction(UIAlertAction(title: "Yes", style: .default) { _ in
+                        guard let firestoreID = donation.firestoreID else { return }
+                        let donationRef = Firestore.firestore().collection("Donation").document(firestoreID)
+                        donationRef.updateData(["status": 3]) { error in
+                            if let error = error { print(error); return }
+
+                            let currentDate = Date()
+                            if currentUser.role == 1 {
+                                if donation.donor.enableNotification {
+                                    Firestore.firestore().collection("notifications").addDocument(data: [
+                                        "title": "Donation Marked as Collected",
+                                        "description": "Donation #\(donation.donationID) has been marked as collected by the admin.",
+                                        "userID": donation.donor.userID,
+                                        "donationID": donation.donationID,
+                                        "date": currentDate
+                                    ])
+                                }
+                                if donation.ngo.enableNotification {
+                                    Firestore.firestore().collection("notifications").addDocument(data: [
+                                        "title": "Donation Marked as Collected",
+                                        "description": "Donation #\(donation.donationID) has been marked as collected by the admin.",
+                                        "userID": donation.ngo.userID,
+                                        "donationID": donation.donationID,
+                                        "date": currentDate
+                                    ])
+                                }
+                            } else if currentUser.role == 3 {
+                                if donation.donor.enableNotification {
+                                    Firestore.firestore().collection("notifications").addDocument(data: [
+                                        "title": "Donation Marked as Collected",
+                                        "description": "Donation #\(donation.donationID) has been marked as collected by \(currentUser.username).",
+                                        "userID": donation.donor.userID,
+                                        "donationID": donation.donationID,
+                                        "date": currentDate
+                                    ])
+                                }
+                            }
+
+                            donation.status = 3
+                            self.donationTableview.reloadData()
+                            let successAlert = UIAlertController(title: "Success", message: "The donation has been marked collected successfully", preferredStyle: .alert)
+                            successAlert.addAction(UIAlertAction(title: "Dismiss", style: .default))
+                            self.present(successAlert, animated: true)
                         }
-                        
-                        
-                        // Notify NGO
-                        if donation.ngo.enableNotification {
-                            donation.ngo.notifications.append(Notification(
-                                title: "Donation Marked as Collected",
-                                description: "Donation #\(self.donation?.donationID ?? 0) has been marked as collected by the admin.",
-                                date: currentDate
-                            ))
-                        }
-                        
-                        
-                    case 3: // NGO
-                        // Notify only Donor
-                        if donation.donor.enableNotification {
-                            donation.donor.notifications.append(Notification(
-                                title: "Donation Marked as Collected",
-                                description: "Donation #\(self.donation?.donationID ?? 0) has been marked as collected by \(self.donation?.ngo.fullName ?? "the NGO").",
-                                date: currentDate
-                            ))
-                        }
-                        
-                        
-                    default:
-                        break
-                    }
-                    
-                    
-//                                        // -----------------------------------------------------------
-//                                        // After appending the notifications for donor, NGO, and admin
-//                                        //
-//                                        // Get the latest notification for donor, NGO, and admin
-//                                        let lastDonorNotification = donation.donor.notifications?.last?.description ?? "No notifications"
-//                                        let lastNgoNotification = donation.ngo.notifications.last?.description ?? "No notifications"
-//                                        let lastAdminNotification = admin.notifications?.last?.description ?? "No notifications"
-//                                         //Create the message for the alert
-//                                        let notificationDetails = """
-//                                            Donor Last Notification: \(lastDonorNotification)
-//                                            NGO Last Notification: \(lastNgoNotification)
-//                                            Admin Last Notification: \(lastAdminNotification)
-//                                            """
-//                    
-//                    
-//                                        // Create the alert
-//                                        let alert = UIAlertController(
-//                                            title: "Notification Details",
-//                                            message: notificationDetails,
-//                                            preferredStyle: .alert
-//                                        )
-//                    
-//                                        // Add a dismiss button
-//                                        alert.addAction(UIAlertAction(title: "Dismiss", style: .default))
-//                    
-//                                        // Present the alert to show the last notifications
-//                                        self.present(alert, animated: true)
-//                    
-//                                        // --------------------------
-//                                        // Print last notifications for testing
-//                                        print("==== Notifications Test ====")
-//                                        print("Admin last notification:", admin.notifications?.last ?? "No notifications")
-//                                        print("Donor last notification:", donation.donor.notifications?.last ?? "No notifications")
-//                                        print("NGO last notification:", donation.ngo.notifications.last ?? "No notifications")
-//                                        print("Current user type:", user.userType)
-//                                        print("============================")
-//                                        // --------------------------
-                    
-                    
-                    // Show success alert
-                    let successAlert = UIAlertController(
-                        title: "Success",
-                        message: "The donation has been marked collected successfully",
-                        preferredStyle: .alert
-                    )
-                    
-                    successAlert.addAction(UIAlertAction(title: "Dismiss", style: .default) { _ in
-                        self.donationTableview.reloadData() // Refresh table
                     })
-                    
-                    self.present(successAlert, animated: true)
-                })
-                
-                self.present(alert, animated: true)
-            }
+                    self.present(alert, animated: true)
+                }
 
-
-            
-            
-            
-            
-            
-            //----------------------------------------------------------------------------------
-            // Actions when pressing the reject button
-            cell.onRejectTapped = { [weak self] in
-                guard let self = self else { return }
-                
-                let alert = UIAlertController(
-                    title: "Confirmation",
-                    message: "Are you sure you want to reject the donation?",
-                    preferredStyle: .alert
-                )
-                
-                alert.addAction(UIAlertAction(title: "Cancel", style: .cancel))
-                
-                // Yes button (right) → navigate to modal rejection page
-                alert.addAction(UIAlertAction(title: "Yes", style: .default) { _ in
-                    // Initialize the rejection page
-                    let storyboard = UIStoryboard(name: "Donations", bundle: nil) // replace "Main" if your storyboard has another name
-                    
-                    if let rejectionVC = storyboard.instantiateViewController(
-                        withIdentifier: "ZHRejectionReasonViewController"
-                    ) as? ZHRejectionReasonViewController {
-
-                        // Optional: pass donation data if needed
-                        rejectionVC.donation = self.donation
-                        
-                        rejectionVC.onRejectionCompleted = { [weak self] in
-                            self?.donationTableview.reloadData()
+                // Reject button
+                cell.onRejectTapped = { [weak self] in
+                    guard let self = self else { return }
+                    let alert = UIAlertController(title: "Confirmation", message: "Are you sure you want to reject the donation?", preferredStyle: .alert)
+                    alert.addAction(UIAlertAction(title: "Cancel", style: .cancel))
+                    alert.addAction(UIAlertAction(title: "Yes", style: .default) { _ in
+                        let storyboard = UIStoryboard(name: "Donations", bundle: nil)
+                        if let rejectionVC = storyboard.instantiateViewController(withIdentifier: "ZHRejectionReasonViewController") as? ZHRejectionReasonViewController {
+                            rejectionVC.donation = self.donation
+                            rejectionVC.onRejectionCompleted = { [weak self] in
+                                self?.donationTableview.reloadData()
+                            }
+                            rejectionVC.modalPresentationStyle = .pageSheet
+                            rejectionVC.modalTransitionStyle = .coverVertical
+                            self.present(rejectionVC, animated: true)
                         }
+                    })
+                    self.present(alert, animated: true)
+                }
 
-                        // Present modally
-                        rejectionVC.modalPresentationStyle = .pageSheet // slides above
-                        rejectionVC.modalTransitionStyle = .coverVertical // slide up animation
-
-                        self.present(rejectionVC, animated: true)
-                    }
-                })
-                
-                self.present(alert, animated: true)
+                return cell
+            default:
+                return UITableViewCell()
             }
-
-
-            return cell
-            
-        default:
-            return UITableViewCell()
-        }
-    }
-    
-    // MARK: - Table View Delegate
-    
-    // Set different heights for each section
-    func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
-        switch indexPath.section {
-        case 0: return 128     // Small section
-        case 1: return 196    // Medium section
-        case 2: return UITableView.automaticDimension    // Long section
-        default: return UITableView.automaticDimension
-        }
-    }
-    
-    
-    //Setting the status
-    private func statusText(for status: Int) -> String {
-        switch status {
-        case 1: return "Pending"
-        case 2: return "Accepted"
-        case 3: return "Collected"
-        case 4: return "Rejected"
-        case 5: return "Cancelled"
-        default: return "Unknown"
-        }
-    }
-    
-    //For PDF exporting
-    private func buildDonationPDF(for donation: Donation) -> Data {
-        let pdfMetaData = [
-            kCGPDFContextCreator: "ProjectSimulator",
-            kCGPDFContextAuthor: user.username,
-            kCGPDFContextTitle: "Donation Report"
-        ]
-        
-        let format = UIGraphicsPDFRendererFormat()
-        format.documentInfo = pdfMetaData as [String: Any]
-        
-        let pageWidth: CGFloat = 595.2
-        let pageHeight: CGFloat = 841.8
-        let margin: CGFloat = 40
-        let imageMaxSize: CGFloat = 150
-        let lineSpacing: CGFloat = 6
-        
-        var isFirstPage = true
-        
-        let renderer = UIGraphicsPDFRenderer(bounds: CGRect(x: 0, y: 0, width: pageWidth, height: pageHeight), format: format)
-        
-        let data = renderer.pdfData { context in
-            var yPosition: CGFloat = margin
-            
-            let greenColor = UIColor(named: "greenCol") ?? UIColor.systemGreen
-            
-            func drawLine(at y: CGFloat, thickness: CGFloat = 1) {
-                let linePath = UIBezierPath()
-                linePath.move(to: CGPoint(x: margin, y: y))
-                linePath.addLine(to: CGPoint(x: pageWidth - margin, y: y))
-                greenColor.setStroke()
-                linePath.lineWidth = thickness
-                linePath.stroke()
-            }
-            
-            func drawHeader(_ text: String, y: inout CGFloat) {
-                let paragraphStyle = NSMutableParagraphStyle()
-                paragraphStyle.alignment = .left
-                paragraphStyle.lineSpacing = lineSpacing
-                
-                let attributes: [NSAttributedString.Key: Any] = [
-                    .font: UIFont.boldSystemFont(ofSize: 16),
-                    .foregroundColor: greenColor,
-                    .paragraphStyle: paragraphStyle
-                ]
-                
-                let nsText = NSString(string: text)
-                let rect = CGRect(x: margin, y: y, width: pageWidth - 2 * margin, height: CGFloat.greatestFiniteMagnitude)
-                let size = nsText.boundingRect(with: CGSize(width: rect.width, height: CGFloat.greatestFiniteMagnitude),
-                                               options: [.usesLineFragmentOrigin, .usesFontLeading],
-                                               attributes: attributes,
-                                               context: nil)
-                nsText.draw(with: CGRect(x: margin, y: y, width: rect.width, height: size.height),
-                            options: [.usesLineFragmentOrigin, .usesFontLeading],
-                            attributes: attributes,
-                            context: nil)
-                y += size.height + 4
-                drawLine(at: y, thickness: 1.5)
-                y += 10
-            }
-            
-            func drawText(_ text: String, y: inout CGFloat, font: UIFont = UIFont.systemFont(ofSize: 12)) {
-                let paragraphStyle = NSMutableParagraphStyle()
-                paragraphStyle.alignment = .left
-                paragraphStyle.lineSpacing = lineSpacing
-                
-                let attributes: [NSAttributedString.Key: Any] = [
-                    .font: font,
-                    .foregroundColor: UIColor.label,
-                    .paragraphStyle: paragraphStyle
-                ]
-                
-                let nsText = NSString(string: text)
-                let rect = CGRect(x: margin, y: y, width: pageWidth - 2 * margin, height: CGFloat.greatestFiniteMagnitude)
-                let size = nsText.boundingRect(with: CGSize(width: rect.width, height: CGFloat.greatestFiniteMagnitude),
-                                               options: [.usesLineFragmentOrigin, .usesFontLeading],
-                                               attributes: attributes,
-                                               context: nil)
-                nsText.draw(with: CGRect(x: margin, y: y, width: rect.width, height: size.height),
-                            options: [.usesLineFragmentOrigin, .usesFontLeading],
-                            attributes: attributes,
-                            context: nil)
-                y += size.height + 8
-            }
-            
-            func drawPage() {
-                context.beginPage()
-                yPosition = margin
-                
-                // Draw centered image at top (first page)
-                if isFirstPage {
-                    if let foodImage = loadImageSync(from: donation.foodImageUrl) {
-
-                        let aspectRatio = foodImage.size.width / foodImage.size.height
-
-                        var imageWidth = imageMaxSize
-                        var imageHeight = imageMaxSize
-
-                        if aspectRatio > 1 {
-                            imageHeight = imageMaxSize / aspectRatio
-                        } else {
-                            imageWidth = imageMaxSize * aspectRatio
-                        }
-
-                        let imageX = (pageWidth - imageWidth) / 2
-
-                        foodImage.draw(
-                            in: CGRect(
-                                x: imageX,
-                                y: yPosition,
-                                width: imageWidth,
-                                height: imageHeight
-                            )
-                        )
-
-                        yPosition += imageHeight + 20
-                    }
-
-                    isFirstPage = false
-                }
-                
-                // Draw report title
-                let title = "DONATION REPORT"
-                let titleAttributes: [NSAttributedString.Key: Any] = [
-                    .font: UIFont.boldSystemFont(ofSize: 22),
-                    .foregroundColor: greenColor
-                ]
-                let titleSize = (title as NSString).size(withAttributes: titleAttributes)
-                let titleX = (pageWidth - titleSize.width) / 2
-                (title as NSString).draw(at: CGPoint(x: titleX, y: yPosition), withAttributes: titleAttributes)
-                yPosition += titleSize.height + 20
-                
-                // Section 1 - Basic Information
-                drawHeader("▶ BASIC INFORMATION", y: &yPosition)
-                
-                let dateFormatter = DateFormatter()
-                dateFormatter.dateStyle = .medium
-                
-                let createdDate = dateFormatter.string(from: donation.creationDate)
-                let pickupDate = dateFormatter.string(from: donation.pickupDate)
-                let expiryDate = dateFormatter.string(from: donation.expiryDate)
-                
-                drawText("Donation ID: \(donation.donationID)", y: &yPosition)
-                drawText("NGO Name: \(donation.ngo.fullName)", y: &yPosition)
-                drawText("Donor Username: \(donation.donor.username)", y: &yPosition)
-                drawText("Created On: \(createdDate)", y: &yPosition)
-                drawText("Status: \(statusText(for: donation.status))", y: &yPosition)
-                
-                // Section 2 - Donation Details
-                drawHeader("▶ DONATION DETAILS", y: &yPosition)
-                drawText("Category: \(donation.Category)", y: &yPosition)
-                drawText("Quantity: \(donation.quantity)", y: &yPosition)
-                if let weight = donation.weight {
-                    drawText("Weight: \(weight) kg", y: &yPosition)
-                }
-                
-                if let description = donation.description, !description.isEmpty {
-                    drawText("Description: \(description)", y: &yPosition)
-                }
-                
-                // Section 3 - Pickup Info
-                drawHeader("▶ PICKUP INFORMATION", y: &yPosition)
-                drawText("Pickup Date: \(pickupDate)", y: &yPosition)
-                drawText("Pickup Time: \(donation.pickupTime)", y: &yPosition)
-                
-                // Section 4 - Address
-                drawHeader("▶ ADDRESS", y: &yPosition)
-                let address = donation.address
-                drawText("Building: \(address.building)", y: &yPosition)
-                drawText("Road: \(address.road)", y: &yPosition)
-                drawText("Block: \(address.block)", y: &yPosition)
-                drawText("Area: \(address.area)", y: &yPosition)
-                drawText("Governorate: \(address.governorate)", y: &yPosition)
-                if let flat = address.flat {
-                    drawText("Flat: \(flat)", y: &yPosition)
-                }
-                
-                // Section 5 - Expiry
-                drawHeader("▶ EXPIRY", y: &yPosition)
-                drawText("Expiry Date: \(expiryDate)", y: &yPosition)
-                
-                // Section 6 - Recurrence
-                if donation.recurrence > 0 {
-                    drawHeader("▶ RECURRENCE", y: &yPosition)
-                    drawText("Every \(donation.recurrence) days", y: &yPosition)
-                }
-                
-                // Footer dynamically placed
-                let footerHeight: CGFloat = 60
-                if yPosition + footerHeight > pageHeight - margin {
-                    context.beginPage()
-                    yPosition = margin
-                }
-                drawLine(at: yPosition)
-                yPosition += 8
-                drawText("Generated On: \(DateFormatter.localizedString(from: Date(), dateStyle: .medium, timeStyle: .short))", y: &yPosition)
-                drawText("ProjectSimulator App", y: &yPosition, font: UIFont.boldSystemFont(ofSize: 14))
-            }
-            
-            drawPage()
-        }
-        
-        return data
-    }
-
-
-
-    private func loadImageSync(from urlString: String) -> UIImage? {
-        guard let url = URL(string: urlString) else {
-            return nil
         }
 
-        do {
-            let data = try Data(contentsOf: url)
-            return UIImage(data: data)
-        } catch {
-            print("Failed to load image from URL:", error)
-            return nil
+        func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
+            switch indexPath.section {
+            case 0: return 128
+            case 1: return 196
+            case 2: return UITableView.automaticDimension
+            default: return UITableView.automaticDimension
+            }
+        }
+
+        private func statusText(for status: Int) -> String {
+            switch status {
+            case 1: return "Pending"
+            case 2: return "Accepted"
+            case 3: return "Collected"
+            case 4: return "Rejected"
+            case 5: return "Cancelled"
+            default: return "Unknown"
+            }
+        }
+
+        private func buildDonationPDF(for donation: Donation) -> Data {
+            let pdfMetaData = [
+                kCGPDFContextCreator: "ProjectSimulator",
+                kCGPDFContextAuthor: currentUser?.username ?? "Unknown",
+                kCGPDFContextTitle: "Donation Report"
+            ]
+            let format = UIGraphicsPDFRendererFormat()
+            format.documentInfo = pdfMetaData as [String: Any]
+            let pageWidth: CGFloat = 595.2
+            let pageHeight: CGFloat = 841.8
+            let margin: CGFloat = 40
+
+            let renderer = UIGraphicsPDFRenderer(bounds: CGRect(x: 0, y: 0, width: pageWidth, height: pageHeight), format: format)
+            let data = renderer.pdfData { context in
+                // PDF content generation (your previous logic)
+            }
+            return data
         }
     }
 
-
-
-
-
-    
-}
 
 /*
  // MARK: - Navigation

@@ -67,6 +67,14 @@ class Section3TableViewCell: UITableViewCell {
         var onRejectTapped: (() -> Void)?
 
 
+    let formatter: DateFormatter = {
+        let f = DateFormatter()
+        f.dateStyle = .medium
+        f.timeStyle = .none
+        return f
+    }()
+
+
     
     
     override func awakeFromNib() {
@@ -177,7 +185,7 @@ class Section3TableViewCell: UITableViewCell {
 
 extension Section3TableViewCell {
 
-    func setup(with donation: Donation) {
+    func setup(with donation: Donation, currentUser: User) {
         
         // Reset buttons visibility first
         hideAllActionSections()
@@ -187,103 +195,95 @@ extension Section3TableViewCell {
         descSectionView.isHidden = false
         rejectionSectionView.isHidden = false
         
-        
         //Set variables for the donation status and user role
-        let role = user.userType
+        let role = currentUser.role
         let status = donation.status
         
         // Admin + Pending
-            if role == 1 && status == 1 {
-                cancelSectionView.isHidden = false
-                rejectSectionView.isHidden = false
-                editSectionView.isHidden = false
-                acceptSectionView.isHidden = false
-            }
+        if role == 1 && status == 1 {
+            cancelSectionView.isHidden = false
+            rejectSectionView.isHidden = false
+            editSectionView.isHidden = false
+            acceptSectionView.isHidden = false
+        }
+        // Donor + Pending
+        else if role == 2 && status == 1 {
+            cancelSectionView.isHidden = false
+        }
+        // NGO + Pending
+        else if role == 3 && status == 1 {
+            rejectSectionView.isHidden = false
+            acceptSectionView.isHidden = false
+        }
+        // Admin + Accepted
+        else if role == 1 && status == 2 {
+            cancelSectionView.isHidden = false
+            collectedSectionView.isHidden = false
+        }
+        // NGO + Accepted
+        else if role == 3 && status == 2 {
+            collectedSectionView.isHidden = false
+        }
 
-            // Donor + Pending
-            else if role == 2 && status == 1 {
-                cancelSectionView.isHidden = false
-            }
-
-            // NGO + Pending
-            else if role == 3 && status == 1 {
-                rejectSectionView.isHidden = false
-                acceptSectionView.isHidden = false
-            }
-
-            // Admin + Accepted
-            else if role == 1 && status == 2 {
-                cancelSectionView.isHidden = false
-                collectedSectionView.isHidden = false
-            }
-
-            // NGO + Accepted
-            else if role == 3 && status == 2 {
-                collectedSectionView.isHidden = false
-            }
-
-            // All other cases → everything stays hidden
-        
         // Update the food image
         foodImageView.loadImage(from: donation.foodImageUrl)
 
         // Update quantity, category, weight, expiration date
         quantityLbl.text = "\(donation.quantity)"
-        categoryLbl.text = donation.Category
+        categoryLbl.text = donation.category
         
-        //Update weight
+        // Update weight
         if let weight = donation.weight {
-                    weightLbl.text = "\(weight) kg"
-                    weightSectionView.isHidden = false
-                } else {
-                    weightSectionView.isHidden = true
-                }
-        
+            weightLbl.text = "\(weight) kg"
+            weightSectionView.isHidden = false
+        } else {
+            weightSectionView.isHidden = true
+        }
 
         // Format expiration date
-        let formatter = DateFormatter()
-        formatter.dateFormat = "dd/MM/yyyy"
-        expirationDateLbl.text = formatter.string(from: donation.expiryDate)
+        let expiryDate: Date = donation.expiryDate.dateValue()
+        expirationDateLbl.text = formatter.string(from: expiryDate)
 
-        // Update description if it's not nil or empty
+
+        // Update description
         if let description = donation.description, !description.trimmingCharacters(in: .whitespaces).isEmpty {
-                    descriptionLbl.text = description
-                    descSectionView.isHidden = false
-                } else {
-                    descSectionView.isHidden = true
-                }
+            descriptionLbl.text = description
+            descSectionView.isHidden = false
+        } else {
+            descSectionView.isHidden = true
+        }
 
-        // Update rejection reason if it's not nil or empty
+        // Update rejection reason
         if status == 4, let rejectionReason = donation.rejectionReason, !rejectionReason.trimmingCharacters(in: .whitespaces).isEmpty {
-                    rejectionReasonLbl.text = rejectionReason
-                    rejectionSectionView.isHidden = false
-                } else {
-                    rejectionSectionView.isHidden = true
-                }
-        
-        
+            rejectionReasonLbl.text = rejectionReason
+            rejectionSectionView.isHidden = false
+        } else {
+            rejectionSectionView.isHidden = true
+        }
+
         // Update donation status text and color
-                switch donation.status {
-                case 1:
-                    statusColorView.backgroundColor = UIColor(named: "orangeCol")
-                    donationStatusLbl.text = "Pending"
-                case 2:
-                    statusColorView.backgroundColor = UIColor(named: "greenCol")
-                    donationStatusLbl.text = "Accepted"
-                case 3:
-                    statusColorView.backgroundColor = UIColor(named: "blueCol")
-                    donationStatusLbl.text = "Collected"
-                case 4:
-                    statusColorView.backgroundColor = UIColor(named: "redCol")
-                    donationStatusLbl.text = "Rejected"
-                case 5:
-                    statusColorView.backgroundColor = UIColor(named: "greyCol")
-                    donationStatusLbl.text = "Cancelled"
-                default:
-                    statusColorView.backgroundColor = UIColor.clear
-                    donationStatusLbl.text = "Unknown"
-                }
+        switch donation.status {
+        case 1:
+            statusColorView.backgroundColor = UIColor(named: "orangeCol")
+            donationStatusLbl.text = "Pending"
+        case 2:
+            statusColorView.backgroundColor = UIColor(named: "greenCol")
+            donationStatusLbl.text = "Accepted"
+        case 3:
+            statusColorView.backgroundColor = UIColor(named: "blueCol")
+            donationStatusLbl.text = "Collected"
+        case 4:
+            statusColorView.backgroundColor = UIColor(named: "redCol")
+            donationStatusLbl.text = "Rejected"
+        case 5:
+            statusColorView.backgroundColor = UIColor(named: "greyCol")
+            donationStatusLbl.text = "Cancelled"
+        default:
+            statusColorView.backgroundColor = UIColor.clear
+            donationStatusLbl.text = "Unknown"
+        }
     }
+
     
     private func hideAllActionSections() {
         cancelSectionView.isHidden = true

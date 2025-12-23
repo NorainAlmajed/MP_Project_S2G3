@@ -32,51 +32,65 @@ class DonationCollectionViewCell: UICollectionViewCell {
     
     
     // MARK: - Configure Cell With Donation Data
-    func setup(with donation: Donation)
-    {
-        // Set logo + make it circular
-        donationLogoImageView.image = UIImage(named: "basket") ?? UIImage()
+    func setup(with donation: Donation, currentUser: User) {
+
+        // Set the correct logo URL depending on the current user role
+        //var logoURL: String?
+
+//        if currentUser.role == 2 {
+//            // Donor view → show NGO logo
+//            logoURL = donation.ngo.profile_image_url
+//        } else {
+//            // Other roles → show donor logo
+//            logoURL = donation.donor.profile_image_url
+//        }
+
+        // Load image async
+//        donationLogoImageView.loadImage(from: logoURL ?? "", placeholder: UIImage(named: "basket"))
+
+
+        // Make it circular
         donationLogoImageView.layer.cornerRadius = donationLogoImageView.frame.height / 2
         donationLogoImageView.clipsToBounds = true
-        
-        // Set text labels
-        donationCategoryLbl.text = donation.Category
-        donationIDLbl.text = "Donation #" + String(donation.donationID)
-        if user.userType == 2 {
-            donorNgoLbl.text = "NGO: " + donation.ngo.fullName
+
+        // Other labels (no change)
+        donationCategoryLbl.text = donation.category
+        donationIDLbl.text = "Donation #\(donation.donationID)"
+
+        if currentUser.role == 2 {
+            donorNgoLbl.text = "NGO: " + (donation.ngo.fullName ?? donation.ngo.username)
         } else {
-            donorNgoLbl.text = "Donor: " + donation.donor.username
+            donorNgoLbl.text = "Donor: " + (donation.donor.fullName ?? donation.donor.username)
         }
-        
-        
-        // Format and display date
+
         let formatter = DateFormatter()
         formatter.dateFormat = "dd/MM/yyyy, h:mm a"
-        donationDateLbl.text = formatter.string(from: donation.creationDate)
-        
-        //Setting the color of the status name and color
-        if donation.status == 1 {
+        donationDateLbl.text = formatter.string(from: donation.creationDate.dateValue())
+
+        // Status
+        switch donation.status {
+        case 1:
             statusColorView.backgroundColor = UIColor(named: "orangeCol")
             donationStatusLbl.text = "Pending"
-        }
-        else if donation.status == 2 {
+        case 2:
             statusColorView.backgroundColor = UIColor(named: "greenCol")
             donationStatusLbl.text = "Accepted"
-        }
-        else if donation.status == 3 {
+        case 3:
             statusColorView.backgroundColor = UIColor(named: "blueCol")
             donationStatusLbl.text = "Collected"
-        }
-        else if donation.status == 4 {
+        case 4:
             statusColorView.backgroundColor = UIColor(named: "redCol")
             donationStatusLbl.text = "Rejected"
-        }
-        else if donation.status == 5 {
+        case 5:
             statusColorView.backgroundColor = UIColor(named: "greyCol")
             donationStatusLbl.text = "Cancelled"
+        default:
+            statusColorView.backgroundColor = .lightGray
+            donationStatusLbl.text = "Unknown"
         }
     }
-    
+
+
     
     // MARK: - UI Setup
     

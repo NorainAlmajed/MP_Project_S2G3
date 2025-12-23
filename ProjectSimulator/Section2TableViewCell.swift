@@ -53,31 +53,32 @@ class Section2TableViewCell: UITableViewCell {
         
         //Update address
         donationAddressLbl.text = address
-            applyLineSpacing()
+        applyLineSpacing()
         
         //Update the city and governorate
         governorateLbl.text = "\(donation.address.area), \(donation.address.governorate) Governorate"
         
         //Update date
-        // Format and display date
+        // Convert Timestamp to Date
         let formatter = DateFormatter()
         formatter.dateFormat = "dd/MM/yyyy, h:mm a"
-        pickupDatelbl.text = "\(formatter.string(from: donation.creationDate)) - \(donation.pickupTime) "
+        pickupDatelbl.text = "\(formatter.string(from: donation.creationDate.dateValue())) - \(donation.pickupTime)"
         
         // Set recurrence label based on integer value
         switch donation.recurrence {
-                case 1:
-                    recurrenceLbl.text = "Recurrence: Repeated Daily"
-                case 2:
-                    recurrenceLbl.text = "Recurrence: Repeated Weekly"
-                case 3:
-                    recurrenceLbl.text = "Recurrence: Repeated Monthly"
-                case 4:
-                    recurrenceLbl.text = "Recurrence: Repeated Yearly"
-                default:
-                    recurrenceLbl.text = "" // 0 or any other value
-                }
+            case 1:
+                recurrenceLbl.text = "Recurrence: Repeated Daily"
+            case 2:
+                recurrenceLbl.text = "Recurrence: Repeated Weekly"
+            case 3:
+                recurrenceLbl.text = "Recurrence: Repeated Monthly"
+            case 4:
+                recurrenceLbl.text = "Recurrence: Repeated Yearly"
+            default:
+                recurrenceLbl.text = "" // 0 or any other value
         }
+    }
+
 
         private func applyLineSpacing() {
             let paragraphStyle = NSMutableParagraphStyle()

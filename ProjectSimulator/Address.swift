@@ -20,44 +20,46 @@ struct Notification {
     var title: String
     var description: String
     var date: Date
+    var userID: String
 }
 
 
 struct User {
-    var fullName: String
+    let userID: String                  // Firestore documentID
+    var fullName: String?           // optional
     var username: String
-    var notifications: [Notification] = []
-    var donations: [Donation]?
-    let userType: Int
+    let role: Int                   // 1=admin, 2=donor, 3=NGO
     var enableNotification: Bool = true
-    var profile_img: String? = ""
+    var profile_image_url: String? = ""
 }
 
-var userNotifications: [Notification] = [
-    
-    Notification(title: "NGO Awaiting Approval", description: "alnoor.association has just signed up and is awaiting your verification.", date: Date().addingTimeInterval(-300)),
-                     
-    Notification(title: "New Donor Regestration", description: "zahraa.hubail has just signed up to the system", date: Date().addingTimeInterval(-100)),
-                     
-    Notification(title: "New Donation Recieved", description: "Donor fatima.hassan has made a new donation to UCO Elderly Care.", date: Date().addingTimeInterval(-200)),
-        
-    Notification(title: "Donation Rejected", description: "Donation #1234 has been rejected by the admin.", date: Date()),
-        
-    Notification(title: "New Donation Accepted", description: "Donation #1234 has been accepted by the admin.", date: Date().addingTimeInterval(-400)),
-        
-    Notification(title: "New Donation Recieved", description: "Donor fatima.hassan has made a new donation to UCO Elderly Care.", date: Date().addingTimeInterval(-500)),
-        
-    Notification(title: "New Donation Recieved", description: "Donor fatima.hassan has made a new donation to UCO Elderly Care.", date: Date().addingTimeInterval(-600)),
-        
-    Notification(title: "New Donation Recieved", description: "Donor fatima.hassan has made a new donation to UCO Elderly Care.", date: Date().addingTimeInterval(-700))
-
-]
 
 
-var users: [User] = [
-    
-    User(fullName: "Zahraa Hubail", username: "zahraa.hubail",
-         notifications: userNotifications,
+//var userNotifications: [Notification] = [
+//    
+//    Notification(title: "NGO Awaiting Approval", description: "alnoor.association has just signed up and is awaiting your verification.", date: Date().addingTimeInterval(-300)),
+//                     
+//    Notification(title: "New Donor Regestration", description: "zahraa.hubail has just signed up to the system", date: Date().addingTimeInterval(-100)),
+//                     
+//    Notification(title: "New Donation Recieved", description: "Donor fatima.hassan has made a new donation to UCO Elderly Care.", date: Date().addingTimeInterval(-200)),
+//        
+//    Notification(title: "Donation Rejected", description: "Donation #1234 has been rejected by the admin.", date: Date()),
+//        
+//    Notification(title: "New Donation Accepted", description: "Donation #1234 has been accepted by the admin.", date: Date().addingTimeInterval(-400)),
+//        
+//    Notification(title: "New Donation Recieved", description: "Donor fatima.hassan has made a new donation to UCO Elderly Care.", date: Date().addingTimeInterval(-500)),
+//        
+//    Notification(title: "New Donation Recieved", description: "Donor fatima.hassan has made a new donation to UCO Elderly Care.", date: Date().addingTimeInterval(-600)),
+//        
+//    Notification(title: "New Donation Recieved", description: "Donor fatima.hassan has made a new donation to UCO Elderly Care.", date: Date().addingTimeInterval(-700))
+//
+//]
+
+
+//var users: [User] = [
+//    
+//    User(fullName: "Zahraa Hubail", username: "zahraa.hubail",
+//         notifications: userNotifications,
          
 //          donations: [
 //            Donation(donationID: 91475, ngo: ngo1, creationDate: Date(), donor: user1, address: Address(building: 1311, road: 3027, block: 430, area: "Karbabad", governorate: "Manama"), pickupDate: Date(), pickupTime: "8AM - 9PM", foodImage: UIImage(named: "apples") ?? UIImage(), status: 1, Category: "Produce", quantity: 30, expiryDate: Date(), description: "Fresh red apples, locally grown and rich in flavor", recurrence: 1),
@@ -73,15 +75,15 @@ var users: [User] = [
 //            Donation(donationID: 91475, ngo: ngo1, creationDate: Date(), donor: user1, address: Address(building: 1311, road: 3027, block: 430, flat: 402, area: "Karbabad", governorate: "Manama"), pickupDate: Date(), pickupTime: "12:00:00", foodImage: UIImage(named: "apples") ?? UIImage(), status: 1, Category: "Produce", quantity: 30, weight: nil, expiryDate: Date(), description: "Fresh red apples, locally grown and rich in flavor"),
 //            
 //            Donation(donationID: 91475, ngo: ngo1, creationDate: Date(), donor: user1, address: Address(building: 1311, road: 3027, block: 430, flat: 402, area: "Karbabad", governorate: "Manama"), pickupDate: Date(), pickupTime: "12:00:00", foodImage: UIImage(named: "apples") ?? UIImage(), status: 2, Category: "Produce", quantity: 30, weight: nil, expiryDate: Date(), description: "Fresh red apples, locally grown and rich in flavor")
-//        ],
-         userType: 1
-)
-]
+////        ],
+//         userType: 1
+//)
+//]
 
-var user = users[0]
-
-var admin = User(fullName: "Haetham Alhaddad", username: "haetham.alhaddad", userType: 1)
-
+//var user = users[0]
+//
+//var admin = User(fullName: "Haetham Alhaddad", username: "haetham.alhaddad", userType: 1)
+//
 
 struct NGO {
     var ngoName: String

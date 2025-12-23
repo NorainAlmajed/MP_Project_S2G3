@@ -2,189 +2,248 @@
 //  NotificationViewController.swift
 //  ProjectSimulator
 //
-//  Created by Fatema Mohamed Amin Jaafar Hasan Hubail on 29/11/2025.
+//  Created by Zahraa Hubail on 29/11/2025.
 //
 
 import UIKit
+import FirebaseFirestore
+
 
 class NotificationsViewController: UIViewController {
 
     // Outlet connected to the collection view in the storyboard
     @IBOutlet weak var notificationsCollectionView: UICollectionView!
     
-    private let noNotificationsLabel: UILabel = {
-        let label = UILabel()
-        label.text = "No notifications available"
-        label.textAlignment = .center
-        label.textColor = .gray
-        label.font = UIFont.systemFont(ofSize: 18, weight: .medium)
-        label.isHidden = true
-        return label
-    }()
-    
-    var sortedNotifications: [Notification] = []
-    
-    override func viewDidLoad() {
-        super.viewDidLoad()
-        
-        // Set the screen title
-        title = "Notifications"
-        
-        // Sort notifications by date (newest first)
-        sortedNotifications = user.notifications.sorted { $0.date > $1.date }
+        // MARK: - Properties
+        let db = Firestore.firestore()
+        var currentUser: User?
 
-        // Set the data source and delegate for the collection view
-        notificationsCollectionView.dataSource = self
-        notificationsCollectionView.delegate = self
-        
-        // Configure the layout of the collection view
-        let layout = UICollectionViewFlowLayout()
-        layout.scrollDirection = .vertical          // vertical scrolling
-        layout.minimumLineSpacing = 10              // space between cells
-        notificationsCollectionView.collectionViewLayout = layout
-        
-        // Adding Clear Button
-        navigationItem.title = "Notifications"
-        navigationItem.rightBarButtonItem = UIBarButtonItem(
-            title: "Clear",
-            style: .plain,
-            target: self,
-            action: #selector(clearNotifications)
-        )
-        
-        // Add grey line under navigation bar
-        navigationItem.rightBarButtonItem?.tintColor = .red
-        
-        // Remove default shadow
-        navigationController?.navigationBar.shadowImage = UIImage()
-        
-        // Add small grey line under navigation bar
-        let bottomLine = UIView()
-        bottomLine.backgroundColor = UIColor.systemGray4
-        bottomLine.translatesAutoresizingMaskIntoConstraints = false
-        navigationController?.navigationBar.addSubview(bottomLine)
+        var sortedNotifications: [Notification] = []
 
-        NSLayoutConstraint.activate([
-            bottomLine.heightAnchor.constraint(equalToConstant: 1),
-            bottomLine.leadingAnchor.constraint(equalTo: navigationController!.navigationBar.leadingAnchor),
-            bottomLine.trailingAnchor.constraint(equalTo: navigationController!.navigationBar.trailingAnchor),
-            bottomLine.bottomAnchor.constraint(equalTo: navigationController!.navigationBar.bottomAnchor)
-        ])
+        private let noNotificationsLabel: UILabel = {
+            let label = UILabel()
+            label.text = "No notifications available"
+            label.textAlignment = .center
+            label.textColor = .gray
+            label.font = UIFont.systemFont(ofSize: 18, weight: .medium)
+            label.isHidden = true
+            return label
+        }()
 
-        // Add the label to the view
-        view.addSubview(noNotificationsLabel)
-        noNotificationsLabel.translatesAutoresizingMaskIntoConstraints = false
-        NSLayoutConstraint.activate([
-            noNotificationsLabel.centerXAnchor.constraint(equalTo: view.centerXAnchor),
-            noNotificationsLabel.centerYAnchor.constraint(equalTo: view.centerYAnchor)
-        ])
-        
-        updateNoNotificationsLabel()
-        
-        if let layout = notificationsCollectionView.collectionViewLayout as? UICollectionViewFlowLayout {
-            layout.sectionInset = UIEdgeInsets(top: 12, left: 0, bottom: 12, right: 0)
+        // MARK: - Lifecycle
+        override func viewDidLoad() {
+            super.viewDidLoad()
+
+            title = "Notifications"
+
+            notificationsCollectionView.dataSource = self
+            notificationsCollectionView.delegate = self
+
+            setupCollectionViewLayout()
+            setupNavigationBar()
+            setupNoNotificationsLabel()
+
+            fetchCurrentUser { [weak self] success in
+                guard let self = self, success else {
+                    self?.updateNoNotificationsLabel()
+                    return
+                }
+                self.fetchNotifications()
+            }
         }
-    
 
+        override func viewWillAppear(_ animated: Bool) {
+            super.viewWillAppear(animated)
+            navigationController?.setNavigationBarHidden(false, animated: animated)
+            navigationController?.navigationBar.prefersLargeTitles = true
+        }
 
-    }
-    
-    private func updateNoNotificationsLabel() {
-        let hasNotifications = !(sortedNotifications.isEmpty)
-        
-        noNotificationsLabel.isHidden = hasNotifications
-        notificationsCollectionView.isHidden = !hasNotifications
-        
-        // Enable or disable Clear button based on notifications
-        navigationItem.rightBarButtonItem?.isEnabled = hasNotifications
-    }
+        // MARK: - UI Setup
+        private func setupCollectionViewLayout() {
+            let layout = UICollectionViewFlowLayout()
+            layout.scrollDirection = .vertical
+            layout.minimumLineSpacing = 12
+            layout.sectionInset = UIEdgeInsets(top: 16, left: 16, bottom: 16, right: 16)
+            notificationsCollectionView.collectionViewLayout = layout
+        }
 
-    @objc func clearNotifications() {
-        // Step 1: Show confirmation alert
-        let confirmAlert = UIAlertController(
-            title: "Clear Notifications",
-            message: "Are you sure you want to clear notifications?",
-            preferredStyle: .alert
-        )
-        
-        // Cancel action (left)
-        let cancelAction = UIAlertAction(title: "Cancel", style: .cancel, handler: nil)
-        
-        // Yes action (right)
-        let yesAction = UIAlertAction(title: "Yes", style: .default) { [weak self] _ in
-            guard let self = self else { return }
-            
-            // Step 2: Show success alert
-            let successAlert = UIAlertController(
-                title: "Success",
-                message: "Notifications have been cleared successfully",
-                preferredStyle: .alert
+        private func setupNavigationBar() {
+            let clearButton = UIBarButtonItem(
+                title: "Clear",
+                style: .plain,
+                target: self,
+                action: #selector(clearNotifications)
             )
-            
-            // Dismiss action
-            let dismissAction = UIAlertAction(title: "Dismiss", style: .default) { _ in
-                // Clear notifications safely
-                user.notifications = []
-                self.sortedNotifications = [] // Clear the sorted notifications too
-                self.notificationsCollectionView.reloadData()
-                self.updateNoNotificationsLabel()
+            navigationItem.rightBarButtonItem = clearButton
+        }
+
+        private func setupNoNotificationsLabel() {
+            view.addSubview(noNotificationsLabel)
+            noNotificationsLabel.translatesAutoresizingMaskIntoConstraints = false
+
+            NSLayoutConstraint.activate([
+                noNotificationsLabel.centerXAnchor.constraint(equalTo: view.centerXAnchor),
+                noNotificationsLabel.centerYAnchor.constraint(equalTo: view.centerYAnchor)
+            ])
+        }
+
+        // MARK: - Firebase
+        func fetchCurrentUser(completion: @escaping (Bool) -> Void) {
+            let tempUserID = "dlqHfZoVwh50p3Aexu1A" // TEMP user (same as Donation VC)
+
+            db.collection("users").document(tempUserID).getDocument { [weak self] snapshot, error in
+                if let error = error {
+                    print("❌ Error fetching user:", error)
+                    completion(false)
+                    return
+                }
+
+                guard let data = snapshot?.data(),
+                      let username = data["username"] as? String,
+                      let role = data["role"] as? Int else {
+                    completion(false)
+                    return
+                }
+
+                self?.currentUser = User(
+                    userID: tempUserID,
+                    username: username,
+                    role: role,
+                    profile_image_url: data["profile_img"] as? String
+                )
+
+                completion(true)
+            }
+        }
+
+        func fetchNotifications() {
+            guard let currentUser = currentUser else {
+                updateNoNotificationsLabel()
+                return
             }
 
-            successAlert.addAction(dismissAction)
-            self.present(successAlert, animated: true, completion: nil)
+            db.collection("notifications")
+                .order(by: "date", descending: true)
+                .getDocuments { [weak self] snapshot, error in
+                    guard let self = self else { return }
+
+                    if let error = error {
+                        print("❌ Error fetching notifications:", error)
+                        self.updateNoNotificationsLabel()
+                        return
+                    }
+
+                    guard let documents = snapshot?.documents else {
+                        self.sortedNotifications = []
+                        self.updateNoNotificationsLabel()
+                        return
+                    }
+
+                    self.sortedNotifications = documents.compactMap { doc -> Notification? in
+                        let data = doc.data()
+
+                        guard
+                            let userID = data["userID"] as? String,
+                            userID == currentUser.userID,
+                            let title = data["title"] as? String,
+                            let description = data["description"] as? String,
+                            let timestamp = data["date"] as? Timestamp
+                        else {
+                            return nil
+                        }
+
+                        return Notification(
+                            title: title,
+                            description: description,
+                            date: timestamp.dateValue(),
+                            userID: userID
+                        )
+                    }
+
+                    self.notificationsCollectionView.reloadData()
+                    self.updateNoNotificationsLabel()
+                }
         }
-        
-        confirmAlert.addAction(cancelAction)
-        confirmAlert.addAction(yesAction)
-        
-        // Show the confirmation alert
-        self.present(confirmAlert, animated: true, completion: nil)
-    }
-    
-    
-    //To hide the tab bar controller
-    override func viewWillAppear(_ animated: Bool) {
-        super.viewWillAppear(animated)
-        tabBarController?.tabBar.isHidden = true
-    }
 
-    override func viewWillDisappear(_ animated: Bool) {
-        super.viewWillDisappear(animated)
-        tabBarController?.tabBar.isHidden = false
-    }
+        // MARK: - UI Helpers
+        private func updateNoNotificationsLabel() {
+            if sortedNotifications.isEmpty {
+                noNotificationsLabel.isHidden = false
+                notificationsCollectionView.isHidden = true
+            } else {
+                noNotificationsLabel.isHidden = true
+                notificationsCollectionView.isHidden = false
+            }
+        }
 
-    
+        // MARK: - Actions
+        @objc func clearNotifications() {
+            let confirmAlert = UIAlertController(
+                title: "Clear Notifications",
+                message: "Are you sure you want to clear notifications?",
+                preferredStyle: .alert
+            )
 
-}
+            let cancelAction = UIAlertAction(title: "Cancel", style: .cancel)
 
-extension NotificationsViewController: UICollectionViewDataSource {
-    
-    // Return number of items to display (based on notifications array)
-    func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        return sortedNotifications.count
-    }
+            let yesAction = UIAlertAction(title: "Yes", style: .default) { [weak self] _ in
+                guard let self = self else { return }
 
-    // Configure each collection view cell
-    func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
-        let cell = notificationsCollectionView.dequeueReusableCell(withReuseIdentifier: "NotificationsCollectionViewCell", for: indexPath) as! NotificationsCollectionViewCell
-        
-        let notification = sortedNotifications[indexPath.row]
-        cell.setup(with: notification)
-        
-        return cell
-    }
-}
+                let successAlert = UIAlertController(
+                    title: "Success",
+                    message: "Notifications have been cleared successfully",
+                    preferredStyle: .alert
+                )
 
-extension NotificationsViewController: UICollectionViewDelegateFlowLayout {
-    func collectionView(_ collectionView: UICollectionView,
-                        layout collectionViewLayout: UICollectionViewLayout,
-                        sizeForItemAt indexPath: IndexPath) -> CGSize {
+                let dismissAction = UIAlertAction(title: "Dismiss", style: .default) { _ in
+                    self.sortedNotifications = []
+                    self.notificationsCollectionView.reloadData()
+                    self.updateNoNotificationsLabel()
+                }
 
-        let isIPad = UIDevice.current.userInterfaceIdiom == .pad
-        let horizontalPadding: CGFloat = isIPad ? 80 : 16
+                successAlert.addAction(dismissAction)
+                self.present(successAlert, animated: true)
+            }
 
-        let width = collectionView.bounds.width - horizontalPadding
-        return CGSize(width: width, height: 130)
+            confirmAlert.addAction(cancelAction)
+            confirmAlert.addAction(yesAction)
+            present(confirmAlert, animated: true)
+        }
     }
 
-}
+    // MARK: - UICollectionViewDataSource
+    extension NotificationsViewController: UICollectionViewDataSource {
+
+        func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
+            return sortedNotifications.count
+        }
+
+        func collectionView(
+            _ collectionView: UICollectionView,
+            cellForItemAt indexPath: IndexPath
+        ) -> UICollectionViewCell {
+
+            let cell = collectionView.dequeueReusableCell(
+                withReuseIdentifier: "NotificationCollectionViewCell",
+                for: indexPath
+            ) as! NotificationsCollectionViewCell
+
+            let notification = sortedNotifications[indexPath.item]
+            cell.setup(with: notification)
+            return cell
+        }
+    }
+
+    // MARK: - UICollectionViewDelegateFlowLayout
+    extension NotificationsViewController: UICollectionViewDelegateFlowLayout {
+
+        func collectionView(
+            _ collectionView: UICollectionView,
+            layout collectionViewLayout: UICollectionViewLayout,
+            sizeForItemAt indexPath: IndexPath
+        ) -> CGSize {
+
+            let width = collectionView.bounds.width - 32
+            return CGSize(width: width, height: 90)
+        }
+    }

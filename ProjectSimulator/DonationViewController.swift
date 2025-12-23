@@ -17,7 +17,8 @@ class DonationViewController: UIViewController {
     @IBOutlet weak var statusCollectionView: UICollectionView!
     
 
-        var currentUserData: [String: Any]?
+        // MARK: - Properties
+        var currentUser: User?
         let db = Firestore.firestore()
 
         let statuses = ["All", "Pending", "Accepted", "Collected", "Rejected", "Cancelled"]
@@ -41,21 +42,21 @@ class DonationViewController: UIViewController {
             return label
         }()
 
+        // MARK: - View Lifecycle
         override func viewDidLoad() {
             super.viewDidLoad()
 
             fetchCurrentUser { success in
-                if success {
-                    self.fetchDonations()
-                } else {
+                guard success else {
                     self.updateNoDonationsLabel()
+                    return
+                }
+                self.fetchAllUsers {
+                    self.fetchDonations()
                 }
             }
 
-            displayedDonations = allDonations.sorted { $0.creationDate > $1.creationDate }
-
             title = "Donations"
-
             donationsCollectionView.dataSource = self
             donationsCollectionView.delegate = self
             statusCollectionView.dataSource = self
@@ -69,8 +70,25 @@ class DonationViewController: UIViewController {
             setupDonationsCollectionLayout()
         }
 
-        // MARK: - UI Setup
+        override func viewWillAppear(_ animated: Bool) {
+            super.viewWillAppear(animated)
+            navigationController?.setNavigationBarHidden(false, animated: animated)
+            navigationController?.navigationBar.prefersLargeTitles = true
+            navigationItem.largeTitleDisplayMode = .always
+            title = "Donations"
 
+            let appearance = UINavigationBarAppearance()
+            appearance.configureWithOpaqueBackground()
+            appearance.backgroundColor = view.backgroundColor
+            appearance.shadowColor = .clear
+            navigationController?.navigationBar.standardAppearance = appearance
+            navigationController?.navigationBar.scrollEdgeAppearance = appearance
+            navigationController?.navigationBar.compactAppearance = appearance
+
+            donationsCollectionView.reloadData()
+        }
+
+        // MARK: - UI Setup
         private func setupStatusCollectionLayout() {
             let layout = UICollectionViewFlowLayout()
             layout.scrollDirection = .horizontal
@@ -112,7 +130,6 @@ class DonationViewController: UIViewController {
         }
 
         // MARK: - Search Header
-
         private func setupSearchHeaderUnderNavBar() {
             searchHeaderView = UIView()
             searchHeaderView.translatesAutoresizingMaskIntoConstraints = false
@@ -178,11 +195,10 @@ class DonationViewController: UIViewController {
         }
 
         @objc private func filterButtonTapped() {
-            // TODO
+            // TODO: implement filter UI
         }
 
-        // MARK: - Label update
-
+        // MARK: - Label Updates
         private func updateNoDonationsLabel() {
             if displayedDonations.isEmpty {
                 noDonationsLabel.isHidden = false
@@ -195,7 +211,6 @@ class DonationViewController: UIViewController {
 
         private func updateNoDonationsLabelDuringSearch() {
             let isSearching = !((searchBar.text ?? "").trimmingCharacters(in: .whitespacesAndNewlines).isEmpty)
-
             if displayedDonations.isEmpty {
                 noDonationsLabel.text = isSearching ? "No results found" : "No donations available"
                 noDonationsLabel.isHidden = false
@@ -207,122 +222,173 @@ class DonationViewController: UIViewController {
         }
 
         // MARK: - Firebase
-
         func fetchCurrentUser(completion: @escaping (Bool) -> Void) {
-            guard let currentUser = Auth.auth().currentUser else {
-                print("No user is logged in")
-                completion(false)
+            let tempUserID = "dlqHfZoVwh50p3Aexu1A" // temporary user
+
+            db.collection("users").document(tempUserID).getDocument { [weak self] snapshot, error in
+                if let error = error {
+                    print("Error fetching user: \(error)")
+                    completion(false)
+                    return
+                }
+                guard let data = snapshot?.data(),
+                      let username = data["username"] as? String,
+                      let role = data["role"] as? Int
+                else {
+                    print("User data missing or invalid")
+                    completion(false)
+                    return
+                }
+
+                self?.currentUser = User(
+                    userID: tempUserID,
+                    username: username,
+                    role: role,
+                    profile_image_url: data["profile_image_url"] as? String
+                )
+                completion(true)
+            }
+        }
+
+        func fetchAllUsers(completion: @escaping () -> Void) {
+            db.collection("users").getDocuments { [weak self] snapshot, error in
+                guard let self = self else { return }
+
+                if let error = error {
+                    print("❌ Error fetching users:", error)
+                    completion()
+                    return
+                }
+
+                guard let documents = snapshot?.documents else {
+                    print("❌ No user documents found")
+                    completion()
+                    return
+                }
+
+                self.allUsers = documents.compactMap { doc -> User? in
+                    let data = doc.data()
+                    guard let username = data["username"] as? String,
+                          let role = data["role"] as? Int else { return nil }
+                    return User(
+                        userID: doc.documentID,
+                        username: username,
+                        role: role,
+                        profile_image_url: data["profile_image_url"] as? String // correct field name
+                    )
+                }
+
+
+                print("Users loaded:", self.allUsers.count)
+                completion()
+            }
+        }
+
+    func fetchDonations() {
+        guard let currentUser = currentUser else {
+            print("Current user not set")
+            return
+        }
+
+        var query: Query = db.collection("Donation")
+        switch currentUser.role {
+        case 1: break // Admin: fetch all donations
+        case 2:
+            query = query.whereField("donor", isEqualTo: db.collection("users").document(currentUser.userID))
+        case 3:
+            query = query.whereField("ngo", isEqualTo: db.collection("users").document(currentUser.userID))
+        default:
+            print("Unknown role")
+            return
+        }
+
+        query.getDocuments { [weak self] snapshot, error in
+            guard let self = self else { return }
+
+            if let error = error {
+                print("Error fetching donations: \(error)")
                 return
             }
 
-            let uid = currentUser.uid
-            db.collection("users").document(uid).getDocument { [weak self] snapshot, error in
-                if let error = error {
-                    print("Error fetching current user: \(error)")
-                    completion(false)
-                    return
+            guard let documents = snapshot?.documents else { return }
+
+            self.allDonations = documents.compactMap { doc -> Donation? in
+                let data = doc.data()
+
+                // Safely unwrap all required fields
+                guard
+                    let ngoRef = data["ngo"] as? DocumentReference,
+                    let donorRef = data["donor"] as? DocumentReference,
+                    let creationTimestamp = data["creationDate"] as? Timestamp,
+                    let pickupTimestamp = data["pickupDate"] as? Timestamp,
+                    let pickupTime = data["pickupTime"] as? String,
+                    let foodImageUrl = data["foodImageUrl"] as? String,
+                    let status = data["status"] as? Int,
+                    let category = data["Category"] as? String,
+                    let quantity = data["quantity"] as? Int,
+                    let expiryTimestamp = data["expiryDate"] as? Timestamp
+                else {
+                    print("Skipping donation document \(doc.documentID) due to missing fields")
+                    return nil
                 }
-                if let data = snapshot?.data() {
-                    self?.currentUserData = data
-                    completion(true)
-                } else {
-                    completion(false)
+
+                // Try to get users
+                guard let ngo = self.getUser(by: ngoRef.documentID),
+                      let donor = self.getUser(by: donorRef.documentID)
+                else {
+                    print("Skipping donation document \(doc.documentID) because NGO or donor not found")
+                    return nil
                 }
+
+                let address = Address(building: 0, road: 0, block: 0, flat: nil, area: "", governorate: "")
+                let donationID = doc.documentID // or data["donationID"] as? String
+
+                guard let donationID = data["donationID"] as? Int else {
+                    print("Skipping donation \(doc.documentID) because donationID is missing")
+                    return nil
+                }
+
+                return Donation(
+                    donationID: donationID,  // use the numeric ID from Firestore
+                    ngo: ngo,
+                    creationDate: creationTimestamp,
+                    donor: donor,
+                    address: address,
+                    pickupDate: pickupTimestamp,
+                    pickupTime: pickupTime,
+                    foodImageUrl: foodImageUrl,
+                    status: status,
+                    category: category,
+                    quantity: quantity,
+                    weight: data["weight"] as? Double,
+                    expiryDate: expiryTimestamp,
+                    description: data["description"] as? String,
+                    rejectionReason: data["rejectionReason"] as? String,
+                    recurrence: data["recurrence"] as? Int ?? 0
+                )
+
             }
+
+            self.displayedDonations = self.allDonations.sorted { $0.creationDate.dateValue() > $1.creationDate.dateValue() }
+            self.donationsCollectionView.reloadData()
+            self.updateNoDonationsLabel()
         }
+    }
 
-        func fetchDonations() {
-            db.collection("donations").getDocuments { [weak self] snapshot, error in
-                guard let self = self else { return }
-                if let error = error {
-                    print("Error fetching donations: \(error)")
-                    return
-                }
-                guard let documents = snapshot?.documents else { return }
 
-                self.allDonations = documents.compactMap { doc in
-                    let data = doc.data()
-                    guard
-                        let userID = data["userID"] as? String,
-                        let donorID = data["donorID"] as? String,
-                        let creationTimestamp = data["creationDate"] as? Timestamp,
-                        let pickupTimestamp = data["pickupDate"] as? Timestamp,
-                        let pickupTime = data["pickupTime"] as? String,
-                        let foodImageUrl = data["foodImageUrl"] as? String,
-                        let status = data["status"] as? Int,
-                        let category = data["Category"] as? String,
-                        let quantity = data["quantity"] as? Int,
-                        let expiryTimestamp = data["expiryDate"] as? Timestamp,
-                        let ngo = self.getUser(by: userID),
-                        let donor = self.getUser(by: donorID)
-                    else { return nil }
-
-                    let addressData = data["address"] as? [String: Any] ?? [:]
-                    let address = Address(
-                        building: addressData["building"] as? Int ?? 0,
-                        road: addressData["road"] as? Int ?? 0,
-                        block: addressData["block"] as? Int ?? 0,
-                        flat: addressData["flat"] as? Int,
-                        area: addressData["area"] as? String ?? "",
-                        governorate: addressData["governorate"] as? String ?? ""
-                    )
-
-                    return Donation(
-                        donationID: Int(doc.documentID) ?? 0,
-                        ngo: ngo,
-                        creationDate: creationTimestamp.dateValue(),
-                        donor: donor,
-                        address: address,
-                        pickupDate: pickupTimestamp.dateValue(),
-                        pickupTime: pickupTime,
-                        foodImageUrl: foodImageUrl,
-                        status: status,
-                        Category: category,
-                        quantity: quantity,
-                        weight: data["weight"] as? Double,
-                        expiryDate: expiryTimestamp.dateValue(),
-                        description: data["description"] as? String,
-                        rejectionReason: data["rejectionReason"] as? String,
-                        recurrence: data["recurrence"] as? Int ?? 0
-                    )
-                }
-
-                self.displayedDonations = self.allDonations.sorted { $0.creationDate > $1.creationDate }
-                self.donationsCollectionView.reloadData()
-                self.updateNoDonationsLabel()
-            }
-        }
 
         func getUser(by id: String) -> User? {
-            return allUsers.first { $0.username == id }
+            return allUsers.first { $0.userID == id }
         }
 
-        // MARK: - Lifecycle Overrides
-
-        override func viewWillAppear(_ animated: Bool) {
-            super.viewWillAppear(animated)
-            navigationController?.setNavigationBarHidden(false, animated: animated)
-            navigationController?.navigationBar.prefersLargeTitles = true
-            navigationItem.largeTitleDisplayMode = .always
-            title = "Donations"
-
-            let appearance = UINavigationBarAppearance()
-            appearance.configureWithOpaqueBackground()
-            appearance.backgroundColor = view.backgroundColor
-            appearance.shadowColor = .clear
-            navigationController?.navigationBar.standardAppearance = appearance
-            navigationController?.navigationBar.scrollEdgeAppearance = appearance
-            navigationController?.navigationBar.compactAppearance = appearance
-
-            donationsCollectionView.reloadData()
-        }
-
+        // MARK: - Segue
         override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
             if segue.identifier == "showDonationDetails",
                let detailsVC = segue.destination as? DonationDetailsViewController,
                let indexPath = donationsCollectionView.indexPathsForSelectedItems?.first {
                 let donation = displayedDonations[indexPath.row]
                 detailsVC.donation = donation
+                detailsVC.currentUser = currentUser
                 detailsVC.hidesBottomBarWhenPushed = true
             }
         }
@@ -338,7 +404,7 @@ class DonationViewController: UIViewController {
         }
     }
 
-    // MARK: - Collection DataSource
+    // MARK: - UICollectionViewDataSource
     extension DonationViewController: UICollectionViewDataSource {
         func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
             return collectionView == statusCollectionView ? statuses.count : displayedDonations.count
@@ -358,13 +424,15 @@ class DonationViewController: UIViewController {
             } else {
                 let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "DonationCollectionViewCell", for: indexPath) as! DonationCollectionViewCell
                 let donation = displayedDonations[indexPath.row]
-                cell.setup(with: donation)
+                if let currentUser = currentUser {
+                    cell.setup(with: donation, currentUser: currentUser)
+                }
                 return cell
             }
         }
     }
 
-    // MARK: - Collection Layout
+    // MARK: - UICollectionViewDelegateFlowLayout
     extension DonationViewController: UICollectionViewDelegateFlowLayout {
         func collectionView(_ collectionView: UICollectionView,
                             layout collectionViewLayout: UICollectionViewLayout,
@@ -379,32 +447,29 @@ class DonationViewController: UIViewController {
         }
     }
 
-// MARK: - Filtering
-extension DonationViewController {
-
-    func filterDonations() {
-        var filtered = allDonations
-
-        // Filter by status
-        if selectedIndex != 0 {
-            filtered = filtered.filter { $0.status == selectedIndex }
-        }
-
-        // Filter by search text
-        let searchText = (searchBar.text ?? "").trimmingCharacters(in: .whitespacesAndNewlines)
-        if !searchText.isEmpty {
-            let text = searchText.lowercased()
-            filtered = filtered.filter {
-                $0.ngo.username.lowercased().contains(text) ||
-                String($0.donationID).contains(text) ||
-                $0.donor.username.lowercased().contains(text) ||
-                $0.Category.lowercased().contains(text)
+    // MARK: - Filtering
+    extension DonationViewController {
+        func filterDonations() {
+            var filtered = allDonations
+            if selectedIndex != 0 {
+                filtered = filtered.filter { $0.status == selectedIndex }
             }
+
+            let searchText = (searchBar.text ?? "").trimmingCharacters(in: .whitespacesAndNewlines)
+            if !searchText.isEmpty {
+                let text = searchText.lowercased()
+                filtered = filtered.filter {
+                    $0.ngo.username.lowercased().contains(text) ||
+                    String($0.donationID).contains(text) ||
+                    $0.donor.username.lowercased().contains(text) ||
+                    $0.category.lowercased().contains(text)
+                }
+            }
+
+            displayedDonations = filtered.sorted {
+                $0.creationDate.dateValue() > $1.creationDate.dateValue()
+            }
+            donationsCollectionView.reloadData()
+            updateNoDonationsLabelDuringSearch()
         }
-
-        displayedDonations = filtered.sorted { $0.creationDate > $1.creationDate }
-        donationsCollectionView.reloadData()
-        updateNoDonationsLabelDuringSearch()
     }
-}
-

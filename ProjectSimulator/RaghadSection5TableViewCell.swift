@@ -25,7 +25,7 @@ class RaghadSection5TableViewCell: UITableViewCell {
             lblWeightError?.isHidden = true
             lblWeightError?.text = "Please enter a valid weight"
             txtWeight?.keyboardType = .decimalPad
-            txtWeight?.inputAccessoryView = makeDoneToolbar()
+            //txtWeight?.inputAccessoryView = makeDoneToolbar()
         
         
         
@@ -35,7 +35,9 @@ class RaghadSection5TableViewCell: UITableViewCell {
            txtWeight.clipsToBounds = true
            txtWeight.backgroundColor = .white
         
-        
+        if txtWeight.inputAccessoryView == nil {   // ✅
+                txtWeight.inputAccessoryView = makeDoneToolbar()
+            }
         
         
         }
@@ -99,15 +101,54 @@ class RaghadSection5TableViewCell: UITableViewCell {
 
  
     
- 
+// 
+//    private func makeDoneToolbar() -> UIToolbar {
+//        let toolbar = UIToolbar()
+//        toolbar.sizeToFit()
+//        let flex = UIBarButtonItem(barButtonSystemItem: .flexibleSpace, target: nil, action: nil)
+//        let done = UIBarButtonItem(title: "Done", style: .done, target: self, action: #selector(doneTapped))
+//        toolbar.items = [flex, done]
+//        return toolbar
+//    }
+//
+    
+    
+//    private func makeDoneToolbar() -> UIToolbar {
+//        let toolbar = UIToolbar()
+//        toolbar.translatesAutoresizingMaskIntoConstraints = false   // ✅
+//        toolbar.sizeToFit()                                        // ✅
+//
+//        let flex = UIBarButtonItem(barButtonSystemItem: .flexibleSpace,
+//                                   target: nil,
+//                                   action: nil)
+//
+//        let done = UIBarButtonItem(title: "Done",
+//                                   style: .done,
+//                                   target: self,
+//                                   action: #selector(doneTapped))
+//
+//        toolbar.items = [flex, done]
+//        return toolbar
+//    }
+
+    
+    
     private func makeDoneToolbar() -> UIToolbar {
-        let toolbar = UIToolbar()
+        let toolbar = UIToolbar(frame: CGRect(x: 0, y: 0, width: UIScreen.main.bounds.width, height: 44))
+        toolbar.autoresizingMask = [.flexibleWidth]
         toolbar.sizeToFit()
+
         let flex = UIBarButtonItem(barButtonSystemItem: .flexibleSpace, target: nil, action: nil)
         let done = UIBarButtonItem(title: "Done", style: .done, target: self, action: #selector(doneTapped))
         toolbar.items = [flex, done]
         return toolbar
     }
+
+    
+    
+    
+    
+    
 
     @objc private func doneTapped() {
         txtWeight.resignFirstResponder()

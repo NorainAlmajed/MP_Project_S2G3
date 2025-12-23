@@ -13,31 +13,36 @@ class UserTableViewCell: UITableViewCell {
     @IBOutlet weak var nameLbl: UILabel!
     @IBOutlet weak var phoneOrStatusLbl: UILabel!
     @IBOutlet weak var emailLbl: UILabel!
+    @IBOutlet weak var imgUserPhoto: UIImageView!
+    
+    @IBOutlet weak var statusLbl: UILabel!
     
     func configure(appUser:AppUser){
         nameLbl.text = appUser.name
         emailLbl.text = appUser.email
-        
+//        imgUserPhoto.image =
         
         if let donor = appUser as? Donor{
-            phoneOrStatusLbl.text = "Phone Number: "
-            phoneOrStatusLbl.text = donor.phoneNumber.description
+
+            statusLbl.text = ""
+            phoneOrStatusLbl.text = ("Phone Number: " + donor.phoneNumber.description)
+
         }else if let ngo = appUser as? NGO{
-            
+            phoneOrStatusLbl.text = "Status: "
             if (ngo.IsPending){
-                phoneOrStatusLbl.text = "Pending"
-                phoneOrStatusLbl.textColor = .orangeCol
+                statusLbl.text = "Pending"
+                statusLbl.textColor = .orangeCol
                 
             }
             else if (ngo.IsRejected)
             {
-                phoneOrStatusLbl.text = "Rejected"
-                phoneOrStatusLbl.textColor = .redCol
+                statusLbl.text = "Rejected"
+                statusLbl.textColor = .redCol
 
             }
             else{
-                phoneOrStatusLbl.text = "Approved"
-                phoneOrStatusLbl.textColor = .greenCol
+                statusLbl.text = "Approved"
+                statusLbl.textColor = .greenCol
 
             }
         }

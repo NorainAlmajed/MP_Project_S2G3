@@ -14,14 +14,14 @@ class NGO: AppUser {
     var IsRejected:Bool
     var IsPending:Bool
     
-    init( userName: String, password: String,name:String, phoneNumber: Int,email:String, cause: String, address: String, governorate: String,IsApproved:Bool,IsRejected:Bool,IsPending:Bool) {
+    init( userName: String, password: String,name:String, phoneNumber: Int,email:String, cause: String, address: String, governorate: String,IsApproved:Bool,IsRejected:Bool,IsPending:Bool, userImg:String) {
         self.cause = cause
         self.address = address
         self.governorate = governorate
         self.IsApproved = IsApproved
         self.IsRejected = IsRejected
         self.IsPending = IsPending
-        super.init(userName: userName, password: password, name: name, phoneNumber:phoneNumber, email: email)
+        super.init(userName: userName, password: password, name: name, phoneNumber:phoneNumber, email: email,userImg:userImg)
     }
     
 }

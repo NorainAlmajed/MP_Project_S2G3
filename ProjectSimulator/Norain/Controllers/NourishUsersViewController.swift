@@ -1,56 +1,51 @@
 //
-//  UsersTableViewController.swift
+//  NourishUsersViewController.swift
 //  ProjectSimulator
 //
-//  Created by Norain  on 18/12/2025.
+//  Created by Norain  on 23/12/2025.
 //
 
 import UIKit
 
-class UsersTableViewController: UITableViewController {
+class NourishUsersViewController: UIViewController,UITableViewDelegate,UITableViewDataSource {
     
     var users = AppData.users
     
+    @IBOutlet weak var usersTableView: UITableView!
+    
     override func viewDidLoad() {
         super.viewDidLoad()
-
+        
+        usersTableView.delegate = self
+        usersTableView.dataSource = self
+        // Do any additional setup after loading the view.
     }
-
-    // MARK: - Table view data source
-
-    override func numberOfSections(in tableView: UITableView) -> Int {
-
-        return 1
-    }
-
-    override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-
+   
+    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         return users.count
     }
-
     
-    override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let cell = tableView.dequeueReusableCell(withIdentifier: Cell.UserCell.rawValue, for: indexPath) as! UserTableViewCell
+    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+        let cell = usersTableView.dequeueReusableCell(withIdentifier: Cell.UserCell.rawValue, for: indexPath) as! UserTableViewCell
 
         let user = users[indexPath.row]
         cell.configure(appUser: user)
         return cell
     }
     
-    override func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
+    func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
         return 120
     }
     
-    override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         
     }
-    // Override to support conditional editing of the table view.
-    override func tableView(_ tableView: UITableView, canEditRowAt indexPath: IndexPath) -> Bool {
-            // Default fallback
-            return true
+    
+    func tableView(_ tableView: UITableView, canEditRowAt indexPath: IndexPath) -> Bool {
+        return true
     }
     
-    override func tableView(_ tableView: UITableView, trailingSwipeActionsConfigurationForRowAt indexPath: IndexPath) -> UISwipeActionsConfiguration? {
+    func tableView(_ tableView: UITableView, trailingSwipeActionsConfigurationForRowAt indexPath: IndexPath) -> UISwipeActionsConfiguration? {
         
         let user = users[indexPath.row]
         let ngo = user as? NGO
@@ -92,14 +87,14 @@ class UsersTableViewController: UITableViewController {
         let configuration = UISwipeActionsConfiguration(actions: actions)
         return configuration
     }
-
+    
     //create Accept Action
     func createAcceptAction(for ngo: NGO, indexPath: IndexPath) -> UIContextualAction {
         let action = UIContextualAction(style: .normal, title: "Accept") { (_, _, completionHandler) in
             ngo.IsPending = false
             ngo.IsApproved = true
             ngo.IsRejected = false
-            self.tableView.reloadRows(at: [indexPath], with: .automatic)
+            self.usersTableView.reloadRows(at: [indexPath], with: .automatic)
             completionHandler(true)
         }
         action.backgroundColor = .greenCol
@@ -112,7 +107,7 @@ class UsersTableViewController: UITableViewController {
             ngo.IsPending = false
             ngo.IsApproved = false
             ngo.IsRejected = true
-            self.tableView.reloadRows(at: [indexPath], with: .automatic)
+            self.usersTableView.reloadRows(at: [indexPath], with: .automatic)
             completionHandler(true)
         }
         action.backgroundColor = .redCol
@@ -130,20 +125,14 @@ class UsersTableViewController: UITableViewController {
         alert.addAction(cancel)
         present(alert, animated: true)
     }
-    /*
-    // Override to support rearranging the table view.
-    override func tableView(_ tableView: UITableView, moveRowAt fromIndexPath: IndexPath, to: IndexPath) {
 
-    }
-    */
-
-    /*
-    // Override to support conditional rearranging of the table view.
-    override func tableView(_ tableView: UITableView, canMoveRowAt indexPath: IndexPath) -> Bool {
-        // Return false if you do not want the item to be re-orderable.
-        return true
-    }
-    */
+    
+    
+    
+    
+    
+    
+    
 
     /*
     // MARK: - Navigation

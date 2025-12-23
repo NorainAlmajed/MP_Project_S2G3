@@ -45,6 +45,7 @@
 				Donations.storyboard,
 				DonationViewController.swift,
 				Norain/Controllers/EditUsersViewController.swift,
+				Norain/Controllers/NourishUsersViewController.swift,
 				Norain/Controllers/UserDetailsViewController.swift,
 				"Norain/Controllers/UsersTableViewController 2.swift",
 				Norain/Helpers/Alerts.swift,

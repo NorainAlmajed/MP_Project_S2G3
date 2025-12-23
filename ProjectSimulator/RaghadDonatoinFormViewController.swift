@@ -80,6 +80,11 @@ class RaghadDonatoinFormViewController: UIViewController,
     //for the keyboard
     private var activeIndexPath: IndexPath?
     private var keyboardObservers: [NSObjectProtocol] = []
+    // 🟢 BASE WHITE SPACE under button (always)
+    private let baseBottomSpace: CGFloat = 20  // 👈 change 24~40 as you like (small)
+    private var isKeyboardShowing = false
+
+
 
     
     private var isAdminUser: Bool { user.isAdmin }
@@ -147,17 +152,46 @@ class RaghadDonatoinFormViewController: UIViewController,
 //        donationFormTableview.verticalScrollIndicatorInsets.bottom = 0
 //
 //        donationFormTableview.tableFooterView = UIView(frame: .zero)
-        donationFormTableview.contentInset.bottom = 0
-        donationFormTableview.verticalScrollIndicatorInsets.bottom = 0
-        donationFormTableview.tableFooterView = UIView(frame: .zero)
+       
 
 
         setupKeyboardAvoidance()
 
-        
+       
+
+
        
 
     }
+    
+    
+    // 🟢 ALWAYS keep small white space under the last cell (even with no keyboard)
+    private func applyBaseBottomInset() {
+        let base = baseBottomSpace + view.safeAreaInsets.bottom  // ✅ includes home indicator safe area
+
+        donationFormTableview.contentInset.bottom = base
+        donationFormTableview.verticalScrollIndicatorInsets.bottom = base
+
+        // ✅ footer lets you scroll a bit past the button
+        if donationFormTableview.tableFooterView?.frame.height != base {
+            donationFormTableview.tableFooterView = UIView(frame: CGRect(x: 0, y: 0, width: 1, height: base))
+        }
+    }
+    override func viewDidLayoutSubviews() {
+        super.viewDidLayoutSubviews()
+        if !isKeyboardShowing { applyBaseBottomInset() }   // ✅ only when keyboard is NOT showing
+    }
+
+    override func viewDidAppear(_ animated: Bool) {
+        super.viewDidAppear(animated)
+        if !isKeyboardShowing { applyBaseBottomInset() }   // ✅ fixes “first time open page” issue
+    }
+    
+    
+    
+    
+    
+    
     
     
     
@@ -627,7 +661,6 @@ class RaghadDonatoinFormViewController: UIViewController,
     }
 
     
-    //for the keyboard
     // 🟡 KEYBOARD START (REPLACE YOUR OLD KEYBOARD CODE)
 
     private func setupKeyboardAvoidance() {
@@ -636,7 +669,7 @@ class RaghadDonatoinFormViewController: UIViewController,
             forName: UIResponder.keyboardWillShowNotification,
             object: nil,
             queue: .main
-        ) { [weak self] note in
+        ) { [weak self] (note: Foundation.Notification) in
             self?.handleKeyboard(note: note, showing: true)
         }
 
@@ -644,35 +677,44 @@ class RaghadDonatoinFormViewController: UIViewController,
             forName: UIResponder.keyboardWillHideNotification,
             object: nil,
             queue: .main
-        ) { [weak self] note in
+        ) { [weak self] (note: Foundation.Notification) in
             self?.handleKeyboard(note: note, showing: false)
         }
 
         keyboardObservers = [willShow, willHide]
     }
-    
 
-    // 🟡 KEYBOARD FIX (OPTIONAL SAFE UNWRAP)
     private func handleKeyboard(note: Foundation.Notification, showing: Bool) {
 
-        guard let tv = donationFormTableview else { return }  // ✅ FIX HERE
+        isKeyboardShowing = showing   // ✅ track state
 
         let endFrame = (note.userInfo?[UIResponder.keyboardFrameEndUserInfoKey] as? CGRect) ?? .zero
         let keyboardHeight = showing ? endFrame.height : 0
 
         let bottomSafe = view.safeAreaInsets.bottom
-        let inset = max(0, keyboardHeight - bottomSafe)
+        let keyboardInset = max(0, keyboardHeight - bottomSafe)
 
-        tv.contentInset.bottom = inset + 12
-        tv.verticalScrollIndicatorInsets.bottom = inset + 12
+        // ✅ IMPORTANT:
+        // base space ALWAYS exists (for the button),
+        // keyboard space gets added on top when keyboard shows
+        let base = baseBottomSpace + bottomSafe
+        let finalBottom = base + keyboardInset + (showing ? 12 : 0)
+
+        donationFormTableview.contentInset.bottom = finalBottom
+        donationFormTableview.verticalScrollIndicatorInsets.bottom = finalBottom
 
         if showing, let ip = activeIndexPath {
-            tv.scrollToRow(at: ip, at: UITableView.ScrollPosition.middle, animated: true)
+            donationFormTableview.scrollToRow(at: ip, at: .middle, animated: true)
+        }
+
+        if !showing {
+            // ✅ when keyboard hides, return to the normal “nice” bottom space
+            applyBaseBottomInset()
         }
     }
 
+    // 🟡 KEYBOARD END
 
- 
 
 
 }

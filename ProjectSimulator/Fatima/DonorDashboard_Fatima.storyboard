@@ -18,9 +18,8 @@
                         <rect key="frame" x="0.0" y="0.0" width="393" height="852"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <tableView clipsSubviews="YES" contentMode="scaleToFill" fixedFrame="YES" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="-1" estimatedRowHeight="-1" sectionHeaderHeight="-1" estimatedSectionHeaderHeight="-1" sectionFooterHeight="-1" estimatedSectionFooterHeight="-1" translatesAutoresizingMaskIntoConstraints="NO" id="sFO-gf-LTr">
-                                <rect key="frame" x="0.0" y="35" width="393" height="784"/>
-                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                            <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="-1" estimatedRowHeight="-1" sectionHeaderHeight="-1" estimatedSectionHeaderHeight="-1" sectionFooterHeight="-1" estimatedSectionFooterHeight="-1" translatesAutoresizingMaskIntoConstraints="NO" id="sFO-gf-LTr">
+                                <rect key="frame" x="0.0" y="0.0" width="393" height="852"/>
                                 <color key="backgroundColor" systemColor="systemBackgroundColor"/>
                                 <prototypes>
                                     <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" insetsLayoutMarginsFromSafeArea="NO" selectionStyle="none" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" reuseIdentifier="SimpleSectionCell" rowHeight="27" id="dBQ-ZP-VO4">
@@ -45,10 +44,6 @@
                                                     <color key="textColor" name="greenCol"/>
                                                     <nil key="highlightedColor"/>
                                                 </label>
-                                                <stackView opaque="NO" contentMode="scaleToFill" fixedFrame="YES" distribution="fillEqually" translatesAutoresizingMaskIntoConstraints="NO" id="E3q-fp-DDl">
-                                                    <rect key="frame" x="20" y="34" width="75" height="34.333333333333343"/>
-                                                    <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                                </stackView>
                                                 <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Fab-7u-EJ3">
                                                     <rect key="frame" x="26" y="34" width="156" height="33"/>
                                                     <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
@@ -153,16 +148,8 @@
                                             <rect key="frame" x="0.0" y="0.0" width="393" height="214"/>
                                             <autoresizingMask key="autoresizingMask"/>
                                             <subviews>
-                                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="Browse NGO's" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="gsp-he-Trj">
-                                                    <rect key="frame" x="20" y="0.0" width="139" height="26"/>
-                                                    <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                                    <fontDescription key="fontDescription" type="system" weight="semibold" pointSize="21"/>
-                                                    <color key="textColor" name="greenCol"/>
-                                                    <nil key="highlightedColor"/>
-                                                </label>
-                                                <collectionView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" fixedFrame="YES" showsHorizontalScrollIndicator="NO" dataMode="prototypes" translatesAutoresizingMaskIntoConstraints="NO" id="TM4-8h-leU">
-                                                    <rect key="frame" x="5" y="24" width="388" height="186"/>
-                                                    <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                                <collectionView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" showsHorizontalScrollIndicator="NO" dataMode="prototypes" translatesAutoresizingMaskIntoConstraints="NO" id="TM4-8h-leU">
+                                                    <rect key="frame" x="0.0" y="0.0" width="393" height="214"/>
                                                     <collectionViewFlowLayout key="collectionViewLayout" scrollDirection="horizontal" automaticEstimatedItemSize="YES" minimumLineSpacing="10" minimumInteritemSpacing="10" id="OyQ-yY-Vkh">
                                                         <size key="itemSize" width="133" height="144"/>
                                                         <size key="headerReferenceSize" width="0.0" height="0.0"/>
@@ -171,7 +158,7 @@
                                                     </collectionViewFlowLayout>
                                                     <cells>
                                                         <collectionViewCell opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" reuseIdentifier="NGOCardCell" id="wqP-QB-mxu" customClass="NGOCardCollectionViewCell" customModule="ProjectSimulator" customModuleProvider="target">
-                                                            <rect key="frame" x="0.0" y="21" width="133" height="144"/>
+                                                            <rect key="frame" x="0.0" y="35" width="133" height="144"/>
                                                             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                                             <collectionViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" insetsLayoutMarginsFromSafeArea="NO" id="6K9-jC-2mh">
                                                                 <rect key="frame" x="0.0" y="0.0" width="133" height="144"/>
@@ -211,7 +198,20 @@
                                                     <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                                     <color key="tintColor" name="greenCol"/>
                                                 </imageView>
+                                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="Browse NGO's" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="gsp-he-Trj">
+                                                    <rect key="frame" x="20" y="-0.66666793823242188" width="139" height="26"/>
+                                                    <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                                    <fontDescription key="fontDescription" type="system" weight="semibold" pointSize="21"/>
+                                                    <color key="textColor" name="greenCol"/>
+                                                    <nil key="highlightedColor"/>
+                                                </label>
                                             </subviews>
+                                            <constraints>
+                                                <constraint firstItem="TM4-8h-leU" firstAttribute="leading" secondItem="plx-AD-p4T" secondAttribute="leading" id="bpi-aS-h6L"/>
+                                                <constraint firstAttribute="trailing" secondItem="TM4-8h-leU" secondAttribute="trailing" id="hDT-0d-t3x"/>
+                                                <constraint firstItem="TM4-8h-leU" firstAttribute="top" secondItem="plx-AD-p4T" secondAttribute="top" id="nVP-Ii-AJ8"/>
+                                                <constraint firstAttribute="bottom" secondItem="TM4-8h-leU" secondAttribute="bottom" id="sGg-9x-Kqh"/>
+                                            </constraints>
                                         </tableViewCellContentView>
                                         <connections>
                                             <outlet property="collectionView" destination="TM4-8h-leU" id="R2v-op-ofN"/>
@@ -326,6 +326,12 @@
                         </subviews>
                         <viewLayoutGuide key="safeArea" id="vDu-zF-Fre"/>
                         <color key="backgroundColor" systemColor="systemBackgroundColor"/>
+                        <constraints>
+                            <constraint firstItem="sFO-gf-LTr" firstAttribute="top" secondItem="5EZ-qb-Rvc" secondAttribute="top" id="Bev-oK-Uq3"/>
+                            <constraint firstAttribute="bottom" secondItem="sFO-gf-LTr" secondAttribute="bottom" id="H6u-76-nid"/>
+                            <constraint firstItem="sFO-gf-LTr" firstAttribute="trailing" secondItem="vDu-zF-Fre" secondAttribute="trailing" id="WZU-9s-zxi"/>
+                            <constraint firstItem="sFO-gf-LTr" firstAttribute="leading" secondItem="vDu-zF-Fre" secondAttribute="leading" id="g3Z-qK-fAp"/>
+                        </constraints>
                     </view>
                     <tabBarItem key="tabBarItem" title="Item" id="au9-S9-qom"/>
                     <navigationItem key="navigationItem" title="Home" id="9ES-rt-8Vv"/>

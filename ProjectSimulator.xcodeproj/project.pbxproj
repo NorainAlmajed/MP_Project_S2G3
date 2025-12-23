@@ -56,16 +56,20 @@
 		D0FCA2BC2EEEC28F00D8AFFF /* Exceptions for "ZainabAlmahdi " folder in "ProjectSimulatorTests" target */ = {
 			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
 			membershipExceptions = (
+				AccountViewController.swift,
 				Authentication.storyboard,
 				LoginViewController.swift,
+				Settings.storyboard,
 			);
 			target = 5FEF8B772EDA363A007D3A97 /* ProjectSimulatorTests */;
 		};
 		D0FCA2BD2EEEC28F00D8AFFF /* Exceptions for "ZainabAlmahdi " folder in "ProjectSimulatorUITests" target */ = {
 			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
 			membershipExceptions = (
+				AccountViewController.swift,
 				Authentication.storyboard,
 				LoginViewController.swift,
+				Settings.storyboard,
 			);
 			target = 5FEF8B812EDA363A007D3A97 /* ProjectSimulatorUITests */;
 		};

@@ -136,13 +136,13 @@ class Section3TableViewCell: UITableViewCell {
     
     //Add iPad resizing logic
     private func adjustImageSizeForDevice() {
-        let isPad = UIDevice.current.userInterfaceIdiom == .pad
-
-        if isPad {
-            // Bigger image on iPad
-            foodImageHeightConstraint.constant = 288
-            foodImageWidthConstraint.constant = 456
-        }
+//        let isPad = UIDevice.current.userInterfaceIdiom == .pad
+//
+//        if isPad {
+//            // Bigger image on iPad
+//            foodImageHeightConstraint.constant = 288
+//            foodImageWidthConstraint.constant = 456
+//        }
         // iPhone → keep storyboard size
     }
 

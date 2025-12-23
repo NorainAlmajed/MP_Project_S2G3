@@ -9,6 +9,7 @@ import UIKit
 
 class EditUsersViewController: UIViewController, UIImagePickerControllerDelegate, UINavigationControllerDelegate{
 //    @IBOutlet weak var btnCause: UIButton!
+    var userToEdit:AppUser!
     
     @IBOutlet weak var ImagePickerEditView: UIImageView!
     override func viewDidLoad() {

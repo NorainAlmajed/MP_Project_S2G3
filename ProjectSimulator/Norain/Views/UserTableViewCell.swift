@@ -21,7 +21,7 @@ class UserTableViewCell: UITableViewCell {
     
     func configure(appUser:AppUser){
         nameLbl.text = appUser.name
-        emailLbl.text = appUser.email
+        emailLbl.text = ("Email: " + appUser.email)
 //        imgUserPhoto.image =
         
         if let donor = appUser as? Donor{
@@ -31,12 +31,12 @@ class UserTableViewCell: UITableViewCell {
 
         }else if let ngo = appUser as? NGO{
             phoneOrStatusLbl.text = "Status: "
-            if (ngo.IsPending){
+            if (ngo.isPending){
                 statusLbl.text = "Pending"
                 statusLbl.textColor = .orangeCol
                 
             }
-            else if (ngo.IsRejected)
+            else if (ngo.isRejected)
             {
                 statusLbl.text = "Rejected"
                 statusLbl.textColor = .redCol

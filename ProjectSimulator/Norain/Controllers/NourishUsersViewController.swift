@@ -7,11 +7,15 @@
 
 import UIKit
 
-class NourishUsersViewController: UIViewController,UITableViewDelegate,UITableViewDataSource {
-    
+class NourishUsersViewController: UIViewController,UITableViewDelegate,UITableViewDataSource
+{
+
+  
+    @IBOutlet weak var searchUsers: UISearchBar!
     var users = AppData.users
     var displayedUsers = AppData.users
-    @IBOutlet weak var searchBar: UISearchBar!
+    @IBOutlet weak var NavBar: UINavigationItem!
+    
     @IBOutlet weak var usersTableView: UITableView!
     @IBOutlet weak var segmentUsers: UISegmentedControl!
     @IBOutlet weak var btnPending: UIButton!
@@ -38,19 +42,20 @@ class NourishUsersViewController: UIViewController,UITableViewDelegate,UITableVi
             // NGO Segment selected
             displayedUsers = users.filter({ $0 is NGO })
             setButtonsHidden(true) // Show buttons
-            
+            NavBar.title = "Nourish NGOs"
         case 2:
             // Donor Segment selected
             displayedUsers = users.filter({ $0 is Donor })
             setButtonsHidden(false) // Hide buttons
-            
+            NavBar.title = "Nourish Donors"
         case 0:
             // All
             displayedUsers = users
             setButtonsHidden(false) // Hide buttons
-            
+            NavBar.title = "Nourish Users"
         case UISegmentedControl.noSegment:
-                    setButtonsHidden(false) // Hide buttons
+            setButtonsHidden(false)
+            NavBar.title = "Nourish Users"
             
         default:
             // Handles any other unexpected index
@@ -74,18 +79,18 @@ class NourishUsersViewController: UIViewController,UITableViewDelegate,UITableVi
     
     
     @IBAction func btnPendingFilter(_ sender: Any) {
-        displayedUsers = users.compactMap { $0 as? NGO }.filter { $0.IsPending }
+        displayedUsers = users.compactMap { $0 as? NGO }.filter { $0.isPending }
         usersTableView.reloadData()
     }
     
     @IBAction func btnApprovedFilter(_ sender: Any) {
-        displayedUsers = users.compactMap { $0 as? NGO }.filter { $0.IsApproved }
+        displayedUsers = users.compactMap { $0 as? NGO }.filter { $0.isApproved }
         usersTableView.reloadData()
     }
     
     
     @IBAction func btnRejectedFilter(_ sender: Any) {
-        displayedUsers = users.compactMap { $0 as? NGO }.filter { $0.IsRejected }
+        displayedUsers = users.compactMap { $0 as? NGO }.filter { $0.isRejected }
         usersTableView.reloadData()
     }
     
@@ -96,7 +101,7 @@ class NourishUsersViewController: UIViewController,UITableViewDelegate,UITableVi
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = usersTableView.dequeueReusableCell(withIdentifier: Cell.UserCell.rawValue, for: indexPath) as! UserTableViewCell
-
+        
         let user = displayedUsers[indexPath.row]
         cell.configure(appUser: user)
         return cell
@@ -107,7 +112,18 @@ class NourishUsersViewController: UIViewController,UITableViewDelegate,UITableVi
     }
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        
+        tableView.deselectRow(at: indexPath, animated: true)
+        let selectedUser = users[indexPath.row]
+        if let detailsVC = storyboard?.instantiateViewController(withIdentifier: "UserDetailsViewController") as? UserDetailsViewController {
+            detailsVC.currentUser = selectedUser
+            detailsVC.delegate = self
+            self.present(detailsVC, animated: true)
+            detailsVC.modalPresentationStyle = .pageSheet
+            
+            self.present(detailsVC, animated: true) {
+                detailsVC.configure(appUser: selectedUser)
+            }
+        }
     }
     
     func tableView(_ tableView: UITableView, canEditRowAt indexPath: IndexPath) -> Bool {
@@ -125,13 +141,13 @@ class NourishUsersViewController: UIViewController,UITableViewDelegate,UITableVi
         
         let deleteAction = UIContextualAction(style: .destructive, title: "Delete") { action, view, completionHandler in
             
-            self.confirmation(title: "Delete Confirmation", message: "Are you sure you want to remove User?"){
+            Alerts.confirmation(on: self, title: "Delete Confirmation", message: "Are you sure you want to remove User?"){
                 self.users.remove(at: indexPath.row)
                 AppData.users.remove(at: indexPath.row)
                 tableView.deleteRows(at: [indexPath], with: .fade)
                 completionHandler(true)
             }
-        
+            
         }
         let editAction = UIContextualAction(style: .normal, title: "Edit") { (action, view, completionHandler) in
             self.showDetailViewController(nav, sender: view)
@@ -141,13 +157,13 @@ class NourishUsersViewController: UIViewController,UITableViewDelegate,UITableVi
         
         var actions: [UIContextualAction] = [editAction,deleteAction]
         
-
+        
         if let ngo = ngo {
-            if ngo.IsPending {
+            if ngo.isPending {
                 // Show both Accept and Reject
                 actions.append(createAcceptAction(for: ngo, indexPath: indexPath))
                 actions.append(createRejectAction(for: ngo, indexPath: indexPath))
-            } else if ngo.IsRejected {
+            } else if ngo.isRejected {
                 // Show only Accept
                 actions.append(createAcceptAction(for: ngo, indexPath: indexPath))
             }
@@ -160,22 +176,22 @@ class NourishUsersViewController: UIViewController,UITableViewDelegate,UITableVi
     //create Accept Action
     func createAcceptAction(for ngo: NGO, indexPath: IndexPath) -> UIContextualAction {
         let action = UIContextualAction(style: .normal, title: "Accept") { (_, _, completionHandler) in
-            ngo.IsPending = false
-            ngo.IsApproved = true
-            ngo.IsRejected = false
+            ngo.isPending = false
+            ngo.isApproved = true
+            ngo.isRejected = false
             self.usersTableView.reloadRows(at: [indexPath], with: .automatic)
             completionHandler(true)
         }
         action.backgroundColor = .greenCol
         return action
     }
-
+    
     //create Reject Action
     func createRejectAction(for ngo: NGO, indexPath: IndexPath) -> UIContextualAction {
         let action = UIContextualAction(style: .normal, title: "Reject") { (_, _, completionHandler) in
-            ngo.IsPending = false
-            ngo.IsApproved = false
-            ngo.IsRejected = true
+            ngo.isPending = false
+            ngo.isApproved = false
+            ngo.isRejected = true
             self.usersTableView.reloadRows(at: [indexPath], with: .automatic)
             completionHandler(true)
         }
@@ -183,34 +199,24 @@ class NourishUsersViewController: UIViewController,UITableViewDelegate,UITableVi
         return action
     }
     
-    
-    func confirmation(title:String, message:String,confirmHandler: @escaping() ->Void){
-        let alert = UIAlertController(title: title, message: message, preferredStyle: .alert)
-        let confirm = UIAlertAction(title: "Confirm", style: .default){action in
-                confirmHandler()
+
+        
+        /*
+         // MARK: - Navigation
+         
+         // In a storyboard-based application, you will often want to do a little preparation before navigation
+         override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
+         // Get the new view controller using segue.destination.
+         // Pass the selected object to the new view controller.
+         }
+         */
+        
+    }
+extension NourishUsersViewController: UserUpdateDelegate {
+    func didUpdateUser() {
+        DispatchQueue.main.async
+        {
+            self.usersTableView.reloadData()
         }
-        let cancel = UIAlertAction(title: "Cancel", style: .cancel)
-        alert.addAction(confirm)
-        alert.addAction(cancel)
-        present(alert, animated: true)
     }
-
-    
-    
-    
-    
-    
-    
-    
-
-    /*
-    // MARK: - Navigation
-
-    // In a storyboard-based application, you will often want to do a little preparation before navigation
-    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-        // Get the new view controller using segue.destination.
-        // Pass the selected object to the new view controller.
-    }
-    */
-
 }

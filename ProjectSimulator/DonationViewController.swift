@@ -505,11 +505,12 @@ class DonationViewController: UIViewController {
             if !searchText.isEmpty {
                 let text = searchText.lowercased()
                 filtered = filtered.filter {
-                    $0.ngo.username.lowercased().contains(text) ||
+                    ($0.ngo.organization_name?.lowercased().contains(text) ?? false) ||
                     String($0.donationID).contains(text) ||
                     $0.donor.username.lowercased().contains(text) ||
                     $0.category.lowercased().contains(text)
                 }
+
             }
 
             displayedDonations = filtered.sorted {

@@ -11,9 +11,26 @@ class EditUsersViewController: UIViewController, UIImagePickerControllerDelegate
 //    @IBOutlet weak var btnCause: UIButton!
     var userToEdit:AppUser!
     
+ 
+    @IBOutlet weak var causeStack: UIStackView!
+    
+    @IBOutlet weak var addressStack: UIStackView!
+    
+    @IBOutlet weak var govStack: UIStackView!
+    
+    @IBOutlet weak var statusStack: UIStackView!
+    
+    @IBOutlet weak var licenseBtn: UIButton!
+    
     @IBOutlet weak var ImagePickerEditView: UIImageView!
     override func viewDidLoad() {
         super.viewDidLoad()
+        self.title = (userToEdit is NGO) ? "NGO Profile" : "Donor Profile"
+            
+            // Add a 'Save' button to the right side of the bar
+            let saveButton = UIBarButtonItem(title: "Save", style: .done, target: self, action: #selector(saveTapped))
+            self.navigationItem.rightBarButtonItem = saveButton
+
 //        let cause = UIMenu(title: "NGO Cause",children: [
 //            UIAction(title: "Option 1") { _ in /* Handle */ },
 //            UIAction(title: "Option 2") { _ in /* Handle */ }
@@ -22,11 +39,25 @@ class EditUsersViewController: UIViewController, UIImagePickerControllerDelegate
 //        btnCause.showsMenuAsPrimaryAction=true
         // Do any additional setup after loading the view.
     }
+    @objc func saveTapped() {
+        // Your logic to save changes and then go back
+        navigationController?.popViewController(animated: true)
+        
+        
+        
+        
+        
 
-    @IBAction func btnImageEditPicker(_ sender: Any) {
-        showPhotoAlert()
-
+    func setupView() {
+        let isNGO = userToEdit is NGO
+        causeStack.isHidden = !isNGO
+        addressStack.isHidden = !isNGO
+        govStack.isHidden = !isNGO
+        statusStack.isHidden = !isNGO
+        licenseBtn.isHidden = !isNGO
     }
+
+
     
     func showPhotoAlert(){
         let alert = UIAlertController(title: "Choose Image", message: nil, preferredStyle: .actionSheet)

@@ -17,38 +17,7 @@ class NgoTableTableViewCell: UITableViewCell {
         // Initialization code
     }
 
-//    func setupCell(photo: UIImage, name:String, category: String){
-//        
-//        imgNgoPhotot.image = photo
-//        lblNgoName.text = name
-//        lblCategory.text = category
-//        
-//    }
-    
-    
-    
-//    func setupCell(photoUrl: String, name: String, category: String) {
-//
-//        lblNgoName.text = name
-//        lblCategory.text = category
-//
-//        imgNgoPhotot.contentMode = .scaleAspectFit
-//        imgNgoPhotot.clipsToBounds = true
-//
-//        // ✅ load from URL string
-//        imgNgoPhotot.setImageFromUrl(photoUrl, placeholder: UIImage(named: "placeholder"))
-//    }
-    
-    
-//    func setupCell(photoUrl: String, name: String, category: String) {
-//        lblNgoName.text = name
-//        lblCategory.text = category
-//
-//        imgNgoPhotot.setImageFromUrl(
-//            photoUrl,
-//            placeholder: UIImage(systemName: "photo")
-//        )
-//    }
+
     func setupCell(photoUrl: String, name: String, category: String) {
         lblNgoName.text = name
         lblCategory.text = category
@@ -62,7 +31,12 @@ class NgoTableTableViewCell: UITableViewCell {
         imgNgoPhotot.setImageFromUrl(
             photoUrl,
             placeholder: placeholder
+            
         )
+        
+        
+        imgNgoPhotot.layer.cornerRadius = 7   // 🔵 change this value as you like
+           imgNgoPhotot.clipsToBounds = true
     }
 
 

@@ -42,7 +42,17 @@ class ZHRejectionReasonViewController: UIViewController, UITextViewDelegate {
             // Placeholder setup
             setPlaceholder()
             updateCounter(count: 0)
+            
+            //makring it rounded
+            styleActionButton(submitBtn)
         }
+    
+    
+    //Setting the radius of the buttons
+    private func styleActionButton(_ button: UIButton) {
+        button.layer.cornerRadius = button.frame.height / 2
+        button.clipsToBounds = true
+    }
 
         // MARK: - Placeholder Logic (THIS IS THE FIX)
 

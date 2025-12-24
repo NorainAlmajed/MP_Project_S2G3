@@ -115,6 +115,8 @@ struct DonationDraft {
     var expiryDate: Date?
     var shortDescription: String?
     var imageUrl: String?
+    var imageData: Data?      //  (for showing image after back)
+
 }
 
 final class DonationDraftStore {

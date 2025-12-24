@@ -106,6 +106,11 @@ class RaghadDonatoinFormViewController: UIViewController,
     private var isUploadingImage = false            // ✅ block proceed while uploading
     
     
+    private var draftImage: UIImage?          // keeps photo in memory
+    private var draftQuantity: Int = 1        // keeps quantity
+    private var draftDescription: String?     // keeps description text
+
+    
     
     
     // MARK: - Lifecycle
@@ -898,11 +903,14 @@ class RaghadDonatoinFormViewController: UIViewController,
             weight: weightValue,
             expiryDate: selectedExpiryDate,
             shortDescription: getShortDescription(),
-            imageUrl: uploadedDonationImageUrl
+
+            imageUrl: uploadedDonationImageUrl,
+            imageData: selectedDonationImage?.jpegData(compressionQuality: 0.9) // ✅ NEW
         )
 
         DonationDraftStore.shared.save(draft)
     }
+
 
     override func viewWillDisappear(_ animated: Bool) {
         super.viewWillDisappear(animated)
@@ -923,11 +931,14 @@ class RaghadDonatoinFormViewController: UIViewController,
         selectedExpiryDate = draft.expiryDate
         uploadedDonationImageUrl = draft.imageUrl
 
-        // If you have your own stored quantity variable, set it here too.
-        // Example: quantityValue = draft.quantity
+        // ✅ NEW: restore the photo for UI
+        if let data = draft.imageData {
+            selectedDonationImage = UIImage(data: data)
+        }
 
         donationFormTableview.reloadData()
     }
+
 
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)

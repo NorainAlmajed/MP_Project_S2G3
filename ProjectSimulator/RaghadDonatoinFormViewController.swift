@@ -29,7 +29,7 @@
 //  Created by Raghad Aleskafi on 13/12/2025.
 //
 
-
+import FirebaseFirestore
 import Cloudinary   // add this at the top of the file
 import UIKit
 import PhotosUI   // optional if you switch to PHPicker later
@@ -549,7 +549,51 @@ class RaghadDonatoinFormViewController: UIViewController,
         }
         return quantityValue
     }
+    
+    
+    
 
+    // Reads the optional short description from the form.
+    // Returns nil if empty or placeholder.
+    private func getShortDescription() -> String? {
+
+        // Description section index differs for admin vs donor
+        let descSection = isAdminUser ? 6 : 5
+        let indexPath = IndexPath(row: 0, section: descSection)
+
+        // Get description cell safely
+        guard let cell = donationFormTableview.cellForRow(at: indexPath)
+                as? RaghadSection7TableViewCell else {
+            return nil
+        }
+
+        // Clean text
+        let text = (cell.txtDescription.text ?? "")
+            .trimmingCharacters(in: .whitespacesAndNewlines)
+
+        // Ignore empty / placeholder
+        if text.isEmpty || text == "Enter a Short Description" {
+            return nil
+        }
+
+        // Valid user input
+        return text
+    }
+
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
     // MARK: - Validation / Navigation
     private func validateAndProceed() {
         view.endEditing(true)
@@ -626,15 +670,98 @@ class RaghadDonatoinFormViewController: UIViewController,
 
         
         
-        
+        //comment this 24 dec 2025 11:39
         
 
         // 5) All good → go next
 //        performSegue(withIdentifier: "showSchedulePickup", sender: self)
         
-        let sb = UIStoryboard(name: "Raghad1", bundle: nil)
-        let vc = sb.instantiateViewController(withIdentifier: "SchedulePickupVC")
-        navigationController?.pushViewController(vc, animated: true)
+//        let sb = UIStoryboard(name: "Raghad1", bundle: nil)
+//        let vc = sb.instantiateViewController(withIdentifier: "SchedulePickupVC")
+//        navigationController?.pushViewController(vc, animated: true)
+        
+        
+        // 5) All good → create draft donation, then go next
+
+        guard let ngo = selectedNgo else {
+            showSimpleAlert(title: "Error", message: "NGO not found.")
+            return
+        }
+
+        // ⚠️ IMPORTANT:
+        // You MUST have Firestore document IDs here.
+        // For now, we assume:
+        // - ngo.id = Firestore doc ID (users collection)
+        // - donor doc ID will be resolved below
+
+        let donorDocId: String
+        if isAdminUser {
+            // ❗ TEMP SAFE SOLUTION (BEGINNER FRIENDLY):
+            // Ask your teammate for donor docId OR use username = docId if same
+            donorDocId = selectedDonorName ?? ""
+        } else {
+            donorDocId = user.username
+        }
+
+        let ngoDocId = ngo.id   // must be Firestore doc id (users collection)
+
+        createDraftDonation(
+            donorUserDocId: donorDocId,
+            ngoUserDocId: ngoDocId
+        ) { [weak self] donationDocId in
+            guard let self = self else { return }
+
+            guard let donationDocId = donationDocId else {
+                self.showSimpleAlert(
+                    title: "Error",
+                    message: "Failed to save donation. Please try again."
+                )
+                return
+            }
+
+            print("➡️ Proceeding with donation ID:", donationDocId)
+
+            let sb = UIStoryboard(name: "Raghad1", bundle: nil)
+            let vc = sb.instantiateViewController(withIdentifier: "SchedulePickupVC")
+
+            
+            
+            
+            // PASS donationDocId TO NORAIN
+            //remove the comment when:
+            //norain do the page
+            //1️⃣ The Schedule Pickup screen has a Swift class
+            //(❌ not just a storyboard screen)
+            //2️⃣ That Swift class contains this property:
+            //vc.setValue(donationDocId, forKey: "donationDocId")
+
+            self.navigationController?.pushViewController(vc, animated: true)
+        }
+
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
 
         
     }
@@ -714,6 +841,76 @@ class RaghadDonatoinFormViewController: UIViewController,
     }
 
     // 🟡 KEYBOARD END
+    
+    
+    
+    
+    
+    
+    
+    //🟡🟡🟡🟡🟡🟡🟡🟡🟡🟡🟡🟡🟡🟡🟡🟡🟡🟡🟡🟡🟡🟡🟡🟡🟡🟡🟡🟡🟡🟡🟡🟡🟡🟡🟡🟡🟡🟡
+    private func createDraftDonation(
+        donorUserDocId: String,
+        ngoUserDocId: String,
+        completion: @escaping (String?) -> Void
+    ) {
+        let db = Firestore.firestore()
+
+        // ✅ References (matches your Firestore schema)
+        let donorRef = db.document("users/\(donorUserDocId)")
+        let ngoRef = db.document("users/\(ngoUserDocId)")
+
+        // ✅ Use existing collection name exactly (Donation)
+        let docRef = db.collection("Donation").document()
+        let newId = docRef.documentID
+
+        
+        
+        // ✅ donationID (number) — only if your team needs it
+        // This makes a simple unique number based on time (safe)
+        let donationID = Int(Date().timeIntervalSince1970) % 1000000
+
+        let data: [String: Any] = [
+            "firestoreID": newId,
+            "donationID": donationID,
+
+            "donor": donorRef,
+            "ngo": ngoRef,
+            "createdBy": db.document("users/\(user.username)"),
+
+
+            "Category": selectedFoodCategory ?? "",
+            "quantity": getQuantityValue() ?? 0,
+            "weight": weightValue as Any,                 // nil allowed
+            "description": getShortDescription() as Any,   // nil allowed
+
+            "foodImageUrl": uploadedDonationImageUrl ?? "",
+
+            "expiryDate": Timestamp(date: selectedExpiryDate ?? Date()),
+            "creationDate": FieldValue.serverTimestamp(),
+
+            // ✅ safest: draft
+            "status": 0,
+
+            // ✅ safe defaults if your team uses these
+            "recurrence": 0
+        ]
+
+        docRef.setData(data) { error in
+            if let error = error {
+                print("❌ createDraftDonation error:", error.localizedDescription)
+                completion(nil)
+            } else {
+                print("✅ Draft Donation created:", newId)
+                completion(newId)
+            }
+        }
+    }
+
+    
+    
+    
+    
 
 
 

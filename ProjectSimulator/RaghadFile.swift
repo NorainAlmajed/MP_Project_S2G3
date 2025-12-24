@@ -73,6 +73,7 @@ var arrNgo: [NGO] =
 
 struct User {
     //  This struct represents ONE donor (admin chooses from these)
+    //let id: String      // Firestore document id
     let username: String
     let userType: Int
 }
@@ -102,15 +103,38 @@ extension User {
 
 
 
+//// MARK: - Donation Draft (Local only)
+//// Keeps form data when user goes back, without saving to Firebase.
+//
+//struct DonationDraft {
+//    var ngoId: String
+//    var donorName: String?
+//    var foodCategory: String?
+//    var quantity: Int?
+//    var weight: Double?
+//    var expiryDate: Date?
+//    var shortDescription: String?
+//    var imageUrl: String?
+//}
+//
+//final class DonationDraftStore {
+//    static let shared = DonationDraftStore()
+//    private init() {}
+//
+//    private var drafts: [String: DonationDraft] = [:] // key = ngoId
+//
+//    func save(_ draft: DonationDraft) {
+//        drafts[draft.ngoId] = draft
+//    }
+//
+//    func load(ngoId: String) -> DonationDraft? {
+//        drafts[ngoId]
+//    }
+//
+//    func clear(ngoId: String) {
+//        drafts.removeValue(forKey: ngoId)
+//    }
+//}
+//
 
-//old
-//var arrNgo = [NgoData]()//create empty array  + the name of the struct that i made  down
-//
-//
-//var ngoDataArray: [NgoData] = [
-//NgoData(name: "Al kawther Society Social Care", category: "Orphanage", photo: UIImage named: "img_alkwther_logo")!
-//
-//
-//arrNgo.append(NgoData.init(name: "Amal Foundation", category: "Charity", photo: UIImage(named: "img_amal_logo")!))
-//arrNgo.append(NgoData.init(name: "Uco Elderly Care", category: "Adult Day Care Center", photo: UIImage(named: "img_uco_logo")!))
-//arrNgo.append(NgoData.init(name: "Heal Foundation", category: "Rehabilitation & Recovery", photo: UIImage(named: "img_heal_logo")!))
+

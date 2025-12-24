@@ -558,41 +558,235 @@ class DonationDetailsViewController: UIViewController, UITableViewDelegate, UITa
             }
         }
 
+    //Prepating pdf
     private func buildDonationPDF(for donation: Donation) -> Data {
+
         let pdfMetaData = [
             kCGPDFContextCreator: "ProjectSimulator",
             kCGPDFContextAuthor: currentUser?.username ?? "Unknown",
             kCGPDFContextTitle: "Donation Report"
         ]
+
         let format = UIGraphicsPDFRendererFormat()
         format.documentInfo = pdfMetaData as [String: Any]
-        
+
         let pageWidth: CGFloat = 595.2
         let pageHeight: CGFloat = 841.8
         let margin: CGFloat = 40
-        
-        let renderer = UIGraphicsPDFRenderer(bounds: CGRect(x: 0, y: 0, width: pageWidth, height: pageHeight), format: format)
-        
+        let imageMaxSize: CGFloat = 150
+        let lineSpacing: CGFloat = 6
+
+        var isFirstPage = true
+
+        let renderer = UIGraphicsPDFRenderer(
+            bounds: CGRect(x: 0, y: 0, width: pageWidth, height: pageHeight),
+            format: format
+        )
+
         let data = renderer.pdfData { context in
-            context.beginPage()
-            
-            let reportText = buildDonationReport(for: donation)
-            
-            let paragraphStyle = NSMutableParagraphStyle()
-            paragraphStyle.lineBreakMode = .byWordWrapping
-            paragraphStyle.alignment = .left
-            
-            let attributes: [NSAttributedString.Key: Any] = [
-                .font: UIFont.systemFont(ofSize: 12),
-                .paragraphStyle: paragraphStyle
-            ]
-            
-            let textRect = CGRect(x: margin, y: margin, width: pageWidth - 2 * margin, height: pageHeight - 2 * margin)
-            reportText.draw(in: textRect, withAttributes: attributes)
+            var yPosition: CGFloat = margin
+
+            let greenColor = UIColor(named: "greenCol") ?? .systemGreen
+
+            func drawLine(at y: CGFloat, thickness: CGFloat = 1) {
+                let path = UIBezierPath()
+                path.move(to: CGPoint(x: margin, y: y))
+                path.addLine(to: CGPoint(x: pageWidth - margin, y: y))
+                greenColor.setStroke()
+                path.lineWidth = thickness
+                path.stroke()
+            }
+
+            func drawHeader(_ text: String, y: inout CGFloat) {
+                let paragraph = NSMutableParagraphStyle()
+                paragraph.alignment = .left
+                paragraph.lineSpacing = lineSpacing
+
+                let attributes: [NSAttributedString.Key: Any] = [
+                    .font: UIFont.boldSystemFont(ofSize: 16),
+                    .foregroundColor: greenColor,
+                    .paragraphStyle: paragraph
+                ]
+
+                let nsText = NSString(string: text)
+                let rect = CGRect(x: margin, y: y, width: pageWidth - margin * 2, height: .greatestFiniteMagnitude)
+
+                let size = nsText.boundingRect(
+                    with: rect.size,
+                    options: [.usesLineFragmentOrigin, .usesFontLeading],
+                    attributes: attributes,
+                    context: nil
+                )
+
+                // Check if next content fits in page, else start new page
+                if y + size.height > pageHeight - margin {
+                    context.beginPage()
+                    y = margin
+                }
+
+                nsText.draw(
+                    with: CGRect(x: margin, y: y, width: rect.width, height: size.height),
+                    options: [.usesLineFragmentOrigin, .usesFontLeading],
+                    attributes: attributes,
+                    context: nil
+                )
+
+                y += size.height + 4
+                drawLine(at: y, thickness: 1.5)
+                y += 10
+            }
+
+            func drawText(_ text: String, y: inout CGFloat, font: UIFont = .systemFont(ofSize: 12)) {
+                let paragraph = NSMutableParagraphStyle()
+                paragraph.alignment = .left
+                paragraph.lineSpacing = lineSpacing
+
+                let attributes: [NSAttributedString.Key: Any] = [
+                    .font: font,
+                    .foregroundColor: UIColor.label,
+                    .paragraphStyle: paragraph
+                ]
+
+                let nsText = NSString(string: text)
+                let rect = CGRect(x: margin, y: y, width: pageWidth - margin * 2, height: .greatestFiniteMagnitude)
+
+                let size = nsText.boundingRect(
+                    with: rect.size,
+                    options: [.usesLineFragmentOrigin, .usesFontLeading],
+                    attributes: attributes,
+                    context: nil
+                )
+
+                // Check if next content fits in page, else start new page
+                if y + size.height > pageHeight - margin {
+                    context.beginPage()
+                    y = margin
+                }
+
+                nsText.draw(
+                    with: CGRect(x: margin, y: y, width: rect.width, height: size.height),
+                    options: [.usesLineFragmentOrigin, .usesFontLeading],
+                    attributes: attributes,
+                    context: nil
+                )
+
+                y += size.height + 8
+            }
+
+            func drawPage() {
+                context.beginPage()
+                yPosition = margin
+
+                // Only show image on first page
+                if isFirstPage, let image = loadImageSync(from: donation.foodImageUrl) {
+                    let aspectRatio = image.size.width / image.size.height
+                    var width = imageMaxSize
+                    var height = imageMaxSize
+
+                    if aspectRatio > 1 {
+                        height = imageMaxSize / aspectRatio
+                    } else {
+                        width = imageMaxSize * aspectRatio
+                    }
+
+                    let x = (pageWidth - width) / 2
+                    image.draw(in: CGRect(x: x, y: yPosition, width: width, height: height))
+                    yPosition += height + 20
+
+                    isFirstPage = false
+                }
+
+                let title = "DONATION REPORT"
+                let titleAttrs: [NSAttributedString.Key: Any] = [
+                    .font: UIFont.boldSystemFont(ofSize: 22),
+                    .foregroundColor: greenColor
+                ]
+
+                let titleSize = (title as NSString).size(withAttributes: titleAttrs)
+                let titleX = (pageWidth - titleSize.width) / 2
+                (title as NSString).draw(at: CGPoint(x: titleX, y: yPosition), withAttributes: titleAttrs)
+                yPosition += titleSize.height + 20
+
+                drawHeader("▶ BASIC INFORMATION", y: &yPosition)
+
+                let df = DateFormatter()
+                df.dateStyle = .medium
+
+                drawText("Donation ID: #\(donation.donationID)", y: &yPosition)
+                drawText("NGO Name: \(donation.ngo.organization_name ?? donation.ngo.username)", y: &yPosition)
+                drawText("Donor Username: \(donation.donor.username)", y: &yPosition)
+                df.dateFormat = "dd MMM yyyy, hh:mm a" // day month year, hour:minute AM/PM
+
+                drawText("Created On: \(df.string(from: donation.creationDate.dateValue()))", y: &yPosition)
+                drawText("Status: \(statusText(for: donation.status))", y: &yPosition)
+
+                drawHeader("▶ DONATION DETAILS", y: &yPosition)
+                drawText("Category: \(donation.category)", y: &yPosition)
+                drawText("Quantity: \(donation.quantity)", y: &yPosition)
+                if let weight = donation.weight {
+                    drawText("Weight: \(weight) kg", y: &yPosition)
+                }
+                if let desc = donation.description, !desc.isEmpty {
+                    drawText("Description: \(desc)", y: &yPosition)
+                }
+                if let rejection = donation.rejectionReason, !rejection.isEmpty {
+                    drawText("Rejection Reason: \(rejection)", y: &yPosition)
+                }
+
+                drawHeader("▶ PICKUP INFORMATION", y: &yPosition)
+                drawText("Pickup Date: \(df.string(from: donation.pickupDate.dateValue()))", y: &yPosition)
+                drawText("Pickup Time: \(donation.pickupTime)", y: &yPosition)
+
+                drawHeader("▶ ADDRESS", y: &yPosition)
+                let a = donation.address
+                drawText("Building: \(a.building)", y: &yPosition)
+                drawText("Road: \(a.road)", y: &yPosition)
+                drawText("Block: \(a.block)", y: &yPosition)
+                drawText("Area: \(a.area)", y: &yPosition)
+                drawText("Governorate: \(a.governorate)", y: &yPosition)
+                if let flat = a.flat {
+                    drawText("Flat: \(flat)", y: &yPosition)
+                }
+
+                drawHeader("▶ EXPIRY", y: &yPosition)
+                drawText("Expiry Date: \(df.string(from: donation.expiryDate.dateValue()))", y: &yPosition)
+
+                if donation.recurrence > 0 {
+                    drawHeader("▶ RECURRENCE", y: &yPosition)
+                    drawText("Every \(donation.recurrence) days", y: &yPosition)
+                }
+
+                drawLine(at: yPosition)
+                yPosition += 8
+                drawText("Generated On: \(DateFormatter.localizedString(from: Date(), dateStyle: .medium, timeStyle: .short))", y: &yPosition)
+                drawText("ProjectSimulator App", y: &yPosition, font: .boldSystemFont(ofSize: 14))
+            }
+
+            drawPage()
         }
-        
+
         return data
     }
+
+    
+    private func loadImageSync(from urlString: String) -> UIImage? {
+        guard let url = URL(string: urlString) else { return nil }
+
+        let semaphore = DispatchSemaphore(value: 0)
+        var loadedImage: UIImage?
+
+        URLSession.shared.dataTask(with: url) { data, _, _ in
+            if let data = data {
+                loadedImage = UIImage(data: data)
+            }
+            semaphore.signal()
+        }.resume()
+
+        semaphore.wait()
+        return loadedImage
+    }
+
+
 
     }
 

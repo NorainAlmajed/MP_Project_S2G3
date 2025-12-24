@@ -47,6 +47,31 @@ class NgoDetailsViewController: UIViewController, UITableViewDataSource, UITable
         } else {
             navigationItem.backBarButtonItem = UIBarButtonItem(title: "", style: .plain, target: nil, action: nil)
         }
+        
+        
+        
+        
+        
+        tableView.cellLayoutMarginsFollowReadableWidth = false
+          tableView.layoutMargins = .zero
+          tableView.separatorInset = .zero
+
+          // Optional but helpful
+          tableView.insetsContentViewsToSafeArea = false
+        
+        tableView.contentInset = .zero
+        tableView.scrollIndicatorInsets = .zero
+        tableView.directionalLayoutMargins = .zero
+        tableView.contentInsetAdjustmentBehavior = .never
+        
+        
+        
+        
+        view.backgroundColor = .systemBackground
+        tableView.backgroundColor = .systemBackground
+
+        
+        
     }
 
     // MARK: - TableView DataSource
@@ -126,6 +151,9 @@ class NgoDetailsViewController: UIViewController, UITableViewDataSource, UITable
         }
     }
 
+    
+    
+    
     
     }
 

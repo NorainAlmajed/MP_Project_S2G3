@@ -11,9 +11,9 @@ import FirebaseFirestore
 
 class SetupProfileViewController: UIViewController,
                                   UIImagePickerControllerDelegate,
-                                  UINavigationControllerDelegate, UITextViewDelegate {
+                                  UINavigationControllerDelegate,
+                                  UITextViewDelegate {
 
-    
     @IBOutlet weak var continueButton: UIButton!
     @IBOutlet weak var uploadButton: UIButton!
     @IBOutlet weak var profileImageView: UIImageView!
@@ -21,20 +21,20 @@ class SetupProfileViewController: UIViewController,
     @IBOutlet weak var bioTextView: UITextView!
     @IBOutlet weak var notificationsSwitch: UISwitch!
     @IBOutlet weak var bioCounterLabel: UILabel!
-    
+
     var userRole: String?
 
     override func viewDidLoad() {
-        
         super.viewDidLoad()
+
         styleActionButton(continueButton)
         styleActionButton(uploadButton)
+
         bioTextView.delegate = self
         bioCounterLabel.text = "0 / 240"
     }
 
     @IBAction func notificationSwitchChanged(_ sender: UISwitch) {
-
         if sender.isOn == false {
             let alert = UIAlertController(
                 title: "Disable Notifications?",
@@ -42,24 +42,19 @@ class SetupProfileViewController: UIViewController,
                 preferredStyle: .alert
             )
 
-            let cancelAction = UIAlertAction(title: "Cancel", style: .cancel) { _ in
+            let cancel = UIAlertAction(title: "Cancel", style: .cancel) { _ in
                 sender.setOn(true, animated: true)
             }
 
-            let confirmAction = UIAlertAction(title: "Disable", style: .destructive)
+            let confirm = UIAlertAction(title: "Disable", style: .destructive)
 
-            alert.addAction(cancelAction)
-            alert.addAction(confirmAction)
+            alert.addAction(cancel)
+            alert.addAction(confirm)
             present(alert, animated: true)
         }
     }
 
-    // MARK: - Image Picker
     @IBAction func addPhotoTapped(_ sender: UIButton) {
-        showImagePicker()
-    }
-
-    func showImagePicker() {
         let picker = UIImagePickerController()
         picker.delegate = self
         picker.allowsEditing = true
@@ -83,12 +78,11 @@ class SetupProfileViewController: UIViewController,
         dismiss(animated: true)
     }
 
-    // MARK: - Continue
     @IBAction func continueTapped(_ sender: UIButton) {
-        saveProfileAndGoHome()
+        saveProfileAndRoute()
     }
 
-    func saveProfileAndGoHome() {
+    func saveProfileAndRoute() {
 
         guard let fullName = fullNameTextField.text, !fullName.isEmpty else {
             showAlert(title: "Missing Name", message: "Please enter your full name.")
@@ -102,45 +96,46 @@ class SetupProfileViewController: UIViewController,
 
         guard let uid = Auth.auth().currentUser?.uid else { return }
 
-        let notifications_enabled = notificationsSwitch.isOn
+        continueButton.isEnabled = false
 
-        // Cloudinary
-        let profile_image_url = ""
+        let notificationsEnabled = notificationsSwitch.isOn
+        let profileImageURL = "" // Cloudinary later
 
-        let db = Firestore.firestore()
-        db.collection("users").document(uid).updateData([
-            "full_name": fullName,
-            "bio": bioTextView.text ?? "",
-            "notifications_enabled": notifications_enabled,
-            "profile_image_url": profile_image_url,
-            "profile_completed": true
-        ]) { [weak self] error in
+        Firestore.firestore()
+            .collection("users")
+            .document(uid)
+            .updateData([
+                "full_name": fullName,
+                "bio": bio,
+                "notifications_enabled": notificationsEnabled,
+                "profile_image_url": profileImageURL,
+                "profile_completed": true
+            ]) { [weak self] error in
 
-            guard let self = self else { return }
+                guard let self = self else { return }
 
-            if let error = error {
-                self.showAlert(title: "Error", message: error.localizedDescription)
-                return
+                if let error = error {
+                    self.continueButton.isEnabled = true
+                    self.showAlert(title: "Error", message: error.localizedDescription)
+                    return
+                }
+
+                self.routeToDashboard()
             }
-
-            self.routeToDashboard()
-        }
     }
 
     func routeToDashboard() {
-        guard let role = userRole else { return }
 
         let storyboard = UIStoryboard(name: "Main", bundle: nil)
         let identifier: String
 
-        switch role {
-        case "3":
-            identifier = "NGOHomeViewController"
-        case "2":
-            identifier = "DonorHomeViewController"
-        case "1":
+        if SessionManager.shared.isAdmin {
             identifier = "AdminHomeViewController"
-        default:
+        } else if SessionManager.shared.isNGO {
+            identifier = "NGOHomeViewController"
+        } else if SessionManager.shared.isDonor {
+            identifier = "DonorHomeViewController"
+        } else {
             return
         }
 
@@ -152,43 +147,36 @@ class SetupProfileViewController: UIViewController,
             sceneDelegate.window?.rootViewController = homeVC
             sceneDelegate.window?.makeKeyAndVisible()
         }
-
     }
 
-    func showAlert(title: String, message: String) {
-        let alert = UIAlertController(
-            title: title,
-            message: message,
-            preferredStyle: .alert
-        )
-        alert.addAction(UIAlertAction(title: "OK", style: .default))
-        present(alert, animated: true)
-    }
-    
+    // MARK: - Bio counter
     func textViewDidChange(_ textView: UITextView) {
-        let currentCount = textView.text.count
-        let maxCount = 240
-
-        if currentCount > maxCount {
-            textView.text = String(textView.text.prefix(maxCount))
+        let max = 240
+        if textView.text.count > max {
+            textView.text = String(textView.text.prefix(max))
         }
-
         bioCounterLabel.text = "\(textView.text.count) / 240"
     }
-    
+
     func textView(_ textView: UITextView,
                   shouldChangeTextIn range: NSRange,
                   replacementText text: String) -> Bool {
 
-        let currentText = textView.text ?? ""
-        guard let stringRange = Range(range, in: currentText) else { return false }
-
-        let updatedText = currentText.replacingCharacters(in: stringRange, with: text)
-        return updatedText.count <= 240
+        let current = textView.text ?? ""
+        guard let stringRange = Range(range, in: current) else { return false }
+        let updated = current.replacingCharacters(in: stringRange, with: text)
+        return updated.count <= 240
     }
-    
+
+    func showAlert(title: String, message: String) {
+        let alert = UIAlertController(title: title, message: message, preferredStyle: .alert)
+        alert.addAction(UIAlertAction(title: "OK", style: .default))
+        present(alert, animated: true)
+    }
+
     private func styleActionButton(_ button: UIButton) {
         button.layer.cornerRadius = button.frame.height / 2
         button.clipsToBounds = true
     }
 }
+

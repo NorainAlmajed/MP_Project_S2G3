@@ -59,6 +59,7 @@
 				AccountViewController.swift,
 				Authentication.storyboard,
 				LoginViewController.swift,
+				SessionManager.swift,
 				Settings.storyboard,
 			);
 			target = 5FEF8B772EDA363A007D3A97 /* ProjectSimulatorTests */;
@@ -69,6 +70,7 @@
 				AccountViewController.swift,
 				Authentication.storyboard,
 				LoginViewController.swift,
+				SessionManager.swift,
 				Settings.storyboard,
 			);
 			target = 5FEF8B812EDA363A007D3A97 /* ProjectSimulatorUITests */;

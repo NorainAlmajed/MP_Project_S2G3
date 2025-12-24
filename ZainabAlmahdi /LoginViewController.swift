@@ -24,6 +24,7 @@ class LoginViewController: UIViewController {
         styleActionButton(loginButton)
     }
 
+
     @IBAction func signupButtonTapped(_ sender: UIButton) {
         performSegue(withIdentifier: "goToRoleSelection", sender: self)
     }
@@ -61,7 +62,7 @@ class LoginViewController: UIViewController {
             showAlert(title: "Missing Password", message: "Please enter your password.")
             return
         }
-
+        
         Auth.auth().signIn(withEmail: email, password: password) { [weak self] result, error in
             guard let self = self else { return }
 
@@ -70,15 +71,23 @@ class LoginViewController: UIViewController {
                 return
             }
 
-            let uid = result!.user.uid
-            self.routeUserByRole(uid: uid)
+            SessionManager.shared.fetchUserRole { success in
+                DispatchQueue.main.async {
+                    if success {
+                        self.performSegue(withIdentifier: "goToAccount", sender: nil)
+                    } else {
+                        self.showAlert(title: "Error", message: "Could not load user role.")
+                    }
+                }
+            }
         }
+
     }
     
     enum UserRole: String {
         case admin = "1"
-        case ngo = "2"
-        case donor = "3"
+        case donor = "2"
+        case ngo = "3"
     }
 
     func routeUserByRole(uid: String) {

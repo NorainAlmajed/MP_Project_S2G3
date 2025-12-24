@@ -11,7 +11,6 @@ import FirebaseFirestore
 
 class DonorSignupViewController: UIViewController {
 
-    // MARK: - Outlets
     @IBOutlet weak var usernameTextField: UITextField!
     @IBOutlet weak var nameTextField: UITextField!
     @IBOutlet weak var phoneNumberTextField: UITextField!
@@ -34,17 +33,13 @@ class DonorSignupViewController: UIViewController {
         createDonorAccount()
     }
 
-    // MARK: - Validation
+
     func validateInputs() -> Bool {
 
-        let email = emailTextField.text?
-            .trimmingCharacters(in: .whitespacesAndNewlines) ?? ""
-
-        let password = passwordTextField.text?
-            .trimmingCharacters(in: .whitespacesAndNewlines) ?? ""
-
-        let confirm = confirmPasswordTextField.text?
-            .trimmingCharacters(in: .whitespacesAndNewlines) ?? ""
+        let email = emailTextField.text?.trimmingCharacters(in: .whitespacesAndNewlines) ?? ""
+        let password = passwordTextField.text?.trimmingCharacters(in: .whitespacesAndNewlines) ?? ""
+        let confirm = confirmPasswordTextField.text?.trimmingCharacters(in: .whitespacesAndNewlines) ?? ""
+        let phone = phoneNumberTextField.text?.trimmingCharacters(in: .whitespacesAndNewlines) ?? ""
 
         guard !email.isEmpty else {
             showAlert(title: "Missing Email", message: "Please enter an email address.")
@@ -66,64 +61,83 @@ class DonorSignupViewController: UIViewController {
             return false
         }
 
+        guard !phone.isEmpty else {
+            showAlert(title: "Missing Phone Number", message: "Please enter your phone number.")
+            return false
+        }
+
+        guard phone.allSatisfy({ $0.isNumber }) else {
+            showAlert(title: "Invalid Phone Number", message: "Phone number must contain digits only.")
+            return false
+        }
+
+        guard phone.count >= 8 else {
+            showAlert(title: "Invalid Phone Number", message: "Phone number must be at least 8 digits.")
+            return false
+        }
+
         return true
     }
-
-    // MARK: - Firebase Auth
+    
     func createDonorAccount() {
+        signupButton.isEnabled = false
 
-        let email = emailTextField.text!
-            .trimmingCharacters(in: .whitespacesAndNewlines)
-
-        let password = passwordTextField.text!
-            .trimmingCharacters(in: .whitespacesAndNewlines)
+        let email = emailTextField.text!.trimmingCharacters(in: .whitespacesAndNewlines)
+        let password = passwordTextField.text!.trimmingCharacters(in: .whitespacesAndNewlines)
 
         Auth.auth().createUser(withEmail: email, password: password) { [weak self] result, error in
             guard let self = self else { return }
 
             if let error = error {
+                self.signupButton.isEnabled = true
                 self.showAlert(title: "Registration Failed", message: error.localizedDescription)
                 return
             }
 
-            guard let uid = result?.user.uid else { return }
+            guard let uid = result?.user.uid else {
+                self.signupButton.isEnabled = true
+                return
+            }
+
             self.saveDonorToFirestore(uid: uid, email: email)
         }
     }
 
-    // MARK: - Firestore
     func saveDonorToFirestore(uid: String, email: String) {
 
-        let db = Firestore.firestore()
+        Firestore.firestore()
+            .collection("users")
+            .document(uid)
+            .setData([
+                "role": "2",
+                "username": usernameTextField.text?.trimmingCharacters(in: .whitespacesAndNewlines) ?? "",
+                "name": nameTextField.text?.trimmingCharacters(in: .whitespacesAndNewlines) ?? "",
+                "phone_number": phoneNumberTextField.text?.trimmingCharacters(in: .whitespacesAndNewlines) ?? "",
+                "email": email,
+                "profile_completed": false,
+                "created_at": Timestamp()
+            ]) { [weak self] error in
 
-        db.collection("users").document(uid).setData([
-            "role": "2",
-            "username": usernameTextField.text?.trimmingCharacters(in: .whitespacesAndNewlines) ?? "",
-            "name": nameTextField.text?.trimmingCharacters(in: .whitespacesAndNewlines) ?? "",
-            "phone_number": phoneNumberTextField.text?.trimmingCharacters(in: .whitespacesAndNewlines) ?? "",
-            "email": email,
-            "created_at": Timestamp()
-        ]) { error in
+                guard let self = self else { return }
 
-            if let error = error {
-                self.showAlert(title: "Error", message: error.localizedDescription)
-                return
+                if let error = error {
+                    self.signupButton.isEnabled = true
+                    self.showAlert(title: "Registration Failed", message: error.localizedDescription)
+                    return
+                }
+
+                let vc = UIStoryboard(name: "Authentication", bundle: nil)
+                    .instantiateViewController(withIdentifier: "SetupProfileViewController")
+                    as! SetupProfileViewController
+
+                vc.userRole = "2"   // Donor
+                vc.modalPresentationStyle = .fullScreen
+                self.present(vc, animated: true)
             }
-
-            let vc = UIStoryboard(name: "Main", bundle: nil)
-                .instantiateViewController(withIdentifier: "DonorHomeViewController")
-            vc.modalPresentationStyle = .fullScreen
-            self.present(vc, animated: true)
-        }
     }
 
-    // MARK: - Alert
     func showAlert(title: String, message: String) {
-        let alert = UIAlertController(
-            title: title,
-            message: message,
-            preferredStyle: .alert
-        )
+        let alert = UIAlertController(title: title, message: message, preferredStyle: .alert)
         alert.addAction(UIAlertAction(title: "OK", style: .default))
         present(alert, animated: true)
     }

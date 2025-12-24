@@ -110,12 +110,26 @@ class UserDetailsViewController: UIViewController {
 
       }
       
-      @IBAction func editBtn(_ sender: Any) {
-          if let editVC = storyboard?.instantiateViewController(withIdentifier: "EditUsersViewController") as? EditUsersViewController {
-                      editVC.modalPresentationStyle = .fullScreen
-                      editVC.userToEdit = self.currentUser
-                      self.navigationController?.pushViewController(editVC, animated: true)
-                  }      }
+    @IBAction func editBtn(_ sender: Any) {
+        let storyboard = UIStoryboard(name: "norain-admin-controls1", bundle: nil)
+            
+            if let editVC = storyboard.instantiateViewController(withIdentifier: "EditUsersViewController") as? EditUsersViewController {
+                
+                // 1. Pass the data
+                editVC.userToEdit = self.currentUser
+                
+                // 2. WRAP editVC in a Navigation Controller
+                // This is the "container" that provides the Nav Bar
+                let nav = UINavigationController(rootViewController: editVC)
+                
+                // 3. Set the presentation style on the NAV controller, not the editVC
+                nav.modalPresentationStyle = .fullScreen
+                
+                // 4. Present the NAV controller
+                self.present(nav, animated: true, completion: nil)
+            }
+        
+    }
   
     /*
     // MARK: - Navigation

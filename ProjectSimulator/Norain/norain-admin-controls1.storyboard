@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="23727" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="mxA-aF-9jl">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="23727" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="Fwt-11-JKb">
     <device id="retina6_3" orientation="portrait" appearance="light"/>
     <dependencies>
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="23721"/>
@@ -396,6 +396,9 @@
                                                         <color key="tintColor" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                                         <state key="normal" title="Button"/>
                                                         <buttonConfiguration key="configuration" style="tinted" image="square.and.arrow.up" catalog="system" title="Upload Photo"/>
+                                                        <connections>
+                                                            <action selector="uploadPhotoTapped:" destination="mxA-aF-9jl" eventType="touchUpInside" id="Knz-6U-oBC"/>
+                                                        </connections>
                                                     </button>
                                                 </subviews>
                                                 <color key="backgroundColor" systemColor="systemBackgroundColor"/>
@@ -686,6 +689,7 @@
                         <outlet property="govStack" destination="H2A-7h-1Q2" id="eqO-uD-Cch"/>
                         <outlet property="licenseBtn" destination="DJG-at-Z9R" id="euY-ro-ZLH"/>
                         <outlet property="statusStack" destination="4ei-nU-KuM" id="vRA-Pv-VmY"/>
+                        <outlet property="uploadPicBtn" destination="kDE-b6-zcq" id="PlW-Yw-m82"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="ZP5-lS-gqV" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>

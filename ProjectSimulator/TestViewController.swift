@@ -47,6 +47,15 @@ class DonationDetailsViewController: UIViewController, UITableViewDelegate, UITa
             )
             
             preloadDonationImage()
+            
+            // Ensure separators are shown
+            donationTableview.separatorStyle = .singleLine
+
+            // Set separator color to be visible in both light and dark mode
+            donationTableview.separatorColor = UIColor { traitCollection in
+                return traitCollection.userInterfaceStyle == .dark ? .lightGray : .gray
+            }
+
         }
         
         @IBAction func exportDonation(_ sender: UIButton) {
@@ -232,6 +241,12 @@ class DonationDetailsViewController: UIViewController, UITableViewDelegate, UITa
                 bottomLine.trailingAnchor.constraint(equalTo: navigationController!.navigationBar.trailingAnchor),
                 bottomLine.bottomAnchor.constraint(equalTo: navigationController!.navigationBar.bottomAnchor)
             ])
+            
+            navigationController?.navigationBar.tintColor = UIColor { traitCollection in
+                return traitCollection.userInterfaceStyle == .dark ? .white : .black
+            }
+
+
         }
 
         override func viewWillDisappear(_ animated: Bool) {

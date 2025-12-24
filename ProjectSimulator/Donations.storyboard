@@ -355,7 +355,7 @@
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="-1" estimatedRowHeight="-1" sectionHeaderHeight="-1" estimatedSectionHeaderHeight="-1" sectionFooterHeight="-1" estimatedSectionFooterHeight="-1" translatesAutoresizingMaskIntoConstraints="NO" id="rQc-Um-iYH">
-                                <rect key="frame" x="0.0" y="168" width="402" height="589"/>
+                                <rect key="frame" x="0.0" y="225" width="402" height="532"/>
                                 <color key="backgroundColor" systemColor="systemBackgroundColor"/>
                                 <prototypes>
                                     <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" insetsLayoutMarginsFromSafeArea="NO" selectionStyle="blue" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" reuseIdentifier="Section1Cell" rowHeight="128" id="eHa-9Z-3fn" customClass="Section1TableViewCell" customModule="ProjectSimulator" customModuleProvider="target">
@@ -416,7 +416,7 @@
                                             <rect key="frame" x="0.0" y="0.0" width="402" height="196"/>
                                             <autoresizingMask key="autoresizingMask"/>
                                             <subviews>
-                                                <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="Location" translatesAutoresizingMaskIntoConstraints="NO" id="K9f-oj-IUd">
+                                                <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="location2" translatesAutoresizingMaskIntoConstraints="NO" id="K9f-oj-IUd">
                                                     <rect key="frame" x="29.666666666666671" y="55" width="86" height="86"/>
                                                     <constraints>
                                                         <constraint firstAttribute="height" constant="86" id="kfx-LP-nLd"/>
@@ -987,13 +987,13 @@
     </scenes>
     <resources>
         <image name="KarranaCharity" width="927" height="929"/>
-        <image name="Location" width="1200" height="1200"/>
         <image name="Notification" width="500" height="500"/>
         <image name="apples" width="736" height="984"/>
         <image name="basket" width="1200" height="1200"/>
         <image name="bell.fill" catalog="system" width="123" height="128"/>
         <image name="heart.text.clipboard.fill" catalog="system" width="103" height="128"/>
         <image name="house.fill" catalog="system" width="128" height="104"/>
+        <image name="location2" width="500" height="500"/>
         <namedColor name="BeigeCol">
             <color red="0.97254901960784312" green="0.8901960784313725" blue="0.74901960784313726" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
         </namedColor>

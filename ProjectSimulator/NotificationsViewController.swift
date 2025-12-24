@@ -176,7 +176,7 @@ class NotificationsViewController: UIViewController {
         
         // MARK: - Firebase
         func fetchCurrentUser(completion: @escaping (Bool) -> Void) {
-            let tempUserID = "dlqHfZoVwh50p3Aexu1A" // Replace with a valid user ID
+            let tempUserID = "Fatima" // Replace with a valid user ID
 
             db.collection("users").document(tempUserID).getDocument { [weak self] snapshot, error in
                 if let error = error {

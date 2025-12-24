@@ -103,38 +103,38 @@ extension User {
 
 
 
-//// MARK: - Donation Draft (Local only)
-//// Keeps form data when user goes back, without saving to Firebase.
-//
-//struct DonationDraft {
-//    var ngoId: String
-//    var donorName: String?
-//    var foodCategory: String?
-//    var quantity: Int?
-//    var weight: Double?
-//    var expiryDate: Date?
-//    var shortDescription: String?
-//    var imageUrl: String?
-//}
-//
-//final class DonationDraftStore {
-//    static let shared = DonationDraftStore()
-//    private init() {}
-//
-//    private var drafts: [String: DonationDraft] = [:] // key = ngoId
-//
-//    func save(_ draft: DonationDraft) {
-//        drafts[draft.ngoId] = draft
-//    }
-//
-//    func load(ngoId: String) -> DonationDraft? {
-//        drafts[ngoId]
-//    }
-//
-//    func clear(ngoId: String) {
-//        drafts.removeValue(forKey: ngoId)
-//    }
-//}
-//
+// MARK: - Donation Draft (Local only)
+// Keeps form data when user goes back, without saving to Firebase.
+
+struct DonationDraft {
+    var ngoId: String
+    var donorName: String?
+    var foodCategory: String?
+    var quantity: Int?
+    var weight: Double?
+    var expiryDate: Date?
+    var shortDescription: String?
+    var imageUrl: String?
+}
+
+final class DonationDraftStore {
+    static let shared = DonationDraftStore()
+    private init() {}
+
+    private var drafts: [String: DonationDraft] = [:] // key = ngoId
+
+    func save(_ draft: DonationDraft) {
+        drafts[draft.ngoId] = draft
+    }
+
+    func load(ngoId: String) -> DonationDraft? {
+        drafts[ngoId]
+    }
+
+    func clear(ngoId: String) {
+        drafts.removeValue(forKey: ngoId)
+    }
+}
+
 
 

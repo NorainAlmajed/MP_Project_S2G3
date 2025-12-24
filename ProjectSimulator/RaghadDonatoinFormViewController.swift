@@ -723,6 +723,9 @@ class RaghadDonatoinFormViewController: UIViewController,
 
             let sb = UIStoryboard(name: "Raghad1", bundle: nil)
             let vc = sb.instantiateViewController(withIdentifier: "SchedulePickupVC")
+            if let ngo = self.selectedNgo {
+                 DonationDraftStore.shared.clear(ngoId: ngo.id)
+             }
 
             
             
@@ -737,31 +740,6 @@ class RaghadDonatoinFormViewController: UIViewController,
 
             self.navigationController?.pushViewController(vc, animated: true)
         }
-
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
 
         
     }
@@ -906,9 +884,56 @@ class RaghadDonatoinFormViewController: UIViewController,
             }
         }
     }
+    
+    //to save a draft of the form when useful for back navigation
+    
+    private func saveDraft() {
+        guard let ngo = selectedNgo else { return }
 
+        let draft = DonationDraft(
+            ngoId: ngo.id,
+            donorName: selectedDonorName,
+            foodCategory: selectedFoodCategory,
+            quantity: getQuantityValue(),
+            weight: weightValue,
+            expiryDate: selectedExpiryDate,
+            shortDescription: getShortDescription(),
+            imageUrl: uploadedDonationImageUrl
+        )
+
+        DonationDraftStore.shared.save(draft)
+    }
+
+    override func viewWillDisappear(_ animated: Bool) {
+        super.viewWillDisappear(animated)
+
+        // Save only when user is going BACK from this screen
+        if isMovingFromParent {
+            saveDraft()
+        }
+    }
     
-    
+    private func restoreDraftIfExists() {
+        guard let ngo = selectedNgo else { return }
+        guard let draft = DonationDraftStore.shared.load(ngoId: ngo.id) else { return }
+
+        selectedDonorName = draft.donorName
+        selectedFoodCategory = draft.foodCategory
+        weightValue = draft.weight
+        selectedExpiryDate = draft.expiryDate
+        uploadedDonationImageUrl = draft.imageUrl
+
+        // If you have your own stored quantity variable, set it here too.
+        // Example: quantityValue = draft.quantity
+
+        donationFormTableview.reloadData()
+    }
+
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        restoreDraftIfExists()
+    }
+
     
     
 

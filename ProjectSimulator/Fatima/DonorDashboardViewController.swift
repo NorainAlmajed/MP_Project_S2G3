@@ -15,6 +15,8 @@ class DonorDashboardViewController: UIViewController {
     private let db = Firestore.firestore()
     private var ngosFromFirestore: [NGO] = []
     private var ngosListener: ListenerRegistration?
+    private var recentDonations: [Donation1] = []
+    private var donationsListener: ListenerRegistration?
 
     // MARK: Section indexes
     private let WELCOME_SECTION = 0
@@ -33,6 +35,8 @@ class DonorDashboardViewController: UIViewController {
         print("mainTableView is nil:", mainTableView == nil)
 
         loadCurrentUser()
+        
+
         mainTableView.delegate = self
         mainTableView.dataSource = self
         mainTableView.separatorStyle = .none
@@ -73,11 +77,48 @@ class DonorDashboardViewController: UIViewController {
                 }
             }
     }
+    private func startListeningForRecentDonations() {
+        guard let uid = currentUserID else { return }
+
+        donationsListener?.remove()
+
+        let userRef = db.collection("users").document(uid)
+
+        donationsListener = db.collection("donations")
+            .whereField("donor", isEqualTo: userRef)
+            .order(by: "creationDate", descending: true)
+            .limit(to: 5)
+            .addSnapshotListener { [weak self] snapshot, error in
+                guard let self = self else { return }
+
+                if let error = error {
+                    print("❌ Donation fetch error:", error.localizedDescription)
+                    return
+                }
+
+                guard let snapshot = snapshot else { return }
+
+                let donations = snapshot.documents.compactMap {
+                    Donation1(document: $0)
+                }
+
+                self.recentDonations = donations
+
+                DispatchQueue.main.async {
+                    self.mainTableView.reloadSections(
+                        IndexSet(integer: self.DONATIONS_SECTION),
+                        with: .none
+                    )
+                }
+            }
+    }
+
     // MARK: - Cleanup
-        deinit {
-            ngosListener?.remove()
-            print("🧹 DonorDashboardViewController deinitialized")
-        }
+    deinit {
+        ngosListener?.remove()
+        donationsListener?.remove()
+    }
+
     private func loadCurrentUser() {
         guard let user = Auth.auth().currentUser else {
             return
@@ -85,7 +126,7 @@ class DonorDashboardViewController: UIViewController {
 
         // Save user ID
         currentUserID = user.uid
-
+        startListeningForRecentDonations()
         // Try Firebase display name
         if let name = user.displayName, !name.isEmpty {
             currentUserName = name
@@ -273,6 +314,20 @@ extension DonorDashboardViewController: UITableViewDataSource, UITableViewDelega
                 cell.selectionStyle = .none
                 return cell
             }
+        if indexPath.section == DONATIONS_SECTION {
+
+            guard let cell = tableView.dequeueReusableCell(
+                withIdentifier: "RecentDonationsCell",
+                for: indexPath
+            ) as? RecentDonationTableViewCell else {
+                fatalError("RecentDonationTableViewCell not connected")
+            }
+
+            cell.configure(with: recentDonations)
+            cell.selectionStyle = .none
+            return cell
+        }
+
 
         
 

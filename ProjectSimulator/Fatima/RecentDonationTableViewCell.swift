@@ -1,68 +1,78 @@
 import UIKit
 
-class RecentDonationTableViewCell: UITableViewCell {
+class RecentDonationTableViewCell: UITableViewCell,
+                                  UICollectionViewDelegate,
+                                  UICollectionViewDataSource {
 
-    private let container = UIView()
-    private let titleLabel = UILabel()
-    private let subtitleLabel = UILabel()
-    private let statusLabel = UILabel()
+    // MARK: - Outlets
+    @IBOutlet weak var recentDonationsCollectionView: UICollectionView!
 
-    override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
-        super.init(style: style, reuseIdentifier: reuseIdentifier)
-        setupUI()
+    // MARK: - Empty State
+    private let emptyStateLabel: UILabel = {
+        let label = UILabel()
+        label.text = "No donations made yet"
+        label.font = .systemFont(ofSize: 16, weight: .medium)
+        label.textColor = .secondaryLabel
+        label.textAlignment = .center
+        label.numberOfLines = 0
+        label.isHidden = true
+        label.translatesAutoresizingMaskIntoConstraints = false
+        return label
+    }()
+
+    private var donations: [Donation1] = []
+
+    // MARK: - Lifecycle
+    override func awakeFromNib() {
+        super.awakeFromNib()
+        setupEmptyStateLabel()
+        setupCollectionView()
     }
 
-    required init?(coder: NSCoder) {
-        super.init(coder: coder)
-        setupUI()
-    }
-
-    private func setupUI() {
-        selectionStyle = .none
-        backgroundColor = .clear
-
-        container.backgroundColor = .secondarySystemBackground
-        container.layer.cornerRadius = 16
-
-        titleLabel.font = .boldSystemFont(ofSize: 16)
-        subtitleLabel.font = .systemFont(ofSize: 14)
-        subtitleLabel.textColor = .secondaryLabel
-        statusLabel.font = .systemFont(ofSize: 13)
-
-        let stack = UIStackView(arrangedSubviews: [titleLabel, subtitleLabel, statusLabel])
-        stack.axis = .vertical
-        stack.spacing = 6
-
-        container.translatesAutoresizingMaskIntoConstraints = false
-        stack.translatesAutoresizingMaskIntoConstraints = false
-
-        contentView.addSubview(container)
-        container.addSubview(stack)
+    // MARK: - Setup
+    private func setupEmptyStateLabel() {
+        contentView.addSubview(emptyStateLabel)
 
         NSLayoutConstraint.activate([
-            container.topAnchor.constraint(equalTo: contentView.topAnchor, constant: 12),
-            container.bottomAnchor.constraint(equalTo: contentView.bottomAnchor, constant: -12),
-            container.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 16),
-            container.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -16),
-
-            stack.topAnchor.constraint(equalTo: container.topAnchor, constant: 16),
-            stack.bottomAnchor.constraint(equalTo: container.bottomAnchor, constant: -16),
-            stack.leadingAnchor.constraint(equalTo: container.leadingAnchor, constant: 16),
-            stack.trailingAnchor.constraint(equalTo: container.trailingAnchor, constant: -16),
+            emptyStateLabel.centerXAnchor.constraint(equalTo: contentView.centerXAnchor),
+            emptyStateLabel.centerYAnchor.constraint(equalTo: contentView.centerYAnchor),
+            emptyStateLabel.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 24),
+            emptyStateLabel.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -24)
         ])
     }
 
-    func configure(with donation: Donation1) {
-        titleLabel.text = donation.category
-        subtitleLabel.text = "Donation #\(donation.donationID)"
+    private func setupCollectionView() {
+        recentDonationsCollectionView.delegate = self
+        recentDonationsCollectionView.dataSource = self
+        recentDonationsCollectionView.isHidden = true
+    }
 
-        switch donation.status {
-        case 1: statusLabel.text = "Pending"
-        case 2: statusLabel.text = "Accepted"
-        case 3: statusLabel.text = "Collected"
-        case 4: statusLabel.text = "Rejected"
-        case 5: statusLabel.text = "Cancelled"
-        default: statusLabel.text = "Unknown"
-        }
+    // MARK: - Configure
+    func configure(with donations: [Donation1]) {
+        self.donations = Array(donations.prefix(3))
+
+        let hasDonations = !self.donations.isEmpty
+        recentDonationsCollectionView.isHidden = !hasDonations
+        emptyStateLabel.isHidden = hasDonations
+
+        recentDonationsCollectionView.reloadData()
+    }
+
+    // MARK: - CollectionView DataSource
+    func collectionView(_ collectionView: UICollectionView,
+                        numberOfItemsInSection section: Int) -> Int {
+        donations.count
+    }
+
+    func collectionView(_ collectionView: UICollectionView,
+                        cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
+
+        let cell = collectionView.dequeueReusableCell(
+            withReuseIdentifier: "RecentDonationCardCell",
+            for: indexPath
+        ) as! RecentDonationCardCell
+
+        cell.configure(with: donations[indexPath.item])
+        return cell
     }
 }

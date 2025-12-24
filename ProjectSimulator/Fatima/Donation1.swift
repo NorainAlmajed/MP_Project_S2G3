@@ -2,35 +2,44 @@ import FirebaseFirestore
 
 struct Donation1 {
 
-    let id: String
-    let category: String
+    let firestoreID: String
     let donationID: Int
-    let creationDate: Date
-    let quantity: Int
+    let category: String
     let status: Int
-    let donorRef: DocumentReference
+    let creationDate: Date
 
+    // MARK: - Derived / UI-safe values
+
+    /// Donor dashboard → always the logged-in user
+    var donorDisplayName: String {
+        return "You"
+    }
+
+    /// Formatted date for UI
+    var formattedDate: String {
+        let formatter = DateFormatter()
+        formatter.dateStyle = .medium
+        formatter.timeStyle = .short
+        return formatter.string(from: creationDate)
+    }
+
+    // MARK: - Firestore Init
     init?(document: QueryDocumentSnapshot) {
-
         let data = document.data()
 
         guard
-            let category = data["Category"] as? String,
             let donationID = data["donationID"] as? Int,
-            let timestamp = data["creationDate"] as? Timestamp,
-            let quantity = data["quantity"] as? Int,
+            let category = data["Category"] as? String,
             let status = data["status"] as? Int,
-            let donorRef = data["donor"] as? DocumentReference
+            let timestamp = data["creationDate"] as? Timestamp
         else {
             return nil
         }
 
-        self.id = document.documentID
-        self.category = category
+        self.firestoreID = document.documentID
         self.donationID = donationID
-        self.creationDate = timestamp.dateValue()
-        self.quantity = quantity
+        self.category = category
         self.status = status
-        self.donorRef = donorRef
+        self.creationDate = timestamp.dateValue()
     }
 }

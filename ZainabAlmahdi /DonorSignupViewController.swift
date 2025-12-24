@@ -18,9 +18,11 @@ class DonorSignupViewController: UIViewController {
     @IBOutlet weak var emailTextField: UITextField!
     @IBOutlet weak var passwordTextField: UITextField!
     @IBOutlet weak var confirmPasswordTextField: UITextField!
-
+    @IBOutlet weak var signupButton: UIButton!
+    
     override func viewDidLoad() {
         super.viewDidLoad()
+        styleActionButton(signupButton)
     }
 
     @IBAction func goToLoginTapped(_ sender: UIButton) {
@@ -95,7 +97,7 @@ class DonorSignupViewController: UIViewController {
         let db = Firestore.firestore()
 
         db.collection("users").document(uid).setData([
-            "role": "donor",
+            "role": "2",
             "username": usernameTextField.text?.trimmingCharacters(in: .whitespacesAndNewlines) ?? "",
             "name": nameTextField.text?.trimmingCharacters(in: .whitespacesAndNewlines) ?? "",
             "phone_number": phoneNumberTextField.text?.trimmingCharacters(in: .whitespacesAndNewlines) ?? "",
@@ -124,5 +126,10 @@ class DonorSignupViewController: UIViewController {
         )
         alert.addAction(UIAlertAction(title: "OK", style: .default))
         present(alert, animated: true)
+    }
+    
+    private func styleActionButton(_ button: UIButton) {
+        button.layer.cornerRadius = button.frame.height / 2
+        button.clipsToBounds = true
     }
 }

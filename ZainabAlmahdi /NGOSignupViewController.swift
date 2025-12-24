@@ -9,10 +9,6 @@ import UIKit
 import FirebaseAuth
 import FirebaseFirestore
 
-import UIKit
-import FirebaseAuth
-import FirebaseFirestore
-
 class NGOSignupViewController: UIViewController,
                               UIPickerViewDelegate,
                               UIPickerViewDataSource,
@@ -38,6 +34,9 @@ class NGOSignupViewController: UIViewController,
         "Northern Governorate"
     ]
 
+
+    @IBOutlet weak var uploadButton: UIButton!
+    @IBOutlet weak var signupButton: UIButton!
     @IBOutlet weak var usernameTextField: UITextField!
     @IBOutlet weak var nameTextField: UITextField!
     @IBOutlet weak var phoneNumberTextField: UITextField!
@@ -51,7 +50,9 @@ class NGOSignupViewController: UIViewController,
 
     override func viewDidLoad() {
         super.viewDidLoad()
-
+        styleActionButton(uploadButton)
+        styleActionButton(signupButton
+        )
         causeTextField.tintColor = .clear
         governorateTextField.tintColor = .clear
 
@@ -195,7 +196,7 @@ class NGOSignupViewController: UIViewController,
         let db = Firestore.firestore()
 
         db.collection("users").document(uid).setData([
-            "role": "ngo",
+            "role": "3",
             "email": emailTextField.text ?? "",
             "username": usernameTextField.text ?? "",
             "organizationName": nameTextField.text ?? "",
@@ -223,4 +224,10 @@ class NGOSignupViewController: UIViewController,
         alert.addAction(UIAlertAction(title: "OK", style: .default))
         present(alert, animated: true)
     }
+    
+    private func styleActionButton(_ button: UIButton) {
+        button.layer.cornerRadius = button.frame.height / 2
+        button.clipsToBounds = true
+    }
+    
 }

@@ -13,6 +13,9 @@ class SetupProfileViewController: UIViewController,
                                   UIImagePickerControllerDelegate,
                                   UINavigationControllerDelegate, UITextViewDelegate {
 
+    
+    @IBOutlet weak var continueButton: UIButton!
+    @IBOutlet weak var uploadButton: UIButton!
     @IBOutlet weak var profileImageView: UIImageView!
     @IBOutlet weak var fullNameTextField: UITextField!
     @IBOutlet weak var bioTextView: UITextView!
@@ -22,7 +25,10 @@ class SetupProfileViewController: UIViewController,
     var userRole: String?
 
     override func viewDidLoad() {
+        
         super.viewDidLoad()
+        styleActionButton(continueButton)
+        styleActionButton(uploadButton)
         bioTextView.delegate = self
         bioCounterLabel.text = "0 / 240"
     }
@@ -96,17 +102,17 @@ class SetupProfileViewController: UIViewController,
 
         guard let uid = Auth.auth().currentUser?.uid else { return }
 
-        let notificationsEnabled = notificationsSwitch.isOn
+        let notifications_enabled = notificationsSwitch.isOn
 
-        // 🔧 Placeholder for Cloudinary
-        let profileImageUrl = ""   // will be filled later
+        // Cloudinary
+        let profile_image_url = ""
 
         let db = Firestore.firestore()
         db.collection("users").document(uid).updateData([
             "full_name": fullName,
             "bio": bioTextView.text ?? "",
-            "notifications_enabled": notificationsEnabled,
-            "profile_image_url": profileImageUrl,
+            "notifications_enabled": notifications_enabled,
+            "profile_image_url": profile_image_url,
             "profile_completed": true
         ]) { [weak self] error in
 
@@ -125,9 +131,18 @@ class SetupProfileViewController: UIViewController,
         guard let role = userRole else { return }
 
         let storyboard = UIStoryboard(name: "Main", bundle: nil)
-        let identifier = role == "NGO"
-            ? "NGOHomeViewController"
-            : "DonorHomeViewController"
+        let identifier: String
+
+        switch role {
+        case "3":
+            identifier = "NGOHomeViewController"
+        case "2":
+            identifier = "DonorHomeViewController"
+        case "1":
+            identifier = "AdminHomeViewController"
+        default:
+            return
+        }
 
         let homeVC = storyboard.instantiateViewController(withIdentifier: identifier)
 
@@ -137,6 +152,7 @@ class SetupProfileViewController: UIViewController,
             sceneDelegate.window?.rootViewController = homeVC
             sceneDelegate.window?.makeKeyAndVisible()
         }
+
     }
 
     func showAlert(title: String, message: String) {
@@ -169,5 +185,10 @@ class SetupProfileViewController: UIViewController,
 
         let updatedText = currentText.replacingCharacters(in: stringRange, with: text)
         return updatedText.count <= 240
+    }
+    
+    private func styleActionButton(_ button: UIButton) {
+        button.layer.cornerRadius = button.frame.height / 2
+        button.clipsToBounds = true
     }
 }

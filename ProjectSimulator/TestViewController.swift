@@ -52,114 +52,139 @@ class DonationDetailsViewController: UIViewController, UITableViewDelegate, UITa
             }
             ExcelExporter.shareCSV(from: self, donation: donation)
         }
+    
+    
+    
         
-        private func buildDonationReport(for donation: Donation) -> String {
-            let dateFormatter = DateFormatter()
-            dateFormatter.dateStyle = .medium
-            dateFormatter.timeStyle = .none
-            
-            let createdDate = dateFormatter.string(from: donation.creationDate.dateValue())
-            let pickupDate = dateFormatter.string(from: donation.pickupDate.dateValue())
-            let expiryDate = dateFormatter.string(from: donation.expiryDate.dateValue())
+    private func buildDonationReport(for donation: Donation) -> NSAttributedString {
+        let dateFormatter = DateFormatter()
+        dateFormatter.dateStyle = .medium
+        dateFormatter.timeStyle = .none
 
-            // Address formatting
-            var addressText = """
-            Building: \(donation.address.building)
-            Road: \(donation.address.road)
-            Block: \(donation.address.block)
-            Area: \(donation.address.area)
-            Governorate: \(donation.address.governorate)
-            """
-            
-            if let flat = donation.address.flat {
-                addressText += "\nFlat: \(flat)"
-            }
-            
-            let weightText = donation.weight != nil ? "\(donation.weight!) kg" : nil
-            let descriptionText = donation.description?.trimmingCharacters(in: .whitespacesAndNewlines)
-            let rejectionReasonText = donation.rejectionReason?.trimmingCharacters(in: .whitespacesAndNewlines)
-            let recurrenceText = donation.recurrence > 0 ? "Every \(donation.recurrence) days" : nil
-            
-            var report = """
-            ====================================
-                    DONATION REPORT
-            ====================================
+        let createdDate = dateFormatter.string(from: donation.creationDate.dateValue())
+        let pickupDate = dateFormatter.string(from: donation.pickupDate.dateValue())
+        let expiryDate = dateFormatter.string(from: donation.expiryDate.dateValue())
 
-            ▶ BASIC INFORMATION
-            ------------------------------------
-            Donation ID:        \(donation.donationID)
-            NGO Name:           \(donation.ngo.organization_name)
-            Donor Username:     \(donation.donor.username)
-            Created On:         \(createdDate)
-            Status:             \(statusText(for: donation.status))
+        // Convert address fields to strings
+        var addressLines: [String: String] = [
+            "Building": String(donation.address.building),
+            "Road": String(donation.address.road),
+            "Block": String(donation.address.block),
+            "Area": donation.address.area,
+            "Governorate": donation.address.governorate
+        ]
 
-            ▶ DONATION DETAILS
-            ------------------------------------
-            Category:           \(donation.category)
-            Quantity:           \(donation.quantity)
-            """
-            
-            if let weightText {
-                report += "\nWeight:            \(weightText)"
-            }
-            
-            report += """
-
-            ▶ PICKUP INFORMATION
-            ------------------------------------
-            Pickup Date:        \(pickupDate)
-            Pickup Time:        \(donation.pickupTime)
-
-            ▶ ADDRESS
-            ------------------------------------
-            \(addressText)
-
-            ▶ EXPIRY
-            ------------------------------------
-            Expiry Date:        \(expiryDate)
-            """
-            
-            if let descriptionText, !descriptionText.isEmpty {
-                report += """
-
-                ▶ DESCRIPTION
-                ------------------------------------
-                \(descriptionText)
-                """
-            }
-            
-            if let rejectionReasonText, !rejectionReasonText.isEmpty {
-                report += """
-
-                ▶ REJECTION REASON
-                ------------------------------------
-                \(rejectionReasonText)
-                """
-            }
-            
-            if let recurrenceText {
-                report += """
-
-                ▶ RECURRENCE
-                ------------------------------------
-                \(recurrenceText)
-                """
-            }
-            
-            report += """
-
-            ====================================
-            Generated On: \(DateFormatter.localizedString(
-                from: Date(),
-                dateStyle: .medium,
-                timeStyle: .short
-            ))
-            ProjectSimulator App
-            ====================================
-            """
-            
-            return report
+        if let flat = donation.address.flat, flat > 0 {
+            addressLines["Flat"] = String(flat)
         }
+
+        // Only include meaningful weight
+        let weightText = (donation.weight != nil && donation.weight! > 0) ? "\(donation.weight!) kg" : nil
+        let descriptionText = donation.description?.trimmingCharacters(in: .whitespacesAndNewlines)
+        let rejectionReasonText = donation.rejectionReason?.trimmingCharacters(in: .whitespacesAndNewlines)
+        let recurrenceText = donation.recurrence > 0 ? "Every \(donation.recurrence) days" : nil
+
+        // Monospaced font for table-like layout
+        let monoFont = UIFont.monospacedSystemFont(ofSize: 14, weight: .regular)
+        let boldMonoFont = UIFont.monospacedSystemFont(ofSize: 16, weight: .bold)
+
+        let report = NSMutableAttributedString()
+
+        // Helper to append centered title
+        func appendCentered(_ text: String) {
+            let paragraph = NSMutableParagraphStyle()
+            paragraph.alignment = .center
+            let attr = NSAttributedString(string: text + "\n\n", attributes: [.font: boldMonoFont, .paragraphStyle: paragraph])
+            report.append(attr)
+        }
+
+        // Helper to append normal rows
+        func appendRow(label: String, value: String) {
+            let paddedLabel = label.padding(toLength: 20, withPad: " ", startingAt: 0)
+            let line = "\(paddedLabel): \(value)\n"
+            let attr = NSAttributedString(string: line, attributes: [.font: monoFont])
+            report.append(attr)
+        }
+
+        // Helper to append section headers
+        func appendSectionHeader(_ text: String) {
+            let line = "------------------------------------------------------------\n"
+            let attrLine = NSAttributedString(string: line, attributes: [.font: monoFont])
+            report.append(attrLine)
+            let attrHeader = NSAttributedString(string: text + "\n", attributes: [.font: boldMonoFont])
+            report.append(attrHeader)
+            report.append(attrLine)
+        }
+
+        // Top border
+        let topLine = NSAttributedString(string: "=============================================\n", attributes: [.font: monoFont])
+        report.append(topLine)
+
+        appendCentered("DONATION REPORT")
+
+        report.append(topLine)
+        report.append(NSAttributedString(string: "\n", attributes: [.font: monoFont]))
+
+        // Basic Information
+        appendSectionHeader("▶ BASIC INFORMATION")
+        appendRow(label: "Donation ID", value: "#\(donation.donationID)")
+        appendRow(label: "NGO Name", value: donation.ngo.organization_name ?? donation.ngo.username)
+        appendRow(label: "Donor Username", value: donation.donor.username)
+        appendRow(label: "Created On", value: createdDate)
+        appendRow(label: "Status", value: statusText(for: donation.status))
+
+        // Donation Details
+        appendSectionHeader("▶ DONATION DETAILS")
+        appendRow(label: "Category", value: donation.category)
+        appendRow(label: "Quantity", value: "\(donation.quantity)")
+        if let weightText { appendRow(label: "Weight", value: weightText) }
+
+        if let descriptionText, !descriptionText.isEmpty {
+            appendSectionHeader("▶ DESCRIPTION")
+            report.append(NSAttributedString(string: descriptionText + "\n", attributes: [.font: monoFont]))
+        }
+
+        if let rejectionReasonText, !rejectionReasonText.isEmpty {
+            appendSectionHeader("▶ REJECTION REASON")
+            report.append(NSAttributedString(string: rejectionReasonText + "\n", attributes: [.font: monoFont]))
+        }
+
+        // Pickup Information
+        appendSectionHeader("▶ PICKUP INFORMATION")
+        appendRow(label: "Pickup Date", value: pickupDate)
+        appendRow(label: "Pickup Time", value: donation.pickupTime)
+
+        // Address
+        appendSectionHeader("▶ ADDRESS")
+        for (key, value) in addressLines {
+            appendRow(label: key, value: value)
+        }
+
+        // Expiry
+        appendSectionHeader("▶ EXPIRY")
+        appendRow(label: "Expiry Date", value: expiryDate)
+
+        // Recurrence
+        if let recurrenceText {
+            appendSectionHeader("▶ RECURRENCE")
+            report.append(NSAttributedString(string: recurrenceText + "\n", attributes: [.font: monoFont]))
+        }
+
+        // Bottom border & footer
+        report.append(NSAttributedString(string: "\n", attributes: [.font: monoFont]))
+        report.append(topLine)
+        let generated = "Generated On: \(DateFormatter.localizedString(from: Date(), dateStyle: .medium, timeStyle: .short))\nProjectSimulator App\n"
+        report.append(NSAttributedString(string: generated, attributes: [.font: monoFont]))
+        report.append(topLine)
+
+        return report
+    }
+
+
+
+    
+    
+    
         
         @objc private func exportTapped() {
             guard let donation = donation else { return }

@@ -69,7 +69,7 @@ class RaghadDonatoinFormViewController: UIViewController,
     private var shouldShowDonorError = false
     private var shouldShowImageError = false
     private var shouldShowQuantityError = false
-    private var quantityValue: Int?
+    //private var quantityValue: Int?
     private var weightValue: Double?
     private var weightInvalidFormat = false
     private var shouldShowWeightError = false
@@ -109,6 +109,8 @@ class RaghadDonatoinFormViewController: UIViewController,
     private var draftImage: UIImage?          // keeps photo in memory
     private var draftQuantity: Int = 1        // keeps quantity
     private var draftDescription: String?     // keeps description text
+    private var selectedQuantity: Int = 1
+    private var selectedShortDescription: String?   // ✅ keeps text even after reload
 
     
     
@@ -275,28 +277,56 @@ class RaghadDonatoinFormViewController: UIViewController,
         
         
         
+//        if adjustedSection == 3 {
+//            let cell = tableView.dequeueReusableCell(withIdentifier: "Section4Cell", for: indexPath) as! RaghadSection4TableViewCell
+//            cell.selectionStyle = .none
+//            
+//            // ✅ restore saved value (prevents flipping back to 1)
+//            let q = quantityValue ?? Int(cell.stepperQuantity.value)
+//            cell.txtQuantity.text = "\(max(q, 1))"
+//            cell.stepperQuantity.value = Double(max(q, 1))
+//            
+//            // ✅ SAVE whenever user changes
+//            cell.onQuantityChanged = { [weak self] value in
+//                guard let self = self else { return }
+//                self.quantityValue = value
+//                self.shouldShowQuantityError = (value == nil || (value ?? 0) <= 0)
+//            }
+//            
+//            // ✅ show/hide error if you use it
+//            cell.configure(showError: shouldShowQuantityError)
+//            
+//            return cell
+//        }
+        
+        
+        
+        
         if adjustedSection == 3 {
-            let cell = tableView.dequeueReusableCell(withIdentifier: "Section4Cell", for: indexPath) as! RaghadSection4TableViewCell
+            let cell = tableView.dequeueReusableCell(
+                withIdentifier: "Section4Cell",
+                for: indexPath
+            ) as! RaghadSection4TableViewCell
+
             cell.selectionStyle = .none
-            
-            // ✅ restore saved value (prevents flipping back to 1)
-            let q = quantityValue ?? Int(cell.stepperQuantity.value)
-            cell.txtQuantity.text = "\(max(q, 1))"
-            cell.stepperQuantity.value = Double(max(q, 1))
-            
-            // ✅ SAVE whenever user changes
+
+            // ✅ ALWAYS restore from VC state
+            cell.txtQuantity.text = "\(selectedQuantity)"
+            cell.stepperQuantity.value = Double(selectedQuantity)
+
+            // ✅ ALWAYS update VC state when user changes
             cell.onQuantityChanged = { [weak self] value in
                 guard let self = self else { return }
-                self.quantityValue = value
-                self.shouldShowQuantityError = (value == nil || (value ?? 0) <= 0)
+
+                let q = value ?? 0
+                self.selectedQuantity = max(q, 1)
+                self.shouldShowQuantityError = q <= 0
             }
-            
-            // ✅ show/hide error if you use it
+
             cell.configure(showError: shouldShowQuantityError)
-            
             return cell
         }
-        
+
         
         
         
@@ -346,17 +376,43 @@ class RaghadDonatoinFormViewController: UIViewController,
         
         //i dont have i just added this
         
+//        if adjustedSection == 6 {
+//            let cell = tableView.dequeueReusableCell(withIdentifier: "Section7Cell", for: indexPath) as! RaghadSection7TableViewCell
+//            cell.onBeginEditing = { [weak self] in
+//                guard let self = self else { return }
+//                self.activeIndexPath = indexPath
+//                self.donationFormTableview.scrollToRow(at: indexPath, at: UITableView.ScrollPosition.middle, animated: true)
+//            }
+//            return cell
+//        }
+
         if adjustedSection == 6 {
             let cell = tableView.dequeueReusableCell(withIdentifier: "Section7Cell", for: indexPath) as! RaghadSection7TableViewCell
+            cell.selectionStyle = .none
+
+            // ✅ Restore saved text
+            if let text = selectedShortDescription, !text.isEmpty {
+                cell.txtDescription.text = text
+                cell.txtDescription.textColor = .label
+                // update counter to match (calls your method indirectly via didChange)
+                cell.textViewDidChange(cell.txtDescription)
+            }
+
+            // ✅ Save live edits
+            cell.onTextChanged = { [weak self] text in
+                self?.selectedShortDescription = text
+            }
+
+            // keep your keyboard scroll
             cell.onBeginEditing = { [weak self] in
                 guard let self = self else { return }
                 self.activeIndexPath = indexPath
-                self.donationFormTableview.scrollToRow(at: indexPath, at: UITableView.ScrollPosition.middle, animated: true)
+                self.donationFormTableview.scrollToRow(at: indexPath, at: .middle, animated: true)
             }
+
             return cell
         }
 
-        
         
         
         
@@ -544,45 +600,58 @@ class RaghadDonatoinFormViewController: UIViewController,
 
     // MARK: - Helpers
     /// Reads the Quantity from Section 4 cell (index 3). Falls back to cached `quantityValue`.
+//    private func getQuantityValue() -> Int? {
+//        // adjustedSection 3 = Quantity
+//        let tableSection = isAdminUser ? 3 : 2   // ✅ IMPORTANT (admin shifts sections)
+//        let indexPath = IndexPath(row: 0, section: tableSection)
+//
+//        if let cell = donationFormTableview.cellForRow(at: indexPath) as? RaghadSection4TableViewCell {
+//            return cell.getQuantityValue()
+//        }
+//        return quantityValue
+//    }
+    
     private func getQuantityValue() -> Int? {
-        // adjustedSection 3 = Quantity
-        let tableSection = isAdminUser ? 3 : 2   // ✅ IMPORTANT (admin shifts sections)
-        let indexPath = IndexPath(row: 0, section: tableSection)
-
-        if let cell = donationFormTableview.cellForRow(at: indexPath) as? RaghadSection4TableViewCell {
-            return cell.getQuantityValue()
-        }
-        return quantityValue
+        return selectedQuantity
     }
+
+    
+    
     
     
     
 
     // Reads the optional short description from the form.
     // Returns nil if empty or placeholder.
+//    private func getShortDescription() -> String? {
+//
+//        // Description section index differs for admin vs donor
+//        let descSection = isAdminUser ? 6 : 5
+//        let indexPath = IndexPath(row: 0, section: descSection)
+//
+//        // Get description cell safely
+//        guard let cell = donationFormTableview.cellForRow(at: indexPath)
+//                as? RaghadSection7TableViewCell else {
+//            return nil
+//        }
+//
+//        // Clean text
+//        let text = (cell.txtDescription.text ?? "")
+//            .trimmingCharacters(in: .whitespacesAndNewlines)
+//
+//        // Ignore empty / placeholder
+//        if text.isEmpty || text == "Enter a Short Description" {
+//            return nil
+//        }
+//
+//        // Valid user input
+//        return text
+//    }
+
+    
     private func getShortDescription() -> String? {
-
-        // Description section index differs for admin vs donor
-        let descSection = isAdminUser ? 6 : 5
-        let indexPath = IndexPath(row: 0, section: descSection)
-
-        // Get description cell safely
-        guard let cell = donationFormTableview.cellForRow(at: indexPath)
-                as? RaghadSection7TableViewCell else {
-            return nil
-        }
-
-        // Clean text
-        let text = (cell.txtDescription.text ?? "")
-            .trimmingCharacters(in: .whitespacesAndNewlines)
-
-        // Ignore empty / placeholder
-        if text.isEmpty || text == "Enter a Short Description" {
-            return nil
-        }
-
-        // Valid user input
-        return text
+        let t = (selectedShortDescription ?? "").trimmingCharacters(in: .whitespacesAndNewlines)
+        return t.isEmpty ? nil : t
     }
 
     
@@ -899,10 +968,12 @@ class RaghadDonatoinFormViewController: UIViewController,
             ngoId: ngo.id,
             donorName: selectedDonorName,
             foodCategory: selectedFoodCategory,
-            quantity: getQuantityValue(),
+            quantity: selectedQuantity,
             weight: weightValue,
             expiryDate: selectedExpiryDate,
-            shortDescription: getShortDescription(),
+            //shortDescription: getShortDescription(),
+            shortDescription: selectedShortDescription,
+
 
             imageUrl: uploadedDonationImageUrl,
             imageData: selectedDonationImage?.jpegData(compressionQuality: 0.9) // ✅ NEW
@@ -935,6 +1006,10 @@ class RaghadDonatoinFormViewController: UIViewController,
         if let data = draft.imageData {
             selectedDonationImage = UIImage(data: data)
         }
+        
+        selectedQuantity = draft.quantity ?? 1
+        selectedShortDescription = draft.shortDescription
+
 
         donationFormTableview.reloadData()
     }

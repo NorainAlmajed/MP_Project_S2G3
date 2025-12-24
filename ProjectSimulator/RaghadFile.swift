@@ -116,6 +116,7 @@ struct DonationDraft {
     var shortDescription: String?
     var imageUrl: String?
     var imageData: Data?      //  (for showing image after back)
+    
 
 }
 

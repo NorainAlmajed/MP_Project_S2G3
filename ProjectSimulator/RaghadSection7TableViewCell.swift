@@ -10,12 +10,19 @@ import UIKit
 class RaghadSection7TableViewCell: UITableViewCell, UITextViewDelegate {
 
     
-    @IBOutlet weak var lblWeightError: UILabel!   //  error label
+//    @IBOutlet weak var lblWeightError: UILabel!   //  error label
+//
+//    var onWeightChanged: ((Double?) -> Void)?     // ⚖️ send value to
+    
+    
+   
 
-    var onWeightChanged: ((Double?) -> Void)?     // ⚖️ send value to
     
     // 🟣 BEGIN EDIT CALLBACK
     var onBeginEditing: (() -> Void)?
+    // ✅ SEND TEXT TO VIEW CONTROLLER
+    var onTextChanged: ((String?) -> Void)?
+
 
     
     @IBOutlet weak var lblCounter: UILabel!
@@ -77,6 +84,8 @@ class RaghadSection7TableViewCell: UITableViewCell, UITextViewDelegate {
             updateCounter(currentCount: 0)
         }
         onBeginEditing?()
+      
+
 
     }
 
@@ -85,6 +94,13 @@ class RaghadSection7TableViewCell: UITableViewCell, UITextViewDelegate {
         if textView.text.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty {
             setPlaceholder()
         }
+        
+        let t = txtDescription.text.trimmingCharacters(in: .whitespacesAndNewlines)
+        if t.isEmpty || t == placeholder {
+            onTextChanged?(nil)
+        }
+
+        
     }
 
     
@@ -131,6 +147,19 @@ class RaghadSection7TableViewCell: UITableViewCell, UITextViewDelegate {
             textView.text = String(textView.text.prefix(maxCharacters))
         }
         updateCounter(currentCount: textView.text.count)
+        // ✅ send updated text (nil if empty)
+//        let t = txtDescription.text.trimmingCharacters(in: .whitespacesAndNewlines)
+//        onTextChanged?(t.isEmpty ? nil : t)
+        
+        
+        let t = txtDescription.text.trimmingCharacters(in: .whitespacesAndNewlines)
+        if t.isEmpty || t == placeholder {
+            onTextChanged?(nil)
+        } else {
+            onTextChanged?(t)
+        }
+
+
     }
 
     

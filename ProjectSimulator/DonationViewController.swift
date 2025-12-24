@@ -223,7 +223,7 @@ class DonationViewController: UIViewController {
 
         // MARK: - Firebase.
     func fetchCurrentUser(completion: @escaping (Bool) -> Void) {
-        let tempUserID = "Fatima" // temporary user
+        let tempUserID = "EApETXLDaQaG1Az0T9nbastpMtG2" // temporary user
 
         db.collection("users").document(tempUserID).getDocument { [weak self] snapshot, error in
             if let error = error {

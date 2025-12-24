@@ -21,19 +21,51 @@ class Section1TableViewCell: UITableViewCell {
 
         // MARK: - Lifecycle
         
-        override func awakeFromNib() {
-            super.awakeFromNib()
+    override func awakeFromNib() {
+        super.awakeFromNib()
+        
+        // Existing setup
+        self.selectionStyle = .none
+        NgoLogoImageView.layer.cornerRadius = 7.24
+        NgoLogoImageView.clipsToBounds = true
+        NgoLogoImageView.contentMode = .scaleAspectFill
 
-            // Disable selection
-            self.selectionStyle = .none
+        // Only adjust layout for iPad
+        if UIDevice.current.userInterfaceIdiom == .pad {
+            // Disable autoresizing mask constraints
+            NgoLogoImageView.translatesAutoresizingMaskIntoConstraints = false
+            ngoNameLbl.translatesAutoresizingMaskIntoConstraints = false
+            donationIDLbl.translatesAutoresizingMaskIntoConstraints = false
+            creationDateLbl.translatesAutoresizingMaskIntoConstraints = false
 
-            // Make NGO logo rounded
-            NgoLogoImageView.layer.cornerRadius = 7.24
-            NgoLogoImageView.clipsToBounds = true
+            // Remove existing constraints if any
+            NSLayoutConstraint.deactivate(NgoLogoImageView.constraints)
+            NSLayoutConstraint.deactivate(ngoNameLbl.constraints)
+            NSLayoutConstraint.deactivate(donationIDLbl.constraints)
+            NSLayoutConstraint.deactivate(creationDateLbl.constraints)
 
-            // Make image fill the view
-            NgoLogoImageView.contentMode = .scaleAspectFill
+            // NGO Logo Constraints
+            NSLayoutConstraint.activate([
+                NgoLogoImageView.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 245),
+                NgoLogoImageView.centerYAnchor.constraint(equalTo: contentView.centerYAnchor),
+                NgoLogoImageView.widthAnchor.constraint(equalToConstant: NgoLogoImageView.frame.width),
+                NgoLogoImageView.heightAnchor.constraint(equalToConstant: NgoLogoImageView.frame.height)
+            ])
+
+            // Labels Constraints
+            NSLayoutConstraint.activate([
+                ngoNameLbl.leadingAnchor.constraint(equalTo: NgoLogoImageView.trailingAnchor, constant: 9),
+                ngoNameLbl.topAnchor.constraint(equalTo: NgoLogoImageView.topAnchor),
+
+                donationIDLbl.leadingAnchor.constraint(equalTo: NgoLogoImageView.trailingAnchor, constant: 9),
+                donationIDLbl.topAnchor.constraint(equalTo: ngoNameLbl.bottomAnchor, constant: 6),
+
+                creationDateLbl.leadingAnchor.constraint(equalTo: NgoLogoImageView.trailingAnchor, constant: 9),
+                creationDateLbl.topAnchor.constraint(equalTo: donationIDLbl.bottomAnchor, constant: 6)
+            ])
         }
+    }
+
 
         override func setSelected(_ selected: Bool, animated: Bool) {
             super.setSelected(selected, animated: animated)

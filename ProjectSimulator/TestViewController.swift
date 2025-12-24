@@ -15,6 +15,8 @@ class DonationDetailsViewController: UIViewController, UITableViewDelegate, UITa
     
     var donation: Donation?
     var currentUser: User?
+    var donationImage: UIImage?
+
 
     
     @IBOutlet weak var donationTableview: UITableView!
@@ -43,6 +45,8 @@ class DonationDetailsViewController: UIViewController, UITableViewDelegate, UITa
                 target: self,
                 action: #selector(exportTapped)
             )
+            
+            preloadDonationImage()
         }
         
         @IBAction func exportDonation(_ sender: UIButton) {
@@ -407,13 +411,15 @@ class DonationDetailsViewController: UIViewController, UITableViewDelegate, UITa
 
                                 case 3: // NGO: notify only donor
                                     if donation.donor.enableNotification {
+                                        let ngoName = currentUser.organization_name ?? "the NGO"
                                         Firestore.firestore().collection("Notification").addDocument(data: [
                                             "title": "Donation Accepted",
-                                            "description": "Donation #\(donation.donationID) has been accepted by \(String(describing: currentUser.organization_name)).",
+                                            "description": "Donation #\(donation.donationID) has been accepted by \(ngoName).",
                                             "userID": donation.donor.userID,
                                             "date": currentDate
                                         ])
                                     }
+
 
                                 default:
                                     break
@@ -543,6 +549,7 @@ class DonationDetailsViewController: UIViewController, UITableViewDelegate, UITa
                         let storyboard = UIStoryboard(name: "Donations", bundle: nil)
                         if let rejectionVC = storyboard.instantiateViewController(withIdentifier: "ZHRejectionReasonViewController") as? ZHRejectionReasonViewController {
                             rejectionVC.donation = self.donation
+                            rejectionVC.currentUser = self.currentUser   // <-- Pass the current user
                             rejectionVC.onRejectionCompleted = { [weak self] in
                                 self?.donationTableview.reloadData()
                             }
@@ -550,6 +557,7 @@ class DonationDetailsViewController: UIViewController, UITableViewDelegate, UITa
                             rejectionVC.modalTransitionStyle = .coverVertical
                             self.present(rejectionVC, animated: true)
                         }
+
                     })
                     self.present(alert, animated: true)
                 }
@@ -703,7 +711,9 @@ class DonationDetailsViewController: UIViewController, UITableViewDelegate, UITa
                 yPosition = margin
 
                 // Only show image on first page
-                if isFirstPage, let image = loadImageSync(from: donation.foodImageUrl) {
+                if isFirstPage, let image = donationImage {
+
+
                     let aspectRatio = image.size.width / image.size.height
                     var width = imageMaxSize
                     var height = imageMaxSize
@@ -810,6 +820,24 @@ class DonationDetailsViewController: UIViewController, UITableViewDelegate, UITa
         semaphore.wait()
         return loadedImage
     }
+    
+    
+    
+    
+    private func preloadDonationImage() {
+        guard let urlString = donation?.foodImageUrl, let url = URL(string: urlString) else { return }
+        
+        URLSession.shared.dataTask(with: url) { [weak self] data, _, error in
+            if let data = data, let image = UIImage(data: data) {
+                DispatchQueue.main.async {
+                    self?.donationImage = image
+                }
+            } else {
+                print("Failed to load donation image: \(error?.localizedDescription ?? "Unknown error")")
+            }
+        }.resume()
+    }
+
 
 
 

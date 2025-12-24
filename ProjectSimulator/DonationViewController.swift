@@ -223,7 +223,7 @@ class DonationViewController: UIViewController {
 
         // MARK: - Firebase.
     func fetchCurrentUser(completion: @escaping (Bool) -> Void) {
-        let tempUserID = "EApETXLDaQaG1Az0T9nbastpMtG2" // temporary user
+        let tempUserID = "RGn6eTMucoVtL95UzXzdMHvfxaq1" // temporary user
 
         db.collection("users").document(tempUserID).getDocument { [weak self] snapshot, error in
             if let error = error {
@@ -293,122 +293,99 @@ class DonationViewController: UIViewController {
     }
 
 
+    
+    
     func fetchDonations() {
-        guard let currentUser = currentUser else {
-            print("Current user not set")
-            return
-        }
+        guard let currentUser = currentUser else { return }
 
         var query: Query = db.collection("Donation")
+
         switch currentUser.role {
-        case 1: break // Admin: fetch all donations
+        case 1: break
         case 2:
             query = query.whereField("donor", isEqualTo: db.collection("users").document(currentUser.userID))
         case 3:
             query = query.whereField("ngo", isEqualTo: db.collection("users").document(currentUser.userID))
         default:
-            print("Unknown role")
             return
         }
 
         query.getDocuments { [weak self] snapshot, error in
             guard let self = self else { return }
+            guard let documents = snapshot?.documents else { return }
 
-            if let error = error {
-                print("Error fetching donations: \(error)")
-                return
-            }
-
-            guard let documents = snapshot?.documents else {
-                print("No donations found")
-                return
-            }
-
-            self.allDonations.removeAll() // Clear previous data
-
-            let group = DispatchGroup() // For async fetching of addresses
+            self.allDonations.removeAll()
+            let group = DispatchGroup()
 
             for doc in documents {
                 let data = doc.data()
 
-                // Safely unwrap required fields
                 guard
                     let ngoRef = data["ngo"] as? DocumentReference,
                     let donorRef = data["donor"] as? DocumentReference,
-                    let creationTimestamp = data["creationDate"] as? Timestamp,
-                    let pickupTimestamp = data["pickupDate"] as? Timestamp,
+                    let addressRef = data["address"] as? DocumentReference,
+                    let creationDate = data["creationDate"] as? Timestamp,
+                    let pickupDate = data["pickupDate"] as? Timestamp,
                     let pickupTime = data["pickupTime"] as? String,
                     let foodImageUrl = data["foodImageUrl"] as? String,
                     let status = data["status"] as? Int,
                     let category = data["Category"] as? String,
                     let quantity = data["quantity"] as? Int,
-                    let expiryTimestamp = data["expiryDate"] as? Timestamp
+                    let expiryDate = data["expiryDate"] as? Timestamp
                 else {
-                    print("Skipping donation document \(doc.documentID) due to missing fields")
                     continue
                 }
 
-                // Fetch users from cached list
-                guard let ngo = self.getUser(by: ngoRef.documentID),
-                      let donor = self.getUser(by: donorRef.documentID)
+                guard
+                    let ngo = self.getUser(by: ngoRef.documentID),
+                    let donor = self.getUser(by: donorRef.documentID)
                 else {
-                    print("Skipping donation document \(doc.documentID) because NGO or donor not found")
                     continue
                 }
 
-                // Firestore auto-generated ID
-                let firestoreID = data["firestoreID"] as? String ?? doc.documentID
-
-                // User-friendly numeric donationID
+                let firestoreID = doc.documentID
                 let donationID = data["donationID"] as? Int ?? 0
 
-                // Fetch address reference
-                if let addressRef = data["address"] as? DocumentReference {
-                    group.enter() // Start async task
+                group.enter()
 
-                    addressRef.getDocument { addressSnapshot, error in
-                        defer { group.leave() } // Ensure group leave
+                addressRef.getDocument { addressSnap, _ in
+                    defer { group.leave() }
 
-                        guard let addressData = addressSnapshot?.data(), error == nil else {
-                            print("Failed to fetch address for donation \(donationID)")
-                            return
-                        }
+                    guard let addressData = addressSnap?.data() else { return }
 
-                        let address = Address(
-                            building: addressData["building"] as? Int ?? 0,
-                            road: addressData["road"] as? Int ?? 0,
-                            block: addressData["block"] as? Int ?? 0,
-                            flat: addressData["flat"] as? Int,
-                            area: addressData["area"] as? String ?? "",
-                            governorate: addressData["governorate"] as? String ?? ""
-                        )
+                    let address = Address(
+                        building: addressData["building"] as? Int ?? 0,
+                        road: addressData["road"] as? Int ?? 0,
+                        block: addressData["block"] as? Int ?? 0,
+                        flat: addressData["flat"] as? Int,
+                        area: addressData["area"] as? String ?? "",
+                        governorate: addressData["governorate"] as? String ?? ""
+                    )
 
-                        let donation = Donation(
-                            firestoreID: firestoreID,
-                            donationID: donationID,
-                            ngo: ngo,
-                            creationDate: creationTimestamp,
-                            donor: donor,
-                            address: address,
-                            pickupDate: pickupTimestamp,
-                            pickupTime: pickupTime,
-                            foodImageUrl: foodImageUrl,
-                            status: status,
-                            category: category,
-                            quantity: quantity,
-                            weight: data["weight"] as? Double,
-                            expiryDate: expiryTimestamp,
-                            description: data["description"] as? String,
-                            rejectionReason: data["rejectionReason"] as? String,
-                            recurrence: data["recurrence"] as? Int ?? 0
-                        )
+                    let donation = Donation(
+                        firestoreID: firestoreID,
+                        donationID: donationID,
+                        ngo: ngo,
+                        creationDate: creationDate,
+                        donor: donor,
+                        address: address, // ✅ REAL ADDRESS
+                        pickupDate: pickupDate,
+                        pickupTime: pickupTime,
+                        foodImageUrl: foodImageUrl,
+                        status: status,
+                        category: category,
+                        quantity: quantity,
+                        weight: data["weight"] as? Double,
+                        expiryDate: expiryDate,
+                        description: data["description"] as? String,
+                        rejectionReason: data["rejectionReason"] as? String,
+                        recurrence: data["recurrence"] as? Int ?? 0
+                    )
 
-                        self.allDonations.append(donation)
-                    }
+                    self.allDonations.append(donation)
                 }
             }
 
-            // Once all addresses are fetched, update displayedDonations and reload
             group.notify(queue: .main) {
                 self.displayedDonations = self.allDonations.sorted {
                     $0.creationDate.dateValue() > $1.creationDate.dateValue()
@@ -418,6 +395,8 @@ class DonationViewController: UIViewController {
             }
         }
     }
+
+
 
 
 

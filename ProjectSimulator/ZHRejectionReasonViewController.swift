@@ -19,8 +19,10 @@ class ZHRejectionReasonViewController: UIViewController, UITextViewDelegate {
     @IBOutlet weak var submitBtn: UIButton!
     
 
-
-        private let placeholderText = "Enter a rejection reason"
+        var currentUser: User?
+    
+    
+        private let placeholderText = "Enter a rejection reason (optional)"
         private let maxCharacters = 90
 
         override func viewDidLoad() {
@@ -94,60 +96,97 @@ class ZHRejectionReasonViewController: UIViewController, UITextViewDelegate {
 
         // MARK: - Submit
 
-        @IBAction func submitTapped(_ sender: UIButton) {
+    @IBAction func submitTapped(_ sender: UIButton) {
 
-            guard let donation = donation,
-                  let firestoreID = donation.firestoreID else {
-                print("No donation or firestoreID")
+        guard let donation = donation,
+              let firestoreID = donation.firestoreID else {
+            print("No donation or firestoreID")
+            return
+        }
+
+        let text = rejectionTextArea.text.trimmingCharacters(in: .whitespacesAndNewlines)
+
+        // Remove placeholder check and alert; rejection reason is now optional
+        let donationRef = Firestore.firestore()
+            .collection("Donation")
+            .document(firestoreID)
+
+        donationRef.updateData([
+            "status": 4,
+            "rejectionReason": text // can be empty
+        ]) { [weak self] error in
+            guard let self = self else { return }
+
+            if let error = error {
+                print("Firestore error:", error.localizedDescription)
                 return
             }
 
-            let text = rejectionTextArea.text.trimmingCharacters(in: .whitespacesAndNewlines)
+            // Update local object
+            donation.status = 4
+            donation.rejectionReason = text
 
-            // Ignore placeholder
-            if text.isEmpty || text == placeholderText {
-                let alert = UIAlertController(
-                    title: "Error",
-                    message: "Please enter a rejection reason.",
-                    preferredStyle: .alert
-                )
-                alert.addAction(UIAlertAction(title: "Dismiss", style: .default))
-                present(alert, animated: true)
-                return
-            }
+            // =========================
+            // NOTIFICATIONS LOGIC START
+            // =========================
+            let currentDate = Date()
+            guard let currentUser = self.currentUser else { return }
 
-            let donationRef = Firestore.firestore()
-                .collection("Donation")
-                .document(firestoreID)
-
-            donationRef.updateData([
-                "status": 4,
-                "rejectionReason": text
-            ]) { [weak self] error in
-                guard let self = self else { return }
-
-                if let error = error {
-                    print("Firestore error:", error.localizedDescription)
-                    return
+            switch currentUser.role {
+            case 1: // Admin: notify both donor and NGO
+                if donation.donor.enableNotification {
+                    Firestore.firestore().collection("Notification").addDocument(data: [
+                        "title": "Donation Rejected",
+                        "description": "Donation #\(donation.donationID) has been rejected by the admin.",
+                        "userID": donation.donor.userID,
+                        "date": currentDate
+                    ])
+                }
+                if donation.ngo.enableNotification {
+                    Firestore.firestore().collection("Notification").addDocument(data: [
+                        "title": "Donation Rejected",
+                        "description": "Donation #\(donation.donationID) has been rejected by the admin.",
+                        "userID": donation.ngo.userID,
+                        "date": currentDate
+                    ])
                 }
 
-                // Update local object
-                donation.status = 4
-                donation.rejectionReason = text
+            case 3: // NGO: notify only donor
+                if donation.donor.enableNotification {
+                    let ngoName = donation.ngo.organization_name ?? "the NGO"
+                    Firestore.firestore().collection("Notification").addDocument(data: [
+                        "title": "Donation Rejected",
+                        "description": "Donation #\(donation.donationID) has been rejected by \(ngoName).",
+                        "userID": donation.donor.userID,
+                        "date": currentDate
+                    ])
+                }
 
-                self.onRejectionCompleted?()
-
-                let successAlert = UIAlertController(
-                    title: "Success",
-                    message: "The donation has been rejected successfully.",
-                    preferredStyle: .alert
-                )
-
-                successAlert.addAction(UIAlertAction(title: "Dismiss", style: .default) { _ in
-                    self.dismiss(animated: true)
-                })
-
-                self.present(successAlert, animated: true)
+            default:
+                break
             }
+            // =========================
+            // NOTIFICATIONS LOGIC END
+            // =========================
+
+            self.onRejectionCompleted?()
+
+            let successAlert = UIAlertController(
+                title: "Success",
+                message: "The donation has been rejected successfully.",
+                preferredStyle: .alert
+            )
+
+            successAlert.addAction(UIAlertAction(title: "Dismiss", style: .default) { _ in
+                self.dismiss(animated: true)
+            })
+
+            self.present(successAlert, animated: true)
         }
     }
+
+    
+    
+    
+    }
+

@@ -20,6 +20,9 @@ class RaghadSection1TableViewCell: UITableViewCell {
     @IBOutlet weak var imgHeightConstraint: NSLayoutConstraint!
     @IBOutlet weak var imgWidthConstraint: NSLayoutConstraint!
     @IBOutlet weak var lblImageError: UILabel!
+    
+    @IBOutlet weak var btnUploadImageOutlet: UIButton!   // 🟢 NEW
+
 
     
     
@@ -46,6 +49,9 @@ class RaghadSection1TableViewCell: UITableViewCell {
 
           // ✅ iPad only: make the image view bigger
           adjustImageSizeForDevice()
+     applyUploadButtonColor()   // 🟢 NEW
+
+     
       }
 
     
@@ -92,6 +98,23 @@ class RaghadSection1TableViewCell: UITableViewCell {
         let config = UIImage.SymbolConfiguration(pointSize: 60, weight: .regular) // 🔧 change 60 -> 70 if you want bigger
         Donation_ImageView.preferredSymbolConfiguration = config
     }
+    
+    private func applyUploadButtonColor() {   // 🟢 NEW
+        btnUploadImageOutlet.backgroundColor = UIColor { trait in
+            if trait.userInterfaceStyle == .dark {
+                return UIColor(named: "grayCol") ?? UIColor(red: 138/255, green: 138/255, blue: 138/255, alpha: 1.0) // 🌙
+            } else {
+                return .clear // ☀️ keep light mode as is
+            }
+        }
+
+        // optional: rounded look
+        btnUploadImageOutlet.layer.cornerRadius = 8
+        btnUploadImageOutlet.clipsToBounds = true
+    }
+
+    
+    
     
     
     }

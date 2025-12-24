@@ -33,7 +33,13 @@ class RaghadSection5TableViewCell: UITableViewCell {
            txtWeight.layer.borderColor = UIColor.systemGray4.cgColor
            txtWeight.layer.cornerRadius = 8
            txtWeight.clipsToBounds = true
-           txtWeight.backgroundColor = .white
+
+        txtWeight.backgroundColor = UIColor { trait in
+            trait.userInterfaceStyle == .dark ? .black : .white
+        }
+        txtWeight.textColor = .label
+
+        
         
         if txtWeight.inputAccessoryView == nil {   // ✅
                 txtWeight.inputAccessoryView = makeDoneToolbar()

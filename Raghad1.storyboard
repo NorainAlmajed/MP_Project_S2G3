@@ -407,6 +407,7 @@
                                         </tableViewCellContentView>
                                         <connections>
                                             <outlet property="Donation_ImageView" destination="G7r-7p-J1F" id="pFY-QG-CxS"/>
+                                            <outlet property="btnUploadImageOutlet" destination="iDq-x7-D7T" id="FNL-eU-unq"/>
                                             <outlet property="imgHeightConstraint" destination="F5p-br-wXF" id="piN-9M-ir4"/>
                                             <outlet property="imgWidthConstraint" destination="hNW-Nq-Z1X" id="Vbe-1E-Ybj"/>
                                             <outlet property="lblImageError" destination="jmj-ok-UVd" id="ea3-q6-ftu"/>

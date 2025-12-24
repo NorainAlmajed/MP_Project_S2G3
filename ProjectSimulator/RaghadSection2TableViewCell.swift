@@ -79,7 +79,14 @@ class RaghadSection2TableViewCell: UITableViewCell {
         var config = UIButton.Configuration.plain()
         config.title = "Choose Donor"
         config.baseForegroundColor = .systemGray
-        config.background.backgroundColor = .white   // ✅ same as textfield
+        
+        
+        config.background.backgroundColor = UIColor { trait in
+            trait.userInterfaceStyle == .dark ? .black : .white
+        }
+        
+        
+        
         config.contentInsets = NSDirectionalEdgeInsets(
             top: 10,
             leading: 12,

@@ -170,39 +170,6 @@ class RaghadSection7TableViewCell: UITableViewCell, UITextViewDelegate {
     
     
 
-
-    
-
-//        private func addDoneButton() {
-//            let toolbar = UIToolbar()
-//            toolbar.sizeToFit()
-//            let flex = UIBarButtonItem(barButtonSystemItem: .flexibleSpace, target: nil, action: nil)
-//            let done = UIBarButtonItem(title: "Done", style: .done, target: self, action: #selector(doneTapped))
-//            toolbar.items = [flex, done]
-//            txtDescription.inputAccessoryView = toolbar
-//        }
-
-    
-    
-//    private func addDoneButton() {
-//        let toolbar = UIToolbar()
-//        toolbar.translatesAutoresizingMaskIntoConstraints = false   // ✅
-//        toolbar.sizeToFit()                                        // ✅
-//
-//        let flex = UIBarButtonItem(barButtonSystemItem: .flexibleSpace,
-//                                   target: nil,
-//                                   action: nil)
-//
-//        let done = UIBarButtonItem(title: "Done",
-//                                   style: .done,
-//                                   target: self,
-//                                   action: #selector(doneTapped))
-//
-//        toolbar.items = [flex, done]
-//        txtDescription.inputAccessoryView = toolbar
-//    }
-    
-    
     
     private func addDoneButton() {
         let toolbar = UIToolbar(frame: CGRect(x: 0, y: 0, width: UIScreen.main.bounds.width, height: 44))

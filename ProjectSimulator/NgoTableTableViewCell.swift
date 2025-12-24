@@ -12,6 +12,8 @@ class NgoTableTableViewCell: UITableViewCell {
     @IBOutlet weak var imgNgoPhotot: UIImageView!
     @IBOutlet weak var lblNgoName: UILabel!
     @IBOutlet weak var lblCategory: UILabel!
+    
+    
     override func awakeFromNib() {
         super.awakeFromNib()
         // Initialization code
@@ -55,3 +57,4 @@ class NgoTableTableViewCell: UITableViewCell {
    
 
 }
+    

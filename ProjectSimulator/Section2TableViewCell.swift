@@ -19,6 +19,7 @@ class Section2TableViewCell: UITableViewCell {
     
     @IBOutlet weak var recurrenceLbl: UILabel!
     
+    @IBOutlet weak var locationImageView: UIImageView!
     
     override func awakeFromNib() {
         super.awakeFromNib()
@@ -26,6 +27,9 @@ class Section2TableViewCell: UITableViewCell {
         
         // Disable selection
             self.selectionStyle = .none
+        
+        // Set location image based on current mode
+            updateLocationImage()
     }
 
     override func setSelected(_ selected: Bool, animated: Bool) {
@@ -96,5 +100,24 @@ class Section2TableViewCell: UITableViewCell {
 
             donationAddressLbl.attributedText = attributedString
         }
+    
+    private func updateLocationImage() {
+        if traitCollection.userInterfaceStyle == .dark {
+            locationImageView.image = UIImage(named: "location2")
+        } else {
+            locationImageView.image = UIImage(named: "Location")
+        }
+    }
 
+
+    override func traitCollectionDidChange(_ previousTraitCollection: UITraitCollection?) {
+        super.traitCollectionDidChange(previousTraitCollection)
+        
+        // Only update if the interface style actually changed
+        if previousTraitCollection?.userInterfaceStyle != traitCollection.userInterfaceStyle {
+            updateLocationImage()
+        }
+    }
+
+    
 }

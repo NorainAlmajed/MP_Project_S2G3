@@ -141,3 +141,16 @@ final class DonationDraftStore {
 
 
 
+
+struct DonationPayload {
+    let ngoId: String
+    let donorName: String?        // nil if donor is donating for themselves
+    let foodCategory: String
+    let quantity: Int
+    let weight: Double?
+    let expiryDate: Date
+    let shortDescription: String?
+    let imageUrl: String
+}
+
+

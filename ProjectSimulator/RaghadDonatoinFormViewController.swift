@@ -768,56 +768,54 @@ class RaghadDonatoinFormViewController: UIViewController,
         // - ngo.id = Firestore doc ID (users collection)
         // - donor doc ID will be resolved below
 
-        let donorDocId: String
-        if isAdminUser {
-            // ❗ TEMP SAFE SOLUTION (BEGINNER FRIENDLY):
-            // Ask your teammate for donor docId OR use username = docId if same
-            donorDocId = selectedDonorName ?? ""
-        } else {
-            donorDocId = user.username
-        }
+        
+        //waiting for norains page
+        
+//       // let donorDocId: String
+//        if isAdminUser {
+//            // ❗ TEMP SAFE SOLUTION (BEGINNER FRIENDLY):
+//            // Ask your teammate for donor docId OR use username = docId if same
+//            donorDocId = selectedDonorName ?? ""
+//        } else {
+//            donorDocId = user.username
+//        }
+//
+//        //let ngoDocId = ngo.id   // must be Firestore doc id (users collection)
 
-        let ngoDocId = ngo.id   // must be Firestore doc id (users collection)
-
-        createDraftDonation(
-            donorUserDocId: donorDocId,
-            ngoUserDocId: ngoDocId
-        ) { [weak self] donationDocId in
-            guard let self = self else { return }
-
-            guard let donationDocId = donationDocId else {
-                self.showSimpleAlert(
-                    title: "Error",
-                    message: "Failed to save donation. Please try again."
-                )
-                return
-            }
-
-            print("➡️ Proceeding with donation ID:", donationDocId)
-
-            let sb = UIStoryboard(name: "Raghad1", bundle: nil)
-            let vc = sb.instantiateViewController(withIdentifier: "SchedulePickupVC")
-            if let ngo = self.selectedNgo {
-                 DonationDraftStore.shared.clear(ngoId: ngo.id)
-             }
-
-            
-            
-            
-            // PASS donationDocId TO NORAIN
-            //remove the comment when:
-            //norain do the page
-            //1️⃣ The Schedule Pickup screen has a Swift class
-            //(❌ not just a storyboard screen)
-            //2️⃣ That Swift class contains this property:
-            //vc.setValue(donationDocId, forKey: "donationDocId")
-
-            self.navigationController?.pushViewController(vc, animated: true)
-        }
+//
+//
+        
+        //❗❗❗❗❗❗❗❗❗❗❗NORAIN❗❗❗❗❗❗❗❗❗❗
+        
+        let payload = DonationPayload(
+            ngoId: ngo.id,
+            donorName: isAdminUser ? selectedDonorName : nil,
+            foodCategory: selectedFoodCategory ?? "",
+            quantity: getQuantityValue() ?? 0,
+            weight: weightValue,
+            expiryDate: selectedExpiryDate ?? Date(),
+            shortDescription: getShortDescription(),
+            imageUrl: uploadedDonationImageUrl ?? ""
+        )
 
         
-    }
-    
+        // ✅ TEMP: navigate only (no Firebase write)
+        let sb = UIStoryboard(name: "Raghad1", bundle: nil)
+        let vc = sb.instantiateViewController(withIdentifier: "SchedulePickupVC")
+        
+        // TODO (Norain):❗❗❗❗❗❗❗❗❗❗❗❗❗❗❗❗❗❗❗❗❗❗❗❗❗❗❗❗❗❗❗❗❗❗❗❗
+        // After creating SchedulePickupViewController.swift
+        // and setting the storyboard custom class,
+        // uncomment the next line to receive the donation data.
+        // (vc as? SchedulePickupViewController)?.payload = payload
+
+        
+        self.navigationController?.pushViewController(vc, animated: true)
+
+        
+        
+   }
+   
     
     
     private var uploadingAlert: UIAlertController?
@@ -928,7 +926,7 @@ class RaghadDonatoinFormViewController: UIViewController,
 
             "donor": donorRef,
             "ngo": ngoRef,
-            "createdBy": db.document("users/\(user.username)"),
+          
 
 
             "Category": selectedFoodCategory ?? "",
@@ -992,37 +990,66 @@ class RaghadDonatoinFormViewController: UIViewController,
         }
     }
     
+//    private func restoreDraftIfExists() {
+//        guard let ngo = selectedNgo else { return }
+//        guard let draft = DonationDraftStore.shared.load(ngoId: ngo.id) else { return }
+//
+//        selectedDonorName = draft.donorName
+//        selectedFoodCategory = draft.foodCategory
+//        weightValue = draft.weight
+//        selectedExpiryDate = draft.expiryDate
+//        uploadedDonationImageUrl = draft.imageUrl
+//
+//        // ✅ NEW: restore the photo for UI
+//        if let data = draft.imageData {
+//            selectedDonationImage = UIImage(data: data)
+//        }
+//        
+//        selectedQuantity = draft.quantity ?? 1
+//        selectedShortDescription = draft.shortDescription
+//
+//
+//        donationFormTableview.reloadData()
+//    }
+    
     private func restoreDraftIfExists() {
         guard let ngo = selectedNgo else { return }
         guard let draft = DonationDraftStore.shared.load(ngoId: ngo.id) else { return }
 
-        selectedDonorName = draft.donorName
-        selectedFoodCategory = draft.foodCategory
-        weightValue = draft.weight
-        selectedExpiryDate = draft.expiryDate
-        uploadedDonationImageUrl = draft.imageUrl
+        // ✅ only restore if current value is empty (don’t overwrite user selections)
+        if (selectedDonorName ?? "").isEmpty { selectedDonorName = draft.donorName }
+        if selectedFoodCategory == nil { selectedFoodCategory = draft.foodCategory }
+        if weightValue == nil { weightValue = draft.weight }
+        if selectedExpiryDate == nil { selectedExpiryDate = draft.expiryDate }
+        if uploadedDonationImageUrl == nil { uploadedDonationImageUrl = draft.imageUrl }
 
-        // ✅ NEW: restore the photo for UI
-        if let data = draft.imageData {
+        if selectedDonationImage == nil, let data = draft.imageData {
             selectedDonationImage = UIImage(data: data)
         }
-        
-        selectedQuantity = draft.quantity ?? 1
-        selectedShortDescription = draft.shortDescription
 
+        if selectedQuantity <= 1, let q = draft.quantity {   // keep user value if already changed
+            selectedQuantity = max(q, 1)
+        }
+
+        if (selectedShortDescription ?? "").isEmpty {
+            selectedShortDescription = draft.shortDescription
+        }
 
         donationFormTableview.reloadData()
     }
+
+    
+    
+    
+    
+    
+    
 
 
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         restoreDraftIfExists()
     }
-
-    
-    
-
 
 
 }

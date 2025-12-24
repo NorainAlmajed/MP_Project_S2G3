@@ -109,45 +109,58 @@ class NotificationsViewController: UIViewController {
             navigationItem.rightBarButtonItem?.isEnabled = hasNotifications
         }
 
-        @objc func clearNotifications() {
-            // Step 1: Show confirmation alert
-            let confirmAlert = UIAlertController(
-                title: "Clear Notifications",
-                message: "Are you sure you want to clear notifications?",
-                preferredStyle: .alert
-            )
-            
-            // Cancel action (left)
-            let cancelAction = UIAlertAction(title: "Cancel", style: .cancel, handler: nil)
-            
-            // Yes action (right)
-            let yesAction = UIAlertAction(title: "Yes", style: .default) { [weak self] _ in
-                guard let self = self else { return }
-                
-                // Step 2: Show success alert
-                let successAlert = UIAlertController(
-                    title: "Success",
-                    message: "Notifications have been cleared successfully",
-                    preferredStyle: .alert
-                )
-                
-                // Dismiss action
-                let dismissAction = UIAlertAction(title: "Dismiss", style: .default) { _ in
-                    self.sortedNotifications = [] // Clear the sorted notifications
-                    self.notificationsCollectionView.reloadData()
-                    self.updateNoNotificationsLabel()
+    
+    //To clear all the notifications available
+    @objc func clearNotifications() {
+        let confirmAlert = UIAlertController(
+            title: "Clear Notifications",
+            message: "Are you sure you want to clear your notifications?",
+            preferredStyle: .alert
+        )
+        
+        let cancelAction = UIAlertAction(title: "Cancel", style: .cancel, handler: nil)
+        
+        let yesAction = UIAlertAction(title: "Yes", style: .default) { [weak self] _ in
+            guard let self = self, let currentUser = self.currentUser else { return }
+
+            // Step 1: Delete notifications from Firebase that belong to current user
+            self.db.collection("Notification")
+                .whereField("userID", isEqualTo: currentUser.userID)
+                .getDocuments { snapshot, error in
+                    if let error = error {
+                        print("❌ Error fetching notifications for deletion:", error)
+                        return
+                    }
+                    
+                    guard let documents = snapshot?.documents else { return }
+
+                    let batch = self.db.batch() // Use batch for multiple deletes
+
+                    for doc in documents {
+                        batch.deleteDocument(doc.reference)
+                    }
+
+                    batch.commit { error in
+                        if let error = error {
+                            print("❌ Error deleting notifications:", error)
+                        } else {
+                            print("✅ Notifications deleted successfully in Firebase")
+                        }
+                    }
                 }
 
-                successAlert.addAction(dismissAction)
-                self.present(successAlert, animated: true, completion: nil)
-            }
-            
-            confirmAlert.addAction(cancelAction)
-            confirmAlert.addAction(yesAction)
-            
-            // Show the confirmation alert
-            self.present(confirmAlert, animated: true, completion: nil)
+            // Step 2: Clear locally
+            self.sortedNotifications.removeAll { $0.userID == currentUser.userID }
+            self.notificationsCollectionView.reloadData()
+            self.updateNoNotificationsLabel()
         }
+        
+        confirmAlert.addAction(cancelAction)
+        confirmAlert.addAction(yesAction)
+        
+        self.present(confirmAlert, animated: true, completion: nil)
+    }
+
         
         
         //To hide the tab bar controller
@@ -194,52 +207,55 @@ class NotificationsViewController: UIViewController {
             }
         }
         
-        func fetchNotifications() {
-            guard let currentUser = currentUser else {
-                updateNoNotificationsLabel()
-                return
-            }
-
-            db.collection("Notification")
-                .order(by: "date", descending: true)
-                .getDocuments { [weak self] snapshot, error in
-                    guard let self = self else { return }
-
-                    if let error = error {
-                        print("❌ Error fetching notifications:", error)
-                        self.updateNoNotificationsLabel()
-                        return
-                    }
-
-                    guard let documents = snapshot?.documents else {
-                        self.sortedNotifications = []
-                        self.updateNoNotificationsLabel()
-                        return
-                    }
-
-                    self.sortedNotifications = documents.compactMap { doc -> Notification? in
-                        let data = doc.data()
-                        guard
-                            let title = data["title"] as? String,
-                            let description = data["description"] as? String,
-                            let timestamp = data["date"] as? Timestamp
-                        else {
-                            print("❌ Skipped notification: \(data)")
-                            return nil
-                        }
-
-                        return Notification(
-                            title: title,
-                            description: description,
-                            date: timestamp.dateValue(),
-                            userID: data["userID"] as? String ?? ""
-                        )
-                    }
-
-                    self.notificationsCollectionView.reloadData()
-                    self.updateNoNotificationsLabel()
-                }
+    //Fetching neccessary notifications of the user
+    func fetchNotifications() {
+        guard let currentUser = currentUser else {
+            updateNoNotificationsLabel()
+            return
         }
+
+        db.collection("Notification")
+            .whereField("userID", isEqualTo: currentUser.userID) // <-- only this user
+            .order(by: "date", descending: true)
+            .getDocuments { [weak self] snapshot, error in
+                guard let self = self else { return }
+
+                if let error = error {
+                    print("❌ Error fetching notifications:", error)
+                    self.updateNoNotificationsLabel()
+                    return
+                }
+
+                guard let documents = snapshot?.documents else {
+                    self.sortedNotifications = []
+                    self.updateNoNotificationsLabel()
+                    return
+                }
+
+                self.sortedNotifications = documents.compactMap { doc -> Notification? in
+                    let data = doc.data()
+                    guard
+                        let title = data["title"] as? String,
+                        let description = data["description"] as? String,
+                        let timestamp = data["date"] as? Timestamp
+                    else {
+                        print("❌ Skipped notification: \(data)")
+                        return nil
+                    }
+
+                    return Notification(
+                        title: title,
+                        description: description,
+                        date: timestamp.dateValue(),
+                        userID: data["userID"] as? String ?? ""
+                    )
+                }
+
+                self.notificationsCollectionView.reloadData()
+                self.updateNoNotificationsLabel()
+            }
+    }
+
     }
 
     extension NotificationsViewController: UICollectionViewDataSource {

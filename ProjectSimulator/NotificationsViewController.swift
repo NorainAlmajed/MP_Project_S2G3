@@ -176,7 +176,7 @@ class NotificationsViewController: UIViewController {
         
         // MARK: - Firebase
         func fetchCurrentUser(completion: @escaping (Bool) -> Void) {
-            let tempUserID = "Fatima" // Replace with a valid user ID
+            let tempUserID = "dlqHfZoVwh50p3Aexu1A" // Replace with a valid user ID
 
             db.collection("users").document(tempUserID).getDocument { [weak self] snapshot, error in
                 if let error = error {
@@ -214,47 +214,56 @@ class NotificationsViewController: UIViewController {
             return
         }
 
-        db.collection("Notification")
-            .whereField("userID", isEqualTo: currentUser.userID) // <-- only this user
-            .order(by: "date", descending: true)
-            .getDocuments { [weak self] snapshot, error in
-                guard let self = self else { return }
+        // Temporary: fetch all notifications, no ordering or index needed
+        db.collection("Notification").getDocuments { [weak self] snapshot, error in
+            guard let self = self else { return }
 
-                if let error = error {
-                    print("❌ Error fetching notifications:", error)
-                    self.updateNoNotificationsLabel()
-                    return
-                }
-
-                guard let documents = snapshot?.documents else {
-                    self.sortedNotifications = []
-                    self.updateNoNotificationsLabel()
-                    return
-                }
-
-                self.sortedNotifications = documents.compactMap { doc -> Notification? in
-                    let data = doc.data()
-                    guard
-                        let title = data["title"] as? String,
-                        let description = data["description"] as? String,
-                        let timestamp = data["date"] as? Timestamp
-                    else {
-                        print("❌ Skipped notification: \(data)")
-                        return nil
-                    }
-
-                    return Notification(
-                        title: title,
-                        description: description,
-                        date: timestamp.dateValue(),
-                        userID: data["userID"] as? String ?? ""
-                    )
-                }
-
-                self.notificationsCollectionView.reloadData()
+            if let error = error {
+                print("❌ Error fetching notifications:", error)
                 self.updateNoNotificationsLabel()
+                return
             }
+
+            guard let documents = snapshot?.documents else {
+                self.sortedNotifications = []
+                self.updateNoNotificationsLabel()
+                return
+            }
+
+            // Filter by current user manually
+            let userNotifications = documents.filter { doc in
+                let data = doc.data()
+                return data["userID"] as? String == currentUser.userID
+            }
+
+            // Map to Notification struct
+            self.sortedNotifications = userNotifications.compactMap { doc -> Notification? in
+                let data = doc.data()
+                guard
+                    let title = data["title"] as? String,
+                    let description = data["description"] as? String,
+                    let timestamp = data["date"] as? Timestamp
+                else {
+                    print("❌ Skipped notification: \(data)")
+                    return nil
+                }
+
+                return Notification(
+                    title: title,
+                    description: description,
+                    date: timestamp.dateValue(),
+                    userID: data["userID"] as? String ?? ""
+                )
+            }
+
+            // Sort manually by date descending
+            self.sortedNotifications.sort { $0.date > $1.date }
+
+            self.notificationsCollectionView.reloadData()
+            self.updateNoNotificationsLabel()
+        }
     }
+
 
     }
 

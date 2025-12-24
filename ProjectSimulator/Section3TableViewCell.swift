@@ -282,6 +282,9 @@ extension Section3TableViewCell {
             statusColorView.backgroundColor = UIColor.clear
             donationStatusLbl.text = "Unknown"
         }
+        
+        // Force the status label to black (works in dark mode too)
+        donationStatusLbl.textColor = .black
     }
 
     

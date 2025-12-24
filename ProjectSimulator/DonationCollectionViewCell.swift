@@ -48,6 +48,13 @@ class DonationCollectionViewCell: UICollectionViewCell {
         // Load image async
 //        donationLogoImageView.loadImage(from: logoURL ?? "", placeholder: UIImage(named: "basket"))
 
+        // Set container color
+            if traitCollection.userInterfaceStyle == .dark {
+                containerView.backgroundColor = UIColor(named: "BeigeCol")?.withAlphaComponent(0.9) // Slightly darker for dark mode
+            } else {
+                containerView.backgroundColor = UIColor(named: "BeigeCol")
+            }
+        
 
         // Make it circular
         donationLogoImageView.layer.cornerRadius = donationLogoImageView.frame.height / 2
@@ -88,6 +95,21 @@ class DonationCollectionViewCell: UICollectionViewCell {
             statusColorView.backgroundColor = .lightGray
             donationStatusLbl.text = "Unknown"
         }
+        
+        
+        // MARK: - Text Color for Dark Mode
+        donationCategoryLbl.textColor = .black
+        donationIDLbl.textColor = .black
+        donorNgoLbl.textColor = .black
+        donationDateLbl.textColor = .black
+
+        
+        // Force donationStatusView background to white, same in light and dark mode
+        donationStatusView.backgroundColor = .white
+
+        
+        // Make the status label black
+        donationStatusLbl.textColor = .black
     }
 
 
@@ -122,6 +144,16 @@ class DonationCollectionViewCell: UICollectionViewCell {
         statusColorView?.clipsToBounds = true
 
     }
+    
+    override func traitCollectionDidChange(_ previousTraitCollection: UITraitCollection?) {
+        super.traitCollectionDidChange(previousTraitCollection)
+
+        // Update container color dynamically when dark/light mode changes
+        if traitCollection.hasDifferentColorAppearance(comparedTo: previousTraitCollection) {
+            containerView.backgroundColor = UIColor(named: "BeigeCol")
+        }
+    }
+
     
 //    //Checking the category name 
 //    private func categoryName(for category: Int) -> String {

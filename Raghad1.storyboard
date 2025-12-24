@@ -156,11 +156,9 @@
                                             <rect key="frame" x="0.0" y="0.0" width="402" height="211"/>
                                             <autoresizingMask key="autoresizingMask"/>
                                             <subviews>
-                                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Our Mission" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="nGN-2E-SkX">
+                                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="Our Mission" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="nGN-2E-SkX">
                                                     <rect key="frame" x="28.666666666666657" y="23" width="305" height="21"/>
-                                                    <constraints>
-                                                        <constraint firstAttribute="width" constant="305" id="JRB-uv-yBj"/>
-                                                    </constraints>
+                                                    <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                                     <fontDescription key="fontDescription" type="boldSystem" pointSize="17"/>
                                                     <nil key="textColor"/>
                                                     <nil key="highlightedColor"/>
@@ -168,11 +166,9 @@
                                                 <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="oEZ-du-30n">
                                                     <rect key="frame" x="28.666666666666657" y="52" width="345" height="147"/>
                                                     <subviews>
-                                                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" lineBreakMode="wordWrap" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="AZH-zL-DhF">
+                                                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" lineBreakMode="wordWrap" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="AZH-zL-DhF">
                                                             <rect key="frame" x="8" y="31.666666666666664" width="329" height="83.666666666666686"/>
-                                                            <constraints>
-                                                                <constraint firstAttribute="width" constant="329" id="STu-y4-mrL"/>
-                                                            </constraints>
+                                                            <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                                             <string key="text">MissionMissionMissionMissionMissionMissionMissionMissionMissionMissionMissionMissionMissionMissionMissionMissionMissionMissionMissionMissionMissionMissionMissionMissionMissionMissionMissionMissionMissionMissionMissionMissionMission</string>
                                                             <fontDescription key="fontDescription" type="system" pointSize="14"/>
                                                             <nil key="textColor"/>
@@ -181,23 +177,14 @@
                                                     </subviews>
                                                     <color key="backgroundColor" systemColor="systemGray4Color"/>
                                                     <constraints>
-                                                        <constraint firstAttribute="width" constant="345" id="AUr-o9-TGN"/>
-                                                        <constraint firstItem="AZH-zL-DhF" firstAttribute="centerX" secondItem="oEZ-du-30n" secondAttribute="centerX" id="AlT-1j-WRg"/>
-                                                        <constraint firstItem="AZH-zL-DhF" firstAttribute="centerX" secondItem="oEZ-du-30n" secondAttribute="centerX" id="Xbk-UK-FoJ"/>
-                                                        <constraint firstItem="AZH-zL-DhF" firstAttribute="centerY" secondItem="oEZ-du-30n" secondAttribute="centerY" id="gYJ-IF-EBY"/>
+                                                        <constraint firstAttribute="height" constant="147" id="Lgd-TC-tJe"/>
                                                     </constraints>
                                                 </view>
                                             </subviews>
-                                            <constraints>
-                                                <constraint firstItem="oEZ-du-30n" firstAttribute="bottom" secondItem="C3L-Ps-Ukh" secondAttribute="bottomMargin" id="0fY-yy-v0T"/>
-                                                <constraint firstItem="oEZ-du-30n" firstAttribute="top" secondItem="C3L-Ps-Ukh" secondAttribute="topMargin" constant="40" id="9jn-PT-6Wo"/>
-                                                <constraint firstItem="oEZ-du-30n" firstAttribute="top" secondItem="nGN-2E-SkX" secondAttribute="bottom" constant="8" id="CeW-ln-e6f"/>
-                                                <constraint firstItem="oEZ-du-30n" firstAttribute="centerX" secondItem="C3L-Ps-Ukh" secondAttribute="centerX" id="KfN-8p-kJF"/>
-                                                <constraint firstItem="nGN-2E-SkX" firstAttribute="leading" secondItem="oEZ-du-30n" secondAttribute="leading" id="hpf-qg-vXO"/>
-                                            </constraints>
                                         </tableViewCellContentView>
                                         <connections>
                                             <outlet property="lblMissionText" destination="AZH-zL-DhF" id="XTs-xO-b8u"/>
+                                            <outlet property="misionTitleLbl" destination="nGN-2E-SkX" id="cw8-bT-oW6"/>
                                             <outlet property="misssionView" destination="oEZ-du-30n" id="1wA-ph-m1o"/>
                                         </connections>
                                     </tableViewCell>
@@ -271,6 +258,7 @@
                                             <outlet property="btnEmail" destination="0fN-lR-VGl" id="g4k-FK-d1u"/>
                                             <outlet property="btnPhone" destination="RQ6-ne-Asn" id="tHb-VI-ls7"/>
                                             <outlet property="contactView" destination="9sh-5n-8hE" id="QXz-Mw-1ep"/>
+                                            <outlet property="lblContact" destination="YFC-0S-2f6" id="aST-n3-iU4"/>
                                             <outlet property="lblEmail" destination="lit-9l-9DO" id="QWr-3k-B0e"/>
                                             <outlet property="lblPgoneNumber" destination="JEK-ni-Bj5" id="pHX-vF-iSd"/>
                                         </connections>
@@ -282,7 +270,7 @@
                                             <rect key="frame" x="0.0" y="0.0" width="402" height="130"/>
                                             <autoresizingMask key="autoresizingMask"/>
                                             <subviews>
-                                                <button opaque="NO" contentMode="scaleToFill" ambiguous="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="U68-HF-448">
+                                                <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="U68-HF-448">
                                                     <rect key="frame" x="20" y="73" width="362" height="39"/>
                                                     <state key="normal" title="Button"/>
                                                     <buttonConfiguration key="configuration" style="filled" title="Chat With Us">
@@ -292,7 +280,7 @@
                                                         <action selector="chatTapped:" destination="YeK-xs-9i3" eventType="touchUpInside" id="GJL-CD-UkN"/>
                                                     </connections>
                                                 </button>
-                                                <button opaque="NO" contentMode="scaleToFill" ambiguous="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Byz-rx-UJ1">
+                                                <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Byz-rx-UJ1">
                                                     <rect key="frame" x="20" y="26" width="362" height="39"/>
                                                     <state key="normal" title="Button"/>
                                                     <buttonConfiguration key="configuration" style="filled" title="Donate To This NGO">

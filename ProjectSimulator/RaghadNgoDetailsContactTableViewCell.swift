@@ -16,6 +16,9 @@ class RaghadNgoDetailsContactTableViewCell: UITableViewCell {
     @IBOutlet weak var btnPhone: UIButton!
     @IBOutlet weak var btnEmail: UIButton!
 
+    @IBOutlet weak var lblContact: UILabel!
+    
+    
 
 //        override func awakeFromNib() {
 //                super.awakeFromNib()

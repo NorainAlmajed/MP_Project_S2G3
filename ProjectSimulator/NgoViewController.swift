@@ -92,6 +92,19 @@ class NgoViewController: UIViewController,
         } else {
             navigationItem.backBarButtonItem = UIBarButtonItem(title: "", style: .plain, target: nil, action: nil)
         }
+        
+        tableView.separatorStyle = .singleLine
+        
+        tableView.separatorColor = UIColor { trait in
+            trait.userInterfaceStyle == .dark
+                ? UIColor.systemGray3   // darker gray for dark mode
+                : UIColor.systemGray4   // light gray for light mode
+        }
+
+
+        
+        
+        
     }
 
     // ✅ Helps iPad / rotation keep header width correct

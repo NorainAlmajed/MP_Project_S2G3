@@ -70,7 +70,12 @@ class NgoDetailsViewController: UIViewController, UITableViewDataSource, UITable
         view.backgroundColor = .systemBackground
         tableView.backgroundColor = .systemBackground
 
-        
+        //navigation color in diffrent modes 
+        navigationController?.navigationBar.tintColor = UIColor { trait in
+            trait.userInterfaceStyle == .dark ? .white : .black
+        }
+
+
         
     }
 

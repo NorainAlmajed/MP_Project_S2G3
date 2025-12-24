@@ -221,7 +221,7 @@ class DonationViewController: UIViewController {
             }
         }
 
-        // MARK: - Firebase
+        // MARK: - Firebase.
     func fetchCurrentUser(completion: @escaping (Bool) -> Void) {
         let tempUserID = "dlqHfZoVwh50p3Aexu1A" // temporary user
 

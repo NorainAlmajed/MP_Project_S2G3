@@ -33,7 +33,7 @@ class DonorSignupViewController: UIViewController {
         createDonorAccount()
     }
 
-
+    // MARK: - Validation
     func validateInputs() -> Bool {
 
         let email = emailTextField.text?.trimmingCharacters(in: .whitespacesAndNewlines) ?? ""
@@ -78,7 +78,8 @@ class DonorSignupViewController: UIViewController {
 
         return true
     }
-    
+
+    // MARK: - Firebase Signup
     func createDonorAccount() {
         signupButton.isEnabled = false
 
@@ -109,7 +110,7 @@ class DonorSignupViewController: UIViewController {
             .collection("users")
             .document(uid)
             .setData([
-                "role": "2",
+                "role": SessionManager.UserRole.donor.rawValue,
                 "username": usernameTextField.text?.trimmingCharacters(in: .whitespacesAndNewlines) ?? "",
                 "name": nameTextField.text?.trimmingCharacters(in: .whitespacesAndNewlines) ?? "",
                 "phone_number": phoneNumberTextField.text?.trimmingCharacters(in: .whitespacesAndNewlines) ?? "",
@@ -126,16 +127,25 @@ class DonorSignupViewController: UIViewController {
                     return
                 }
 
-                let vc = UIStoryboard(name: "Authentication", bundle: nil)
-                    .instantiateViewController(withIdentifier: "SetupProfileViewController")
-                    as! SetupProfileViewController
+                SessionManager.shared.fetchUserRole { success in
+                    DispatchQueue.main.async {
+                        if success {
+                            let vc = UIStoryboard(name: "Authentication", bundle: nil)
+                                .instantiateViewController(withIdentifier: "SetupProfileViewController")
+                                as! SetupProfileViewController
 
-                vc.userRole = "2"   // Donor
-                vc.modalPresentationStyle = .fullScreen
-                self.present(vc, animated: true)
+                            vc.modalPresentationStyle = .fullScreen
+                            self.present(vc, animated: true)
+                        } else {
+                            self.signupButton.isEnabled = true
+                            self.showAlert(title: "Error", message: "Unable to load user session.")
+                        }
+                    }
+                }
             }
     }
 
+    // MARK: - UI Helpers
     func showAlert(title: String, message: String) {
         let alert = UIAlertController(title: title, message: message, preferredStyle: .alert)
         alert.addAction(UIAlertAction(title: "OK", style: .default))

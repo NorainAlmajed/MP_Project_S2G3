@@ -1,10 +1,3 @@
-//
-//  NGOSignupViewController.swift
-//  ProjectSimulator
-//
-//  Created by BP-36-201-02 on 20/12/2025.
-//
-
 import UIKit
 import FirebaseAuth
 import FirebaseFirestore
@@ -15,7 +8,6 @@ class NGOSignupViewController: UIViewController,
                               UIImagePickerControllerDelegate,
                               UINavigationControllerDelegate {
 
-    
     let causePicker = UIPickerView()
     let governoratePicker = UIPickerView()
 
@@ -76,6 +68,7 @@ class NGOSignupViewController: UIViewController,
         dismiss(animated: true)
     }
 
+    // MARK: - Image Picker
     @IBAction func uploadLicenseTapped(_ sender: Any) {
         let picker = UIImagePickerController()
         picker.delegate = self
@@ -100,6 +93,7 @@ class NGOSignupViewController: UIViewController,
         dismiss(animated: true)
     }
 
+    // MARK: - Picker View
     func numberOfComponents(in pickerView: UIPickerView) -> Int { 1 }
 
     func pickerView(_ pickerView: UIPickerView, numberOfRowsInComponent component: Int) -> Int {
@@ -135,31 +129,32 @@ class NGOSignupViewController: UIViewController,
         view.endEditing(true)
     }
 
+    // MARK: - Signup Flow
     @IBAction func registerButtonTapped(_ sender: UIButton) {
         guard validateInputs() else { return }
-        createNGOAccount()
-        
-        guard let licenseImage = self.licenseImageView.image else {
-            self.showAlert(title: "Missing License", message: "Please upload NGO license.")
+
+        guard let licenseImage = licenseImageView.image else {
+            showAlert(title: "Missing License", message: "Please upload NGO license.")
             return
         }
+
+        signupButton.isEnabled = false
 
         CloudinaryService.shared.uploadImage(licenseImage) { [weak self] result in
             guard let self = self else { return }
 
             switch result {
             case .success(let licenseUrl):
-                self.saveNGOToFirestore(uid: uid, licenseUrl: licenseUrl)
+                self.createNGOAccount(licenseUrl: licenseUrl)
 
             case .failure(let error):
+                self.signupButton.isEnabled = true
                 self.showAlert(title: "Upload Failed", message: error.localizedDescription)
             }
         }
-
     }
 
     func validateInputs() -> Bool {
-
         let email = emailTextField.text?.trimmingCharacters(in: .whitespacesAndNewlines) ?? ""
         let password = passwordTextField.text?.trimmingCharacters(in: .whitespacesAndNewlines) ?? ""
         let confirm = confirmPasswordTextField.text?.trimmingCharacters(in: .whitespacesAndNewlines) ?? ""
@@ -191,26 +186,24 @@ class NGOSignupViewController: UIViewController,
         }
 
         guard phone.allSatisfy({ $0.isNumber }) else {
-            showAlert(title: "Invalid Phone Number", message: "Phone number must contain digits only.")
+            showAlert(title: "Invalid Phone Number", message: "Digits only.")
             return false
         }
 
         guard phone.count >= 8 else {
-            showAlert(title: "Invalid Phone Number", message: "Phone number must be at least 8 digits.")
+            showAlert(title: "Invalid Phone Number", message: "At least 8 digits.")
             return false
         }
 
         guard licenseImageView.image != nil else {
-            showAlert(title: "Missing License", message: "Please upload your NGO license.")
+            showAlert(title: "Missing License", message: "Upload NGO license.")
             return false
         }
 
         return true
     }
 
-    func createNGOAccount() {
-        signupButton.isEnabled = false
-
+    func createNGOAccount(licenseUrl: String) {
         let email = emailTextField.text!.trimmingCharacters(in: .whitespacesAndNewlines)
         let password = passwordTextField.text!.trimmingCharacters(in: .whitespacesAndNewlines)
 
@@ -228,14 +221,11 @@ class NGOSignupViewController: UIViewController,
                 return
             }
 
-            self.saveNGOToFirestore(uid: uid)
+            self.saveNGOToFirestore(uid: uid, licenseUrl: licenseUrl)
         }
     }
 
-    func saveNGOToFirestore(uid: String) {
-
-        let ngoLicenseURL = "https://res.cloudinary.com/duqn0m9ed/image/upload/v1766664321/b8a16de6-4891-4480-ad9f-36456ebf320d_x7soyt.png"
-
+    func saveNGOToFirestore(uid: String, licenseUrl: String) {
         Firestore.firestore()
             .collection("users")
             .document(uid)
@@ -248,7 +238,7 @@ class NGOSignupViewController: UIViewController,
                 "address": addressTextField.text ?? "",
                 "cause": causeTextField.text ?? "",
                 "governorate": governorateTextField.text ?? "",
-                "ngo_license_url": ngoLicenseURL,
+                "ngo_license_url": licenseUrl,
                 "profile_completed": false,
                 "created_at": Timestamp()
             ]) { [weak self] error in
@@ -260,22 +250,30 @@ class NGOSignupViewController: UIViewController,
                     return
                 }
 
-                let vc = UIStoryboard(name: "Authentication", bundle: nil)
-                    .instantiateViewController(withIdentifier: "SetupProfileViewController")
-                    as! SetupProfileViewController
-
-                vc.userRole = "3"   // NGO
-                vc.modalPresentationStyle = .fullScreen
-                self.present(vc, animated: true)
+                SessionManager.shared.fetchUserRole { success in
+                    DispatchQueue.main.async {
+                        if success {
+                            let vc = UIStoryboard(name: "Authentication", bundle: nil)
+                                .instantiateViewController(withIdentifier: "SetupProfileViewController")
+                                as! SetupProfileViewController
+                            vc.modalPresentationStyle = .fullScreen
+                            self.present(vc, animated: true)
+                        } else {
+                            self.signupButton.isEnabled = true
+                            self.showAlert(title: "Error", message: "Session load failed.")
+                        }
+                    }
+                }
             }
     }
 
+    // MARK: - UI
     func showAlert(title: String, message: String) {
         let alert = UIAlertController(title: title, message: message, preferredStyle: .alert)
         alert.addAction(UIAlertAction(title: "OK", style: .default))
         present(alert, animated: true)
     }
-    
+
     private func styleActionButton(_ button: UIButton) {
         button.layer.cornerRadius = button.frame.height / 2
         button.clipsToBounds = true

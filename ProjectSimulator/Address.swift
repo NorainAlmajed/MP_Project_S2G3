@@ -8,12 +8,16 @@
 import UIKit
 
 struct Address {
+    var name: String?
     var building: Int
     var road: Int
     var block: Int
     var flat: Int
     var area: String
     var governorate: String
+    var fullAddress: String {
+        return "\(building), \(road), \(block)\n\(area), \(governorate)"
+    }
 }
 
 struct Notification {

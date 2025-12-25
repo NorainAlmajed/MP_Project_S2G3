@@ -32,7 +32,6 @@ class SetupProfileViewController: UIViewController,
         bioCounterLabel.text = "0 / 240"
     }
 
-    // MARK: - Notifications
     @IBAction func notificationSwitchChanged(_ sender: UISwitch) {
         if sender.isOn == false {
             let alert = UIAlertController(

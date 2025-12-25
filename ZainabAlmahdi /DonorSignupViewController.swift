@@ -110,7 +110,7 @@ class DonorSignupViewController: UIViewController {
             .collection("users")
             .document(uid)
             .setData([
-                "role": SessionManager.UserRole.donor.rawValue,
+                "role": "2",
                 "username": usernameTextField.text?.trimmingCharacters(in: .whitespacesAndNewlines) ?? "",
                 "name": nameTextField.text?.trimmingCharacters(in: .whitespacesAndNewlines) ?? "",
                 "phone_number": phoneNumberTextField.text?.trimmingCharacters(in: .whitespacesAndNewlines) ?? "",

@@ -31,7 +31,7 @@ class DonorDashboardViewController: UIViewController {
     // MARK: Lifecycle
     override func viewDidLoad() {
         super.viewDidLoad()
-            print("✅ DonorDashboardViewController loaded")
+            print("DonorDashboardViewController loaded")
         print("mainTableView is nil:", mainTableView == nil)
 
         loadCurrentUser()
@@ -56,12 +56,12 @@ class DonorDashboardViewController: UIViewController {
                 guard let self = self else { return }
 
                 if let error = error {
-                    print("❌ Firestore NGO fetch error:", error.localizedDescription)
+                    print("Firestore NGO fetch error:", error.localizedDescription)
                     return
                 }
 
                 guard let snapshot = snapshot else {
-                    print("⚠️ No snapshot returned")
+                    print("No snapshot returned")
                     return
                 }
 
@@ -78,29 +78,39 @@ class DonorDashboardViewController: UIViewController {
             }
     }
     private func startListeningForRecentDonations() {
-        guard let uid = currentUserID else { return }
+        guard let uid = currentUserID else {
+            print("UID is nil")
+            return
+        }
 
         donationsListener?.remove()
 
         let userRef = db.collection("users").document(uid)
 
-        donationsListener = db.collection("donations")
+        donationsListener = db.collection("Donation")
             .whereField("donor", isEqualTo: userRef)
-            .order(by: "creationDate", descending: true)
             .limit(to: 5)
             .addSnapshotListener { [weak self] snapshot, error in
+
                 guard let self = self else { return }
 
                 if let error = error {
-                    print("❌ Donation fetch error:", error.localizedDescription)
+                    print("Donation fetch error:", error.localizedDescription)
                     return
                 }
 
-                guard let snapshot = snapshot else { return }
+                guard let snapshot = snapshot else {
+                    print("Snapshot is nil")
+                    return
+                }
+
+                print("SNAPSHOT COUNT:", snapshot.documents.count)
 
                 let donations = snapshot.documents.compactMap {
                     Donation1(document: $0)
                 }
+
+                print("PARSED DONATIONS:", donations.count)
 
                 self.recentDonations = donations
 
@@ -112,6 +122,7 @@ class DonorDashboardViewController: UIViewController {
                 }
             }
     }
+
 
     // MARK: - Cleanup
     deinit {

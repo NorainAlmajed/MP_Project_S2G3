@@ -22,8 +22,6 @@ class SetupProfileViewController: UIViewController,
     @IBOutlet weak var notificationsSwitch: UISwitch!
     @IBOutlet weak var bioCounterLabel: UILabel!
 
-    var userRole: String?
-
     override func viewDidLoad() {
         super.viewDidLoad()
 
@@ -34,6 +32,7 @@ class SetupProfileViewController: UIViewController,
         bioCounterLabel.text = "0 / 240"
     }
 
+    // MARK: - Notifications
     @IBAction func notificationSwitchChanged(_ sender: UISwitch) {
         if sender.isOn == false {
             let alert = UIAlertController(
@@ -54,6 +53,7 @@ class SetupProfileViewController: UIViewController,
         }
     }
 
+    // MARK: - Image Picker
     @IBAction func addPhotoTapped(_ sender: UIButton) {
         let picker = UIImagePickerController()
         picker.delegate = self
@@ -78,11 +78,8 @@ class SetupProfileViewController: UIViewController,
         dismiss(animated: true)
     }
 
+    // MARK: - Continue
     @IBAction func continueTapped(_ sender: UIButton) {
-        saveProfileAndRoute()
-    }
-
-    func saveProfileAndRoute() {
 
         guard let fullName = fullNameTextField.text, !fullName.isEmpty else {
             showAlert(title: "Missing Name", message: "Please enter your full name.")
@@ -94,12 +91,35 @@ class SetupProfileViewController: UIViewController,
             return
         }
 
-        guard let uid = Auth.auth().currentUser?.uid else { return }
+        guard let image = profileImageView.image else {
+            showAlert(title: "Missing Photo", message: "Please upload a profile photo.")
+            return
+        }
 
         continueButton.isEnabled = false
 
-        let notificationsEnabled = notificationsSwitch.isOn
-        let profileImageURL = "" // Cloudinary later
+        CloudinaryService.shared.uploadImage(image) { [weak self] result in
+            guard let self = self else { return }
+
+            switch result {
+            case .success(let imageUrl):
+                self.saveProfile(
+                    fullName: fullName,
+                    bio: bio,
+                    profileImageUrl: imageUrl
+                )
+
+            case .failure(let error):
+                self.continueButton.isEnabled = true
+                self.showAlert(title: "Upload Failed", message: error.localizedDescription)
+            }
+        }
+    }
+
+    // MARK: - Firestore
+    func saveProfile(fullName: String, bio: String, profileImageUrl: String) {
+
+        guard let uid = Auth.auth().currentUser?.uid else { return }
 
         Firestore.firestore()
             .collection("users")
@@ -107,8 +127,8 @@ class SetupProfileViewController: UIViewController,
             .updateData([
                 "full_name": fullName,
                 "bio": bio,
-                "notifications_enabled": notificationsEnabled,
-                "profile_image_url": profileImageURL,
+                "notifications_enabled": notificationsSwitch.isOn,
+                "profile_image_url": profileImageUrl,
                 "profile_completed": true
             ]) { [weak self] error in
 
@@ -124,6 +144,7 @@ class SetupProfileViewController: UIViewController,
             }
     }
 
+    // MARK: - Routing
     func routeToDashboard() {
 
         let storyboard = UIStoryboard(name: "Main", bundle: nil)
@@ -141,15 +162,13 @@ class SetupProfileViewController: UIViewController,
 
         let homeVC = storyboard.instantiateViewController(withIdentifier: identifier)
 
-        if let sceneDelegate = UIApplication.shared.connectedScenes
-            .first?.delegate as? SceneDelegate {
-
+        if let sceneDelegate = UIApplication.shared.connectedScenes.first?.delegate as? SceneDelegate {
             sceneDelegate.window?.rootViewController = homeVC
             sceneDelegate.window?.makeKeyAndVisible()
         }
     }
 
-    // MARK: - Bio counter
+    // MARK: - Bio Counter
     func textViewDidChange(_ textView: UITextView) {
         let max = 240
         if textView.text.count > max {
@@ -161,13 +180,13 @@ class SetupProfileViewController: UIViewController,
     func textView(_ textView: UITextView,
                   shouldChangeTextIn range: NSRange,
                   replacementText text: String) -> Bool {
-
         let current = textView.text ?? ""
         guard let stringRange = Range(range, in: current) else { return false }
         let updated = current.replacingCharacters(in: stringRange, with: text)
         return updated.count <= 240
     }
 
+    // MARK: - Helpers
     func showAlert(title: String, message: String) {
         let alert = UIAlertController(title: title, message: message, preferredStyle: .alert)
         alert.addAction(UIAlertAction(title: "OK", style: .default))
@@ -179,4 +198,3 @@ class SetupProfileViewController: UIViewController,
         button.clipsToBounds = true
     }
 }
-

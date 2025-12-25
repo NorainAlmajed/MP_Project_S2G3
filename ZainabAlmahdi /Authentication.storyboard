@@ -355,7 +355,7 @@
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="rO6-vl-WS0">
-                                <rect key="frame" x="0.0" y="26" width="477" height="800"/>
+                                <rect key="frame" x="0.0" y="40" width="477" height="800"/>
                                 <subviews>
                                     <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" spacing="12" translatesAutoresizingMaskIntoConstraints="NO" id="jNk-xZ-YNF">
                                         <rect key="frame" x="138.33333333333334" y="95.000000000000014" width="120.00000000000003" height="166.33333333333337"/>
@@ -400,7 +400,7 @@
                                         </connections>
                                     </button>
                                     <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" alignment="top" spacing="25" translatesAutoresizingMaskIntoConstraints="NO" id="4Do-b5-2AG">
-                                        <rect key="frame" x="38" y="275" width="320.33333333333337" height="273.66666666666674"/>
+                                        <rect key="frame" x="38" y="275" width="320.33333333333331" height="273.66666666666674"/>
                                         <subviews>
                                             <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" alignment="top" spacing="25" translatesAutoresizingMaskIntoConstraints="NO" id="Pvv-vT-vTg">
                                                 <rect key="frame" x="0.0" y="0.0" width="320.33333333333331" height="79.666666666666671"/>
@@ -1025,7 +1025,7 @@
     </scenes>
     <inferredMetricsTieBreakers>
         <segue reference="ec3-Eu-0Cf"/>
-        <segue reference="fsn-AO-KUL"/>
+        <segue reference="r8v-hH-6zD"/>
     </inferredMetricsTieBreakers>
     <resources>
         <image name="person.crop.circle" catalog="system" width="128" height="123"/>

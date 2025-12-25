@@ -138,6 +138,24 @@ class NGOSignupViewController: UIViewController,
     @IBAction func registerButtonTapped(_ sender: UIButton) {
         guard validateInputs() else { return }
         createNGOAccount()
+        
+        guard let licenseImage = self.licenseImageView.image else {
+            self.showAlert(title: "Missing License", message: "Please upload NGO license.")
+            return
+        }
+
+        CloudinaryService.shared.uploadImage(licenseImage) { [weak self] result in
+            guard let self = self else { return }
+
+            switch result {
+            case .success(let licenseUrl):
+                self.saveNGOToFirestore(uid: uid, licenseUrl: licenseUrl)
+
+            case .failure(let error):
+                self.showAlert(title: "Upload Failed", message: error.localizedDescription)
+            }
+        }
+
     }
 
     func validateInputs() -> Bool {
@@ -216,7 +234,7 @@ class NGOSignupViewController: UIViewController,
 
     func saveNGOToFirestore(uid: String) {
 
-        let ngoLicenseURL = ""
+        let ngoLicenseURL = "https://res.cloudinary.com/duqn0m9ed/image/upload/v1766664321/b8a16de6-4891-4480-ad9f-36456ebf320d_x7soyt.png"
 
         Firestore.firestore()
             .collection("users")

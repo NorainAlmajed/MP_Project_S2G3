@@ -15,8 +15,8 @@
                                             UITableViewDataSource,
                                             UIImagePickerControllerDelegate,
                                             UINavigationControllerDelegate,
-                                            ZahraSection1TableViewCellDelegate,
-                                            DonorSelectionDelegate {
+                                            ZahraSection1TableViewCellDelegate
+                                             {
         
         var donation: Donation?
         
@@ -47,10 +47,8 @@
             
             present(alert, animated: true)
         }
-        var selectedNgo: NGO?
         
         // MARK: - State / Validation
-        private var shouldShowDonorError = false
         private var shouldShowImageError = false
         private var shouldShowQuantityError = false
         //private var quantityValue: Int?
@@ -81,7 +79,6 @@
         // Image + Donor
         @IBOutlet weak var donationFormTableview: UITableView!
         private var selectedDonationImage: UIImage?
-        private var selectedDonorName: String?
         
         
         private let cloudinaryService = CloudinaryService()
@@ -403,16 +400,7 @@
         
 
         
-        // MARK: - DonorSelectionDelegate
-        func didSelectDonor(name: String) {
-            selectedDonorName = name
-            shouldShowDonorError = false
-            if isAdminUser {
-                donationFormTableview.reloadSections(IndexSet(integer: 1), with: .none)
-            } else {
-                donationFormTableview.reloadData()
-            }
-        }
+       
         
         // MARK: - Image Picking (UIImagePickerController)
         private func openCamera() {
@@ -523,12 +511,9 @@
             view.endEditing(true)
 
             // 1) Compute validity
-            let missingImage = (selectedDonationImage == nil)
             let missingUploadedUrl = (uploadedDonationImageUrl == nil)
-
-            
-            let missingDonor = isAdminUser ? (selectedDonorName == nil) : false
-            let missingFoodCategory = (selectedFoodCategory == nil)
+         
+            let missingFoodCategory = (selectedFoodCategory == nil || selectedFoodCategory?.isEmpty == true)
 
             // Quantity
             let qty = getQuantityValue() ?? 0
@@ -541,11 +526,10 @@
             let missingExpiry = (selectedExpiryDate == nil)
 
             // 2) Flip error flags
-            shouldShowImageError = missingImage
-            shouldShowDonorError = missingDonor
             shouldShowFoodCategoryError = missingFoodCategory
             shouldShowQuantityError = invalidQuantity
             shouldShowWeightError = invalidWeight
+            shouldShowImageError = missingUploadedUrl
 
             // 3) Reload only affected sections (✅ correct indices)
             let sectionsToReload: [Int]
@@ -561,7 +545,6 @@
                 donationFormTableview.reloadSections(IndexSet(sectionsToReload), with: .none)
             }
 
-
             // ⛔ Still uploading to Cloudinary
             if isUploadingImage {
                 showSimpleAlert(
@@ -571,69 +554,50 @@
                 return
             }
 
-            // ⛔ Image selected but not uploaded yet
-           
-
-            if missingImage ||
-               missingUploadedUrl ||
-               missingFoodCategory ||
-               invalidQuantity ||
-               invalidWeight ||
-               missingExpiry ||
-               missingDonor {
-
-                if missingUploadedUrl && !missingImage {
+            // ⛔ Validation failed
+            if missingUploadedUrl || missingFoodCategory || invalidQuantity || invalidWeight || missingExpiry {
+                if missingUploadedUrl {
                     showSimpleAlert(
                         title: "Image Not Uploaded",
                         message: "Please wait or try selecting the image again."
                     )
                 }
-
                 return
             }
 
-            
-
-            // 5) All good → create draft donation, then go next
-
-            guard let ngo = selectedNgo else {
-                showSimpleAlert(title: "Error", message: "NGO not found.")
+            // ✅ Firebase update (update existing donation)
+            guard let donation = donation,
+                  let donationID = donation.firestoreID else {
                 return
             }
 
+            let db = Firestore.firestore()
+            let donationRef = db.collection("Donation").document(donationID)
 
-            
-            //❗❗❗❗❗❗❗❗❗❗❗NORAIN❗❗❗❗❗❗❗❗❗❗
-            
-            let payload = DonationPayload(
-                ngoId: ngo.id,
-                donorName: isAdminUser ? selectedDonorName : nil,
-                foodCategory: selectedFoodCategory ?? "",
-                quantity: getQuantityValue() ?? 0,
-                weight: weightValue,
-                expiryDate: selectedExpiryDate ?? Date(),
-                shortDescription: getShortDescription(),
-                imageUrl: uploadedDonationImageUrl ?? ""
-            )
+            var updatedData: [String: Any] = [
+                "Category": selectedFoodCategory ?? "",
+                "quantity": selectedQuantity,
+                "weight": weightValue as Any,
+                "description": selectedShortDescription as Any,
+                "foodImageUrl": uploadedDonationImageUrl ?? "",
+                "expiryDate": Timestamp(date: selectedExpiryDate ?? Date())
+            ]
 
-            
-            // ✅ TEMP: navigate only (no Firebase write)
-            let sb = UIStoryboard(name: "Donations", bundle: nil)
-            let vc = sb.instantiateViewController(withIdentifier: "SchedulePickupVC")
-            
-            // TODO (Norain):❗❗❗❗❗❗❗❗❗❗❗❗❗❗❗❗❗❗❗❗❗❗❗❗❗❗❗❗❗❗❗❗❗❗❗❗
-            // After creating SchedulePickupViewController.swift
-            // and setting the storyboard custom class,
-            // uncomment the next line to receive the donation data.
-            // (vc as? SchedulePickupViewController)?.payload = payload
+      
+            // Update Firebase
+            donationRef.updateData(updatedData) { (error: Error?) in
+                if let error = error {
+                    self.showSimpleAlert(title: "Update Failed", message: error.localizedDescription)
+                    return
+                }
 
-            
-            self.navigationController?.pushViewController(vc, animated: true)
+                print("✅ Donation updated successfully")
 
-            
-            
-       }
-       
+    
+            }
+
+        }
+
         
         
         private var uploadingAlert: UIAlertController?
@@ -717,86 +681,84 @@
         
         
         //🟡🟡🟡🟡🟡🟡🟡🟡🟡🟡🟡🟡🟡🟡🟡🟡🟡🟡🟡🟡🟡🟡🟡🟡🟡🟡🟡🟡🟡🟡🟡🟡🟡🟡🟡🟡🟡🟡
-        private func createDraftDonation(
-            donorUserDocId: String,
-            ngoUserDocId: String,
-            completion: @escaping (String?) -> Void
-        ) {
-            let db = Firestore.firestore()
-
-            // ✅ References (matches your Firestore schema)
-            let donorRef = db.document("users/\(donorUserDocId)")
-            let ngoRef = db.document("users/\(ngoUserDocId)")
-
-            // ✅ Use existing collection name exactly (Donation)
-            let docRef = db.collection("Donation").document()
-            let newId = docRef.documentID
-
-            
-            
-            // ✅ donationID (number) — only if your team needs it
-            // This makes a simple unique number based on time (safe)
-            let donationID = Int(Date().timeIntervalSince1970) % 1000000
-
-            let data: [String: Any] = [
-                "firestoreID": newId,
-                "donationID": donationID,
-
-                "donor": donorRef,
-                "ngo": ngoRef,
-              
-
-
-                "Category": selectedFoodCategory ?? "",
-                "quantity": getQuantityValue() ?? 0,
-                "weight": weightValue as Any,                 // nil allowed
-                "description": getShortDescription() as Any,   // nil allowed
-
-                "foodImageUrl": uploadedDonationImageUrl ?? "",
-
-                "expiryDate": Timestamp(date: selectedExpiryDate ?? Date()),
-                "creationDate": FieldValue.serverTimestamp(),
-
-                // ✅ safest: draft
-                "status": 0,
-
-                // ✅ safe defaults if your team uses these
-                "recurrence": 0
-            ]
-
-            docRef.setData(data) { error in
-                if let error = error {
-                    print("❌ createDraftDonation error:", error.localizedDescription)
-                    completion(nil)
-                } else {
-                    print("✅ Draft Donation created:", newId)
-                    completion(newId)
-                }
-            }
-        }
+//        private func createDraftDonation(
+//            donorUserDocId: String,
+//            ngoUserDocId: String,
+//            completion: @escaping (String?) -> Void
+//        ) {
+//            let db = Firestore.firestore()
+//
+//            // ✅ References (matches your Firestore schema)
+//            let donorRef = db.document("users/\(donorUserDocId)")
+//            let ngoRef = db.document("users/\(ngoUserDocId)")
+//
+//            // ✅ Use existing collection name exactly (Donation)
+//            let docRef = db.collection("Donation").document()
+//            let newId = docRef.documentID
+//
+//            
+//            
+//            // ✅ donationID (number) — only if your team needs it
+//            // This makes a simple unique number based on time (safe)
+//            let donationID = Int(Date().timeIntervalSince1970) % 1000000
+//
+//            let data: [String: Any] = [
+//                "firestoreID": newId,
+//                "donationID": donationID,
+//
+//                "donor": donorRef,
+//                "ngo": ngoRef,
+//              
+//
+//
+//                "Category": selectedFoodCategory ?? "",
+//                "quantity": getQuantityValue() ?? 0,
+//                "weight": weightValue as Any,                 // nil allowed
+//                "description": getShortDescription() as Any,   // nil allowed
+//
+//                "foodImageUrl": uploadedDonationImageUrl ?? "",
+//
+//                "expiryDate": Timestamp(date: selectedExpiryDate ?? Date()),
+//                "creationDate": FieldValue.serverTimestamp(),
+//
+//                // ✅ safest: draft
+//                "status": 0,
+//
+//                // ✅ safe defaults if your team uses these
+//                "recurrence": 0
+//            ]
+//
+//            docRef.setData(data) { error in
+//                if let error = error {
+//                    print("❌ createDraftDonation error:", error.localizedDescription)
+//                    completion(nil)
+//                } else {
+//                    print("✅ Draft Donation created:", newId)
+//                    completion(newId)
+//                }
+//            }
+//        }
         
         //to save a draft of the form when useful for back navigation
         
         private func saveDraft() {
-            guard let ngo = selectedNgo else { return }
+            guard let donationId = donation?.firestoreID else { return }  // use donation ID instead
 
             let draft = DonationDraft(
-                ngoId: ngo.id,
-                donorName: selectedDonorName,
+                ngoId: donationId,  // you can just use this as the key; it doesn't need to be the real NGO
                 foodCategory: selectedFoodCategory,
                 quantity: selectedQuantity,
                 weight: weightValue,
                 expiryDate: selectedExpiryDate,
-                //shortDescription: getShortDescription(),
                 shortDescription: selectedShortDescription,
-
-
                 imageUrl: uploadedDonationImageUrl,
-                imageData: selectedDonationImage?.jpegData(compressionQuality: 0.9) // ✅ NEW
+                imageData: selectedDonationImage?.jpegData(compressionQuality: 0.9)
             )
 
             DonationDraftStore.shared.save(draft)
         }
+
+
 
 
         override func viewWillDisappear(_ animated: Bool) {
@@ -811,11 +773,10 @@
 
         
         private func restoreDraftIfExists() {
-            guard let ngo = selectedNgo else { return }
-            guard let draft = DonationDraftStore.shared.load(ngoId: ngo.id) else { return }
+            guard let donationId = donation?.firestoreID else { return }
+            guard let draft = DonationDraftStore.shared.load(ngoId: donationId) else { return }
 
-            // ✅ only restore if current value is empty (don’t overwrite user selections)
-            if (selectedDonorName ?? "").isEmpty { selectedDonorName = draft.donorName }
+            // restore fields
             if selectedFoodCategory == nil { selectedFoodCategory = draft.foodCategory }
             if weightValue == nil { weightValue = draft.weight }
             if selectedExpiryDate == nil { selectedExpiryDate = draft.expiryDate }
@@ -825,7 +786,7 @@
                 selectedDonationImage = UIImage(data: data)
             }
 
-            if selectedQuantity <= 1, let q = draft.quantity {   // keep user value if already changed
+            if selectedQuantity <= 1, let q = draft.quantity {
                 selectedQuantity = max(q, 1)
             }
 
@@ -835,6 +796,7 @@
 
             donationFormTableview.reloadData()
         }
+
 
         
         
@@ -863,11 +825,6 @@
             } else {
                 uploadedDonationImageUrl = nil
                 selectedDonationImage = nil
-            }
-
-            // Section 1: Donor (only for admin)
-            if isAdminUser {
-                selectedDonorName = donation.donor.username
             }
 
             // Section 2: Food Category

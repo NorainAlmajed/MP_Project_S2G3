@@ -12,32 +12,36 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
 
     var window: UIWindow?
 
+    func scene(
+        _ scene: UIScene,
+        willConnectTo session: UISceneSession,
+        options connectionOptions: UIScene.ConnectionOptions
+    ) {
+        guard let windowScene = (scene as? UIWindowScene) else { return }
 
-    func scene(_ scene: UIScene, willConnectTo session: UISceneSession, options connectionOptions: UIScene.ConnectionOptions) {
-        guard let windowScene = (scene as? UIWindowScene) else
-        { return }
         window = UIWindow(windowScene: windowScene)
         setRootViewController()
         window?.makeKeyAndVisible()
-        }
+    }
+
     func setRootViewController() {
 
         if Auth.auth().currentUser != nil {
-            // User logged in → Main storyboard
-            let authStoryboard = UIStoryboard(name: "Authentication", bundle: nil)
-            let homeVC = authStoryboard.instantiateViewController(
-                withIdentifier: "HomeViewController"
-            )
-            window?.rootViewController = homeVC
+            // Logged in → Main app
+            let storyboard = UIStoryboard(name: "Main", bundle: nil)
+            let rootVC = storyboard.instantiateInitialViewController()
+            window?.rootViewController = rootVC
+
         } else {
-            // User NOT logged in → Authentication storyboard
-            let authStoryboard = UIStoryboard(name: "Authentication", bundle: nil)
-            let loginVC = authStoryboard.instantiateViewController(
-                withIdentifier: "LoginViewController"
-            )
-            window?.rootViewController = loginVC
+           
+            let storyboard = UIStoryboard(name: "Authentication", bundle: nil)
+
+            let rootVC = storyboard.instantiateInitialViewController()
+            window?.rootViewController = rootVC
         }
     }
+
+
 
         // Other SceneDelegate methods...
     }

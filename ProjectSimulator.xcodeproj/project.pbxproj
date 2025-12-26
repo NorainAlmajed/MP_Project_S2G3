@@ -18,6 +18,7 @@
 		BDD3183C2EEB815800880EFF /* FirebaseDatabase in Frameworks */ = {isa = PBXBuildFile; productRef = BDD3183B2EEB815800880EFF /* FirebaseDatabase */; };
 		BDD3183E2EEB815800880EFF /* FirebaseFirestore in Frameworks */ = {isa = PBXBuildFile; productRef = BDD3183D2EEB815800880EFF /* FirebaseFirestore */; };
 		BDD318402EEB815800880EFF /* FirebaseMessaging in Frameworks */ = {isa = PBXBuildFile; productRef = BDD3183F2EEB815800880EFF /* FirebaseMessaging */; };
+		D06572672EFDC18B00F89FB8 /* Cloudinary in Frameworks */ = {isa = PBXBuildFile; productRef = D06572662EFDC18B00F89FB8 /* Cloudinary */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -59,6 +60,7 @@
 				AccountViewController.swift,
 				Authentication.storyboard,
 				LoginViewController.swift,
+				SessionManager.swift,
 				Settings.storyboard,
 			);
 			target = 5FEF8B772EDA363A007D3A97 /* ProjectSimulatorTests */;
@@ -69,6 +71,7 @@
 				AccountViewController.swift,
 				Authentication.storyboard,
 				LoginViewController.swift,
+				SessionManager.swift,
 				Settings.storyboard,
 			);
 			target = 5FEF8B812EDA363A007D3A97 /* ProjectSimulatorUITests */;
@@ -114,6 +117,7 @@
 				BDD318342EEB815800880EFF /* FirebaseAnalytics in Frameworks */,
 				BDD318402EEB815800880EFF /* FirebaseMessaging in Frameworks */,
 				BDD3183A2EEB815800880EFF /* FirebaseCrashlytics in Frameworks */,
+				D06572672EFDC18B00F89FB8 /* Cloudinary in Frameworks */,
 				BDD318382EEB815800880EFF /* FirebaseCore in Frameworks */,
 				BDD318362EEB815800880EFF /* FirebaseAuth in Frameworks */,
 				BDD3183E2EEB815800880EFF /* FirebaseFirestore in Frameworks */,
@@ -146,6 +150,7 @@
 				5FEF8B642EDA3636007D3A97 /* ProjectSimulator */,
 				5FEF8B7B2EDA363A007D3A97 /* ProjectSimulatorTests */,
 				5FEF8B852EDA363A007D3A97 /* ProjectSimulatorUITests */,
+				D06572652EFDC17D00F89FB8 /* Frameworks */,
 				5FEF8B632EDA3636007D3A97 /* Products */,
 			);
 			sourceTree = "<group>";
@@ -158,6 +163,13 @@
 				5FEF8B822EDA363A007D3A97 /* ProjectSimulatorUITests.xctest */,
 			);
 			name = Products;
+			sourceTree = "<group>";
+		};
+		D06572652EFDC17D00F89FB8 /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			name = Frameworks;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -188,6 +200,7 @@
 				BDD3183B2EEB815800880EFF /* FirebaseDatabase */,
 				BDD3183D2EEB815800880EFF /* FirebaseFirestore */,
 				BDD3183F2EEB815800880EFF /* FirebaseMessaging */,
+				D06572662EFDC18B00F89FB8 /* Cloudinary */,
 			);
 			productName = ProjectSimulator;
 			productReference = 5FEF8B622EDA3636007D3A97 /* ProjectSimulator.app */;
@@ -689,6 +702,11 @@
 			isa = XCSwiftPackageProductDependency;
 			package = BDD318322EEB815800880EFF /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */;
 			productName = FirebaseMessaging;
+		};
+		D06572662EFDC18B00F89FB8 /* Cloudinary */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = D45EA9832EF80973009261E1 /* XCRemoteSwiftPackageReference "cloudinary_ios" */;
+			productName = Cloudinary;
 		};
 /* End XCSwiftPackageProductDependency section */
 	};

@@ -17,8 +17,16 @@
                                             UINavigationControllerDelegate,
                                             ZahraSection1TableViewCellDelegate,
                                             DonorSelectionDelegate {
+        
+        var donation: Donation?
+        
+        
         func section1DidTapUploadImage(_ cell: ZahraaSection1TableViewCell) {
             // Show options to pick an image
+            
+    
+
+            
             let alert = UIAlertController(title: "Upload Image", message: nil, preferredStyle: .actionSheet)
             
             alert.addAction(UIAlertAction(title: "Take Photo", style: .default) { [weak self] _ in
@@ -99,7 +107,7 @@
             donationFormTableview.delegate = self
             donationFormTableview.dataSource = self
             
-            title = "Donation Form"
+            title = "Edit Donation Details"
             navigationController?.navigationBar.prefersLargeTitles = false
             
             let tap = UITapGestureRecognizer(target: self, action: #selector(dismissKeyboard))

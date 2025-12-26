@@ -853,6 +853,16 @@ class DonationDetailsViewController: UIViewController, UITableViewDelegate, UITa
         }.resume()
     }
 
+    
+    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
+        if segue.identifier == "editDonationSegue" {
+            if let editVC = segue.destination as? EditDonationViewController {
+                // Pass the donation object
+                editVC.donation = self.donation
+            }
+        }
+    }
+
 
 
 

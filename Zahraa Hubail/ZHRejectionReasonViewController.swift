@@ -19,7 +19,7 @@ class ZHRejectionReasonViewController: UIViewController, UITextViewDelegate {
     @IBOutlet weak var submitBtn: UIButton!
     
 
-        var currentUser: User?
+        var currentUser: ZahraaUser?
     
     
         private let placeholderText = "Enter a rejection reason (optional)"

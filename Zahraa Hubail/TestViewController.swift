@@ -14,7 +14,7 @@ import FirebaseFirestore
 class DonationDetailsViewController: UIViewController, UITableViewDelegate, UITableViewDataSource {
     
     var donation: Donation?
-    var currentUser: User?
+    var currentUser: ZahraaUser?
     var donationImage: UIImage?
 
 

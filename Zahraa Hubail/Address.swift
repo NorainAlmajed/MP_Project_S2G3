@@ -24,7 +24,7 @@ struct Notification {
 }
 
 
-struct User {
+struct ZahraaUser {
     let userID: String                  // Firestore documentID
     var fullName: String?           // optional
     var username: String
@@ -86,15 +86,3 @@ struct User {
 //var admin = User(fullName: "Haetham Alhaddad", username: "haetham.alhaddad", userType: 1)
 //
 
-struct NGO {
-    var ngoName: String
-    var logo: UIImage
-    var notifications: [Notification] = []
-    var enableNotification: Bool = true
-}
-
-var ngo1 = NGO(ngoName: "Karrana Charity Society",
-              logo: UIImage(named: "KarranaCharity") ?? UIImage())
-
-var ngo2 = NGO(ngoName: "Al kawther Society Social Care",
-              logo: UIImage(named: "alkawthar") ?? UIImage())

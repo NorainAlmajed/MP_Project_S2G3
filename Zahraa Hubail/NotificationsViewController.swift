@@ -30,7 +30,7 @@ class NotificationsViewController: UIViewController {
         var sortedNotifications: [Notification] = []
         
         let db = Firestore.firestore()
-        var currentUser: User?
+        var currentUser: ZahraaUser?
         
         override func viewDidLoad() {
             super.viewDidLoad()
@@ -193,7 +193,7 @@ class NotificationsViewController: UIViewController {
                     return
                 }
 
-                self?.currentUser = User(
+                self?.currentUser = ZahraaUser(
                     userID: tempUserID,
                     fullName: data["fullName"] as? String,
                     username: username,

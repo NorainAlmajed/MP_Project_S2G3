@@ -12,9 +12,9 @@ import FirebaseFirestore
 class Donation {
     var firestoreID: String?  
     var donationID: Int                   // Firestore auto-generated document ID
-    var ngo: User            // Reference to NGO in Firestore
+    var ngo: ZahraaUser            // Reference to NGO in Firestore
     var creationDate: Timestamp
-    var donor: User          // Reference to donor in Firestore§
+    var donor: ZahraaUser          // Reference to donor in Firestore§
     var address: Address        // Reference to address in Firestore
     var pickupDate: Timestamp
     var pickupTime: String
@@ -31,9 +31,9 @@ class Donation {
     init(
         firestoreID: String,
         donationID: Int,
-        ngo: User,
+        ngo: ZahraaUser,
         creationDate: Timestamp,
-        donor: User,
+        donor: ZahraaUser,
         address: Address,
         pickupDate: Timestamp,
         pickupTime: String,

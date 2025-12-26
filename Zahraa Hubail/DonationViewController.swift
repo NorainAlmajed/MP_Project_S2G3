@@ -18,7 +18,7 @@ class DonationViewController: UIViewController {
     
 
         // MARK: - Properties
-        var currentUser: User?
+        var currentUser: ZahraaUser?
         let db = Firestore.firestore()
 
         let statuses = ["All", "Pending", "Accepted", "Collected", "Rejected", "Cancelled"]
@@ -26,7 +26,7 @@ class DonationViewController: UIViewController {
 
         var allDonations: [Donation] = []
         var displayedDonations: [Donation] = []
-        var allUsers: [User] = []
+        var allUsers: [ZahraaUser] = []
 
         private var searchBar: UISearchBar!
         private var filterButton: UIButton!
@@ -240,7 +240,7 @@ class DonationViewController: UIViewController {
                 return
             }
 
-            self?.currentUser = User(
+            self?.currentUser = ZahraaUser(
                 userID: tempUserID,
                 fullName: data["fullName"] as? String,
                 username: username,
@@ -270,12 +270,12 @@ class DonationViewController: UIViewController {
                 return
             }
 
-            self.allUsers = documents.compactMap { doc -> User? in
+            self.allUsers = documents.compactMap { doc -> ZahraaUser? in
                 let data = doc.data()
                 guard let username = data["username"] as? String,
                       let role = data["role"] as? Int else { return nil }
 
-                return User(
+                return ZahraaUser(
                     userID: doc.documentID,
                     fullName: data["fullName"] as? String,
                     username: username,
@@ -402,7 +402,7 @@ class DonationViewController: UIViewController {
 
 
 
-        func getUser(by id: String) -> User? {
+        func getUser(by id: String) -> ZahraaUser? {
             return allUsers.first { $0.userID == id }
         }
 

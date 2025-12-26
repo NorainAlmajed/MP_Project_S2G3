@@ -19,6 +19,9 @@
                                              {
         
         var donation: Donation?
+        // In EditDonationViewController.swift
+        var onDonationUpdated: ((Donation) -> Void)?
+
         
         
         func section1DidTapUploadImage(_ cell: ZahraaSection1TableViewCell) {
@@ -510,42 +513,7 @@
         private func validateAndProceed() {
             view.endEditing(true)
 
-            // 1) Compute validity
-            let missingUploadedUrl = (uploadedDonationImageUrl == nil)
-         
-            let missingFoodCategory = (selectedFoodCategory == nil || selectedFoodCategory?.isEmpty == true)
-
-            // Quantity
-            let qty = getQuantityValue() ?? 0
-            let invalidQuantity = (qty <= 0)
-
-            // Weight (optional, only format validation)
-            let invalidWeight = weightInvalidFormat
-
-            // Expiry
-            let missingExpiry = (selectedExpiryDate == nil)
-
-            // 2) Flip error flags
-            shouldShowFoodCategoryError = missingFoodCategory
-            shouldShowQuantityError = invalidQuantity
-            shouldShowWeightError = invalidWeight
-            shouldShowImageError = missingUploadedUrl
-
-            // 3) Reload only affected sections (✅ correct indices)
-            let sectionsToReload: [Int]
-            if isAdminUser {
-                // [0] image, [1] donor, [2] food, [3] qty, [4] weight, [5] expiry
-                sectionsToReload = [0, 1, 2, 3, 4, 5]
-            } else {
-                // [0] image, [1] food, [2] qty, [3] weight, [4] expiry
-                sectionsToReload = [0, 1, 2, 3, 4]
-            }
-
-            UIView.performWithoutAnimation {
-                donationFormTableview.reloadSections(IndexSet(sectionsToReload), with: .none)
-            }
-
-            // ⛔ Still uploading to Cloudinary
+            // ⛔ 0) Stop immediately if image is still uploading
             if isUploadingImage {
                 showSimpleAlert(
                     title: "Uploading Image",
@@ -554,49 +522,115 @@
                 return
             }
 
-            // ⛔ Validation failed
-            if missingUploadedUrl || missingFoodCategory || invalidQuantity || invalidWeight || missingExpiry {
-                if missingUploadedUrl {
-                    showSimpleAlert(
-                        title: "Image Not Uploaded",
-                        message: "Please wait or try selecting the image again."
-                    )
-                }
+            // 1️⃣ Compute validity (EDIT MODE LOGIC)
+
+            // Image is missing ONLY if:
+            // - no old image URL
+            // - AND no newly selected image
+            let missingImage = (uploadedDonationImageUrl == nil && selectedDonationImage == nil)
+
+            let missingFoodCategory = (selectedFoodCategory == nil || selectedFoodCategory?.isEmpty == true)
+
+            let qty = selectedQuantity
+            let invalidQuantity = (qty <= 0)
+
+            let invalidWeight = weightInvalidFormat
+
+            let missingExpiry = (selectedExpiryDate == nil)
+
+            // 2️⃣ Flip error flags (for red labels)
+            shouldShowImageError = missingImage
+            shouldShowFoodCategoryError = missingFoodCategory
+            shouldShowQuantityError = invalidQuantity
+            shouldShowWeightError = invalidWeight
+
+            // 3️⃣ Reload affected sections
+            // Sections for EDIT (no donor):
+            // [0] image, [1] food, [2] quantity, [3] weight, [4] expiry
+            UIView.performWithoutAnimation {
+                donationFormTableview.reloadSections(
+                    IndexSet([0, 1, 2, 3, 4]),
+                    with: .none
+                )
+            }
+
+            // 4️⃣ Stop if validation failed
+            if missingImage || missingFoodCategory || invalidQuantity || invalidWeight || missingExpiry {
                 return
             }
 
-            // ✅ Firebase update (update existing donation)
-            guard let donation = donation,
-                  let donationID = donation.firestoreID else {
+            // 5️⃣ Update existing donation in Firebase
+            guard
+                let donation = donation,
+                let donationId = donation.firestoreID
+            else {
+                showSimpleAlert(title: "Error", message: "Donation not found.")
                 return
             }
 
             let db = Firestore.firestore()
-            let donationRef = db.collection("Donation").document(donationID)
+            let donationRef = db.collection("Donation").document(donationId)
 
             var updatedData: [String: Any] = [
                 "Category": selectedFoodCategory ?? "",
                 "quantity": selectedQuantity,
-                "weight": weightValue as Any,
-                "description": selectedShortDescription as Any,
-                "foodImageUrl": uploadedDonationImageUrl ?? "",
                 "expiryDate": Timestamp(date: selectedExpiryDate ?? Date())
             ]
 
-      
-            // Update Firebase
-            donationRef.updateData(updatedData) { (error: Error?) in
+            // Optional fields
+            if let weight = weightValue {
+                updatedData["weight"] = weight
+            }
+
+            if let description = selectedShortDescription, !description.isEmpty {
+                updatedData["description"] = description
+            }
+
+            if let imageUrl = uploadedDonationImageUrl {
+                updatedData["foodImageUrl"] = imageUrl
+            }
+
+            // 6️⃣ Perform update
+            donationRef.updateData(updatedData) { [weak self] (error: Error?) in
+                guard let self = self else { return }
+
                 if let error = error {
-                    self.showSimpleAlert(title: "Update Failed", message: error.localizedDescription)
+                    self.showSimpleAlert(
+                        title: "Update Failed",
+                        message: error.localizedDescription
+                    )
                     return
                 }
 
                 print("✅ Donation updated successfully")
 
-    
-            }
+                // ✅ Edit flow ends here — no navigation
+                let alert = UIAlertController(
+                    title: "Success",
+                    message: "Donation details have been updated successfully.",
+                    preferredStyle: .alert
+                )
+                alert.addAction(UIAlertAction(title: "Dismiss", style: .default, handler: { [weak self] _ in
+                    self?.navigationController?.popViewController(animated: true)
+                }))
+                present(alert, animated: true)
 
+                self.donation?.category = self.selectedFoodCategory ?? ""
+                self.donation?.quantity = self.selectedQuantity
+                self.donation?.weight = self.weightValue
+                self.donation?.expiryDate = Timestamp(date: self.selectedExpiryDate ?? Date())
+                self.donation?.description = self.selectedShortDescription
+                self.donation?.foodImageUrl = self.uploadedDonationImageUrl ?? self.donation!.foodImageUrl
+
+                // ✅ Tell DonationDetailsViewController that donation was updated
+                self.onDonationUpdated?(self.donation!)
+
+                
+            }
+            
+            
         }
+
 
         
         

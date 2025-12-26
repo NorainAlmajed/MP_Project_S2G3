@@ -859,13 +859,24 @@ class DonationDetailsViewController: UIViewController, UITableViewDelegate, UITa
 
     
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-        if segue.identifier == "editDonationSegue" {
-            if let editVC = segue.destination as? EditDonationViewController {
-                // Pass the donation object
-                editVC.donation = self.donation
+        if segue.identifier == "editDonationSegue",
+           let editVC = segue.destination as? EditDonationViewController {
+            editVC.donation = self.donation
+
+            // Set closure to refresh when returning
+            editVC.onDonationUpdated = { [weak self] updatedDonation in
+                guard let self = self else { return }
+
+                // 1) Update local donation
+                self.donation = updatedDonation
+
+                // 2) Reload table view and image
+                self.preloadDonationImage() // if you have a method for image loading
+                self.donationTableview.reloadData()
             }
         }
     }
+
 
 
 

@@ -35,24 +35,60 @@
 /* End PBXFileReference section */
 
 /* Begin PBXFileSystemSynchronizedBuildFileExceptionSet section */
-		5FEF8B8A2EDA363A007D3A97 /* Exceptions for "ProjectSimulator" folder in "ProjectSimulator" target */ = {
+		BD35D9882EFDFEDC00E79483 /* Exceptions for "ProjectSimulator" folder in "ProjectSimulator" target */ = {
 			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
 			membershipExceptions = (
-				Info.plist,
+				"/Localized: Chats.storyboard",
+				"/Localized: LaunchScreen.storyboard",
+				"/Localized: Main.storyboard",
+				Address.swift,
+				AppDelegate.swift,
+				Assets.xcassets,
+				"Chat controllers/Chat.swift",
+				"Chat controllers/Chatcell.swift",
+				"Chat controllers/ChatViewController.swift",
+				"Chat controllers/MessageCell.swift",
+				Donation.swift,
+				DonationCollectionViewCell.swift,
+				DonationDetailsViewController.swift,
+				Donations.storyboard,
+				DonationViewController.swift,
+				SceneDelegate.swift,
+				ViewController.swift,
+				zahraafet1.storyboard,
+				Zainab_mahdi.storyboard,
 			);
 			target = 5FEF8B612EDA3636007D3A97 /* ProjectSimulator */;
+		};
+		BD35D9892EFDFEDC00E79483 /* Exceptions for "ProjectSimulator" folder in "ProjectSimulatorUITests" target */ = {
+			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
+			membershipExceptions = (
+				"/Localized: Chats.storyboard",
+				"/Localized: LaunchScreen.storyboard",
+				"/Localized: Main.storyboard",
+				Address.swift,
+				AppDelegate.swift,
+				Assets.xcassets,
+				"Chat controllers/Chat.swift",
+				"Chat controllers/Chatcell.swift",
+				"Chat controllers/ChatViewController.swift",
+				"Chat controllers/MessageCell.swift",
+				Donation.swift,
+				DonationCollectionViewCell.swift,
+				DonationDetailsViewController.swift,
+				Donations.storyboard,
+				DonationViewController.swift,
+				Info.plist,
+				SceneDelegate.swift,
+				ViewController.swift,
+				zahraafet1.storyboard,
+				Zainab_mahdi.storyboard,
+			);
+			target = 5FEF8B812EDA363A007D3A97 /* ProjectSimulatorUITests */;
 		};
 /* End PBXFileSystemSynchronizedBuildFileExceptionSet section */
 
 /* Begin PBXFileSystemSynchronizedRootGroup section */
-		5FEF8B642EDA3636007D3A97 /* ProjectSimulator */ = {
-			isa = PBXFileSystemSynchronizedRootGroup;
-			exceptions = (
-				5FEF8B8A2EDA363A007D3A97 /* Exceptions for "ProjectSimulator" folder in "ProjectSimulator" target */,
-			);
-			path = ProjectSimulator;
-			sourceTree = "<group>";
-		};
 		5FEF8B7B2EDA363A007D3A97 /* ProjectSimulatorTests */ = {
 			isa = PBXFileSystemSynchronizedRootGroup;
 			path = ProjectSimulatorTests;
@@ -61,6 +97,15 @@
 		5FEF8B852EDA363A007D3A97 /* ProjectSimulatorUITests */ = {
 			isa = PBXFileSystemSynchronizedRootGroup;
 			path = ProjectSimulatorUITests;
+			sourceTree = "<group>";
+		};
+		BD35D9792EFDFEDC00E79483 /* ProjectSimulator */ = {
+			isa = PBXFileSystemSynchronizedRootGroup;
+			exceptions = (
+				BD35D9882EFDFEDC00E79483 /* Exceptions for "ProjectSimulator" folder in "ProjectSimulator" target */,
+				BD35D9892EFDFEDC00E79483 /* Exceptions for "ProjectSimulator" folder in "ProjectSimulatorUITests" target */,
+			);
+			path = ProjectSimulator;
 			sourceTree = "<group>";
 		};
 /* End PBXFileSystemSynchronizedRootGroup section */
@@ -94,7 +139,7 @@
 			isa = PBXGroup;
 			children = (
 				5FEF8BFA2EDB8B59007D3A97 /* DonationDetailViewController.swift */,
-				5FEF8B642EDA3636007D3A97 /* ProjectSimulator */,
+				BD35D9792EFDFEDC00E79483 /* ProjectSimulator */,
 				5FEF8B7B2EDA363A007D3A97 /* ProjectSimulatorTests */,
 				5FEF8B852EDA363A007D3A97 /* ProjectSimulatorUITests */,
 				5FEF8B632EDA3636007D3A97 /* Products */,
@@ -125,9 +170,6 @@
 			buildRules = (
 			);
 			dependencies = (
-			);
-			fileSystemSynchronizedGroups = (
-				5FEF8B642EDA3636007D3A97 /* ProjectSimulator */,
 			);
 			name = ProjectSimulator;
 			packageProductDependencies = (
@@ -174,6 +216,7 @@
 			);
 			fileSystemSynchronizedGroups = (
 				5FEF8B852EDA363A007D3A97 /* ProjectSimulatorUITests */,
+				BD35D9792EFDFEDC00E79483 /* ProjectSimulator */,
 			);
 			name = ProjectSimulatorUITests;
 			packageProductDependencies = (

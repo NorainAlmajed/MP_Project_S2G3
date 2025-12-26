@@ -84,7 +84,7 @@
                                                                     <nil key="highlightedColor"/>
                                                                 </label>
                                                             </subviews>
-                                                            <color key="backgroundColor" red="0.94117647058823528" green="0.90980392156862744" blue="0.80784313725490198" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
+                                                            <color key="backgroundColor" name="BeigeCol"/>
                                                         </view>
                                                         <view contentMode="scaleToFill" ambiguous="YES" translatesAutoresizingMaskIntoConstraints="NO" id="8wF-Mm-zdC">
                                                             <rect key="frame" x="125" y="0.0" width="115" height="56"/>
@@ -97,7 +97,7 @@
                                                                     <nil key="highlightedColor"/>
                                                                 </label>
                                                             </subviews>
-                                                            <color key="backgroundColor" red="0.94117647058823528" green="0.90980392156862744" blue="0.80784313725490198" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
+                                                            <color key="backgroundColor" name="BeigeCol"/>
                                                         </view>
                                                         <view contentMode="scaleToFill" ambiguous="YES" translatesAutoresizingMaskIntoConstraints="NO" id="X3l-0T-9xL">
                                                             <rect key="frame" x="250" y="0.0" width="115" height="56"/>
@@ -110,7 +110,7 @@
                                                                     <nil key="highlightedColor"/>
                                                                 </label>
                                                             </subviews>
-                                                            <color key="backgroundColor" red="0.94117647058823528" green="0.90980392156862744" blue="0.80784313725490198" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
+                                                            <color key="backgroundColor" name="BeigeCol"/>
                                                         </view>
                                                     </subviews>
                                                 </stackView>
@@ -229,33 +229,47 @@
                                                     <rect key="frame" x="20" y="55" width="353" height="401"/>
                                                     <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                                     <color key="backgroundColor" systemColor="systemBackgroundColor"/>
-                                                    <collectionViewFlowLayout key="collectionViewLayout" automaticEstimatedItemSize="YES" minimumLineSpacing="10" minimumInteritemSpacing="10" id="7La-QJ-Rre">
-                                                        <size key="itemSize" width="359" height="124"/>
+                                                    <collectionViewFlowLayout key="collectionViewLayout" scrollDirection="horizontal" automaticEstimatedItemSize="YES" minimumLineSpacing="10" minimumInteritemSpacing="10" id="7La-QJ-Rre">
+                                                        <size key="itemSize" width="356" height="131"/>
                                                         <size key="headerReferenceSize" width="0.0" height="0.0"/>
                                                         <size key="footerReferenceSize" width="0.0" height="0.0"/>
                                                         <inset key="sectionInset" minX="0.0" minY="0.0" maxX="0.0" maxY="0.0"/>
                                                     </collectionViewFlowLayout>
                                                     <cells>
                                                         <collectionViewCell opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" reuseIdentifier="RecentDonationCardCell" id="yRu-2H-847" customClass="RecentDonationCardCell" customModule="ProjectSimulator">
-                                                            <rect key="frame" x="-3" y="0.0" width="359" height="124"/>
+                                                            <rect key="frame" x="0.0" y="0.0" width="356" height="131"/>
                                                             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                                             <collectionViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" insetsLayoutMarginsFromSafeArea="NO" id="AyA-KB-gc9">
-                                                                <rect key="frame" x="0.0" y="0.0" width="359" height="124"/>
+                                                                <rect key="frame" x="0.0" y="0.0" width="356" height="131"/>
                                                                 <autoresizingMask key="autoresizingMask"/>
                                                                 <subviews>
                                                                     <view contentMode="scaleToFill" ambiguous="YES" translatesAutoresizingMaskIntoConstraints="NO" id="XVW-RU-963" userLabel="cardContainerView">
-                                                                        <rect key="frame" x="1" y="-11" width="385" height="142"/>
+                                                                        <rect key="frame" x="0.0" y="-11" width="359" height="142"/>
                                                                         <subviews>
-                                                                            <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" ambiguous="YES" translatesAutoresizingMaskIntoConstraints="NO" id="C78-5c-Q12">
-                                                                                <rect key="frame" x="20" y="43" width="60" height="60"/>
-                                                                                <color key="backgroundColor" name="gradient-first"/>
-                                                                                <constraints>
-                                                                                    <constraint firstAttribute="height" constant="48" id="6fw-Kz-PwM"/>
-                                                                                    <constraint firstAttribute="width" constant="48" id="eHm-Yx-NVX"/>
-                                                                                </constraints>
+                                                                            <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" ambiguous="YES" image="basket" translatesAutoresizingMaskIntoConstraints="NO" id="C78-5c-Q12">
+                                                                                <rect key="frame" x="14" y="40" width="66" height="69"/>
                                                                             </imageView>
-                                                                            <stackView opaque="NO" contentMode="scaleToFill" ambiguous="YES" axis="vertical" alignment="top" spacing="8" translatesAutoresizingMaskIntoConstraints="NO" id="Xd0-dz-ERG">
-                                                                                <rect key="frame" x="103.0000000000001" y="20.000000000000007" width="145.66666666666663" height="90.666666666666686"/>
+                                                                            <view contentMode="scaleToFill" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="8Vg-UM-uKH">
+                                                                                <rect key="frame" x="246" y="20" width="104" height="28"/>
+                                                                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                                                                <subviews>
+                                                                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text=" Status" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Xyv-ia-jJe">
+                                                                                        <rect key="frame" x="23" y="0.0" width="76" height="28"/>
+                                                                                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                                                                        <fontDescription key="fontDescription" type="boldSystem" pointSize="16"/>
+                                                                                        <nil key="textColor"/>
+                                                                                        <nil key="highlightedColor"/>
+                                                                                    </label>
+                                                                                    <view contentMode="scaleToFill" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="OeM-pf-V6f">
+                                                                                        <rect key="frame" x="6" y="6" width="15" height="16"/>
+                                                                                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                                                                        <color key="backgroundColor" name="orangeCol"/>
+                                                                                    </view>
+                                                                                </subviews>
+                                                                                <color key="backgroundColor" systemColor="systemBackgroundColor"/>
+                                                                            </view>
+                                                                            <stackView opaque="NO" contentMode="scaleToFill" ambiguous="YES" axis="vertical" alignment="top" spacing="13" translatesAutoresizingMaskIntoConstraints="NO" id="Xd0-dz-ERG">
+                                                                                <rect key="frame" x="96" y="20" width="145.66666666666674" height="81.333333333333343"/>
                                                                                 <subviews>
                                                                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Donation Category" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="qC2-Sv-IZ4">
                                                                                         <rect key="frame" x="0.0" y="0.0" width="145.66666666666666" height="19.333333333333332"/>
@@ -264,61 +278,35 @@
                                                                                         <nil key="highlightedColor"/>
                                                                                     </label>
                                                                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Donation ID" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="PmB-OJ-NbN">
-                                                                                        <rect key="frame" x="0.0" y="27.333333333333336" width="75.666666666666671" height="17"/>
-                                                                                        <fontDescription key="fontDescription" type="system" pointSize="14"/>
-                                                                                        <nil key="textColor"/>
-                                                                                        <nil key="highlightedColor"/>
-                                                                                    </label>
-                                                                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Donor Name" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="tKb-WI-2uf">
-                                                                                        <rect key="frame" x="0.0" y="52.333333333333329" width="81" height="17"/>
-                                                                                        <fontDescription key="fontDescription" type="system" pointSize="14"/>
+                                                                                        <rect key="frame" x="0.0" y="32.333333333333336" width="80.333333333333329" height="18"/>
+                                                                                        <fontDescription key="fontDescription" type="system" pointSize="15"/>
                                                                                         <nil key="textColor"/>
                                                                                         <nil key="highlightedColor"/>
                                                                                     </label>
                                                                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Donation time" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="pbb-Tx-NKJ">
-                                                                                        <rect key="frame" x="0.0" y="77.333333333333329" width="73.333333333333329" height="13.333333333333329"/>
-                                                                                        <fontDescription key="fontDescription" type="system" pointSize="11"/>
+                                                                                        <rect key="frame" x="0.0" y="63.333333333333329" width="95.666666666666671" height="18"/>
+                                                                                        <fontDescription key="fontDescription" type="system" pointSize="15"/>
                                                                                         <nil key="textColor"/>
                                                                                         <nil key="highlightedColor"/>
                                                                                     </label>
                                                                                 </subviews>
                                                                             </stackView>
-                                                                            <view contentMode="scaleToFill" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="8Vg-UM-uKH">
-                                                                                <rect key="frame" x="262" y="20" width="88" height="22"/>
-                                                                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                                                                <subviews>
-                                                                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="Status" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Xyv-ia-jJe">
-                                                                                        <rect key="frame" x="26" y="0.0" width="53" height="22"/>
-                                                                                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                                                                        <fontDescription key="fontDescription" type="boldSystem" pointSize="10"/>
-                                                                                        <nil key="textColor"/>
-                                                                                        <nil key="highlightedColor"/>
-                                                                                    </label>
-                                                                                    <view contentMode="scaleToFill" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="OeM-pf-V6f">
-                                                                                        <rect key="frame" x="5" y="3" width="15" height="16"/>
-                                                                                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                                                                        <color key="backgroundColor" name="orangeCol"/>
-                                                                                    </view>
-                                                                                </subviews>
-                                                                                <color key="backgroundColor" systemColor="systemBackgroundColor"/>
-                                                                            </view>
                                                                         </subviews>
                                                                         <color key="backgroundColor" red="0.94190015699999996" green="0.91076578760000004" blue="0.80878866199999999" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
                                                                         <constraints>
-                                                                            <constraint firstItem="Xd0-dz-ERG" firstAttribute="top" secondItem="XVW-RU-963" secondAttribute="top" constant="20" id="8mE-eV-hxm"/>
+                                                                            <constraint firstItem="Xd0-dz-ERG" firstAttribute="leading" secondItem="C78-5c-Q12" secondAttribute="trailing" constant="20" id="0Kw-TM-eOh"/>
+                                                                            <constraint firstItem="Xd0-dz-ERG" firstAttribute="top" secondItem="XVW-RU-963" secondAttribute="top" constant="20" id="nDW-au-lDJ"/>
                                                                         </constraints>
                                                                     </view>
                                                                 </subviews>
-                                                                <color key="backgroundColor" name="BeigeCol"/>
                                                             </collectionViewCellContentView>
-                                                            <size key="customSize" width="359" height="124"/>
+                                                            <size key="customSize" width="356" height="131"/>
                                                             <connections>
                                                                 <outlet property="basketImage" destination="C78-5c-Q12" id="MXb-Zk-hnP"/>
                                                                 <outlet property="categoryLabel" destination="qC2-Sv-IZ4" id="a6J-bd-sXg"/>
                                                                 <outlet property="donationCardView" destination="XVW-RU-963" id="nfU-BJ-9Lg"/>
                                                                 <outlet property="donationIDLabel" destination="PmB-OJ-NbN" id="LPF-pu-10W"/>
                                                                 <outlet property="donationTimeLabel" destination="pbb-Tx-NKJ" id="5xh-oA-iD1"/>
-                                                                <outlet property="donorNamelabel" destination="tKb-WI-2uf" id="kV6-Xq-8FI"/>
                                                                 <outlet property="statusColor" destination="OeM-pf-V6f" id="yyb-l6-Saf"/>
                                                                 <outlet property="statusLabel" destination="Xyv-ia-jJe" id="Irm-Du-U8u"/>
                                                                 <outlet property="statusView" destination="8Vg-UM-uKH" id="qbo-fm-aIc"/>
@@ -326,20 +314,13 @@
                                                         </collectionViewCell>
                                                     </cells>
                                                 </collectionView>
-                                                <view contentMode="scaleToFill" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="vVi-fN-B00" userLabel="recent donations_chev">
-                                                    <rect key="frame" x="0.0" y="-5" width="249" height="64.666666666666671"/>
+                                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="Recent Donations" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="6sF-3x-wOw">
+                                                    <rect key="frame" x="21" y="12.666666666666666" width="179" height="25.333333333333336"/>
                                                     <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                                    <subviews>
-                                                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="Recent Donations" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="6sF-3x-wOw">
-                                                            <rect key="frame" x="21" y="22" width="179" height="21"/>
-                                                            <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                                            <fontDescription key="fontDescription" type="system" weight="semibold" pointSize="21"/>
-                                                            <color key="textColor" name="greenCol"/>
-                                                            <color key="highlightedColor" name="greenCol"/>
-                                                        </label>
-                                                    </subviews>
-                                                    <color key="backgroundColor" systemColor="systemBackgroundColor"/>
-                                                </view>
+                                                    <fontDescription key="fontDescription" type="system" weight="semibold" pointSize="21"/>
+                                                    <color key="textColor" name="greenCol"/>
+                                                    <color key="highlightedColor" name="greenCol"/>
+                                                </label>
                                             </subviews>
                                         </tableViewCellContentView>
                                         <connections>
@@ -413,13 +394,11 @@
     </scenes>
     <color key="tintColor" systemColor="tintColor"/>
     <resources>
+        <image name="basket" width="1200" height="1200"/>
         <image name="chevron.right" catalog="system" width="97" height="128"/>
         <image name="house" catalog="system" width="128" height="104"/>
         <namedColor name="BeigeCol">
             <color red="0.97254901960784312" green="0.8901960784313725" blue="0.74901960784313726" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
-        </namedColor>
-        <namedColor name="gradient-first">
-            <color red="0.20392156862745098" green="0.28235294117647058" blue="0.77254901960784317" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
         </namedColor>
         <namedColor name="greenCol">
             <color red="0.070588235294117646" green="0.38823529411764707" blue="0.070588235294117646" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>

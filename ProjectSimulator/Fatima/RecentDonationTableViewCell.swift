@@ -44,8 +44,8 @@ class RecentDonationTableViewCell: UITableViewCell,
 
         let layout = UICollectionViewFlowLayout()
         layout.scrollDirection = .horizontal
-        layout.itemSize = CGSize(width: 280, height: 180)
-        layout.minimumLineSpacing = 16
+        layout.itemSize = CGSize(width: 385, height: 120)
+        layout.minimumLineSpacing = 12
         layout.sectionInset = UIEdgeInsets(top: 8, left: 16, bottom: 8, right: 16)
 
         recentDonationsCollectionView.collectionViewLayout = layout
@@ -60,6 +60,7 @@ class RecentDonationTableViewCell: UITableViewCell,
             recentDonationsCollectionView.bottomAnchor.constraint(equalTo: contentView.bottomAnchor)
         ])
     }
+   
 
     private func setupEmptyState() {
         contentView.addSubview(emptyStateLabel)

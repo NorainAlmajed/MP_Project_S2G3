@@ -243,8 +243,7 @@ extension DonorDashboardViewController: UITableViewDataSource, UITableViewDelega
             return isPad ? 280 : 220
 
         case DONATIONS_SECTION:
-            return isPad ? 260 : 200
-
+            return isPad ? 400 : 300
         default:
             return 100
         }
@@ -305,7 +304,7 @@ extension DonorDashboardViewController: UITableViewDataSource, UITableViewDelega
 
             cell.selectionStyle = .none
             return cell
-        }
+        }  // MARK: Browse NGO
             if indexPath.section == NGOS_SECTION {
                 let cell = tableView.dequeueReusableCell(
                     withIdentifier: "RecommendedNGOsCell",
@@ -324,7 +323,7 @@ extension DonorDashboardViewController: UITableViewDataSource, UITableViewDelega
 
                 cell.selectionStyle = .none
                 return cell
-            }
+            } // MARK: Recent donations
         if indexPath.section == DONATIONS_SECTION {
 
             guard let cell = tableView.dequeueReusableCell(

@@ -10,7 +10,7 @@ class NGOCardCollectionViewCell: UICollectionViewCell {
         super.awakeFromNib()
 
         backgroundColor = .clear
-        contentView.backgroundColor = .impactBeige
+        contentView.backgroundColor = UIColor(named: "BeigeCol")
 
         contentView.layer.cornerRadius = 16
         contentView.clipsToBounds = true

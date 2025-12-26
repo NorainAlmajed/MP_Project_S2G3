@@ -6,6 +6,7 @@ class ImpactTrackerTableViewCell: UITableViewCell {
 
     // Section title: "Impact Tracker"
     @IBOutlet weak var impactTrackerLabel: UILabel!
+    private var allDonations: [Donation1] = []
 
     // Card containers
     @IBOutlet weak var totalCardView: UIView!
@@ -121,7 +122,7 @@ class ImpactTrackerTableViewCell: UITableViewCell {
         )
 
         livesImpactedNum.attributedText = makeStatText(
-            title: "Lives Saved",
+            title: "Lives Impacted",
             value: livesImpacted
         )
     }

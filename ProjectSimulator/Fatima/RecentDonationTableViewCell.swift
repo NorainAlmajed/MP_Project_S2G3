@@ -10,7 +10,8 @@ class RecentDonationTableViewCell: UITableViewCell,
     @IBOutlet weak var recentDonationContent: UIView!
     // MARK: - Data
     private var donations: [Donation1] = []
-
+    @IBOutlet weak var headerView: UILabel!
+    
     // MARK: - Empty State
     private let emptyStateLabel: UILabel = {
         let label = UILabel()
@@ -43,7 +44,7 @@ class RecentDonationTableViewCell: UITableViewCell,
         recentDonationsCollectionView.showsHorizontalScrollIndicator = false
 
         let layout = UICollectionViewFlowLayout()
-        layout.scrollDirection = .horizontal
+        layout.scrollDirection = .vertical
         layout.itemSize = CGSize(width: 385, height: 120)
         layout.minimumLineSpacing = 12
         layout.sectionInset = UIEdgeInsets(top: 8, left: 16, bottom: 8, right: 16)
@@ -53,13 +54,30 @@ class RecentDonationTableViewCell: UITableViewCell,
 
     private func setupLayoutConstraints() {
         NSLayoutConstraint.activate([
-            recentDonationsCollectionView.topAnchor.constraint(equalTo: contentView.topAnchor),
-            recentDonationsCollectionView.leadingAnchor.constraint(equalTo: contentView.leadingAnchor),
-            recentDonationsCollectionView.trailingAnchor.constraint(equalTo: contentView.trailingAnchor),
-            //recentDonationsCollectionView.heightAnchor.constraint(equalToConstant: 200),
-            recentDonationsCollectionView.bottomAnchor.constraint(equalTo: contentView.bottomAnchor)
+
+            // Header
+            headerView.topAnchor.constraint(equalTo: recentDonationContent.topAnchor),
+            headerView.leadingAnchor.constraint(equalTo: recentDonationContent.leadingAnchor),
+            headerView.trailingAnchor.constraint(equalTo: recentDonationContent.trailingAnchor),
+            headerView.heightAnchor.constraint(equalToConstant: 36),
+
+            // Collection view BELOW header
+            recentDonationsCollectionView.topAnchor.constraint(
+                equalTo: headerView.bottomAnchor,
+                constant: 8
+            ),
+            recentDonationsCollectionView.leadingAnchor.constraint(
+                equalTo: recentDonationContent.leadingAnchor
+            ),
+            recentDonationsCollectionView.trailingAnchor.constraint(
+                equalTo: recentDonationContent.trailingAnchor
+            ),
+            recentDonationsCollectionView.bottomAnchor.constraint(
+                equalTo: recentDonationContent.bottomAnchor
+            )
         ])
     }
+
    
 
     private func setupEmptyState() {

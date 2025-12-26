@@ -86,7 +86,7 @@ class RecentDonationCardCell: UICollectionViewCell {
             basketImage.widthAnchor.constraint(equalToConstant: 75),
             basketImage.heightAnchor.constraint(equalToConstant: 75)
         ])
-        basketImage.layer.cornerRadius = 12
+        basketImage.layer.cornerRadius = 7
         basketImage.image = UIImage(named: "basket")
         //basketImage.contentMode = .scaleAspectFit
         basketImage.contentMode = .scaleToFill

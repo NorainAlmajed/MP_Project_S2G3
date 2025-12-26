@@ -2,54 +2,68 @@ import UIKit
 
 class RecommendedNGOsTableViewCell: UITableViewCell {
 
-    @IBOutlet weak var collectionView: UICollectionView!
+    // MARK: - Outlets
     @IBOutlet weak var titleLabel: UILabel!
+    @IBOutlet weak var collectionView: UICollectionView!
 
+    //@IBOutlet weak var headerView: UIView!
+    @IBOutlet weak var headerView: UIView!
+    // MARK: - Data
     private var ngos: [NGO] = []
 
-    // Callbacks to the dashboard
+    // Callbacks
     var onSeeAllTapped: (() -> Void)?
     var onNGOSelected: ((NGO) -> Void)?
 
+    // MARK: - Lifecycle
     override func awakeFromNib() {
         super.awakeFromNib()
 
-        //contentView.backgroundColor = .impactBeige
         setupCollectionView()
         setupTapGesture()
+        setupLayoutConstraints()
     }
 
+    // MARK: - Layout
+    private func setupLayoutConstraints() {
+        headerView.translatesAutoresizingMaskIntoConstraints = false
+        collectionView.translatesAutoresizingMaskIntoConstraints = false
+
+        NSLayoutConstraint.activate([
+            // Header at top
+            headerView.topAnchor.constraint(equalTo: contentView.topAnchor, constant: 16),
+            headerView.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 16),
+            headerView.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -16),
+
+            // Collection view BELOW header
+            collectionView.topAnchor.constraint(equalTo: headerView.bottomAnchor, constant: 20),
+            collectionView.leadingAnchor.constraint(equalTo: contentView.leadingAnchor),
+            collectionView.trailingAnchor.constraint(equalTo: contentView.trailingAnchor),
+            collectionView.bottomAnchor.constraint(equalTo: contentView.bottomAnchor)
+        ])
+    }
 
     // MARK: - Collection View Setup
     private func setupCollectionView() {
         collectionView.delegate = self
         collectionView.dataSource = self
-
-        // Make the whole scrolling area same beige
-        //collectionView.backgroundColor = .impactBeige
-        //contentView.backgroundColor = .impactBeige
-        //backgroundColor = .impactBeige
-
+        collectionView.backgroundColor = .clear
         collectionView.showsHorizontalScrollIndicator = false
         collectionView.alwaysBounceHorizontal = true
 
         let layout = UICollectionViewFlowLayout()
         layout.scrollDirection = .horizontal
         layout.minimumLineSpacing = 16
-
-        // Padding left/right
         layout.sectionInset = UIEdgeInsets(top: 0, left: 16, bottom: 0, right: 16)
-
         layout.itemSize = CGSize(width: 145, height: 160)
 
         collectionView.collectionViewLayout = layout
     }
 
-
-    // MARK: - Tap on "Recommended NGO's"
+    // MARK: - Header Tap
     private func setupTapGesture() {
-        titleLabel.isUserInteractionEnabled = true
-        titleLabel.addGestureRecognizer(
+        headerView.isUserInteractionEnabled = true
+        headerView.addGestureRecognizer(
             UITapGestureRecognizer(target: self, action: #selector(seeAllTapped))
         )
     }
@@ -58,9 +72,9 @@ class RecommendedNGOsTableViewCell: UITableViewCell {
         onSeeAllTapped?()
     }
 
-    // MARK: - Data
+    // MARK: - Data (Random + Limit)
     func configure(with ngos: [NGO]) {
-        self.ngos = ngos
+        self.ngos = Array(ngos.shuffled().prefix(6))
         collectionView.reloadData()
     }
 }

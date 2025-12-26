@@ -16,6 +16,8 @@ class DonorDashboardViewController: UIViewController {
     private var ngosFromFirestore: [NGO] = []
     private var ngosListener: ListenerRegistration?
     private var recentDonations: [Donation1] = []
+    private var allDonations: [Donation1] = []
+
     private var donationsListener: ListenerRegistration?
 
     // MARK: Section indexes
@@ -123,6 +125,40 @@ class DonorDashboardViewController: UIViewController {
             }
     }
 
+    private func startListeningForImpactDonations() {
+
+        guard let uid = currentUserID else { return }
+
+        let userRef = db.collection("users").document(uid)
+
+        db.collection("Donation")
+            .whereField("donor", isEqualTo: userRef)
+            .addSnapshotListener { [weak self] snapshot, error in
+
+                guard let self = self else { return }
+
+                if let error = error {
+                    print("Impact donation fetch error:", error.localizedDescription)
+                    return
+                }
+
+                guard let snapshot = snapshot else { return }
+
+                let donations = snapshot.documents.compactMap {
+                    Donation1(document: $0)
+                }
+
+                self.allDonations = donations
+
+                // 🔥 Reload ONLY impact section
+                DispatchQueue.main.async {
+                    self.mainTableView.reloadSections(
+                        IndexSet(integer: self.IMPACT_TRACKER_SECTION),
+                        with: .none
+                    )
+                }
+            }
+    }
 
     // MARK: - Cleanup
     deinit {
@@ -138,6 +174,7 @@ class DonorDashboardViewController: UIViewController {
         // Save user ID
         currentUserID = user.uid
         startListeningForRecentDonations()
+        startListeningForImpactDonations()
         // Try Firebase display name
         if let name = user.displayName, !name.isEmpty {
             currentUserName = name
@@ -163,19 +200,26 @@ class DonorDashboardViewController: UIViewController {
 
     // MARK: - Impact calculation (CORE LOGIC)
     private var impactData: ImpactData {
-        calculateImpact(from: donations)
+        calculateImpact(from: allDonations)
     }
-   
 
-    private func calculateImpact(from donations: [Donation]) -> ImpactData {
+    private func calculateImpact(from donations: [Donation1]) -> ImpactData {
 
-        let totalDonations = donations.count
+        // Filter only VALID donations, no rejected or cancelled
+        let validDonations = donations.filter {
+            $0.status == 2 || $0.status == 3   // Accepted or Collected
+        }
 
-        let mealsProvided = donations.reduce(0) { result, donation in
+        // total donations (VALID only)
+        let totalDonations = validDonations.count
+
+        // Meals provided = sum of quantity
+        let mealsProvided = validDonations.reduce(0) { result, donation in
             result + donation.quantity
         }
 
-        // MARK: 1 live per 3 meals
+        // 4️⃣ Conservative business rule
+        // 1 person supported per 3 meals
         let livesImpacted = mealsProvided / 3
 
         return ImpactData(
@@ -184,6 +228,9 @@ class DonorDashboardViewController: UIViewController {
             livesImpacted: livesImpacted
         )
     }
+
+
+
 
     // MARK: - The ellipses in the navigation menu
     private func setupEllipsisMenu() {

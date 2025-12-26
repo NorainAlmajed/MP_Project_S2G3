@@ -269,7 +269,8 @@ class RaghadSection6TableViewCell: UITableViewCell {
             // ---- CHANGE END ----
 
             stack.topAnchor.constraint(equalTo: contentView.topAnchor, constant: 8),
-            stack.bottomAnchor.constraint(equalTo: contentView.bottomAnchor, constant: -22),
+            stack.bottomAnchor.constraint(equalTo: contentView.bottomAnchor, constant: -39),
+            //-22
 
             txtExpiryDate.heightAnchor.constraint(equalToConstant: 34)
         ])

@@ -9,11 +9,11 @@ import UIKit
 
 class RaghadSection5TableViewCell: UITableViewCell {
 
-    @IBOutlet weak var lblWeightError: UILabel!   // 🔴 error label
+    @IBOutlet weak var lblWeightError: UILabel!   //  error label
 
    
     @IBOutlet weak var txtWeight: UITextField!
-    var onWeightChanged: ((Double?, Bool) -> Void)?   // 🧩WEIGHT_OPTIONAL_CELL
+    var onWeightChanged: ((Double?, Bool) -> Void)?   // WEIGHT_OPTIONAL_CELL
 
     
 
@@ -41,22 +41,15 @@ class RaghadSection5TableViewCell: UITableViewCell {
 
         
         
-        if txtWeight.inputAccessoryView == nil {   // ✅
+        if txtWeight.inputAccessoryView == nil {   //
                 txtWeight.inputAccessoryView = makeDoneToolbar()
             }
         
         
         }
 
-//    func configure(showError: Bool) {   // 🧩WEIGHT_OPTIONAL_CELL
-//        lblWeightError.isHidden = !showError
-//        if showError {
-//            lblWeightError.text = "Invalid weight format. Use 1 or 1.5"
-//        }
-//    }
     
-    
-    func configure(showError: Bool) {   // 🧩WEIGHT_OPTIONAL_CELL
+    func configure(showError: Bool) {   // WEIGHT_OPTIONAL_CELL
         lblWeightError.isHidden = !showError
 
         if showError {
@@ -69,16 +62,17 @@ class RaghadSection5TableViewCell: UITableViewCell {
 
     
     
-    // ✅ Accepts: "1", "1.5", "0.5", "10.25"
-    // ❌ Rejects: ".", "1.", ".5", "1..2", letters, negative
-    private func parseWeight() -> (value: Double?, invalidFormat: Bool) {   // 🧩WEIGHT_OPTIONAL_CELL
+    //  Accepts: "1", "1.5", "0.5", "10.25"
+    //  Rejects: ".", "1.", ".5", "1..2", letters, negative
+    private func parseWeight() -> (value: Double?, invalidFormat: Bool) {
+        // WEIGHT_OPTIONAL_CELL
         guard let raw = txtWeight.text else { return (nil, false) }
         let t = raw.trimmingCharacters(in: .whitespacesAndNewlines)
 
-        // ✅ Empty is allowed (optional)
+        //  Empty is allowed (optional)
         if t.isEmpty { return (nil, false) }
 
-        // ❌ invalid formats
+        //  invalid formats
         if t == "." { return (nil, true) }
         if t.hasSuffix(".") { return (nil, true) }
         if t.hasPrefix(".") { return (nil, true) }
@@ -91,16 +85,8 @@ class RaghadSection5TableViewCell: UITableViewCell {
         return (value, false)
     }
 
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    @IBAction func weightTextChanged(_ sender: UITextField) {  // ⌨️
+
+    @IBAction func weightTextChanged(_ sender: UITextField) {  //
         let result = parseWeight()
            onWeightChanged?(result.value, result.invalidFormat)
     }
@@ -136,7 +122,7 @@ class RaghadSection5TableViewCell: UITableViewCell {
 
         if isIPad {
             let p = NSMutableParagraphStyle()
-            p.firstLineHeadIndent = 45   // ✅ SAME NUMBER as Food Category iPad indent
+            p.firstLineHeadIndent = 45   //  SAME NUMBER as Food Category iPad indent
 
             lblWeightError.attributedText = NSAttributedString(
                 string: text,

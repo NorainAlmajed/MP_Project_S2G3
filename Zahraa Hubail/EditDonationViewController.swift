@@ -9,6 +9,8 @@
     import Cloudinary   // add this at the top of the file
     import UIKit
     import PhotosUI   // optional if you switch to PHPicker later
+    import FirebaseFirestore
+
 
     class EditDonationViewController: UIViewController,
                                             UITableViewDelegate,
@@ -603,6 +605,9 @@
                 }
 
                 print("✅ Donation updated successfully")
+                
+                // 🔔 Send notifications to donor and NGO
+                    self.sendUpdateNotifications(for: donation)
 
                 // ✅ Edit flow ends here — no navigation
                 let alert = UIAlertController(
@@ -890,6 +895,57 @@
                 donationFormTableview.reloadData()
             }
         }
+        
+        
+        // MARK: - Send notifications to donor and NGO
+        // MARK: - Send notifications to donor and NGO
+        private func sendUpdateNotifications(for donation: Donation) {
+            let db = Firestore.firestore()
+            
+            // ✅ Use exact title and description format
+            let title = "Donation Updated"
+            let description = "Donation #\(donation.donationID) has been edited by the admin."
+            let date = Timestamp(date: Date())
+            
+            // 1️⃣ Donor notification
+            let donor = donation.donor
+            if donor.enableNotification {  // corrected property name
+                let donorNotification: [String: Any] = [
+                    "userID": donor.userID,      // match your struct field
+                    "title": title,
+                    "description": description,
+                    "date": date
+                ]
+                
+                db.collection("Notification").addDocument(data: donorNotification) { error in
+                    if let error = error {
+                        print("❌ Failed to create donor notification:", error.localizedDescription)
+                    } else {
+                        print("✅ Donor notification created")
+                    }
+                }
+            }
+            
+            // 2️⃣ NGO notification
+            let ngo = donation.ngo
+            if ngo.enableNotification {  // corrected property name
+                let ngoNotification: [String: Any] = [
+                    "userID": ngo.userID,
+                    "title": title,
+                    "description": description,
+                    "date": date
+                ]
+                
+                db.collection("Notification").addDocument(data: ngoNotification) { error in
+                    if let error = error {
+                        print("❌ Failed to create NGO notification:", error.localizedDescription)
+                    } else {
+                        print("✅ NGO notification created")
+                    }
+                }
+            }
+        }
+
 
 
 

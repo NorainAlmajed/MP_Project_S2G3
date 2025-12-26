@@ -30,6 +30,8 @@ class SetupProfileViewController: UIViewController,
 
         bioTextView.delegate = self
         bioCounterLabel.text = "0 / 240"
+        
+        navigationItem.hidesBackButton = true
     }
 
     @IBAction func notificationSwitchChanged(_ sender: UISwitch) {
@@ -52,7 +54,6 @@ class SetupProfileViewController: UIViewController,
         }
     }
 
-    // MARK: - Image Picker
     @IBAction func addPhotoTapped(_ sender: UIButton) {
         let picker = UIImagePickerController()
         picker.delegate = self

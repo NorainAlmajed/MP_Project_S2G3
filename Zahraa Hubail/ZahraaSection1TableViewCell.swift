@@ -59,21 +59,31 @@ class ZahraaSection1TableViewCell: UITableViewCell {
         
     }
  
-    func setDonationImage(_ image: UIImage?) {
-            if let image = image {
-                Donation_ImageView.image = image
-                Donation_ImageView.contentMode = .scaleAspectFit
-                Donation_ImageView.tintColor = nil
-       
-                
-            } else {
-                applyBigPlaceholderIcon() // 🟢 NEW: bigger logo
-                Donation_ImageView.image = UIImage(systemName: "photo")
-                Donation_ImageView.tintColor = .systemGray3
-                Donation_ImageView.contentMode = .center
-            }
+    
+    
+    
+    //For the image
+    func setDonationImage(_ image: UIImage?, imageUrl: String? = nil, placeholder: UIImage? = UIImage(systemName: "photo")) {
+        if let img = image {
+            // User-selected image
+            Donation_ImageView.image = img
+            Donation_ImageView.contentMode = .scaleAspectFit
+            Donation_ImageView.tintColor = nil
+        } else if let urlStr = imageUrl, !urlStr.isEmpty {
+            // Load image from URL (original donation image)
+            Donation_ImageView.loadImage(from: urlStr, placeholder: placeholder)
+        } else {
+            // Fallback to placeholder
+            applyBigPlaceholderIcon()
+            Donation_ImageView.image = placeholder
+            Donation_ImageView.tintColor = .systemGray3
+            Donation_ImageView.contentMode = .center
         }
+    }
 
+
+    
+    
         func configure(showError: Bool) {
             lblImageError.isHidden = !showError
         }

@@ -123,27 +123,7 @@
             
             print("🔐 Current user:", user.username, " | 👤 Is Admin?", user.isAdmin)
             
-            
-            
-            
-            //for the last elemnt button 👤  👤  👤  👤  👤  👤  👤  👤  👤  👤
-    //        let extra: CGFloat = view.safeAreaInsets.bottom + 40   // ✅ enough space for button
-    //        donationFormTableview.contentInset.bottom = extra
-    //        donationFormTableview.verticalScrollIndicatorInsets.bottom = extra
-    //
-    //        // ✅ also add a footer so you can always scroll past last cell
-    //        if donationFormTableview.tableFooterView == nil || donationFormTableview.tableFooterView?.frame.height != extra {
-    //            donationFormTableview.tableFooterView = UIView(frame: CGRect(x: 0, y: 0, width: 1, height: extra))
-    //        }
-            
-            
-            // ✅ NO permanent extra space (keyboard code will handle it)
-    //        donationFormTableview.contentInset.bottom = 0
-    ////        donationFormTableview.scrollIndicatorInsets.bottom = 0
-    //        donationFormTableview.verticalScrollIndicatorInsets.bottom = 0
-    //
-    //        donationFormTableview.tableFooterView = UIView(frame: .zero)
-           
+        
 
 
             setupKeyboardAvoidance()
@@ -165,6 +145,10 @@
                 bottomLine.bottomAnchor.constraint(equalTo: navigationController!.navigationBar.bottomAnchor)
             ])
 
+
+            //Populate donation data
+            populateDonationDetails()
+            donationFormTableview.reloadData()
 
            
 
@@ -197,11 +181,7 @@
         
         
         
-        
-        
-        
-        
-        
+
         
         // MARK: - Keyboard helpers
         func addDoneButtonOnKeyboard() {
@@ -232,7 +212,8 @@
                 let cell = tableView.dequeueReusableCell(withIdentifier: "Section1Cell", for: indexPath) as! ZahraaSection1TableViewCell
                 cell.selectionStyle = .none
                 cell.delegate = self
-                cell.setDonationImage(selectedDonationImage)
+                cell.setDonationImage(selectedDonationImage, imageUrl: uploadedDonationImageUrl)
+
                 
                 cell.configure(showError: shouldShowImageError)
                 cell.lblImageError.text = "Please upload an image"
@@ -867,6 +848,58 @@
             super.viewWillAppear(animated)
             restoreDraftIfExists()
         }
+
+        
+        
+        //Prepare the data when opening the page
+        // Call this in viewDidLoad or viewWillAppear after `donation` is set
+        private func populateDonationDetails() {
+            guard let donation = donation else { return }
+
+            // Section 0: Image
+            if !donation.foodImageUrl.isEmpty {
+                uploadedDonationImageUrl = donation.foodImageUrl
+                selectedDonationImage = nil // clear any previous selection
+            } else {
+                uploadedDonationImageUrl = nil
+                selectedDonationImage = nil
+            }
+
+            // Section 1: Donor (only for admin)
+            if isAdminUser {
+                selectedDonorName = donation.donor.username
+            }
+
+            // Section 2: Food Category
+            selectedFoodCategory = donation.category
+
+            // Section 3: Quantity
+            selectedQuantity = max(donation.quantity, 1) // ensure minimum 1
+
+            // Section 4: Weight (optional)
+            weightValue = donation.weight
+            weightInvalidFormat = false
+            shouldShowWeightError = false
+
+            // Section 5: Expiry Date
+            selectedExpiryDate = donation.expiryDate.dateValue()
+
+            // Section 6: Short Description (optional)
+            if let desc = donation.description?.trimmingCharacters(in: .whitespacesAndNewlines),
+               !desc.isEmpty {
+                selectedShortDescription = desc
+            } else {
+                selectedShortDescription = nil // will show placeholder in cell
+            }
+
+            // Section 7: Proceed button — no value needed
+
+            // Reload all sections
+            UIView.performWithoutAnimation {
+                donationFormTableview.reloadData()
+            }
+        }
+
 
 
     }

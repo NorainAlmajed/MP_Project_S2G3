@@ -57,8 +57,20 @@ class SchedulePickupViewController: UIViewController {
         setupDatePicker()
         setupTableView()
  
-
+        signInAnonymously()
     }
+    
+    private func signInAnonymously() {
+        Auth.auth().signInAnonymously { [weak self] authResult, error in
+            if let error = error {
+                print("❌ Sign in error: \(error.localizedDescription)")
+                self?.showAlert(title: "Error", message: "Could not sign in: \(error.localizedDescription)")
+            } else {
+                print("✅ Signed in anonymously with user ID: \(authResult?.user.uid ?? "")")
+            }
+        }
+    }
+    
     private func setupUI() {
         let appearance = UINavigationBarAppearance()
         appearance.configureWithOpaqueBackground()
@@ -140,11 +152,12 @@ class SchedulePickupViewController: UIViewController {
         }
     
     @IBAction func addNewAddressTapped(_ sender: UIButton) {
-        let storyboard = UIStoryboard(name: "Main", bundle: nil) // Ensure name matches your .storyboard file
-            if let vc = storyboard.instantiateViewController(withIdentifier: "AddAddressViewController") as? AddAddressViewController {
-//                vc.delegate = self // This connects the protocol we defined earlier
-                navigationController?.pushViewController(vc, animated: true)
-            }
+        let storyboard = UIStoryboard(name: "norain-schedule-pickup", bundle: nil)
+        if let vc = storyboard.instantiateViewController(withIdentifier: "AddAddressViewController") as? AddAddressViewController {
+            vc.delegate = self
+            navigationController?.pushViewController(vc, animated: true)
+        }
+            
         }
         
         @IBAction func dateButtonTapped(_ sender: UIButton) {
@@ -202,7 +215,24 @@ class SchedulePickupViewController: UIViewController {
         }
         
         @IBAction func confirmButtonTapped(_ sender: UIButton) {
-            saveScheduleToFirebase()
+//            saveScheduleToFirebase()
+            print("🔍 Checking form fields:")
+               print("Address: \(selectedAddress != nil ? "✅" : "❌")")
+               print("Date: \(selectedDate != nil ? "✅" : "❌")")
+               print("Timeframe: \(selectedTimeframe != nil ? "✅" : "❌")")
+               print("Is Recurring: \(isRecurring)")
+               print("Frequency: \(selectedFrequency ?? "nil")")
+               
+               // Check User Authentication
+               if let userId = Auth.auth().currentUser?.uid {
+                   print("User ID: ✅ \(userId)")
+               } else {
+                   print("User ID: ❌ NOT LOGGED IN")
+                   showAlert(title: "Error", message: "You must be logged in to schedule a pickup")
+                   return
+               }
+               
+               saveScheduleToFirebase()
         }
     private func saveScheduleToFirebase() {
             guard let userId = Auth.auth().currentUser?.uid,

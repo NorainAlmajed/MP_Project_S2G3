@@ -95,10 +95,11 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
 
 //        if Auth.auth().currentUser != nil {
             // Logged in → Noorain screen
-            let noorainVC = storyboard.instantiateViewController(
-                withIdentifier: "SchedulePickupViewController"
-            )
-            window?.rootViewController = noorainVC
+        
+        if let scheduleVC = storyboard.instantiateViewController(withIdentifier: "SchedulePickupViewController") as? SchedulePickupViewController {
+            let navController = UINavigationController(rootViewController: scheduleVC)
+            window?.rootViewController = navController
+        }
 
 //        } else {
             // Not logged in → Login

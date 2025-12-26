@@ -20,29 +20,7 @@ class RaghadNgoDetailsContactTableViewCell: UITableViewCell {
     
     
 
-//        override func awakeFromNib() {
-//                super.awakeFromNib()
-//
-//            // ✅ Make cell background clear
-//                   backgroundColor = .clear
-//                   contentView.backgroundColor = .clear
-//
-//                   // ✅ White card background
-//                   contactView.backgroundColor = .white
-//
-//                   // ✅ Light gray border
-//                   contactView.layer.cornerRadius = 16
-//                   contactView.layer.borderWidth = 1
-//                   contactView.layer.borderColor = UIColor.systemGray4.cgColor
-//                   contactView.clipsToBounds = true
-//               }
-//    
-//    
-//    func configure(phone: String, email: String) {
-//        lblPgoneNumber.text = phone
-//        lblEmail.text = email
-//    }
-//       }
+
 
     override func awakeFromNib() {
             super.awakeFromNib()

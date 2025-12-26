@@ -272,54 +272,6 @@ class NgoViewController: UIViewController,
     
     
     
-    
-//    private func fetchNgosFromFirebase() {
-//        let db = Firestore.firestore()
-//
-//        db.collection("ngos").getDocuments { [weak self] snapshot, error in
-//            guard let self = self else { return }
-//
-//            if let error = error {
-//                print("❌ Fetch NGOs failed:", error)
-//                return
-//            }
-//
-//            let docs = snapshot?.documents ?? []
-//
-//            let ngos: [NGO] = docs.compactMap { doc -> NGO? in
-//                let data = doc.data()
-//
-//                let name = data["organizationName"] as? String ?? data["name"] as? String ?? ""
-//                let category = data["category"] as? String ?? data["cause"] as? String ?? ""
-//                let mission = data["bio"] as? String ?? data["mission"] as? String ?? ""
-//                let email = data["email"] as? String ?? ""
-//                let phone = "\(data["phoneNumber"] ?? "")"
-//                let photoUrl = data["profileImageUrl"] as? String ?? ""
-//
-//                if name.isEmpty { return nil }
-//
-//                return NGO(
-//                    id: doc.documentID,
-//                    name: name,
-//                    category: category,
-//                    photo: photoUrl,
-//                    mission: mission,
-//                    phoneNumber: phone,
-//                    email: email
-//                )
-//            }
-//            
-//            
-//            
-//
-////            self.shownNgos = ngos
-////            self.applySearchAndFilter() // ✅ so search/filter works using Firebase list too
-////            self.tableView.reloadData()
-//            
-//            
-//            
-//        }
-//    }
 
     
     private func fetchNgosFromFirebase() {

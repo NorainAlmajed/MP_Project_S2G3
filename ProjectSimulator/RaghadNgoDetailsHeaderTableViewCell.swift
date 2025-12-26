@@ -20,20 +20,7 @@ class RaghadNgoDetailsHeaderTableViewCell: UITableViewCell {
         img_logo.clipsToBounds = true
     }
 
-//    func configure(ngo: NGO) {
-//        lblNgoName.text = ngo.name
-//        lblNgoCategory.text = ngo.category
-//        img_logo.image = ngo.photo
-//    }
-    
-    
-//    func configure(ngo: NGO) {
-//        lblNgoName.text = ngo.name
-//        lblNgoCategory.text = ngo.category
-//
-//        img_logo.contentMode = .scaleAspectFit
-//        img_logo.setImageFromUrl(ngo.photo, placeholder: UIImage(named: "placeholder"))
-//    }
+
 
     func configure(ngo: NGO) {
         lblNgoName.text = ngo.name

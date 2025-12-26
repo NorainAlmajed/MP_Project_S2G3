@@ -8,6 +8,21 @@
 
 /* Begin PBXBuildFile section */
 		48C4D03D2EF993110025325A /* Cloudinary in Frameworks */ = {isa = PBXBuildFile; productRef = 48C4D03C2EF993110025325A /* Cloudinary */; };
+		48D294132EFEF13C005A8DA2 /* Section1TableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 48D294062EFEF13C005A8DA2 /* Section1TableViewCell.swift */; };
+		48D294142EFEF13C005A8DA2 /* Donation.swift in Sources */ = {isa = PBXBuildFile; fileRef = 48D293FA2EFEF13C005A8DA2 /* Donation.swift */; };
+		48D294152EFEF13C005A8DA2 /* DonationCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 48D293FB2EFEF13C005A8DA2 /* DonationCollectionViewCell.swift */; };
+		48D294162EFEF13C005A8DA2 /* Section2TableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 48D294072EFEF13C005A8DA2 /* Section2TableViewCell.swift */; };
+		48D294172EFEF13C005A8DA2 /* Section3TableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 48D294082EFEF13C005A8DA2 /* Section3TableViewCell.swift */; };
+		48D294182EFEF13C005A8DA2 /* DonationViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 48D293FD2EFEF13C005A8DA2 /* DonationViewController.swift */; };
+		48D294192EFEF13C005A8DA2 /* StatusCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 48D294092EFEF13C005A8DA2 /* StatusCollectionViewCell.swift */; };
+		48D2941A2EFEF13C005A8DA2 /* ExcelExporter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 48D293FE2EFEF13C005A8DA2 /* ExcelExporter.swift */; };
+		48D2941B2EFEF13C005A8DA2 /* TestViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 48D2940A2EFEF13C005A8DA2 /* TestViewController.swift */; };
+		48D2941C2EFEF13C005A8DA2 /* UIImageView+URLZH.swift in Sources */ = {isa = PBXBuildFile; fileRef = 48D2940B2EFEF13C005A8DA2 /* UIImageView+URLZH.swift */; };
+		48D2941E2EFEF13C005A8DA2 /* ZHRejectionReasonViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 48D2940E2EFEF13C005A8DA2 /* ZHRejectionReasonViewController.swift */; };
+		48D2941F2EFEF13C005A8DA2 /* Address.swift in Sources */ = {isa = PBXBuildFile; fileRef = 48D293F62EFEF13C005A8DA2 /* Address.swift */; };
+		48D294202EFEF13C005A8DA2 /* NotificationsCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 48D294032EFEF13C005A8DA2 /* NotificationsCollectionViewCell.swift */; };
+		48D294212EFEF13C005A8DA2 /* NotificationsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 48D294042EFEF13C005A8DA2 /* NotificationsViewController.swift */; };
+		48D294242EFEF13C005A8DA2 /* Donations.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 48D293FC2EFEF13C005A8DA2 /* Donations.storyboard */; };
 		BDD3182F2EEB7F9500880EFF /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = BDD3182E2EEB7F9500880EFF /* GoogleService-Info.plist */; };
 		BDD318302EEB7F9500880EFF /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = BDD3182E2EEB7F9500880EFF /* GoogleService-Info.plist */; };
 		BDD318312EEB7F9500880EFF /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = BDD3182E2EEB7F9500880EFF /* GoogleService-Info.plist */; };
@@ -38,6 +53,21 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		48D293F62EFEF13C005A8DA2 /* Address.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Address.swift; sourceTree = "<group>"; };
+		48D293FA2EFEF13C005A8DA2 /* Donation.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Donation.swift; sourceTree = "<group>"; };
+		48D293FB2EFEF13C005A8DA2 /* DonationCollectionViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DonationCollectionViewCell.swift; sourceTree = "<group>"; };
+		48D293FC2EFEF13C005A8DA2 /* Donations.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; path = Donations.storyboard; sourceTree = "<group>"; };
+		48D293FD2EFEF13C005A8DA2 /* DonationViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DonationViewController.swift; sourceTree = "<group>"; };
+		48D293FE2EFEF13C005A8DA2 /* ExcelExporter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ExcelExporter.swift; sourceTree = "<group>"; };
+		48D294032EFEF13C005A8DA2 /* NotificationsCollectionViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NotificationsCollectionViewCell.swift; sourceTree = "<group>"; };
+		48D294042EFEF13C005A8DA2 /* NotificationsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NotificationsViewController.swift; sourceTree = "<group>"; };
+		48D294062EFEF13C005A8DA2 /* Section1TableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Section1TableViewCell.swift; sourceTree = "<group>"; };
+		48D294072EFEF13C005A8DA2 /* Section2TableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Section2TableViewCell.swift; sourceTree = "<group>"; };
+		48D294082EFEF13C005A8DA2 /* Section3TableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Section3TableViewCell.swift; sourceTree = "<group>"; };
+		48D294092EFEF13C005A8DA2 /* StatusCollectionViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StatusCollectionViewCell.swift; sourceTree = "<group>"; };
+		48D2940A2EFEF13C005A8DA2 /* TestViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TestViewController.swift; sourceTree = "<group>"; };
+		48D2940B2EFEF13C005A8DA2 /* UIImageView+URLZH.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIImageView+URLZH.swift"; sourceTree = "<group>"; };
+		48D2940E2EFEF13C005A8DA2 /* ZHRejectionReasonViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ZHRejectionReasonViewController.swift; sourceTree = "<group>"; };
 		5FEF8B622EDA3636007D3A97 /* ProjectSimulator.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = ProjectSimulator.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		5FEF8B782EDA363A007D3A97 /* ProjectSimulatorTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = ProjectSimulatorTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		5FEF8B822EDA363A007D3A97 /* ProjectSimulatorUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = ProjectSimulatorUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -140,9 +170,32 @@
 			name = Frameworks;
 			sourceTree = "<group>";
 		};
+		48D294302EFEF2C7005A8DA2 /* Zahraa Hubail */ = {
+			isa = PBXGroup;
+			children = (
+				48D293F62EFEF13C005A8DA2 /* Address.swift */,
+				48D293FA2EFEF13C005A8DA2 /* Donation.swift */,
+				48D293FB2EFEF13C005A8DA2 /* DonationCollectionViewCell.swift */,
+				48D293FD2EFEF13C005A8DA2 /* DonationViewController.swift */,
+				48D293FE2EFEF13C005A8DA2 /* ExcelExporter.swift */,
+				48D294032EFEF13C005A8DA2 /* NotificationsCollectionViewCell.swift */,
+				48D294042EFEF13C005A8DA2 /* NotificationsViewController.swift */,
+				48D294062EFEF13C005A8DA2 /* Section1TableViewCell.swift */,
+				48D294072EFEF13C005A8DA2 /* Section2TableViewCell.swift */,
+				48D294082EFEF13C005A8DA2 /* Section3TableViewCell.swift */,
+				48D294092EFEF13C005A8DA2 /* StatusCollectionViewCell.swift */,
+				48D2940A2EFEF13C005A8DA2 /* TestViewController.swift */,
+				48D2940B2EFEF13C005A8DA2 /* UIImageView+URLZH.swift */,
+				48D2940E2EFEF13C005A8DA2 /* ZHRejectionReasonViewController.swift */,
+				48D293FC2EFEF13C005A8DA2 /* Donations.storyboard */,
+			);
+			path = "Zahraa Hubail";
+			sourceTree = "<group>";
+		};
 		5FEF8B592EDA3636007D3A97 = {
 			isa = PBXGroup;
 			children = (
+				48D294302EFEF2C7005A8DA2 /* Zahraa Hubail */,
 				BDD3182E2EEB7F9500880EFF /* GoogleService-Info.plist */,
 				D0FCA2B52EEEC14000D8AFFF /* ZainabAlmahdi  */,
 				5FEF8B642EDA3636007D3A97 /* ProjectSimulator */,
@@ -297,6 +350,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				BDD318302EEB7F9500880EFF /* GoogleService-Info.plist in Resources */,
+				48D294242EFEF13C005A8DA2 /* Donations.storyboard in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -323,6 +377,20 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				48D294132EFEF13C005A8DA2 /* Section1TableViewCell.swift in Sources */,
+				48D294142EFEF13C005A8DA2 /* Donation.swift in Sources */,
+				48D294152EFEF13C005A8DA2 /* DonationCollectionViewCell.swift in Sources */,
+				48D294162EFEF13C005A8DA2 /* Section2TableViewCell.swift in Sources */,
+				48D294172EFEF13C005A8DA2 /* Section3TableViewCell.swift in Sources */,
+				48D294182EFEF13C005A8DA2 /* DonationViewController.swift in Sources */,
+				48D294192EFEF13C005A8DA2 /* StatusCollectionViewCell.swift in Sources */,
+				48D2941A2EFEF13C005A8DA2 /* ExcelExporter.swift in Sources */,
+				48D2941B2EFEF13C005A8DA2 /* TestViewController.swift in Sources */,
+				48D2941C2EFEF13C005A8DA2 /* UIImageView+URLZH.swift in Sources */,
+				48D2941E2EFEF13C005A8DA2 /* ZHRejectionReasonViewController.swift in Sources */,
+				48D2941F2EFEF13C005A8DA2 /* Address.swift in Sources */,
+				48D294202EFEF13C005A8DA2 /* NotificationsCollectionViewCell.swift in Sources */,
+				48D294212EFEF13C005A8DA2 /* NotificationsViewController.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

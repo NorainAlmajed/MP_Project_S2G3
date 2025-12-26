@@ -46,6 +46,7 @@
 				DonationViewController.swift,
 				Norain/Controllers/EditUsersViewController.swift,
 				Norain/Controllers/NourishUsersViewController.swift,
+				Norain/Controllers/RejectionPopupViewController.swift,
 				Norain/Controllers/UserDetailsViewController.swift,
 				Norain/Helpers/Alerts.swift,
 				Norain/Helpers/AppData.swift,

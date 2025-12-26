@@ -6,7 +6,6 @@
         <capability name="Named colors" minToolsVersion="9.0"/>
         <capability name="Safe area layout guides" minToolsVersion="9.0"/>
         <capability name="System colors in document resources" minToolsVersion="11.0"/>
-        <capability name="UIMenu" message="Requires Xcode 11 or later." minToolsVersion="11.0" requiredIntegratedClassName="UICommandDiff"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
     <scenes>
@@ -78,8 +77,9 @@
                                                     <nil key="textColor"/>
                                                     <nil key="highlightedColor"/>
                                                 </label>
-                                                <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="KarranaCharity" translatesAutoresizingMaskIntoConstraints="NO" id="4Ez-UK-yxG">
-                                                    <rect key="frame" x="20" y="12" width="100" height="96"/>
+                                                <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="photo" catalog="system" translatesAutoresizingMaskIntoConstraints="NO" id="4Ez-UK-yxG">
+                                                    <rect key="frame" x="20" y="13.666666666666664" width="100" height="93"/>
+                                                    <color key="tintColor" white="0.66666666666666663" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                                     <constraints>
                                                         <constraint firstAttribute="width" constant="100" id="TFT-sk-xRi"/>
                                                     </constraints>
@@ -232,7 +232,7 @@
                         <rect key="frame" x="0.0" y="0.0" width="402" height="874"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Bio" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="iL7-gF-HXv">
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" ambiguous="YES" text="Bio" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="iL7-gF-HXv">
                                 <rect key="frame" x="21" y="261" width="39" height="37.666666666666686"/>
                                 <fontDescription key="fontDescription" style="UICTFontTextStyleTitle1"/>
                                 <nil key="textColor"/>
@@ -249,8 +249,8 @@
                                 <fontDescription key="fontDescription" type="system" pointSize="14"/>
                                 <textInputTraits key="textInputTraits" autocapitalizationType="sentences"/>
                             </textView>
-                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="3kF-ax-tzq">
-                                <rect key="frame" x="29" y="524" width="344" height="135"/>
+                            <view contentMode="scaleToFill" misplaced="YES" translatesAutoresizingMaskIntoConstraints="NO" id="3kF-ax-tzq">
+                                <rect key="frame" x="29" y="616" width="344" height="135"/>
                                 <subviews>
                                     <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="tUa-HP-E9w" userLabel="Accept Btn">
                                         <rect key="frame" x="185" y="20" width="143" height="39"/>
@@ -285,8 +285,9 @@
                                 </subviews>
                                 <color key="backgroundColor" systemColor="systemBackgroundColor"/>
                             </view>
-                            <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="Uq7-FY-Kid">
+                            <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" ambiguous="YES" image="photo" catalog="system" translatesAutoresizingMaskIntoConstraints="NO" id="Uq7-FY-Kid">
                                 <rect key="frame" x="21" y="151" width="122" height="102"/>
+                                <color key="tintColor" white="0.66666666669999997" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                 <constraints>
                                     <constraint firstAttribute="width" constant="122" id="B9o-I3-Vh9"/>
                                 </constraints>
@@ -325,6 +326,13 @@
                                     <action selector="cancelBtn:" destination="Omg-aE-SIU" eventType="touchUpInside" id="BdZ-TA-KQa"/>
                                 </connections>
                             </button>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="Rejection Reason" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="JF3-Xh-jUc">
+                                <rect key="frame" x="29" y="524" width="344" height="84"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                <fontDescription key="fontDescription" type="system" weight="medium" pointSize="17"/>
+                                <nil key="textColor"/>
+                                <nil key="highlightedColor"/>
+                            </label>
                         </subviews>
                         <viewLayoutGuide key="safeArea" id="Snj-fJ-bWQ"/>
                         <color key="backgroundColor" systemColor="systemBackgroundColor"/>
@@ -356,24 +364,25 @@
                         <outlet property="emailLbl" destination="Yyj-g1-sDf" id="dYy-28-PvD"/>
                         <outlet property="nameLbl" destination="zHc-VW-AnJ" id="y8c-Uc-lX5"/>
                         <outlet property="phoneOrStatusLbl" destination="xI0-K5-7KD" id="gtL-YW-X1Q"/>
+                        <outlet property="reasonLabel" destination="JF3-Xh-jUc" id="E6L-hy-3BO"/>
                         <outlet property="rejectBtn" destination="2vV-LF-RgL" id="oFi-on-noe"/>
                         <outlet property="userImgV" destination="Uq7-FY-Kid" id="7QD-on-hiL"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="bDp-YI-W53" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="827" y="-175"/>
+            <point key="canvasLocation" x="408.95522388059698" y="-166.13272311212813"/>
         </scene>
         <!--Edit Users View Controller-->
         <scene sceneID="M6R-oT-Ejj">
             <objects>
                 <viewController storyboardIdentifier="EditUsersViewController" id="mxA-aF-9jl" customClass="EditUsersViewController" customModule="ProjectSimulator" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="hft-MZ-DhB">
-                        <rect key="frame" x="0.0" y="0.0" width="402" height="874"/>
+                        <rect key="frame" x="0.0" y="0.0" width="402" height="1150"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <scrollView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="pbP-vF-pgD">
-                                <rect key="frame" x="0.0" y="124" width="402" height="682"/>
+                                <rect key="frame" x="0.0" y="124" width="402" height="958"/>
                                 <subviews>
                                     <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="3NO-6S-Jdq">
                                         <rect key="frame" x="0.0" y="0.0" width="402" height="971"/>
@@ -381,13 +390,13 @@
                                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="ylS-ws-EZl" userLabel="PhotoView">
                                                 <rect key="frame" x="105" y="0.0" width="192" height="241"/>
                                                 <subviews>
-                                                    <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="Ndh-C1-dQF">
-                                                        <rect key="frame" x="26" y="20" width="140" height="140"/>
+                                                    <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="photo" catalog="system" translatesAutoresizingMaskIntoConstraints="NO" id="Ndh-C1-dQF">
+                                                        <rect key="frame" x="8" y="21.666666666666657" width="176" height="137"/>
                                                         <constraints>
                                                             <constraint firstAttribute="height" relation="lessThanOrEqual" constant="140" id="4Rf-uW-pxr"/>
                                                             <constraint firstAttribute="height" relation="greaterThanOrEqual" constant="120" id="5rp-9M-zn3"/>
                                                             <constraint firstAttribute="width" relation="greaterThanOrEqual" constant="140" id="CtF-B0-Ycs"/>
-                                                            <constraint firstAttribute="width" constant="140" id="Yvz-r8-Jhc"/>
+                                                            <constraint firstAttribute="width" constant="176" id="Yvz-r8-Jhc"/>
                                                             <constraint firstAttribute="height" constant="140" id="l7Y-8S-o1L"/>
                                                         </constraints>
                                                     </imageView>
@@ -402,6 +411,7 @@
                                                     </button>
                                                 </subviews>
                                                 <color key="backgroundColor" systemColor="systemBackgroundColor"/>
+                                                <color key="tintColor" white="0.66666666669999997" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                                 <constraints>
                                                     <constraint firstItem="kDE-b6-zcq" firstAttribute="centerX" secondItem="ylS-ws-EZl" secondAttribute="centerX" id="5MC-tE-LXW"/>
                                                     <constraint firstItem="Ndh-C1-dQF" firstAttribute="top" secondItem="ylS-ws-EZl" secondAttribute="top" constant="20" id="Ccn-Ym-ETp"/>
@@ -427,29 +437,19 @@
                                                                 <nil key="textColor"/>
                                                                 <nil key="highlightedColor"/>
                                                             </label>
-                                                            <button opaque="NO" contentMode="scaleToFill" showsMenuAsPrimaryAction="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" changesSelectionAsPrimaryAction="YES" translatesAutoresizingMaskIntoConstraints="NO" id="ZmY-0e-DvU">
+                                                            <button opaque="NO" contentMode="left" semanticContentAttribute="forceRightToLeft" showsMenuAsPrimaryAction="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" changesSelectionAsPrimaryAction="YES" translatesAutoresizingMaskIntoConstraints="NO" id="ZmY-0e-DvU">
                                                                 <rect key="frame" x="0.0" y="30.333333333333375" width="341" height="38.333333333333343"/>
                                                                 <constraints>
                                                                     <constraint firstAttribute="width" constant="341" id="tBu-dc-F3J"/>
                                                                 </constraints>
                                                                 <color key="tintColor" systemColor="secondarySystemGroupedBackgroundColor"/>
-                                                                <menu key="menu" title="Ngo Cause" identifier="btnCause" id="Me1-A2-lp3">
-                                                                    <children>
-                                                                        <command title="NGO Cause" menuElementState="mixed" id="4os-UF-OnU"/>
-                                                                        <command title="Orphans" id="a2H-3b-0cy"/>
-                                                                        <command title="Chronically ill" id="ohL-2g-zlh"/>
-                                                                        <command title="Disabled People" id="IB1-bK-Fr7"/>
-                                                                        <command title="Children" id="ubq-iz-bzn"/>
-                                                                        <command title="Women" id="V78-5i-7f6"/>
-                                                                        <command title="Elderly" id="Aaw-2O-Dmt"/>
-                                                                    </children>
-                                                                </menu>
                                                                 <state key="normal" title="Cause"/>
-                                                                <buttonConfiguration key="configuration" style="tinted" title="Cause">
+                                                                <buttonConfiguration key="configuration" style="tinted" image="chevron.down" catalog="system" title="Cause">
                                                                     <backgroundConfiguration key="background">
                                                                         <color key="strokeColor" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                                                     </backgroundConfiguration>
                                                                     <color key="baseForegroundColor" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                                                    <color key="baseBackgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                                                 </buttonConfiguration>
                                                             </button>
                                                         </subviews>
@@ -558,23 +558,14 @@
                                                                 <nil key="textColor"/>
                                                                 <nil key="highlightedColor"/>
                                                             </label>
-                                                            <button opaque="NO" contentMode="scaleToFill" showsMenuAsPrimaryAction="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" changesSelectionAsPrimaryAction="YES" translatesAutoresizingMaskIntoConstraints="NO" id="DG7-7Z-bDD">
+                                                            <button opaque="NO" contentMode="scaleToFill" semanticContentAttribute="forceRightToLeft" showsMenuAsPrimaryAction="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" changesSelectionAsPrimaryAction="YES" translatesAutoresizingMaskIntoConstraints="NO" id="DG7-7Z-bDD">
                                                                 <rect key="frame" x="0.0" y="29.333333333333375" width="341" height="38.333333333333343"/>
                                                                 <constraints>
                                                                     <constraint firstAttribute="width" constant="341" id="CkP-hT-d9b"/>
                                                                 </constraints>
                                                                 <color key="tintColor" systemColor="secondarySystemGroupedBackgroundColor"/>
-                                                                <menu key="menu" title="Governorate" id="fWv-oX-Yzt">
-                                                                    <children>
-                                                                        <command title="Governorate" menuElementState="mixed" id="GMr-1H-dUe"/>
-                                                                        <command title="Manama Governorate" id="ndg-ZQ-s8W"/>
-                                                                        <command title="Muharraq Governorate" id="HbG-yV-Pbh"/>
-                                                                        <command title="Nothrern Governorate" id="vgZ-8J-qrD"/>
-                                                                        <command title="Southern Governorate" id="ziD-W0-KmP"/>
-                                                                    </children>
-                                                                </menu>
                                                                 <state key="normal" title="Cause"/>
-                                                                <buttonConfiguration key="configuration" style="filled" title="Governorate">
+                                                                <buttonConfiguration key="configuration" style="filled" image="chevron.down" catalog="system" title="Governorate">
                                                                     <backgroundConfiguration key="background">
                                                                         <color key="strokeColor" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                                                     </backgroundConfiguration>
@@ -591,25 +582,21 @@
                                                                 <nil key="textColor"/>
                                                                 <nil key="highlightedColor"/>
                                                             </label>
-                                                            <button opaque="NO" contentMode="scaleToFill" showsMenuAsPrimaryAction="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" changesSelectionAsPrimaryAction="YES" translatesAutoresizingMaskIntoConstraints="NO" id="VzQ-x0-kKd">
+                                                            <button opaque="NO" contentMode="scaleToFill" semanticContentAttribute="forceRightToLeft" showsMenuAsPrimaryAction="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" changesSelectionAsPrimaryAction="YES" translatesAutoresizingMaskIntoConstraints="NO" id="VzQ-x0-kKd">
                                                                 <rect key="frame" x="0.0" y="30.333333333333261" width="341" height="38.333333333333343"/>
+                                                                <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                                                 <constraints>
                                                                     <constraint firstAttribute="width" constant="341" id="JJS-zI-e6F"/>
                                                                 </constraints>
-                                                                <color key="tintColor" systemColor="secondarySystemGroupedBackgroundColor"/>
-                                                                <menu key="menu" title="NGO Status" id="1Il-qa-eXT">
-                                                                    <children>
-                                                                        <command title="NGO Status" menuElementState="mixed" id="FnX-lq-ga2"/>
-                                                                        <command title="Pending" id="mlU-4J-zQq"/>
-                                                                        <command title="Approved" id="Kzv-M3-W1e"/>
-                                                                        <command title="Rejected" id="hQ2-SQ-BoB"/>
-                                                                    </children>
-                                                                </menu>
+                                                                <color key="tintColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                                                 <state key="normal" title="Cause"/>
-                                                                <buttonConfiguration key="configuration" style="filled" title="Status">
+                                                                <buttonConfiguration key="configuration" style="filled" image="chevron.down" catalog="system" title="Status">
                                                                     <backgroundConfiguration key="background">
+                                                                        <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                                                         <color key="strokeColor" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                                                     </backgroundConfiguration>
+                                                                    <color key="baseForegroundColor" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                                                    <color key="baseBackgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                                                 </buttonConfiguration>
                                                             </button>
                                                         </subviews>
@@ -625,6 +612,9 @@
                                                                 <color key="tintColor" name="greenCol"/>
                                                                 <state key="normal" title="Button"/>
                                                                 <buttonConfiguration key="configuration" style="filled" title="Save Changes"/>
+                                                                <connections>
+                                                                    <action selector="saveChangesTapped:" destination="mxA-aF-9jl" eventType="touchUpInside" id="iit-5N-LTu"/>
+                                                                </connections>
                                                             </button>
                                                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="DJG-at-Z9R">
                                                                 <rect key="frame" x="0.0" y="46.333333333333371" width="341" height="38.333333333333343"/>
@@ -642,6 +632,9 @@
                                                                 <color key="tintColor" name="redCol"/>
                                                                 <state key="normal" title="Button"/>
                                                                 <buttonConfiguration key="configuration" style="filled" title="Delete Account"/>
+                                                                <connections>
+                                                                    <action selector="deleteBtnTapped:" destination="mxA-aF-9jl" eventType="touchUpInside" id="VZW-fx-E06"/>
+                                                                </connections>
                                                             </button>
                                                         </subviews>
                                                     </stackView>
@@ -683,24 +676,35 @@
                         </constraints>
                     </view>
                     <navigationItem key="navigationItem" id="gIm-9W-zyR"/>
+                    <size key="freeformSize" width="402" height="1150"/>
                     <connections>
                         <outlet property="ImagePickerEditView" destination="Ndh-C1-dQF" id="ew5-kF-9Ks"/>
+                        <outlet property="addressField" destination="VVP-Gf-fw2" id="LbH-G1-Zfa"/>
                         <outlet property="addressStack" destination="nqs-OX-VEU" id="lNY-7l-SFU"/>
                         <outlet property="causeStack" destination="Rld-gc-ozn" id="qXK-yI-Jxb"/>
+                        <outlet property="causebtn" destination="ZmY-0e-DvU" id="OC4-R9-8aZ"/>
+                        <outlet property="deleteBtn" destination="mzr-d4-KO1" id="D58-rE-MJB"/>
+                        <outlet property="emailField" destination="0Cj-vq-kX1" id="CMt-YS-b7A"/>
                         <outlet property="govStack" destination="H2A-7h-1Q2" id="eqO-uD-Cch"/>
+                        <outlet property="governorateBtn" destination="DG7-7Z-bDD" id="aje-Jr-c64"/>
                         <outlet property="licenseBtn" destination="DJG-at-Z9R" id="euY-ro-ZLH"/>
+                        <outlet property="nameField" destination="LWJ-BZ-SrR" id="9jl-dk-g9L"/>
+                        <outlet property="phoneField" destination="5q3-IZ-Kyu" id="Xwy-eZ-vHM"/>
+                        <outlet property="saveBtn" destination="mkW-Hk-dae" id="mez-VZ-1RA"/>
+                        <outlet property="statusBtn" destination="VzQ-x0-kKd" id="GE1-0q-umh"/>
                         <outlet property="statusStack" destination="4ei-nU-KuM" id="vRA-Pv-VmY"/>
                         <outlet property="uploadPicBtn" destination="kDE-b6-zcq" id="PlW-Yw-m82"/>
+                        <outlet property="usernameField" destination="tlI-T3-D0l" id="NNK-oh-MfX"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="ZP5-lS-gqV" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="1524" y="-175"/>
+            <point key="canvasLocation" x="1092.5373134328358" y="-173.68421052631578"/>
         </scene>
         <!--Rejection Reason View Controller-->
         <scene sceneID="7Oi-dj-dam">
             <objects>
-                <viewController title="Rejection Reason View Controller" id="Slp-CZ-vfp" sceneMemberID="viewController">
+                <viewController storyboardIdentifier="RejectionPopupViewController" title="Rejection Reason View Controller" useStoryboardIdentifierAsRestorationIdentifier="YES" id="Slp-CZ-vfp" customClass="RejectionPopupViewController" customModule="ProjectSimulator" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="iFG-CT-uMY">
                         <rect key="frame" x="0.0" y="0.0" width="402" height="874"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
@@ -753,14 +757,18 @@
                             <constraint firstItem="SV4-tZ-Hou" firstAttribute="bottom" secondItem="UKc-LN-KKN" secondAttribute="bottom" constant="313" id="vtM-VO-2ov"/>
                         </constraints>
                     </view>
+                    <connections>
+                        <outlet property="reasonTextView" destination="VBm-Hq-80B" id="82L-Zv-1DH"/>
+                    </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="UWf-as-685" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="3049" y="-175"/>
+            <point key="canvasLocation" x="1770" y="-166"/>
         </scene>
     </scenes>
     <resources>
-        <image name="KarranaCharity" width="927" height="929"/>
+        <image name="chevron.down" catalog="system" width="128" height="70"/>
+        <image name="photo" catalog="system" width="128" height="93"/>
         <image name="photo.artframe" catalog="system" width="128" height="93"/>
         <image name="square.and.arrow.up" catalog="system" width="110" height="128"/>
         <image name="xmark" catalog="system" width="128" height="113"/>

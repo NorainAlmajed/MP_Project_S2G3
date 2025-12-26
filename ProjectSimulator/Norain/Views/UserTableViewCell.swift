@@ -31,12 +31,12 @@ class UserTableViewCell: UITableViewCell {
 
         }else if let ngo = appUser as? NGO{
             phoneOrStatusLbl.text = "Status: "
-            if (ngo.isPending){
+            if (ngo.status == .pending){
                 statusLbl.text = "Pending"
                 statusLbl.textColor = .orangeCol
                 
             }
-            else if (ngo.isRejected)
+            else if (ngo.status == .rejected)
             {
                 statusLbl.text = "Rejected"
                 statusLbl.textColor = .redCol

@@ -14,6 +14,7 @@ class NourishUsersViewController: UIViewController,UITableViewDelegate,UITableVi
     @IBOutlet weak var searchUsers: UISearchBar!
     var users = AppData.users
     var displayedUsers = AppData.users
+    var ngoBeingProcessed: NGO?
     @IBOutlet weak var NavBar: UINavigationItem!
     
     @IBOutlet weak var usersTableView: UITableView!
@@ -79,18 +80,18 @@ class NourishUsersViewController: UIViewController,UITableViewDelegate,UITableVi
     
     
     @IBAction func btnPendingFilter(_ sender: Any) {
-        displayedUsers = users.compactMap { $0 as? NGO }.filter { $0.isPending }
+        displayedUsers = users.compactMap { $0 as? NGO }.filter { $0.status == .pending}
         usersTableView.reloadData()
     }
     
     @IBAction func btnApprovedFilter(_ sender: Any) {
-        displayedUsers = users.compactMap { $0 as? NGO }.filter { $0.isApproved }
+        displayedUsers = users.compactMap { $0 as? NGO }.filter { $0.status == .approved }
         usersTableView.reloadData()
     }
     
     
     @IBAction func btnRejectedFilter(_ sender: Any) {
-        displayedUsers = users.compactMap { $0 as? NGO }.filter { $0.isRejected }
+        displayedUsers = users.compactMap { $0 as? NGO }.filter { $0.status == .rejected }
         usersTableView.reloadData()
     }
     
@@ -113,7 +114,7 @@ class NourishUsersViewController: UIViewController,UITableViewDelegate,UITableVi
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         tableView.deselectRow(at: indexPath, animated: true)
-        let selectedUser = users[indexPath.row]
+        let selectedUser = displayedUsers[indexPath.row]
         if let detailsVC = storyboard?.instantiateViewController(withIdentifier: "UserDetailsViewController") as? UserDetailsViewController {
             detailsVC.currentUser = selectedUser
             detailsVC.delegate = self
@@ -141,17 +142,35 @@ class NourishUsersViewController: UIViewController,UITableViewDelegate,UITableVi
         
         let deleteAction = UIContextualAction(style: .destructive, title: "Delete") { action, view, completionHandler in
             
-            Alerts.confirmation(on: self, title: "Delete Confirmation", message: "Are you sure you want to remove User?"){
-                self.users.remove(at: indexPath.row)
-                AppData.users.remove(at: indexPath.row)
+            Alerts.confirmation(on: self, title: "Delete Confirmation", message: "Are you sure you want to remove User?") {
+                
+                // 1. Get the specific user from the displayed list
+                let userToRemove = self.displayedUsers[indexPath.row]
+                
+                // 2. Remove from the list the TableView is currently using (CRITICAL FIX)
+                self.displayedUsers.remove(at: indexPath.row)
+                
+                // 3. Remove from the other lists by matching the ID
+                self.users.removeAll { $0.userName == userToRemove.userName }
+                AppData.users.removeAll { $0.userName == userToRemove.userName }
+                
+                // 4. Update the UI
                 tableView.deleteRows(at: [indexPath], with: .fade)
+                
                 completionHandler(true)
             }
-            
         }
         let editAction = UIContextualAction(style: .normal, title: "Edit") { (action, view, completionHandler) in
-            self.showDetailViewController(nav, sender: view)
-            completionHandler(true)
+            let storyboard = UIStoryboard(name: "norain-admin-controls1", bundle: nil)
+                let editVC = storyboard.instantiateViewController(withIdentifier: "EditUsersViewController") as! EditUsersViewController
+                
+              
+                editVC.userToEdit = self.displayedUsers[indexPath.row]
+                
+                let nav = UINavigationController(rootViewController: editVC)
+                self.present(nav, animated: true)
+                completionHandler(true)
+            
         }
         editAction.backgroundColor = .blueCol
         
@@ -159,11 +178,11 @@ class NourishUsersViewController: UIViewController,UITableViewDelegate,UITableVi
         
         
         if let ngo = ngo {
-            if ngo.isPending {
+            if ngo.status == .pending {
                 // Show both Accept and Reject
                 actions.append(createAcceptAction(for: ngo, indexPath: indexPath))
                 actions.append(createRejectAction(for: ngo, indexPath: indexPath))
-            } else if ngo.isRejected {
+            } else if ngo.status == .rejected {
                 // Show only Accept
                 actions.append(createAcceptAction(for: ngo, indexPath: indexPath))
             }
@@ -176,9 +195,7 @@ class NourishUsersViewController: UIViewController,UITableViewDelegate,UITableVi
     //create Accept Action
     func createAcceptAction(for ngo: NGO, indexPath: IndexPath) -> UIContextualAction {
         let action = UIContextualAction(style: .normal, title: "Accept") { (_, _, completionHandler) in
-            ngo.isPending = false
-            ngo.isApproved = true
-            ngo.isRejected = false
+            ngo.status = .approved
             self.usersTableView.reloadRows(at: [indexPath], with: .automatic)
             completionHandler(true)
         }
@@ -189,17 +206,24 @@ class NourishUsersViewController: UIViewController,UITableViewDelegate,UITableVi
     //create Reject Action
     func createRejectAction(for ngo: NGO, indexPath: IndexPath) -> UIContextualAction {
         let action = UIContextualAction(style: .normal, title: "Reject") { (_, _, completionHandler) in
-            ngo.isPending = false
-            ngo.isApproved = false
-            ngo.isRejected = true
-            self.usersTableView.reloadRows(at: [indexPath], with: .automatic)
-            completionHandler(true)
-        }
-        action.backgroundColor = .redCol
-        return action
+                // Save the NGO so the delegate knows which one to update later
+                self.ngoBeingProcessed = ngo
+                self.showRejectionPopup()
+                completionHandler(true)
+            }
+            action.backgroundColor = .red
+            return action
     }
     
-
+    func showRejectionPopup() {
+        let storyboard = UIStoryboard(name: "norain-admin-controls1", bundle: nil)
+        if let popupVC = storyboard.instantiateViewController(withIdentifier: "RejectionPopupViewController") as? RejectionPopupViewController {
+            popupVC.delegate = self
+            popupVC.modalPresentationStyle = .overCurrentContext
+            popupVC.modalTransitionStyle = .crossDissolve // Smoother appearance
+            self.present(popupVC, animated: true)
+        }
+    }
         
         /*
          // MARK: - Navigation
@@ -217,6 +241,21 @@ extension NourishUsersViewController: UserUpdateDelegate {
         DispatchQueue.main.async
         {
             self.usersTableView.reloadData()
+        }
+    }
+}
+extension NourishUsersViewController: RejectionDelegate {
+    func didProvideReason(_ reason: String) {
+        if let ngo = self.ngoBeingProcessed {
+            ngo.status = .rejected
+            
+            // If the user left it empty, maybe provide a default
+            ngo.rejectionReason = reason.isEmpty ? "No specific reason provided." : reason
+            
+            self.usersTableView.reloadData()
+            self.ngoBeingProcessed = nil // Reset for the next use
+            
+            print("Successfully rejected \(ngo.name) for: \(reason)")
         }
     }
 }

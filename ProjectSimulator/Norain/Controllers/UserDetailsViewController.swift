@@ -17,6 +17,8 @@ class UserDetailsViewController: UIViewController {
     
     @IBOutlet weak var nameLbl: UILabel!
     @IBOutlet weak var bioOrDescLbl: UILabel!
+    
+    @IBOutlet weak var reasonLabel: UILabel!
     @IBOutlet weak var bioOrDesctxt: UITextView!
     @IBOutlet weak var emailLbl: UILabel!
     @IBOutlet weak var acceptBtn: UIButton!
@@ -57,19 +59,23 @@ class UserDetailsViewController: UIViewController {
             bioOrDesctxt.text = donor.bio
             acceptBtn.isHidden = true
             rejectBtn.isHidden = true
+            reasonLabel.isHidden = true
             
         }else if let ngo = appUser as? NGO{
             bioOrDescLbl.text = "Mission"
             bioOrDesctxt.text = ngo.mission
-            if (ngo.isPending){
+            if (ngo.status == .pending){
                 phoneOrStatusLbl.text = "Pending"
                 phoneOrStatusLbl.textColor = .orangeCol
+                reasonLabel.isHidden = true
 
             }
-            else if (ngo.isRejected)
+            else if (ngo.status == .rejected)
             {
                 phoneOrStatusLbl.text = "Rejected"
                 phoneOrStatusLbl.textColor = .redCol
+                reasonLabel.text = "Reason: \(ngo.rejectionReason ?? "None")"
+                reasonLabel.isHidden = false
                 
                 acceptBtn.isHidden = true
                 rejectBtn.isHidden = true
@@ -77,9 +83,11 @@ class UserDetailsViewController: UIViewController {
             else{
                 phoneOrStatusLbl.text = "Approved"
                 phoneOrStatusLbl.textColor = .greenCol
-                
+                reasonLabel.isHidden = true
                 acceptBtn.isHidden = true
                 rejectBtn.isHidden = true
+                
+
             }
         }
         
@@ -89,9 +97,7 @@ class UserDetailsViewController: UIViewController {
     @IBAction func acceptBtn(_ sender: Any) {
         if let ngo = currentUser as? NGO
         {
-            ngo.isPending = false
-            ngo.isApproved = true
-            ngo.isRejected = false
+            ngo.status = .approved
             self.configure(appUser: ngo)
             delegate?.didUpdateUser()
                     
@@ -100,10 +106,10 @@ class UserDetailsViewController: UIViewController {
       @IBAction func rejectBtn(_ sender: Any) {
           Alerts.confirmation(on: self, title: "NGO Rejction", message: "Are You Sure you want to Reject this NGO?") {
               if let ngo = self.currentUser as? NGO{
-                  ngo.isPending = false
-                  ngo.isApproved = false
-                  ngo.isRejected = true
+                  ngo.status = .rejected
+
                   self.configure(appUser: ngo)
+                  self.showRejectionPopup()
               }
           }
 
@@ -112,25 +118,33 @@ class UserDetailsViewController: UIViewController {
       
     @IBAction func editBtn(_ sender: Any) {
         let storyboard = UIStoryboard(name: "norain-admin-controls1", bundle: nil)
-            
-            if let editVC = storyboard.instantiateViewController(withIdentifier: "EditUsersViewController") as? EditUsersViewController {
-                
-                // 1. Pass the data
-                editVC.userToEdit = self.currentUser
-                
-                // 2. WRAP editVC in a Navigation Controller
-                // This is the "container" that provides the Nav Bar
-                let nav = UINavigationController(rootViewController: editVC)
-                
-                // 3. Set the presentation style on the NAV controller, not the editVC
-                nav.modalPresentationStyle = .fullScreen
-                
-                // 4. Present the NAV controller
-                self.present(nav, animated: true, completion: nil)
-            }
         
+        guard let editVC = storyboard.instantiateViewController(withIdentifier: "EditUsersViewController") as? EditUsersViewController else { return }
+
+        // 1. Double check what we are passing
+        if let user = self.currentUser {
+            print("Passing user: \(user.name) of type: \(type(of: user))")
+            editVC.userToEdit = user
+        }
+        
+        // 2. Wrap and present
+        let nav = UINavigationController(rootViewController: editVC)
+        nav.modalPresentationStyle = .fullScreen
+        self.present(nav, animated: true, completion: nil)
     }
   
+    
+    func showRejectionPopup() {
+        let storyboard = UIStoryboard(name: "norain-admin-controls1", bundle: nil)
+        if let popupVC = storyboard.instantiateViewController(withIdentifier: "RejectionPopupViewController") as? RejectionPopupViewController {
+            
+            // This is the "handshake" that connects the two screens
+            popupVC.delegate = self
+            
+            popupVC.modalPresentationStyle = .overCurrentContext
+            self.present(popupVC, animated: true)
+        }
+    }
     /*
     // MARK: - Navigation
 
@@ -141,4 +155,18 @@ class UserDetailsViewController: UIViewController {
     }
     */
 
+}
+extension UserDetailsViewController: RejectionDelegate {
+    func didProvideReason(_ reason: String) {
+        if let ngo = self.currentUser as? NGO {
+            ngo.status = .rejected
+            ngo.rejectionReason = reason
+            
+            // Refresh the UI to show "Rejected" status
+            self.configure(appUser: ngo)
+            
+            // Sync with the main table view
+            delegate?.didUpdateUser()
+        }
+    }
 }

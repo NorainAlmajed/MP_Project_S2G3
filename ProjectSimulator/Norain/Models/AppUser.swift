@@ -14,6 +14,7 @@ class AppUser {
     var email:String
     var userImg:String
 
+
     init(userName: String, password: String, name: String, phoneNumber: Int, email: String, userImg: String) {
         self.userName = userName
         self.password = password

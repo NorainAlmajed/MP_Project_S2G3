@@ -55,6 +55,10 @@ class DonationDetailsViewController: UIViewController, UITableViewDelegate, UITa
             donationTableview.separatorColor = UIColor { traitCollection in
                 return traitCollection.userInterfaceStyle == .dark ? .lightGray : .gray
             }
+            
+            // Remove back button text for the next VC
+                let backItem = UIBarButtonItem(title: "", style: .plain, target: nil, action: nil)
+                navigationItem.backBarButtonItem = backItem
 
         }
         

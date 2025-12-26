@@ -149,6 +149,21 @@
             setupKeyboardAvoidance()
 
            
+            // Remove default shadow
+            navigationController?.navigationBar.shadowImage = UIImage()
+
+            // Add small grey line under navigation bar
+            let bottomLine = UIView()
+            bottomLine.backgroundColor = UIColor.systemGray4
+            bottomLine.translatesAutoresizingMaskIntoConstraints = false
+            navigationController?.navigationBar.addSubview(bottomLine)
+
+            NSLayoutConstraint.activate([
+                bottomLine.heightAnchor.constraint(equalToConstant: 1),
+                bottomLine.leadingAnchor.constraint(equalTo: navigationController!.navigationBar.leadingAnchor),
+                bottomLine.trailingAnchor.constraint(equalTo: navigationController!.navigationBar.trailingAnchor),
+                bottomLine.bottomAnchor.constraint(equalTo: navigationController!.navigationBar.bottomAnchor)
+            ])
 
 
            

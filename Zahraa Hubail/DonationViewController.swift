@@ -354,13 +354,14 @@ class DonationViewController: UIViewController {
                     guard let addressData = addressSnap?.data() else { return }
 
                     let address = ZahraaAddress(
-                        building: addressData["building"] as? Int ?? 0,
-                        road: addressData["road"] as? Int ?? 0,
-                        block: addressData["block"] as? Int ?? 0,
-                        flat: addressData["flat"] as? Int,
+                        building: String(addressData["building"] as? Int ?? 0),
+                        road: String(addressData["road"] as? Int ?? 0),
+                        block: String(addressData["block"] as? Int ?? 0),
+                        flat: (addressData["flat"] as? Int).map { String($0) }, // optional
                         area: addressData["area"] as? String ?? "",
                         governorate: addressData["governorate"] as? String ?? ""
                     )
+
 
                     let donation = Donation(
                         firestoreID: firestoreID,

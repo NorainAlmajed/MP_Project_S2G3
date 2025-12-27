@@ -30,8 +30,8 @@ class ExcelExporter {
         
         // Full address
         let address = donation.address
-        let fullAddress = "Building: \(address.building), Road: \(address.road), Block: \(address.block), Flat: \(address.flat ?? 0), Area: \(address.area), Governorate: \(address.governorate)"
-        
+        let fullAddress = "Building: \(address.building), Road: \(address.road), Block: \(address.block), Flat: \(address.flat.map { "\($0)" } ?? "0"), Area: \(address.area), Governorate: \(address.governorate)"
+
         // CSV header
         var csvText = """
         Donation ID,NGO Name,Donor Username,Category,Quantity,Weight,Pickup Date,Pickup Time,Expiry Date,Status,Address,Description,Recurrence
@@ -43,7 +43,7 @@ class ExcelExporter {
         let descriptionString = donation.description ?? "-"
         let recurrenceString = donation.recurrence > 0 ? "\(donation.recurrence)" : "None"
         
-        csvText += "\(donation.donationID),\(donation.ngo.fullName),\(donation.donor.username),\(donation.category),\(donation.quantity),\(weightString),\(dateFormatter.string(from: donation.pickupDate.dateValue())),\(donation.pickupTime),\(dateFormatter.string(from: donation.expiryDate.dateValue())),\(statusText),\(fullAddress),\(descriptionString),\(recurrenceString)\n"
+        csvText += "\(donation.donationID),\(donation.ngo.fullName ?? donation.ngo.username),\(donation.donor.username),\(donation.category),\(donation.quantity),\(weightString),\(dateFormatter.string(from: donation.pickupDate.dateValue())),\(donation.pickupTime),\(dateFormatter.string(from: donation.expiryDate.dateValue())),\(statusText),\(fullAddress),\(descriptionString),\(recurrenceString)\n"
 
         
         // Write CSV to file

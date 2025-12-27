@@ -7,7 +7,14 @@
 
 import UIKit
 
+protocol ZahraaAddressTableViewCellDelegate: AnyObject {
+    func didTapAddressButton()
+}
+
+
 class ZahraaAddressTableViewCell: UITableViewCell {
+
+    weak var delegate: ZahraaAddressTableViewCellDelegate?
 
     
     @IBOutlet weak var addressBtn: UIButton!
@@ -74,6 +81,7 @@ class ZahraaAddressTableViewCell: UITableViewCell {
 
     
     @IBAction func addressBtn(_ sender: Any) {
-        print("Address button tapped")
+        delegate?.didTapAddressButton()
     }
+
 }

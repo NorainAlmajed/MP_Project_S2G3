@@ -17,7 +17,8 @@
                                             UITableViewDataSource,
                                             UIImagePickerControllerDelegate,
                                             UINavigationControllerDelegate,
-                                            ZahraSection1TableViewCellDelegate
+                                            ZahraSection1TableViewCellDelegate,
+                                            ZahraaAddressDelegate
                                              {
         
         var donation: Donation?
@@ -371,11 +372,15 @@
 
                 if let donation = self.donation {
                     cell.configure(with: donation)
-                    cell.layoutIfNeeded() // ✅ ensure the button truncates correctly
+                    cell.layoutIfNeeded()
                 }
+
+                // ✅ Set the delegate
+                cell.delegate = self
 
                 return cell
             }
+
 
 
 
@@ -974,8 +979,32 @@
             }
         }
 
+        // You can put this anywhere inside the main class (not extension)
+        func didAddAddress(_ address: ZahraaAddress) {
+            print("Address added:", address)
+            // You can update your donation model if needed
+            donation?.address = address
+            donationFormTableview.reloadSections(IndexSet(integer: 7), with: .none)
+        }
+
 
 
 
     }
 
+extension EditDonationViewController: ZahraaAddressTableViewCellDelegate {
+    func didTapAddressButton() {
+        let storyboard = UIStoryboard(name: "Donations", bundle: nil)
+        let addressVC = storyboard.instantiateViewController(
+            withIdentifier: "ZahraaAddressPageViewController"
+        ) as! ZahraaAddressPageViewController
+        addressVC.delegate = self  // your existing AddAddressDelegate
+
+        // ✅ REMOVE BACK TEXT
+        let backItem = UIBarButtonItem()
+        backItem.title = ""
+        navigationItem.backBarButtonItem = backItem
+
+        navigationController?.pushViewController(addressVC, animated: true)
+    }
+}

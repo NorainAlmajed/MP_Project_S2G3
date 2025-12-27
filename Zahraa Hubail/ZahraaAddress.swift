@@ -7,11 +7,15 @@
 
 import UIKit
 
+protocol ZahraaAddressDelegate: AnyObject {
+    func didAddAddress(_ address: ZahraaAddress)
+}
+
 struct ZahraaAddress {
-    var building: Int
-    var road: Int
-    var block: Int
-    var flat: Int?
+    var building: String
+    var road: String
+    var block: String
+    var flat: String?
     var area: String
     var governorate: String
 }

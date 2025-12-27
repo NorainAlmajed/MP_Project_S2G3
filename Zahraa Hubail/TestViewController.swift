@@ -91,7 +91,7 @@ class DonationDetailsViewController: UIViewController, UITableViewDelegate, UITa
             "Governorate": donation.address.governorate
         ]
 
-        if let flat = donation.address.flat, flat > 0 {
+        if let flat = donation.address.flat, !flat.trimmingCharacters(in: .whitespaces).isEmpty {
             addressLines["Flat"] = String(flat)
         }
 

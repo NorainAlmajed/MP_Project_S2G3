@@ -22,6 +22,9 @@
                                              {
         
         var donation: Donation?
+        private var draftAddress: ZahraaAddress?
+
+        
         // In EditDonationViewController.swift
         var onDonationUpdated: ((Donation) -> Void)?
 
@@ -371,7 +374,15 @@
                 cell.selectionStyle = .none
 
                 if let donation = self.donation {
-                    cell.configure(with: donation)
+                    // ✅ Create a temporary copy for display
+                    var donationForDisplay = donation
+
+                    // ✅ If user edited address but didn’t save donation yet
+                    if let draftAddress = draftAddress {
+                        donationForDisplay.address = draftAddress
+                    }
+
+                    cell.configure(with: donationForDisplay)
                     cell.layoutIfNeeded()
                 }
 
@@ -546,7 +557,7 @@
         private func validateAndProceed() {
             view.endEditing(true)
 
-            // ⛔ 0) Stop immediately if image is still uploading
+            // 0️⃣ Stop if image is still uploading
             if isUploadingImage {
                 showSimpleAlert(
                     title: "Uploading Image",
@@ -555,36 +566,22 @@
                 return
             }
 
-            // 1️⃣ Compute validity (EDIT MODE LOGIC)
-
-            // Image is missing ONLY if:
-            // - no old image URL
-            // - AND no newly selected image
+            // 1️⃣ Compute validity
             let missingImage = (uploadedDonationImageUrl == nil && selectedDonationImage == nil)
-
             let missingFoodCategory = (selectedFoodCategory == nil || selectedFoodCategory?.isEmpty == true)
-
-            let qty = selectedQuantity
-            let invalidQuantity = (qty <= 0)
-
+            let invalidQuantity = (selectedQuantity <= 0)
             let invalidWeight = weightInvalidFormat
-
             let missingExpiry = (selectedExpiryDate == nil)
 
-            // 2️⃣ Flip error flags (for red labels)
+            // 2️⃣ Flip error flags
             shouldShowImageError = missingImage
             shouldShowFoodCategoryError = missingFoodCategory
             shouldShowQuantityError = invalidQuantity
             shouldShowWeightError = invalidWeight
 
             // 3️⃣ Reload affected sections
-            // Sections for EDIT (no donor):
-            // [0] image, [1] food, [2] quantity, [3] weight, [4] expiry
             UIView.performWithoutAnimation {
-                donationFormTableview.reloadSections(
-                    IndexSet([0, 1, 2, 3, 4]),
-                    with: .none
-                )
+                donationFormTableview.reloadSections(IndexSet([0, 2, 3, 4, 5]), with: .none)
             }
 
             // 4️⃣ Stop if validation failed
@@ -592,15 +589,19 @@
                 return
             }
 
-            // 5️⃣ Update existing donation in Firebase
-            guard
-                let donation = donation,
-                let donationId = donation.firestoreID
-            else {
-                showSimpleAlert(title: "Error", message: "Donation not found.")
-                return
+            // 5️⃣ Update donation object with draft address if exists
+            if let draft = draftAddress, let address = donation?.address {
+                address.building = draft.building
+                address.road = draft.road
+                address.block = draft.block
+                address.area = draft.area
+                address.governorate = draft.governorate
+                address.flat = draft.flat
             }
 
+
+            // 6️⃣ Prepare Firestore update
+            guard let donation = donation, let donationId = donation.firestoreID else { return }
             let db = Firestore.firestore()
             let donationRef = db.collection("Donation").document(donationId)
 
@@ -610,64 +611,35 @@
                 "expiryDate": Timestamp(date: selectedExpiryDate ?? Date())
             ]
 
-            // Optional fields
-            if let weight = weightValue {
-                updatedData["weight"] = weight
+            if let weight = weightValue { updatedData["weight"] = weight }
+            if let description = selectedShortDescription { updatedData["description"] = description }
+            if let imageUrl = uploadedDonationImageUrl { updatedData["foodImageUrl"] = imageUrl }
+
+            // ✅ Include address only if draft exists
+            if let address = draftAddress {
+                updatedData["address"] = [
+                    "building": address.building,
+                    "road": address.road,
+                    "block": address.block,
+                    "area": address.area,
+                    "governorate": address.governorate,
+                    "flat": address.flat as Any
+                ]
             }
 
-            if let description = selectedShortDescription, !description.isEmpty {
-                updatedData["description"] = description
-            }
-
-            if let imageUrl = uploadedDonationImageUrl {
-                updatedData["foodImageUrl"] = imageUrl
-            }
-
-            // 6️⃣ Perform update
-            donationRef.updateData(updatedData) { [weak self] (error: Error?) in
-                guard let self = self else { return }
-                
-                print("🔹 updateData closure called") // <-- ADD THIS LINE
-
+            // 7️⃣ Firestore update
+            donationRef.updateData(updatedData) { [weak self] error in
                 if let error = error {
-                    self.showSimpleAlert(
-                        title: "Update Failed",
-                        message: error.localizedDescription
-                    )
+                    self?.showSimpleAlert(title: "Update Failed", message: error.localizedDescription)
                     return
                 }
 
                 print("✅ Donation updated successfully")
-                
-                // 🔔 Send notifications to donor and NGO
-                    self.sendUpdateNotifications(for: donation)
-
-                // ✅ Edit flow ends here — no navigation
-                let alert = UIAlertController(
-                    title: "Success",
-                    message: "Donation details have been updated successfully.",
-                    preferredStyle: .alert
-                )
-                alert.addAction(UIAlertAction(title: "Dismiss", style: .default, handler: { [weak self] _ in
-                    self?.navigationController?.popViewController(animated: true)
-                }))
-                present(alert, animated: true)
-
-                self.donation?.category = self.selectedFoodCategory ?? ""
-                self.donation?.quantity = self.selectedQuantity
-                self.donation?.weight = self.weightValue
-                self.donation?.expiryDate = Timestamp(date: self.selectedExpiryDate ?? Date())
-                self.donation?.description = self.selectedShortDescription
-                self.donation?.foodImageUrl = self.uploadedDonationImageUrl ?? self.donation!.foodImageUrl
-
-                // ✅ Tell DonationDetailsViewController that donation was updated
-                self.onDonationUpdated?(self.donation!)
-
-                
+                self?.onDonationUpdated?(donation)
+                self?.navigationController?.popViewController(animated: true)
             }
-            
-            
         }
+
 
 
         
@@ -984,38 +956,13 @@
         
         
         func didAddAddress(_ address: ZahraaAddress) {
-            guard let donation = donation,
-                  let donationId = donation.firestoreID
-            else { return }
+            // ✅ Store address TEMPORARILY (draft only)
+            draftAddress = address
 
-            // Update local model
-            donation.address = address
-
-            // 🔥 UPDATE FIRESTORE
-            let db = Firestore.firestore()
-            let donationRef = db.collection("Donation").document(donationId)
-
-            let addressData: [String: Any] = [
-                "building": address.building,
-                "road": address.road,
-                "block": address.block,
-                "area": address.area,
-                "governorate": address.governorate,
-                "flat": address.flat as Any
-            ]
-
-            donationRef.updateData([
-                "address": addressData
-            ]) { error in
-                if let error = error {
-                    print("❌ Failed to update address:", error.localizedDescription)
-                } else {
-                    print("✅ Address updated successfully")
-                }
-            }
-
+            // ✅ Update UI only
             donationFormTableview.reloadSections(IndexSet(integer: 7), with: .none)
         }
+
 
 
 

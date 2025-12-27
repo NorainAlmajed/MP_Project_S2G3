@@ -35,6 +35,19 @@ struct ZahraaUser {
 }
 
 
+struct Address {
+    var name: String?
+    var building: String
+    var road: String
+    var block: String
+    var flat: String
+    var area: String
+    var governorate: String
+    var fullAddress: String {
+        return "\(building), \(road), \(block)\n\(area), \(governorate)"
+    }
+}
+
 
 //var userNotifications: [Notification] = [
 //    

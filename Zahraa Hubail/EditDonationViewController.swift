@@ -621,6 +621,8 @@
             // 6️⃣ Perform update
             donationRef.updateData(updatedData) { [weak self] (error: Error?) in
                 guard let self = self else { return }
+                
+                print("🔹 updateData closure called") // <-- ADD THIS LINE
 
                 if let error = error {
                     self.showSimpleAlert(

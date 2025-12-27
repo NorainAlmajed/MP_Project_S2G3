@@ -160,8 +160,6 @@ UITextFieldDelegate,UIGestureRecognizerDelegate {
         ])
     }
 
-
-
     func endChat() {
         inputBarView.isHidden = true
         endButton.isEnabled = false
@@ -198,11 +196,6 @@ saveMessages()
         messageTextField.text = ""
         textFieldDidChangeSelection(messageTextField)
     }
-
-    @IBAction func sendTapped(_ sender: UIButton) {
-        sendMessage()
-    }
-
 
     func saveMessages() {
         let key = "chatMessages_\(chatID)"
@@ -249,7 +242,6 @@ saveMessages()
 //text field functions
     
     func textFieldDidChangeSelection(_ textField: UITextField) {
-        let hasText = !(textField.text?.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty ?? true)
     }
 
     func textFieldShouldReturn(_ textField: UITextField) -> Bool {

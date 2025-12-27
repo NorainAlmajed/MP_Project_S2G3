@@ -124,6 +124,8 @@ class Chat: UIViewController,  UISearchBarDelegate, UITableViewDataSource, UITab
         
         
     }
+    
+  
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
 
@@ -204,6 +206,9 @@ class Chat: UIViewController,  UISearchBarDelegate, UITableViewDataSource, UITab
 
             let date = Date(timeIntervalSince1970: timestamp)
             cell.timeStamp.text = formatTimestampForChatList(date)
+            
+            let unread = UnreadManager.get(chatID: chat.chatID)
+                cell.configureUnread(count: unread)
 
         } else {
             cell.timeStamp.text = ""
@@ -280,5 +285,9 @@ class Chat: UIViewController,  UISearchBarDelegate, UITableViewDataSource, UITab
         return formatter.string(from: date)
     }
 
-
+    //unread badge function
+        func didReceiveMessage(chatID: String) {
+            UnreadManager.increase(chatID: chatID)
+            ChatTable.reloadData()
+        }
 }

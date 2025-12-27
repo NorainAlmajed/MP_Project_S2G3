@@ -22,6 +22,14 @@
                                              {
         
         var donation: Donation?
+        
+        // MARK: - Pickup time
+        private var selectedPickupTime: String?  // or whatever type your timeframe uses
+        @IBOutlet weak var timeErrorLbl: UILabel!  // link this from storyboard
+
+        
+        private var timeframeCell: ZahraaPickUpTimeTableViewCell?
+
         private var draftAddress: ZahraaAddress?
 
         
@@ -157,7 +165,6 @@
             populateDonationDetails()
             donationFormTableview.reloadData()
 
-           
 
         }
         
@@ -205,7 +212,7 @@
         @objc func doneButtonTapped() { view.endEditing(true) }
         
         // MARK: - Table DataSource
-        func numberOfSections(in tableView: UITableView) -> Int { isAdminUser ? 10 : 9 }
+        func numberOfSections(in tableView: UITableView) -> Int { isAdminUser ? 12 : 11 }
         func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int { 1 }
         
         
@@ -410,11 +417,39 @@
                 return cell
             }
 
+            
+            
+            //PickUp time cell
+            if adjustedSection == 9 {
+                let cell = tableView.dequeueReusableCell(withIdentifier: "PickUpTimeCell", for: indexPath) as! ZahraaPickUpTimeTableViewCell
+
+                // set current selected time
+                let currentTime = selectedPickupTime ?? donation?.pickupTime
+                cell.configure(selected: currentTime)
+
+                // IMPORTANT: set the callback
+                cell.onTimeframeSelected = { [weak self] selected in
+                    self?.selectedPickupTime = selected
+                    self?.timeErrorLbl.isHidden = true
+                }
+
+                return cell
+            }
+
+
+            //Recurrence
+            if adjustedSection == 10 {
+                let cell = tableView.dequeueReusableCell(withIdentifier: "RecurrenceCell", for: indexPath) as! ZahraaRecurrenceTableViewCell
+
+
+                return cell
+            }
+
 
             
             
             // Section 8 (Proceed button)
-            if adjustedSection == 9 {
+            if adjustedSection == 11 {
                 let cell = tableView.dequeueReusableCell(withIdentifier: "Section8Cell", for: indexPath) as! ZahraaSection8TableViewCell
                 cell.selectionStyle = .none
                 cell.onProceedTapped = { [weak self] in
@@ -425,6 +460,7 @@
                 }
                 return cell
             }
+            
             
             // Fallback
             let cell = tableView.dequeueReusableCell(withIdentifier: "Section\(adjustedSection + 1)Cell", for: indexPath)
@@ -453,7 +489,9 @@
             case 6: return 161
             case 7: return 114 // Address
             case 8: return 102 //Pickup Date
-            case 9: return UITableView.automaticDimension
+            case 9: return 324 //Pickup Time
+            case 10: return 152
+            case 11: return UITableView.automaticDimension
             default: return UITableView.automaticDimension
             }
         }
@@ -573,7 +611,7 @@
         // MARK: - Validation / Navigation
         private func validateAndProceed() {
             view.endEditing(true)
-
+            
             // 0️⃣ Stop if image is still uploading
             if isUploadingImage {
                 showSimpleAlert(
@@ -589,21 +627,24 @@
             let invalidQuantity = (selectedQuantity <= 0)
             let invalidWeight = weightInvalidFormat
             let missingExpiry = (selectedExpiryDate == nil)
-            let missingPickupDate = (selectedPickupDate == nil) // ✅ check pickup date
+            let missingPickupDate = (selectedPickupDate == nil)
+            let missingPickupTime = (selectedPickupTime == nil)
 
             // 2️⃣ Flip error flags
             shouldShowImageError = missingImage
             shouldShowFoodCategoryError = missingFoodCategory
             shouldShowQuantityError = invalidQuantity
             shouldShowWeightError = invalidWeight
+            timeErrorLbl.isHidden = !missingPickupTime
 
             // 3️⃣ Reload affected sections
+            var sectionsToReload = [0, 2, 3, 4, 5, 8, 9]
             UIView.performWithoutAnimation {
-                donationFormTableview.reloadSections(IndexSet([0, 2, 3, 4, 5, 8]), with: .none)
+                donationFormTableview.reloadSections(IndexSet(sectionsToReload), with: .none)
             }
 
             // 4️⃣ Stop if validation failed
-            if missingImage || missingFoodCategory || invalidQuantity || invalidWeight || missingExpiry || missingPickupDate {
+            if missingImage || missingFoodCategory || invalidQuantity || invalidWeight || missingExpiry || missingPickupDate || missingPickupTime {
                 return
             }
 
@@ -631,7 +672,8 @@
             if let weight = weightValue { updatedData["weight"] = weight }
             if let description = selectedShortDescription { updatedData["description"] = description }
             if let imageUrl = uploadedDonationImageUrl { updatedData["foodImageUrl"] = imageUrl }
-            if let pickupDate = selectedPickupDate { updatedData["pickupDate"] = Timestamp(date: pickupDate) } // ✅ add pickup date
+            if let pickupDate = selectedPickupDate { updatedData["pickupDate"] = Timestamp(date: pickupDate) }
+            if let pickupTime = selectedPickupTime { updatedData["pickupTime"] = pickupTime }
 
             // ✅ Include address only if draft exists
             if let address = draftAddress {
@@ -657,7 +699,6 @@
                 self?.navigationController?.popViewController(animated: true)
             }
         }
-
 
 
 
@@ -742,66 +783,7 @@
         
         
         
-        
-        //🟡🟡🟡🟡🟡🟡🟡🟡🟡🟡🟡🟡🟡🟡🟡🟡🟡🟡🟡🟡🟡🟡🟡🟡🟡🟡🟡🟡🟡🟡🟡🟡🟡🟡🟡🟡🟡🟡
-//        private func createDraftDonation(
-//            donorUserDocId: String,
-//            ngoUserDocId: String,
-//            completion: @escaping (String?) -> Void
-//        ) {
-//            let db = Firestore.firestore()
-//
-//            // ✅ References (matches your Firestore schema)
-//            let donorRef = db.document("users/\(donorUserDocId)")
-//            let ngoRef = db.document("users/\(ngoUserDocId)")
-//
-//            // ✅ Use existing collection name exactly (Donation)
-//            let docRef = db.collection("Donation").document()
-//            let newId = docRef.documentID
-//
-//            
-//            
-//            // ✅ donationID (number) — only if your team needs it
-//            // This makes a simple unique number based on time (safe)
-//            let donationID = Int(Date().timeIntervalSince1970) % 1000000
-//
-//            let data: [String: Any] = [
-//                "firestoreID": newId,
-//                "donationID": donationID,
-//
-//                "donor": donorRef,
-//                "ngo": ngoRef,
-//              
-//
-//
-//                "Category": selectedFoodCategory ?? "",
-//                "quantity": getQuantityValue() ?? 0,
-//                "weight": weightValue as Any,                 // nil allowed
-//                "description": getShortDescription() as Any,   // nil allowed
-//
-//                "foodImageUrl": uploadedDonationImageUrl ?? "",
-//
-//                "expiryDate": Timestamp(date: selectedExpiryDate ?? Date()),
-//                "creationDate": FieldValue.serverTimestamp(),
-//
-//                // ✅ safest: draft
-//                "status": 0,
-//
-//                // ✅ safe defaults if your team uses these
-//                "recurrence": 0
-//            ]
-//
-//            docRef.setData(data) { error in
-//                if let error = error {
-//                    print("❌ createDraftDonation error:", error.localizedDescription)
-//                    completion(nil)
-//                } else {
-//                    print("✅ Draft Donation created:", newId)
-//                    completion(newId)
-//                }
-//            }
-//        }
-        
+
         //to save a draft of the form when useful for back navigation
         
         private func saveDraft() {

@@ -35,19 +35,28 @@ class ZahraaRecurrenceTableViewCell: UITableViewCell {
     
     override func awakeFromNib() {
         super.awakeFromNib()
+        
+        // Make the cell background adaptive
+        backgroundColor = .systemBackground
+        frequencyContainer.backgroundColor = .systemBackground
 
         frequencyContainer.isHidden = true
         reccuringSwitch.addTarget(self, action: #selector(switchChanged), for: .valueChanged)
         frequencyBtn.addTarget(self, action: #selector(frequencyBtnTapped), for: .touchUpInside)
 
-        if UIDevice.current.userInterfaceIdiom == .pad {
-            donationFreqLeading.constant = 94
-            recurrDonLeading.constant = 94
-            frequencyContainerLeading.constant = 94
+        // Adaptive text color
+        frequencyBtn.setTitleColor(.label, for: .normal)
+        donationFreqLbl.textColor = .label
+        recurrDonLbl.textColor = .label
 
-            layoutIfNeeded()
-        }
+        // ✅ Change existing system arrow color
+        frequencyBtn.tintColor = .label  // black in light, white in dark
     }
+
+
+
+
+
 
 
     
@@ -91,25 +100,44 @@ class ZahraaRecurrenceTableViewCell: UITableViewCell {
     
     
 
-        @objc private func frequencyBtnTapped() {
-            // Show a picker or action sheet for the user to select recurrence
-            let alert = UIAlertController(title: "Select Frequency", message: nil, preferredStyle: .actionSheet)
+    @objc private func frequencyBtnTapped() {
+        // Create the action sheet
+        let alert = UIAlertController(title: "Select Frequency", message: nil, preferredStyle: .actionSheet)
+        
+        // ✅ Make button text adaptive (black in light, white in dark)
+        alert.view.tintColor = .label
 
-            let options = [("Daily", 1), ("Weekly", 2), ("Monthly", 3), ("Yearly", 4)]
-            for (title, value) in options {
-                alert.addAction(UIAlertAction(title: title, style: .default, handler: { [weak self] _ in
-                    self?.currentRecurrence = value
-                    self?.frequencyBtn.setTitle(title, for: .normal)
-                    self?.onFrequencySelected?(value)
-                }))
-            }
+        // ✅ Optional: make the title adaptive too
+        let titleAttributes = [NSAttributedString.Key.foregroundColor: UIColor.label]
+        alert.setValue(NSAttributedString(string: "Select Frequency", attributes: titleAttributes), forKey: "attributedTitle")
 
-            alert.addAction(UIAlertAction(title: "Cancel", style: .cancel))
-            if let vc = self.parentViewController() {
-                vc.present(alert, animated: true)
-            }
+        // Options for recurrence
+        let options = [("Daily", 1), ("Weekly", 2), ("Monthly", 3), ("Yearly", 4)]
+        for (title, value) in options {
+            alert.addAction(UIAlertAction(title: title, style: .default, handler: { [weak self] _ in
+                guard let self = self else { return }
+                self.currentRecurrence = value
+                self.frequencyBtn.setTitle(title, for: .normal)
+                self.onFrequencySelected?(value)
+            }))
         }
 
+        // Cancel button
+        alert.addAction(UIAlertAction(title: "Cancel", style: .cancel))
+
+        // ✅ iPad popover setup
+        if let popover = alert.popoverPresentationController {
+            popover.sourceView = frequencyBtn
+            popover.sourceRect = frequencyBtn.bounds
+        }
+
+        // Present the alert
+        parentViewController()?.present(alert, animated: true)
+    }
+
+    
+    
+    
         private func recurrenceToString(_ value: Int) -> String {
             switch value {
             case 1: return "Daily"
@@ -140,3 +168,5 @@ extension UIView {
         return nil
     }
 }
+
+

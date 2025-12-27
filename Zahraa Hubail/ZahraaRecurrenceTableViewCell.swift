@@ -12,22 +12,47 @@ class ZahraaRecurrenceTableViewCell: UITableViewCell {
     @IBOutlet weak var reccuringSwitch: UISwitch!
     @IBOutlet weak var frequencyContainer: UIView!
     @IBOutlet weak var frequencyBtn: UIButton!
+    @IBOutlet weak var donationFreqLbl: UILabel!
+    @IBOutlet weak var recurrDonLbl: UILabel!
     
+    //Constraints
+    @IBOutlet weak var donationFreqLeading: NSLayoutConstraint!
+    @IBOutlet weak var recurrDonLeading: NSLayoutConstraint!
+    @IBOutlet weak var frequencyContainerLeading: NSLayoutConstraint!
 
-        // Callback to notify VC when switch changes
+    
+    
+    // Callback to notify VC when switch changes
         var onSwitchChanged: ((Bool) -> Void)?
         var onFrequencySelected: ((Int) -> Void)? // returns recurrence integer
-
+    
+    
         // Keep track of current recurrence
         private var currentRecurrence: Int = 0
 
-        override func awakeFromNib() {
-            super.awakeFromNib()
-            frequencyContainer.isHidden = true
-            reccuringSwitch.addTarget(self, action: #selector(switchChanged), for: .valueChanged)
-            frequencyBtn.addTarget(self, action: #selector(frequencyBtnTapped), for: .touchUpInside)
-        }
+    
+    
+    
+    override func awakeFromNib() {
+        super.awakeFromNib()
 
+        frequencyContainer.isHidden = true
+        reccuringSwitch.addTarget(self, action: #selector(switchChanged), for: .valueChanged)
+        frequencyBtn.addTarget(self, action: #selector(frequencyBtnTapped), for: .touchUpInside)
+
+        if UIDevice.current.userInterfaceIdiom == .pad {
+            donationFreqLeading.constant = 94
+            recurrDonLeading.constant = 94
+            frequencyContainerLeading.constant = 94
+
+            layoutIfNeeded()
+        }
+    }
+
+
+    
+    
+    
         func configure(with recurrence: Int) {
             currentRecurrence = recurrence
 
@@ -94,7 +119,14 @@ class ZahraaRecurrenceTableViewCell: UITableViewCell {
             default: return "Select Frequency"
             }
         }
+    
+    
     }
+
+
+
+
+
 
 extension UIView {
     func parentViewController() -> UIViewController? {

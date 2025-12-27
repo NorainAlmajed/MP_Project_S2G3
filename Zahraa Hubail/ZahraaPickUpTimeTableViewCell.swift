@@ -10,6 +10,12 @@ import UIKit
 class ZahraaPickUpTimeTableViewCell: UITableViewCell {
 
     @IBOutlet weak var timeframeTableView: UITableView!
+    @IBOutlet weak var pickupTimeLbl: UILabel!
+    
+    @IBOutlet weak var pickupLblLeading: NSLayoutConstraint!
+    
+    @IBOutlet weak var pickupTableLeading: NSLayoutConstraint!
+    
     private var _selectedTimeframe: String?
 
 
@@ -26,13 +32,27 @@ class ZahraaPickUpTimeTableViewCell: UITableViewCell {
         // Callback to notify parent when a timeframe is selected
         var onTimeframeSelected: ((String) -> Void)?
 
-        override func awakeFromNib() {
-            super.awakeFromNib()
-            timeframeTableView.delegate = self
-            timeframeTableView.dataSource = self
-            timeframeTableView.register(UITableViewCell.self, forCellReuseIdentifier: "TimeframeCell")
+    override func awakeFromNib() {
+        super.awakeFromNib()
+
+        timeframeTableView.delegate = self
+        timeframeTableView.dataSource = self
+        timeframeTableView.register(UITableViewCell.self, forCellReuseIdentifier: "TimeframeCell")
+
+        if UIDevice.current.userInterfaceIdiom == .pad {
+            pickupLblLeading.constant = 94
+            pickupTableLeading.constant = 0
+            layoutIfNeeded()
         }
     }
+
+    
+    
+    }
+
+
+
+
 
     extension ZahraaPickUpTimeTableViewCell: UITableViewDelegate, UITableViewDataSource {
 

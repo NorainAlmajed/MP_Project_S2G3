@@ -42,24 +42,29 @@ class ZahraaRecurrenceTableViewCell: UITableViewCell {
             }
         }
 
-        @objc private func switchChanged() {
-            let isOn = reccuringSwitch.isOn
-            frequencyContainer.isHidden = !isOn
+    
+    
+    @objc private func switchChanged() {
+        let isOn = reccuringSwitch.isOn
+        frequencyContainer.isHidden = !isOn
 
-            // If switch turned off, reset recurrence
-            if !isOn {
-                currentRecurrence = 0
-                frequencyBtn.setTitle("Select Frequency", for: .normal)
-                onFrequencySelected?(0)
-            } else if currentRecurrence == 0 {
-                // default to daily if switched on from off
-                currentRecurrence = 1
-                frequencyBtn.setTitle(recurrenceToString(1), for: .normal)
-                onFrequencySelected?(1)
-            }
-
-            onSwitchChanged?(isOn)
+        if !isOn {
+            currentRecurrence = 0
+            frequencyBtn.setTitle("Select Frequency", for: .normal)
+            onFrequencySelected?(0) // ✅ sends 0 to VC
+        } else if currentRecurrence == 0 {
+            currentRecurrence = 1
+            frequencyBtn.setTitle(recurrenceToString(1), for: .normal)
+            onFrequencySelected?(1)
         }
+
+        onSwitchChanged?(isOn)
+    }
+
+    
+    
+    
+    
 
         @objc private func frequencyBtnTapped() {
             // Show a picker or action sheet for the user to select recurrence

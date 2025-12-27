@@ -646,7 +646,7 @@
             timeErrorLbl.isHidden = !missingPickupTime
 
             // 3️⃣ Reload affected sections
-            var sectionsToReload = [0, 2, 3, 4, 5, 8, 9]
+            var sectionsToReload = [0, 2, 3, 4, 5, 8, 9, 10] // include recurrence section
             UIView.performWithoutAnimation {
                 donationFormTableview.reloadSections(IndexSet(sectionsToReload), with: .none)
             }
@@ -674,7 +674,8 @@
             var updatedData: [String: Any] = [
                 "Category": selectedFoodCategory ?? "",
                 "quantity": selectedQuantity,
-                "expiryDate": Timestamp(date: selectedExpiryDate ?? Date())
+                "expiryDate": Timestamp(date: selectedExpiryDate ?? Date()),
+                "recurrence": donation.recurrence // ✅ include recurrence
             ]
 
             if let weight = weightValue { updatedData["weight"] = weight }
@@ -707,7 +708,6 @@
                 self?.navigationController?.popViewController(animated: true)
             }
         }
-
 
 
         

@@ -28,55 +28,48 @@ class ZahraaAddressTableViewCell: UITableViewCell {
     
     
     func configure(with donation: Donation) {
-        
-        // 1️⃣ Border like text fields
-        addressBtn.layer.borderWidth = 1
-        addressBtn.layer.borderColor = UIColor.systemGray4.cgColor
-        addressBtn.layer.cornerRadius = 8
-        addressBtn.clipsToBounds = true
-        
-        // ✅ Set text color to black
-          addressBtn.setTitleColor(.black, for: .normal)
-        
+        // Full address
         let address = donation.address
         var addressParts: [String] = []
-        
-        // Building
         addressParts.append("Building \(address.building)")
-        
-        // Optional: only show Flat on iPad or if present
-        if let flat = address.flat {
-            addressParts.append("Flat \(flat)")
-        }
-        
-        // Road & Block
+        if let flat = address.flat { addressParts.append("Flat \(flat)") }
         addressParts.append("Road \(address.road)")
         addressParts.append("Block \(address.block)")
-        
-        // Area & Governorate
         addressParts.append(address.area)
         addressParts.append("\(address.governorate) Governorate")
-        
+
         var fullAddress = addressParts.joined(separator: ", ")
-        
-        // ✅ Adjust for device type
         if UIDevice.current.userInterfaceIdiom == .phone {
-            // iPhone: shorten the string
             fullAddress = "Building \(address.building), Road \(address.road), Block \(address.block) ..."
         }
+
+        // ✅ Use UIButton.Configuration for background & text color
+        var config = UIButton.Configuration.filled()
+        config.title = fullAddress
+        config.titleAlignment = .leading
+        config.contentInsets = NSDirectionalEdgeInsets(top: 10, leading: 12, bottom: 10, trailing: 12)
         
-        addressBtn.setTitle(fullAddress, for: .normal)
+        // Dynamic colors for light/dark mode
+        config.baseBackgroundColor = UIColor { trait in
+            return trait.userInterfaceStyle == .dark ? .black : .white
+        }
+        config.baseForegroundColor = UIColor { trait in
+            return trait.userInterfaceStyle == .dark ? .white : .black
+        }
         
-        // Force single line and truncation
-        addressBtn.titleLabel?.lineBreakMode = .byTruncatingTail
-        addressBtn.titleLabel?.numberOfLines = 1
-        addressBtn.titleLabel?.adjustsFontSizeToFitWidth = false
-        addressBtn.titleLabel?.baselineAdjustment = .alignCenters
-        addressBtn.contentHorizontalAlignment = .left
-        addressBtn.titleLabel?.semanticContentAttribute = .forceLeftToRight
+        // Border
+        config.background.strokeWidth = 0.5
+        config.background.strokeColor = UIColor { trait in
+            return trait.userInterfaceStyle == .dark ? UIColor.white.withAlphaComponent(0.3) : UIColor.systemGray4
+        }
+        config.background.cornerRadius = 8
+
+        
+        // Apply configuration
+        addressBtn.configuration = config
+        addressBtn.contentHorizontalAlignment = .leading
+        addressBtn.adjustsImageWhenHighlighted = false // prevents text dimming
     }
-
-
 
 
     

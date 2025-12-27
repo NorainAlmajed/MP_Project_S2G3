@@ -1,8 +1,3 @@
-//
-//  SceneDelegate.swift
-//  ProjectSimulator
-//
-
 import UIKit
 import FirebaseAuth
 
@@ -22,26 +17,22 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         window?.makeKeyAndVisible()
     }
 
-    func setRootViewController() {
-        let authStoryboard = UIStoryboard(name: "Authentication", bundle: nil)
+    private func setRootViewController() {
 
         if Auth.auth().currentUser != nil {
-            // User logged in
-            let homeVC = authStoryboard.instantiateViewController(
-                withIdentifier: "HomeViewController"
-            )
-            window?.rootViewController = homeVC
+            // Logged in → Main app
+            let storyboard = UIStoryboard(name: "Main", bundle: nil)
+            let rootVC = storyboard.instantiateInitialViewController()
+            window?.rootViewController = rootVC
         } else {
-            // User NOT logged in
-            let loginVC = authStoryboard.instantiateViewController(
-                withIdentifier: "LoginViewController"
-            )
-            window?.rootViewController = loginVC
+            // Not logged in → Authentication flow
+            let storyboard = UIStoryboard(name: "Authentication", bundle: nil)
+            let rootVC = storyboard.instantiateInitialViewController()
+            window?.rootViewController = rootVC
         }
     }
 
-    // MARK: - Scene lifecycle
-
+    // MARK: - Scene lifecycle (empty is fine)
     func sceneDidDisconnect(_ scene: UIScene) {}
     func sceneDidBecomeActive(_ scene: UIScene) {}
     func sceneWillResignActive(_ scene: UIScene) {}

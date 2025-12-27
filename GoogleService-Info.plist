@@ -3,17 +3,17 @@
 <plist version="1.0">
 <dict>
 	<key>API_KEY</key>
-	<string>AIzaSyD6Vo5rNVaVt8F93ku5XoPD5xxnlzAOoSs</string>
+	<string>AIzaSyDcIPEgQWK5tgQkGhbxK0JgMSsJIS-g-9s</string>
 	<key>GCM_SENDER_ID</key>
-	<string>194621258376</string>
+	<string>286491730082</string>
 	<key>PLIST_VERSION</key>
 	<string>1</string>
 	<key>BUNDLE_ID</key>
 	<string>com.bignerdranch.ProjectSimulator</string>
 	<key>PROJECT_ID</key>
-	<string>nourish-ad2b7</string>
+	<string>nourish-bahrain</string>
 	<key>STORAGE_BUCKET</key>
-	<string>nourish-ad2b7.firebasestorage.app</string>
+	<string>nourish-bahrain.firebasestorage.app</string>
 	<key>IS_ADS_ENABLED</key>
 	<false></false>
 	<key>IS_ANALYTICS_ENABLED</key>
@@ -25,6 +25,6 @@
 	<key>IS_SIGNIN_ENABLED</key>
 	<true></true>
 	<key>GOOGLE_APP_ID</key>
-	<string>1:194621258376:ios:65f7157fc4f1fa4021bd3d</string>
+	<string>1:286491730082:ios:ed850c53e0800b73d0b7fb</string>
 </dict>
 </plist>

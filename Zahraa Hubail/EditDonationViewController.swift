@@ -979,13 +979,44 @@
             }
         }
 
-        // You can put this anywhere inside the main class (not extension)
+        
+        
+        
+        
         func didAddAddress(_ address: ZahraaAddress) {
-            print("Address added:", address)
-            // You can update your donation model if needed
-            donation?.address = address
+            guard let donation = donation,
+                  let donationId = donation.firestoreID
+            else { return }
+
+            // Update local model
+            donation.address = address
+
+            // 🔥 UPDATE FIRESTORE
+            let db = Firestore.firestore()
+            let donationRef = db.collection("Donation").document(donationId)
+
+            let addressData: [String: Any] = [
+                "building": address.building,
+                "road": address.road,
+                "block": address.block,
+                "area": address.area,
+                "governorate": address.governorate,
+                "flat": address.flat as Any
+            ]
+
+            donationRef.updateData([
+                "address": addressData
+            ]) { error in
+                if let error = error {
+                    print("❌ Failed to update address:", error.localizedDescription)
+                } else {
+                    print("✅ Address updated successfully")
+                }
+            }
+
             donationFormTableview.reloadSections(IndexSet(integer: 7), with: .none)
         }
+
 
 
 
@@ -998,13 +1029,19 @@ extension EditDonationViewController: ZahraaAddressTableViewCellDelegate {
         let addressVC = storyboard.instantiateViewController(
             withIdentifier: "ZahraaAddressPageViewController"
         ) as! ZahraaAddressPageViewController
-        addressVC.delegate = self  // your existing AddAddressDelegate
-
-        // ✅ REMOVE BACK TEXT
+        
+        // ✅ Pass the donation object here
+        addressVC.donation = self.donation
+        
+        // ✅ Set delegate
+        addressVC.delegate = self  // your existing ZahraaAddressDelegate
+        
+        // ✅ Optional: remove back text
         let backItem = UIBarButtonItem()
         backItem.title = ""
         navigationItem.backBarButtonItem = backItem
 
         navigationController?.pushViewController(addressVC, animated: true)
     }
+
 }

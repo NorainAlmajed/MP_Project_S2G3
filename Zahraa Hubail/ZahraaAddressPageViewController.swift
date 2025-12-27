@@ -11,11 +11,11 @@ import UIKit
 class ZahraaAddressPageViewController: UIViewController {
 
     
-        
+        var donation: Donation?
+
         
         weak var delegate: ZahraaAddressDelegate?
 
-        @IBOutlet weak var nameTextField: UITextField!
         
         @IBOutlet weak var buildingTextField: UITextField!
         
@@ -34,11 +34,23 @@ class ZahraaAddressPageViewController: UIViewController {
         private var selectedGovernorate: String = ""
         private let governorates = ["Capital", "Muharraq", "Northern", "Southern"]
             
+    
+    
         override func viewDidLoad() {
             super.viewDidLoad()
             setupUI()
             // Do any additional setup after loading the view.
+            // Make saveButton rounded
+                saveButton.layer.cornerRadius = saveButton.frame.height / 2
+                saveButton.clipsToBounds = true
+            
+            // Prefill address fields
+                configureAddressFields()
         }
+    
+    
+    
+    
         private func setupUI() {
             title = "Edit Address Form"
         }
@@ -61,43 +73,63 @@ class ZahraaAddressPageViewController: UIViewController {
                     present(alert, animated: true)
         }
         
-        @IBAction func saveButtonTapped(_ sender: Any) {
-            guard let name = nameTextField.text, !name.isEmpty,
-                  let building = buildingTextField.text, !building.isEmpty,
-                  let road = roadTextField.text, !road.isEmpty,
-                  let block = blockTextField.text, !block.isEmpty,
-                  let area = areaTextField.text, !area.isEmpty,
-                  !selectedGovernorate.isEmpty else {
-                showAlert(title: "Error", message: "Please fill in all required fields")
-                return
-            }
-                    
-            let address = ZahraaAddress(
-                building: building,
-                road: road.description,
-                block: block.description,
-                flat: flatTextField.text ?? "",
-                area: area,
-                governorate: selectedGovernorate
-            )
-                    
-            delegate?.didAddAddress(address)
-            navigationController?.popViewController(animated: true)
+    @IBAction func saveButtonTapped(_ sender: Any) {
+
+        guard
+            let building = buildingTextField.text, !building.isEmpty,
+            let road = roadTextField.text, !road.isEmpty,
+            let block = blockTextField.text, !block.isEmpty,
+            let area = areaTextField.text, !area.isEmpty,
+            !selectedGovernorate.isEmpty,
+            let donation = donation
+        else {
+            showAlert(title: "Error", message: "Please fill in all required fields")
+            return
         }
-        
+
+        // ✅ UPDATE EXISTING ADDRESS (NO CREATION LOGIC)
+        donation.address.building = building
+        donation.address.road = road
+        donation.address.block = block
+        donation.address.area = area
+        donation.address.governorate = selectedGovernorate
+
+        let flatText = flatTextField.text?.trimmingCharacters(in: .whitespacesAndNewlines)
+        donation.address.flat = flatText?.isEmpty == true ? nil : flatText
+
+        // ✅ Send updated address back
+        delegate?.didAddAddress(donation.address)
+
+        navigationController?.popViewController(animated: true)
+    }
+
         private func showAlert(title: String, message: String) {
                 let alert = UIAlertController(title: title, message: message, preferredStyle: .alert)
                 alert.addAction(UIAlertAction(title: "OK", style: .default))
                 present(alert, animated: true)
             }
-        /*
-        // MARK: - Navigation
 
-        // In a storyboard-based application, you will often want to do a little preparation before navigation
-        override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-            // Get the new view controller using segue.destination.
-            // Pass the selected object to the new view controller.
+    
+    private func configureAddressFields() {
+        guard let address = donation?.address else { return }
+
+        // Fill text fields
+        buildingTextField.text = address.building
+        roadTextField.text = address.road
+        blockTextField.text = address.block
+        areaTextField.text = address.area
+        
+        // Flat is optional
+        if let flat = address.flat, !flat.isEmpty {
+            flatTextField.text = flat
+        } else {
+            flatTextField.text = "" // or leave as placeholder
         }
-        */
+
+        // Governorate button
+        selectedGovernorate = address.governorate
+        governorateButton.setTitle(selectedGovernorate, for: .normal)
+    }
+
 
     }

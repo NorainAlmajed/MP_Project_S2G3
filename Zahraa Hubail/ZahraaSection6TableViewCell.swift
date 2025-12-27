@@ -276,10 +276,6 @@ class ZahraaSection6TableViewCell: UITableViewCell {
         ])
     }
 
-
-
-
-    
     
     
 }

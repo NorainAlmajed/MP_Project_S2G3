@@ -65,7 +65,8 @@
         private var weightInvalidFormat = false
         private var shouldShowWeightError = false
         private var selectedExpiryDate: Date?
-        
+        private var selectedPickupDate: Date?
+
         
         
         //for the keyboard
@@ -204,7 +205,7 @@
         @objc func doneButtonTapped() { view.endEditing(true) }
         
         // MARK: - Table DataSource
-        func numberOfSections(in tableView: UITableView) -> Int { isAdminUser ? 9 : 8 }
+        func numberOfSections(in tableView: UITableView) -> Int { isAdminUser ? 10 : 9 }
         func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int { 1 }
         
         
@@ -393,12 +394,27 @@
             }
 
 
+                //PickUp date cell
+            if adjustedSection == 8 {
+                let cell = tableView.dequeueReusableCell(withIdentifier: "PickUpDateCell", for: indexPath) as! ZahraaPickUpDateTableViewCell
+                cell.selectionStyle = .none
+                
+                // ✅ Set the existing pickup date
+                cell.configure(date: selectedPickupDate)
+                
+                // ✅ Keep VC updated when user changes the date
+                cell.onDateSelected = { [weak self] date in
+                    self?.selectedPickupDate = date
+                }
+                
+                return cell
+            }
 
 
             
             
             // Section 8 (Proceed button)
-            if adjustedSection == 8 {
+            if adjustedSection == 9 {
                 let cell = tableView.dequeueReusableCell(withIdentifier: "Section8Cell", for: indexPath) as! ZahraaSection8TableViewCell
                 cell.selectionStyle = .none
                 cell.onProceedTapped = { [weak self] in
@@ -435,8 +451,9 @@
             case 4: return 102
             case 5: return 102
             case 6: return 161
-            case 7: return 126 // Address
-            case 8: return UITableView.automaticDimension
+            case 7: return 114 // Address
+            case 8: return 102 //Pickup Date
+            case 9: return UITableView.automaticDimension
             default: return UITableView.automaticDimension
             }
         }
@@ -572,6 +589,7 @@
             let invalidQuantity = (selectedQuantity <= 0)
             let invalidWeight = weightInvalidFormat
             let missingExpiry = (selectedExpiryDate == nil)
+            let missingPickupDate = (selectedPickupDate == nil) // ✅ check pickup date
 
             // 2️⃣ Flip error flags
             shouldShowImageError = missingImage
@@ -581,11 +599,11 @@
 
             // 3️⃣ Reload affected sections
             UIView.performWithoutAnimation {
-                donationFormTableview.reloadSections(IndexSet([0, 2, 3, 4, 5]), with: .none)
+                donationFormTableview.reloadSections(IndexSet([0, 2, 3, 4, 5, 8]), with: .none)
             }
 
             // 4️⃣ Stop if validation failed
-            if missingImage || missingFoodCategory || invalidQuantity || invalidWeight || missingExpiry {
+            if missingImage || missingFoodCategory || invalidQuantity || invalidWeight || missingExpiry || missingPickupDate {
                 return
             }
 
@@ -598,7 +616,6 @@
                 address.governorate = draft.governorate
                 address.flat = draft.flat
             }
-
 
             // 6️⃣ Prepare Firestore update
             guard let donation = donation, let donationId = donation.firestoreID else { return }
@@ -614,6 +631,7 @@
             if let weight = weightValue { updatedData["weight"] = weight }
             if let description = selectedShortDescription { updatedData["description"] = description }
             if let imageUrl = uploadedDonationImageUrl { updatedData["foodImageUrl"] = imageUrl }
+            if let pickupDate = selectedPickupDate { updatedData["pickupDate"] = Timestamp(date: pickupDate) } // ✅ add pickup date
 
             // ✅ Include address only if draft exists
             if let address = draftAddress {
@@ -639,6 +657,7 @@
                 self?.navigationController?.popViewController(animated: true)
             }
         }
+
 
 
 
@@ -899,6 +918,11 @@
             UIView.performWithoutAnimation {
                 donationFormTableview.reloadData()
             }
+            
+            // Section 8: PickUp Date
+            selectedPickupDate = donation.pickupDate.dateValue()
+
+
         }
         
         

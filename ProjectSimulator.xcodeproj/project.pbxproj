@@ -19,6 +19,7 @@
 		481E6C232EFF149300F61C65 /* ZahraaSection8TableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 481E6C222EFF149300F61C65 /* ZahraaSection8TableViewCell.swift */; };
 		481E6C292EFFEAD800F61C65 /* ZahraaAddressTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 481E6C282EFFEAD800F61C65 /* ZahraaAddressTableViewCell.swift */; };
 		481E6D082F0015A900F61C65 /* ZahraaAddressPageViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 481E6D072F0015A900F61C65 /* ZahraaAddressPageViewController.swift */; };
+		481E6D0A2F00398900F61C65 /* ZahraaPickUpDateTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 481E6D092F00398900F61C65 /* ZahraaPickUpDateTableViewCell.swift */; };
 		48C4D03D2EF993110025325A /* Cloudinary in Frameworks */ = {isa = PBXBuildFile; productRef = 48C4D03C2EF993110025325A /* Cloudinary */; };
 		48D294132EFEF13C005A8DA2 /* Section1TableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 48D294062EFEF13C005A8DA2 /* Section1TableViewCell.swift */; };
 		48D294142EFEF13C005A8DA2 /* Donation.swift in Sources */ = {isa = PBXBuildFile; fileRef = 48D293FA2EFEF13C005A8DA2 /* Donation.swift */; };
@@ -77,6 +78,7 @@
 		481E6C222EFF149300F61C65 /* ZahraaSection8TableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ZahraaSection8TableViewCell.swift; sourceTree = "<group>"; };
 		481E6C282EFFEAD800F61C65 /* ZahraaAddressTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ZahraaAddressTableViewCell.swift; sourceTree = "<group>"; };
 		481E6D072F0015A900F61C65 /* ZahraaAddressPageViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ZahraaAddressPageViewController.swift; sourceTree = "<group>"; };
+		481E6D092F00398900F61C65 /* ZahraaPickUpDateTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ZahraaPickUpDateTableViewCell.swift; sourceTree = "<group>"; };
 		48D293F62EFEF13C005A8DA2 /* ZahraaAddress.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ZahraaAddress.swift; sourceTree = "<group>"; };
 		48D293FA2EFEF13C005A8DA2 /* Donation.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Donation.swift; sourceTree = "<group>"; };
 		48D293FB2EFEF13C005A8DA2 /* DonationCollectionViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DonationCollectionViewCell.swift; sourceTree = "<group>"; };
@@ -223,6 +225,7 @@
 				481E6C222EFF149300F61C65 /* ZahraaSection8TableViewCell.swift */,
 				481E6C282EFFEAD800F61C65 /* ZahraaAddressTableViewCell.swift */,
 				481E6D072F0015A900F61C65 /* ZahraaAddressPageViewController.swift */,
+				481E6D092F00398900F61C65 /* ZahraaPickUpDateTableViewCell.swift */,
 			);
 			path = "Zahraa Hubail";
 			sourceTree = "<group>";
@@ -423,6 +426,7 @@
 				481E6C152EFF136300F61C65 /* ZahraaSection1TableViewCell.swift in Sources */,
 				48D294172EFEF13C005A8DA2 /* Section3TableViewCell.swift in Sources */,
 				48D294182EFEF13C005A8DA2 /* DonationViewController.swift in Sources */,
+				481E6D0A2F00398900F61C65 /* ZahraaPickUpDateTableViewCell.swift in Sources */,
 				48D294192EFEF13C005A8DA2 /* StatusCollectionViewCell.swift in Sources */,
 				481E6C192EFF13F200F61C65 /* ZahraaSection3TableViewCell.swift in Sources */,
 				481E6C1B2EFF140F00F61C65 /* ZahraaSection4TableViewCell.swift in Sources */,

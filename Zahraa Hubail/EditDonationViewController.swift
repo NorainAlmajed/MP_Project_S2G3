@@ -440,7 +440,15 @@
             //Recurrence
             if adjustedSection == 10 {
                 let cell = tableView.dequeueReusableCell(withIdentifier: "RecurrenceCell", for: indexPath) as! ZahraaRecurrenceTableViewCell
+                cell.selectionStyle = .none
 
+                // Configure with existing donation recurrence
+                cell.configure(with: donation?.recurrence ?? 0)
+
+                // Keep VC state updated
+                cell.onFrequencySelected = { [weak self] value in
+                    self?.donation?.recurrence = value
+                }
 
                 return cell
             }

@@ -39,6 +39,17 @@ class ZahraaPickUpTimeTableViewCell: UITableViewCell {
         timeframeTableView.dataSource = self
         timeframeTableView.register(UITableViewCell.self, forCellReuseIdentifier: "TimeframeCell")
 
+        // ✅ Make the outer cell background adaptive
+        backgroundColor = .systemBackground          // cell container
+        timeframeTableView.backgroundColor = .systemBackground // inner table matches cell
+
+        // ✅ Separator color
+        if traitCollection.userInterfaceStyle == .dark {
+            timeframeTableView.separatorColor = .gray
+        } else {
+            timeframeTableView.separatorColor = .separator // default color
+        }
+
         if UIDevice.current.userInterfaceIdiom == .pad {
             pickupLblLeading.constant = 94
             pickupTableLeading.constant = 0
@@ -54,50 +65,42 @@ class ZahraaPickUpTimeTableViewCell: UITableViewCell {
 
 
 
-    extension ZahraaPickUpTimeTableViewCell: UITableViewDelegate, UITableViewDataSource {
+extension ZahraaPickUpTimeTableViewCell: UITableViewDelegate, UITableViewDataSource {
 
-        func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-            return timeframes.count
-        }
-
-        
-        
-        
-        func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-            let cell = tableView.dequeueReusableCell(withIdentifier: "TimeframeCell", for: indexPath)
-            let time = timeframes[indexPath.row]
-            cell.textLabel?.text = time
-
-            // ✅ Use _selectedTimeframe instead of selectedTimeframe
-            cell.accessoryType = (time == _selectedTimeframe) ? .checkmark : .none
-
-            return cell
-        }
-
-
-        
-        
-        func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-            guard indexPath.row < timeframes.count else { return }
-            let selected = timeframes[indexPath.row]
-            _selectedTimeframe = selected
-            if let callback = onTimeframeSelected {
-                callback(selected)
-            }
-
-            tableView.reloadData()
-        }
-
-        
-
-        func configure(selected: String?) {
-            // update table view without storing it in the cell
-            timeframeTableView.reloadData()
-            
-            // store in a private variable ONLY for table view logic
-            self._selectedTimeframe = selected
-        }
-            
-
-        
+    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+        return timeframes.count
     }
+
+    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+        let cell = tableView.dequeueReusableCell(withIdentifier: "TimeframeCell", for: indexPath)
+        let time = timeframes[indexPath.row]
+        cell.textLabel?.text = time
+
+        // ✅ Text color: white only in dark mode, default in light mode
+        if traitCollection.userInterfaceStyle == .dark {
+            cell.textLabel?.textColor = .white
+        } else {
+            cell.textLabel?.textColor = nil // default color (black in light mode)
+        }
+
+        cell.backgroundColor = .clear   // shows the table view background
+        cell.accessoryType = (time == _selectedTimeframe) ? .checkmark : .none
+        cell.tintColor = .systemBlue
+
+        return cell
+    }
+
+    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        guard indexPath.row < timeframes.count else { return }
+        let selected = timeframes[indexPath.row]
+        _selectedTimeframe = selected
+        onTimeframeSelected?(selected)
+        tableView.reloadData()
+    }
+
+    func configure(selected: String?) {
+        self._selectedTimeframe = selected
+        timeframeTableView.reloadData()
+    }
+}
+

@@ -8,9 +8,16 @@
 import Foundation
 
 
-struct PickupSchedule {
-    var address: Address?
-    var pickupDate: Date?
-    var timeframe: String?
-    var Recurrance: Int
+import Foundation
+import FirebaseFirestore
+
+struct IncompleteDonation {
+    var category: String?
+    var description: String?
+    var quantity: Int?
+    var weight: Double?
+    var foodImageUrl: String?
+    var expiryDate: Date?
+    var donationID: Int?
+    var ngo: DocumentReference?
 }

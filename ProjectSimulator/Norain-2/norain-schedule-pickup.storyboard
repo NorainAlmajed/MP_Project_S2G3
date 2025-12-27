@@ -12,7 +12,7 @@
         <!--SchedulePickupViewController-->
         <scene sceneID="s0d-6b-0kx">
             <objects>
-                <viewController storyboardIdentifier="SchedulePickupViewController" title="SchedulePickupViewController" id="Y6W-OH-hqX" customClass="SchedulePickupViewController" customModule="ProjectSimulator" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController storyboardIdentifier="SchedulePickupViewController" title="SchedulePickupViewController" useStoryboardIdentifierAsRestorationIdentifier="YES" id="Y6W-OH-hqX" customClass="SchedulePickupViewController" customModule="ProjectSimulator" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="5EZ-qb-Rvc">
                         <rect key="frame" x="0.0" y="0.0" width="393" height="929"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
@@ -62,6 +62,13 @@
                                                             <action selector="addNewAddressTapped:" destination="Y6W-OH-hqX" eventType="touchUpInside" id="P00-n9-Afx"/>
                                                         </connections>
                                                     </button>
+                                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="**Please Select a Pickup Address" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="ci9-Xu-1fS">
+                                                        <rect key="frame" x="156" y="77" width="197" height="21"/>
+                                                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                                        <fontDescription key="fontDescription" type="system" pointSize="12"/>
+                                                        <color key="textColor" systemColor="systemRedColor"/>
+                                                        <nil key="highlightedColor"/>
+                                                    </label>
                                                 </subviews>
                                                 <constraints>
                                                     <constraint firstItem="UJO-vb-wqF" firstAttribute="centerY" secondItem="UJM-s5-bfj" secondAttribute="centerY" constant="-4" id="0fa-NQ-I93"/>
@@ -119,7 +126,7 @@
                                                     <color key="baseForegroundColor" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                                 </buttonConfiguration>
                                                 <connections>
-                                                    <action selector="dateButtonTapped:" destination="Y6W-OH-hqX" eventType="touchUpInside" id="dtX-Wg-gBx"/>
+                                                    <action selector="dateButtonTapped:" destination="Y6W-OH-hqX" eventType="touchUpInside" id="QF1-A4-PJz"/>
                                                 </connections>
                                             </button>
                                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Pick-up timeframe" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="ew4-ei-kzH">
@@ -219,6 +226,20 @@
                                                     <action selector="confirmButtonTapped:" destination="Y6W-OH-hqX" eventType="touchUpInside" id="Mrj-xd-KRx"/>
                                                 </connections>
                                             </button>
+                                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="**Please Select a Pickup Date" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="suy-DA-cjv">
+                                                <rect key="frame" x="20" y="196" width="197" height="21"/>
+                                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                                <fontDescription key="fontDescription" type="system" pointSize="12"/>
+                                                <color key="textColor" systemColor="systemRedColor"/>
+                                                <nil key="highlightedColor"/>
+                                            </label>
+                                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="**Please Select a Pickup time" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="AZH-Ht-BKt">
+                                                <rect key="frame" x="20" y="481" width="197" height="21"/>
+                                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                                <fontDescription key="fontDescription" type="system" pointSize="12"/>
+                                                <color key="textColor" systemColor="systemRedColor"/>
+                                                <nil key="highlightedColor"/>
+                                            </label>
                                         </subviews>
                                         <color key="backgroundColor" systemColor="systemBackgroundColor"/>
                                         <constraints>
@@ -284,14 +305,17 @@
                         <outlet property="addNewAddressBtn" destination="rvz-7A-BY3" id="3Kj-G2-OED"/>
                         <outlet property="addressContainerView" destination="UJM-s5-bfj" id="xrr-m9-6Ub"/>
                         <outlet property="addressDetailsLbl" destination="LBz-wD-8pd" id="NAU-0c-eoh"/>
+                        <outlet property="addressErrorLbl" destination="ci9-Xu-1fS" id="004-ad-xU5"/>
                         <outlet property="addressNameLbl" destination="4Wc-bn-5gx" id="Epc-MY-W2C"/>
                         <outlet property="checkmarkImageView" destination="UJO-vb-wqF" id="trD-X4-yUc"/>
                         <outlet property="confirmBtn" destination="O86-bh-XHy" id="nwb-cA-djV"/>
                         <outlet property="dateBtn" destination="sNF-qT-Itx" id="Fja-Fl-18h"/>
+                        <outlet property="dateErrorLbl" destination="suy-DA-cjv" id="qPF-BK-tTZ"/>
                         <outlet property="dateTextField" destination="oqW-Ii-khC" id="KKe-KK-ekp"/>
                         <outlet property="frequencyBtn" destination="B8C-D8-QkK" id="cpY-b5-fA4"/>
                         <outlet property="frequencyContainer" destination="qQO-Hz-LFG" id="YFG-46-c7p"/>
                         <outlet property="reccuringSwitch" destination="lIO-UP-Sfq" id="FGF-fS-2NK"/>
+                        <outlet property="timeErrorLbl" destination="AZH-Ht-BKt" id="BFx-ek-ugf"/>
                         <outlet property="timeframeHeightConstraint" destination="nfV-vU-9ci" id="fFd-6B-mXb"/>
                         <outlet property="timeframeTableView" destination="ZjW-am-x0D" id="ppb-Zv-6g0"/>
                         <segue destination="MH0-2O-wVd" kind="show" identifier="showAddAddress" id="M1d-zz-bca"/>
@@ -316,7 +340,7 @@
                                 <nil key="highlightedColor"/>
                             </label>
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Address Name" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="343-9q-oxU">
-                                <rect key="frame" x="40" y="232" width="110.66666666666669" height="19.333333333333343"/>
+                                <rect key="frame" x="40.000000000000007" y="232" width="110.66666666666669" height="19.333333333333343"/>
                                 <fontDescription key="fontDescription" type="system" weight="semibold" pointSize="16"/>
                                 <nil key="textColor"/>
                                 <nil key="highlightedColor"/>
@@ -374,7 +398,7 @@
                                 <nil key="highlightedColor"/>
                             </label>
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Building" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="19J-SB-ZyI">
-                                <rect key="frame" x="40" y="343" width="62" height="20.333333333333314"/>
+                                <rect key="frame" x="40" y="343.33333333333331" width="62" height="20.333333333333314"/>
                                 <fontDescription key="fontDescription" type="system" weight="semibold" pointSize="16"/>
                                 <nil key="textColor"/>
                                 <nil key="highlightedColor"/>
@@ -527,6 +551,9 @@
         </systemColor>
         <systemColor name="systemGrayColor">
             <color red="0.5568627451" green="0.5568627451" blue="0.57647058819999997" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+        </systemColor>
+        <systemColor name="systemRedColor">
+            <color red="1" green="0.23137254900000001" blue="0.18823529410000001" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
         </systemColor>
     </resources>
 </document>

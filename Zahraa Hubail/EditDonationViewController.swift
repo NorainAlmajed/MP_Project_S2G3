@@ -200,8 +200,12 @@
         @objc func doneButtonTapped() { view.endEditing(true) }
         
         // MARK: - Table DataSource
-        func numberOfSections(in tableView: UITableView) -> Int { isAdminUser ? 8 : 7 }
+        func numberOfSections(in tableView: UITableView) -> Int { isAdminUser ? 9 : 8 }
         func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int { 1 }
+        
+        
+        
+        
         
         func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
             
@@ -350,14 +354,35 @@
                 }
 
                 return cell
+                
+                
+                
             }
 
             
-            
+            // 🏠 Address (before Proceed button)
+            if adjustedSection == 7 {
+                let cell = tableView.dequeueReusableCell(
+                    withIdentifier: "AddressCell",
+                    for: indexPath
+                ) as! ZahraaAddressTableViewCell
+
+                cell.selectionStyle = .none
+
+                if let donation = self.donation {
+                    cell.configure(with: donation)
+                    cell.layoutIfNeeded() // ✅ ensure the button truncates correctly
+                }
+
+                return cell
+            }
+
+
+
             
             
             // Section 8 (Proceed button)
-            if adjustedSection == 7 {
+            if adjustedSection == 8 {
                 let cell = tableView.dequeueReusableCell(withIdentifier: "Section8Cell", for: indexPath) as! ZahraaSection8TableViewCell
                 cell.selectionStyle = .none
                 cell.onProceedTapped = { [weak self] in
@@ -394,7 +419,8 @@
             case 4: return 102
             case 5: return 102
             case 6: return 161
-            case 7: return UITableView.automaticDimension
+            case 7: return 126 // Address
+            case 8: return UITableView.automaticDimension
             default: return UITableView.automaticDimension
             }
         }

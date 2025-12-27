@@ -17,6 +17,7 @@
 		481E6C1F2EFF145900F61C65 /* ZahraaSection6TableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 481E6C1E2EFF145900F61C65 /* ZahraaSection6TableViewCell.swift */; };
 		481E6C212EFF147100F61C65 /* ZahraaSection7TableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 481E6C202EFF147100F61C65 /* ZahraaSection7TableViewCell.swift */; };
 		481E6C232EFF149300F61C65 /* ZahraaSection8TableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 481E6C222EFF149300F61C65 /* ZahraaSection8TableViewCell.swift */; };
+		481E6C292EFFEAD800F61C65 /* ZahraaAddressTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 481E6C282EFFEAD800F61C65 /* ZahraaAddressTableViewCell.swift */; };
 		48C4D03D2EF993110025325A /* Cloudinary in Frameworks */ = {isa = PBXBuildFile; productRef = 48C4D03C2EF993110025325A /* Cloudinary */; };
 		48D294132EFEF13C005A8DA2 /* Section1TableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 48D294062EFEF13C005A8DA2 /* Section1TableViewCell.swift */; };
 		48D294142EFEF13C005A8DA2 /* Donation.swift in Sources */ = {isa = PBXBuildFile; fileRef = 48D293FA2EFEF13C005A8DA2 /* Donation.swift */; };
@@ -73,6 +74,7 @@
 		481E6C1E2EFF145900F61C65 /* ZahraaSection6TableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ZahraaSection6TableViewCell.swift; sourceTree = "<group>"; };
 		481E6C202EFF147100F61C65 /* ZahraaSection7TableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ZahraaSection7TableViewCell.swift; sourceTree = "<group>"; };
 		481E6C222EFF149300F61C65 /* ZahraaSection8TableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ZahraaSection8TableViewCell.swift; sourceTree = "<group>"; };
+		481E6C282EFFEAD800F61C65 /* ZahraaAddressTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ZahraaAddressTableViewCell.swift; sourceTree = "<group>"; };
 		48D293F62EFEF13C005A8DA2 /* Address.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Address.swift; sourceTree = "<group>"; };
 		48D293FA2EFEF13C005A8DA2 /* Donation.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Donation.swift; sourceTree = "<group>"; };
 		48D293FB2EFEF13C005A8DA2 /* DonationCollectionViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DonationCollectionViewCell.swift; sourceTree = "<group>"; };
@@ -217,6 +219,7 @@
 				481E6C1E2EFF145900F61C65 /* ZahraaSection6TableViewCell.swift */,
 				481E6C202EFF147100F61C65 /* ZahraaSection7TableViewCell.swift */,
 				481E6C222EFF149300F61C65 /* ZahraaSection8TableViewCell.swift */,
+				481E6C282EFFEAD800F61C65 /* ZahraaAddressTableViewCell.swift */,
 			);
 			path = "Zahraa Hubail";
 			sourceTree = "<group>";
@@ -420,6 +423,7 @@
 				48D294192EFEF13C005A8DA2 /* StatusCollectionViewCell.swift in Sources */,
 				481E6C192EFF13F200F61C65 /* ZahraaSection3TableViewCell.swift in Sources */,
 				481E6C1B2EFF140F00F61C65 /* ZahraaSection4TableViewCell.swift in Sources */,
+				481E6C292EFFEAD800F61C65 /* ZahraaAddressTableViewCell.swift in Sources */,
 				48D2941A2EFEF13C005A8DA2 /* ExcelExporter.swift in Sources */,
 				48D2941B2EFEF13C005A8DA2 /* TestViewController.swift in Sources */,
 				48D2941C2EFEF13C005A8DA2 /* UIImageView+URLZH.swift in Sources */,

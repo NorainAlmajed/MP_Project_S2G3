@@ -2,7 +2,7 @@ import UIKit
 import FirebaseAuth
 import FirebaseFirestore
 
-// MARK: Impact Model (derived data)
+// MARK: - Impact Model
 struct ImpactData {
     let totalDonations: Int
     let mealsProvided: Int
@@ -10,392 +10,338 @@ struct ImpactData {
 }
 
 class DonorDashboardViewController: UIViewController {
+
+    // MARK: - Roles
+    enum UserRole: Int {
+        case admin = 1
+        case donor = 2
+        case ngo = 3
+    }
+
+    // MARK: - Sections
+    enum DashboardSection {
+        case welcome
+        case quickActions
+        case impactTracker
+        case graph
+        case browseNGOs
+        case recentDonations
+        case allDonations
+        case pendingDonations
+        case manageUsers
+    }
+
+    // MARK: - State
+    // we set the current user to donor because its the safest state and most common & to avoid crashing
+    private var currentRole: UserRole = .donor
+    private var sections: [DashboardSection] = []
+
     private var currentUserName: String = "there"
     private var currentUserID: String?
+
     private let db = Firestore.firestore()
+
     private var ngosFromFirestore: [NGO] = []
-    private var ngosListener: ListenerRegistration?
+    // for donor
     private var recentDonations: [Donation1] = []
+    // for thr admin
     private var allDonations: [Donation1] = []
 
+    private var ngosListener: ListenerRegistration?
     private var donationsListener: ListenerRegistration?
-
-    // MARK: Section indexes
-    private let WELCOME_SECTION = 0
-    private let QUICK_ACTIONS_SECTION = 1
-    private let IMPACT_TRACKER_SECTION = 2
-    private let GRAPH_SECTION = 3
-    private let NGOS_SECTION = 4
-    private let DONATIONS_SECTION = 5
 
     @IBOutlet weak var mainTableView: UITableView!
 
-    // MARK: Lifecycle
+    // MARK: - Lifecycle
     override func viewDidLoad() {
         super.viewDidLoad()
-            print("DonorDashboardViewController loaded")
-        print("mainTableView is nil:", mainTableView == nil)
-
-        loadCurrentUser()
-        
 
         mainTableView.delegate = self
         mainTableView.dataSource = self
         mainTableView.separatorStyle = .none
 
         setupEllipsisMenu()
+        loadCurrentUser()
         startListeningForNGOs()
-        
-
     }
+
+    // MARK: - Configure sections by role
+    private func configureSections(for role: UserRole) {
+        switch role {
+
+        case .donor:
+            sections = [
+                .welcome,
+                .quickActions,
+                .impactTracker,
+                .graph,
+                .browseNGOs,
+                .recentDonations
+            ]
+
+        case .ngo:
+            sections = [
+                .welcome,
+                .quickActions,
+                .impactTracker,
+                .pendingDonations
+            ]
+
+        case .admin:
+            sections = [
+                .welcome,
+                .quickActions,
+                .impactTracker,
+                .allDonations,
+                .manageUsers,
+                .browseNGOs
+            ]
+        }
+    }
+
+    // MARK: - User
+    private func loadCurrentUser() {
+        guard let user = Auth.auth().currentUser else { return }
+
+        currentUserID = user.uid
+
+        // Fetch role
+        db.collection("users").document(user.uid).getDocument { [weak self] snapshot, _ in
+            guard
+                let self = self,
+                let data = snapshot?.data(),
+                let roleInt = data["role"] as? Int,
+                let role = UserRole(rawValue: roleInt)
+            else { return }
+
+            self.currentRole = role
+            self.configureSections(for: role)
+            self.mainTableView.reloadData()
+        }
+
+        // Name
+        if let name = user.displayName, !name.isEmpty {
+            currentUserName = name
+        } else if let email = user.email {
+            currentUserName = email.components(separatedBy: "@").first?.capitalized ?? "there"
+        }
+
+        startListeningForRecentDonations()
+        startListeningForImpactDonations()
+    }
+
+    // MARK: - Firestore listeners
     private func startListeningForNGOs() {
-        // Stop old listener if exists (important to avoid duplicates)
         ngosListener?.remove()
 
         ngosListener = db.collection("users")
             .whereField("role", isEqualTo: 3)
-            .addSnapshotListener { [weak self] snapshot, error in
+            .addSnapshotListener { [weak self] snapshot, _ in
                 guard let self = self else { return }
-
-                if let error = error {
-                    print("Firestore NGO fetch error:", error.localizedDescription)
-                    return
-                }
-
-                guard let snapshot = snapshot else {
-                    print("No snapshot returned")
-                    return
-                }
-
-                let ngos: [NGO] = snapshot.documents.compactMap { doc in
-                    NGO(document: doc)
-                }
-
-                self.ngosFromFirestore = ngos
-
-                // Reload only the NGO section (fast + smooth)
-                DispatchQueue.main.async {
-                    self.mainTableView.reloadSections(IndexSet(integer: self.NGOS_SECTION), with: .none)
-                }
+                self.ngosFromFirestore = snapshot?.documents.compactMap { NGO(document: $0) } ?? []
+                self.mainTableView.reloadData()
             }
     }
-    private func startListeningForRecentDonations() {
-        guard let uid = currentUserID else {
-            print("UID is nil")
-            return
-        }
 
-        donationsListener?.remove()
+    private func startListeningForRecentDonations() {
+        guard let uid = currentUserID else { return }
 
         let userRef = db.collection("users").document(uid)
 
         donationsListener = db.collection("Donation")
             .whereField("donor", isEqualTo: userRef)
             .limit(to: 5)
-            .addSnapshotListener { [weak self] snapshot, error in
-
+            .addSnapshotListener { [weak self] snapshot, _ in
                 guard let self = self else { return }
-
-                if let error = error {
-                    print("Donation fetch error:", error.localizedDescription)
-                    return
-                }
-
-                guard let snapshot = snapshot else {
-                    print("Snapshot is nil")
-                    return
-                }
-
-                print("SNAPSHOT COUNT:", snapshot.documents.count)
-
-                let donations = snapshot.documents.compactMap {
-                    Donation1(document: $0)
-                }
-
-                print("PARSED DONATIONS:", donations.count)
-
-                self.recentDonations = donations
-
-                DispatchQueue.main.async {
-                    self.mainTableView.reloadSections(
-                        IndexSet(integer: self.DONATIONS_SECTION),
-                        with: .none
-                    )
-                }
+                self.recentDonations = snapshot?.documents.compactMap { Donation1(document: $0) } ?? []
+                self.mainTableView.reloadData()
             }
     }
 
     private func startListeningForImpactDonations() {
-
         guard let uid = currentUserID else { return }
 
         let userRef = db.collection("users").document(uid)
 
         db.collection("Donation")
             .whereField("donor", isEqualTo: userRef)
-            .addSnapshotListener { [weak self] snapshot, error in
-
+            .addSnapshotListener { [weak self] snapshot, _ in
                 guard let self = self else { return }
-
-                if let error = error {
-                    print("Impact donation fetch error:", error.localizedDescription)
-                    return
-                }
-
-                guard let snapshot = snapshot else { return }
-
-                let donations = snapshot.documents.compactMap {
-                    Donation1(document: $0)
-                }
-
-                self.allDonations = donations
-
-                // 🔥 Reload ONLY impact section
-                DispatchQueue.main.async {
-                    self.mainTableView.reloadSections(
-                        IndexSet(integer: self.IMPACT_TRACKER_SECTION),
-                        with: .none
-                    )
-                }
+                self.allDonations = snapshot?.documents.compactMap { Donation1(document: $0) } ?? []
+                self.mainTableView.reloadData()
             }
     }
 
-    // MARK: - Cleanup
-    deinit {
-        ngosListener?.remove()
-        donationsListener?.remove()
-    }
-
-    private func loadCurrentUser() {
-        guard let user = Auth.auth().currentUser else {
-            return
-        }
-
-        // Save user ID
-        currentUserID = user.uid
-        startListeningForRecentDonations()
-        startListeningForImpactDonations()
-        // Try Firebase display name
-        if let name = user.displayName, !name.isEmpty {
-            currentUserName = name
-        }
-        // Fallback: derive name from email
-        else if let email = user.email {
-            let nameFromEmail = email
-                .components(separatedBy: "@")
-                .first ?? "there"
-            currentUserName = nameFromEmail.capitalized
-        }
-        // Final fallback
-        else {
-            currentUserName = "there"
-        }
-
-        mainTableView.reloadSections(
-            IndexSet(integer: WELCOME_SECTION),
-            with: .none
-        )
-    }
-
-
-    // MARK: - Impact calculation (CORE LOGIC)
+    // MARK: - Impact Logic
     private var impactData: ImpactData {
-        calculateImpact(from: allDonations)
-    }
-
-    private func calculateImpact(from donations: [Donation1]) -> ImpactData {
-
-        // Filter only VALID donations, no rejected or cancelled
-        let validDonations = donations.filter {
-            $0.status == 2 || $0.status == 3   // Accepted or Collected
-        }
-
-        // total donations (VALID only)
-        let totalDonations = validDonations.count
-
-        // Meals provided = sum of quantity
-        let mealsProvided = validDonations.reduce(0) { result, donation in
-            result + donation.quantity
-        }
-
-        // 4️⃣ Conservative business rule
-        // 1 person supported per 3 meals
-        let livesImpacted = mealsProvided / 3
-
+        let valid = allDonations.filter { $0.status == 2 || $0.status == 3 }
+        let meals = valid.reduce(0) { $0 + $1.quantity }
         return ImpactData(
-            totalDonations: totalDonations,
-            mealsProvided: mealsProvided,
-            livesImpacted: livesImpacted
+            totalDonations: valid.count,
+            mealsProvided: meals,
+            livesImpacted: meals / 3
         )
     }
 
-
-
-
-    // MARK: - The ellipses in the navigation menu
+    // MARK: - Menu and ellipses
     private func setupEllipsisMenu() {
-
-        let notificationsAction = UIAction(
-            title: "Notifications",
-            image: UIImage(systemName: "bell")
-        ) { _ in
-            print("Notifications tapped")
-        }
-
-        let chatAction = UIAction(
-            title: "Chat",
-            image: UIImage(systemName: "message")
-        ) { _ in
-            print("Chat tapped")
-        }
-
         navigationItem.rightBarButtonItem = UIBarButtonItem(
             image: UIImage(systemName: "ellipsis"),
-            menu: UIMenu(children: [notificationsAction, chatAction])
+            menu: UIMenu(children: [
+                UIAction(title: "Notifications", image: UIImage(systemName: "bell")) { _ in },
+                UIAction(title: "Chat", image: UIImage(systemName: "message")) { _ in }
+            ])
         )
     }
 }
 
-// MARK: - Table View
+// MARK: - TableView
 extension DonorDashboardViewController: UITableViewDataSource, UITableViewDelegate {
-
+    
     func numberOfSections(in tableView: UITableView) -> Int {
-        return 6
+        sections.count
     }
-
+    
     func tableView(_ tableView: UITableView,
-                   numberOfRowsInSection section: Int) -> Int {
-        return 1
-    }
-
+                   numberOfRowsInSection section: Int) -> Int { 1 }
+    
+    // MARK: To make the size responsive on iPads and iPhone
     func tableView(_ tableView: UITableView,
                    heightForRowAt indexPath: IndexPath) -> CGFloat {
-
+        
         let isPad = traitCollection.userInterfaceIdiom == .pad
-
-        switch indexPath.section {
-        case WELCOME_SECTION:
-            return isPad ? 120 : 80
-
-        case QUICK_ACTIONS_SECTION:
-            return isPad ? 110 : 80
-
-        case IMPACT_TRACKER_SECTION:
-            return isPad ? 180 : 140
-
-        case GRAPH_SECTION:
-            return isPad ? 260 : 200
-
-        case NGOS_SECTION:
-            return isPad ? 280 : 220
-
-        case DONATIONS_SECTION:
+        let section = sections[indexPath.section]
+        
+        switch section {
+        case .welcome: return isPad ? 120 : 80
+        case .quickActions: return isPad ? 110 : 80
+        case .impactTracker: return isPad ? 180 : 140
+        case .graph: return isPad ? 260 : 200
+        case .browseNGOs: return isPad ? 280 : 220
+        case .recentDonations,
+                .allDonations,
+                .pendingDonations,
+                .manageUsers:
             return isPad ? 400 : 300
-        default:
-            return 100
         }
     }
-
-
+    
     func tableView(_ tableView: UITableView,
                    cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-
-        // MARK: - Welcome Section
-        if indexPath.section == WELCOME_SECTION {
-
+        
+        let section = sections[indexPath.section]
+        
+        switch section {
+            // MARK: Welcome msg
+        case .welcome:
             let cell = UITableViewCell()
             cell.selectionStyle = .none
-
+            
             let label = UILabel()
-            label.text = "Hi \(currentUserName), thank you for your generosity!"
             label.font = .boldSystemFont(ofSize: 20)
             label.numberOfLines = 0
             label.translatesAutoresizingMaskIntoConstraints = false
-
+            // diso
+            switch currentRole {
+            case .admin:
+                label.text = "Welcome back, Admin \(currentUserName)"
+            case .donor:
+                label.text = "Hi \(currentUserName), thank you for your generosity!"
+            case .ngo:
+                label.text = "Welcome back, \(currentUserName)"
+            }
+            
             cell.contentView.addSubview(label)
-
             NSLayoutConstraint.activate([
                 label.topAnchor.constraint(equalTo: cell.contentView.topAnchor, constant: 16),
                 label.leadingAnchor.constraint(equalTo: cell.contentView.leadingAnchor, constant: 16),
                 label.trailingAnchor.constraint(equalTo: cell.contentView.trailingAnchor, constant: -16),
                 label.bottomAnchor.constraint(equalTo: cell.contentView.bottomAnchor, constant: -16)
             ])
-
+            
             return cell
-        }
-
-        // MARK: Quick Actions (view donations and browse ngo)
-        if indexPath.section == QUICK_ACTIONS_SECTION {
-
+            
+        case .quickActions:
             let cell = tableView.dequeueReusableCell(
                 withIdentifier: "QuickActionsCell",
                 for: indexPath
             )
             cell.selectionStyle = .none
+
+            // Find buttons by tag
+            let firstButton = cell.contentView.viewWithTag(1) as? UIButton
+            let secondButton = cell.contentView.viewWithTag(2) as? UIButton
+
+            switch currentRole {
+
+            case .donor:
+                firstButton?.setTitle("View Donations", for: .normal)
+                secondButton?.setTitle("Browse NGOs", for: .normal)
+
+            case .ngo:
+                firstButton?.setTitle("Manage Donations", for: .normal)
+                secondButton?.setTitle("Manage Profile", for: .normal)
+
+            case .admin:
+                firstButton?.setTitle("Manage Users", for: .normal)
+                secondButton?.setTitle("Manage Donations", for: .normal)
+            }
+
             return cell
-        }
 
-        // MARK: - Impact Tracker
-        if indexPath.section == IMPACT_TRACKER_SECTION {
-
-            let cell = tableView.dequeueReusableCell(
-                withIdentifier: "ImpactTrackerCell",
-                for: indexPath
-            ) as! ImpactTrackerTableViewCell
-
+        case .impactTracker:
+            let cell = tableView.dequeueReusableCell(withIdentifier: "ImpactTrackerCell", for: indexPath) as! ImpactTrackerTableViewCell
             cell.configure(
                 totalDonations: impactData.totalDonations,
                 mealsProvided: impactData.mealsProvided,
                 livesImpacted: impactData.livesImpacted
             )
-
             cell.selectionStyle = .none
             return cell
-        }  // MARK: Browse NGO
-            if indexPath.section == NGOS_SECTION {
-                let cell = tableView.dequeueReusableCell(
-                    withIdentifier: "RecommendedNGOsCell",
-                    for: indexPath
-                ) as! RecommendedNGOsTableViewCell
-
-                cell.configure(with: ngosFromFirestore)
-
-                cell.onSeeAllTapped = {
-                    print("Go to NGO discovery page")
-                }
-
-                cell.onNGOSelected = { ngo in
-                    print("Open NGO page: \(ngo.organizationName)")
-                }
-
-                cell.selectionStyle = .none
-                return cell
-            } // MARK: Recent donations
-        if indexPath.section == DONATIONS_SECTION {
-
-            guard let cell = tableView.dequeueReusableCell(
-                withIdentifier: "RecentDonationsCell",
-                for: indexPath
-            ) as? RecentDonationTableViewCell else {
-                fatalError("RecentDonationTableViewCell not connected")
-            }
-
+            
+        case .graph:
+            // Placeholder (keep section, don’t remove)
+            let cell = UITableViewCell()
+            cell.selectionStyle = .none
+            cell.contentView.backgroundColor = .systemGray6
+            cell.textLabel?.textAlignment = .center
+            cell.textLabel?.text = "📊 Graph (Placeholder)"
+            return cell
+            
+        case .browseNGOs:
+            let cell = tableView.dequeueReusableCell(withIdentifier: "RecommendedNGOsCell", for: indexPath) as! RecommendedNGOsTableViewCell
+            cell.configure(with: ngosFromFirestore)
+            cell.onSeeAllTapped = { print("Go to NGO discovery page") }
+            cell.onNGOSelected = { ngo in print("Open NGO page: \(ngo.organizationName)") }
+            cell.selectionStyle = .none
+            return cell
+            
+        case .recentDonations:
+            let cell = tableView.dequeueReusableCell(withIdentifier: "RecentDonationsCell", for: indexPath) as! RecentDonationTableViewCell
             cell.configure(with: recentDonations)
             cell.selectionStyle = .none
             return cell
+            
+        case .allDonations:
+            let cell = UITableViewCell()
+            cell.selectionStyle = .none
+            cell.textLabel?.textAlignment = .center
+            cell.textLabel?.text = "🧾 Latest Donations (Admin) - Placeholder"
+            return cell
+            
+        case .pendingDonations:
+            let cell = UITableViewCell()
+            cell.selectionStyle = .none
+            cell.textLabel?.textAlignment = .center
+            cell.textLabel?.text = "⏳ Pending Donations (NGO) - Placeholder"
+            return cell
+            
+        case .manageUsers:
+            let cell = UITableViewCell()
+            cell.selectionStyle = .none
+            cell.textLabel?.textAlignment = .center
+            cell.textLabel?.text = "👥 Manage Users (Admin) - Placeholder"
+            return cell
         }
-
-
-        
-
-        // MARK: - Placeholder sections
-        let cell = UITableViewCell()
-        cell.selectionStyle = .none
-        cell.contentView.backgroundColor = .systemGray5
-        cell.textLabel?.text = "Section \(indexPath.section)"
-        cell.textLabel?.font = .boldSystemFont(ofSize: 18)
-
-        return cell
     }
-    
 }

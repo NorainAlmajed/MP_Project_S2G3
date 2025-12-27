@@ -39,6 +39,7 @@
 			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
 			membershipExceptions = (
 				"/Localized: Chats.storyboard",
+				"/Localized: Filters.storyboard",
 				"/Localized: LaunchScreen.storyboard",
 				"/Localized: Main.storyboard",
 				Address.swift,
@@ -53,10 +54,14 @@
 				DonationDetailsViewController.swift,
 				Donations.storyboard,
 				DonationViewController.swift,
+				"Filter Controllers/DonationFilterController.swift",
+				"Filter Controllers/DonorFilterViewController.swift",
+				"Filter Controllers/FilterHeaderCell.swift",
+				"Filter Controllers/FilterOptionCell.swift",
+				"Filter Controllers/NGOFilterViewController.swift",
 				SceneDelegate.swift,
 				ViewController.swift,
 				zahraafet1.storyboard,
-				Zainab_mahdi.storyboard,
 			);
 			target = 5FEF8B612EDA3636007D3A97 /* ProjectSimulator */;
 		};
@@ -64,6 +69,7 @@
 			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
 			membershipExceptions = (
 				"/Localized: Chats.storyboard",
+				"/Localized: Filters.storyboard",
 				"/Localized: LaunchScreen.storyboard",
 				"/Localized: Main.storyboard",
 				Address.swift,
@@ -78,11 +84,15 @@
 				DonationDetailsViewController.swift,
 				Donations.storyboard,
 				DonationViewController.swift,
+				"Filter Controllers/DonationFilterController.swift",
+				"Filter Controllers/DonorFilterViewController.swift",
+				"Filter Controllers/FilterHeaderCell.swift",
+				"Filter Controllers/FilterOptionCell.swift",
+				"Filter Controllers/NGOFilterViewController.swift",
 				Info.plist,
 				SceneDelegate.swift,
 				ViewController.swift,
 				zahraafet1.storyboard,
-				Zainab_mahdi.storyboard,
 			);
 			target = 5FEF8B812EDA363A007D3A97 /* ProjectSimulatorUITests */;
 		};

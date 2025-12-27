@@ -13,28 +13,27 @@ protocol RejectionDelegate: AnyObject {
 
 class RejectionPopupViewController: UIViewController {
 
-    @IBOutlet weak var reasonTextView: UITextView!
+    
+    @IBOutlet weak var reasonTextField: UITextField!
     weak var delegate: RejectionDelegate?
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        reasonTextView.layer.borderWidth = 1
-        reasonTextView.layer.borderColor = UIColor.lightGray.cgColor
-        reasonTextView.layer.cornerRadius = 8
+        reasonTextField.layer.borderWidth = 1
+        reasonTextField.layer.borderColor = UIColor.lightGray.cgColor
+        reasonTextField.layer.cornerRadius = 8
         // Do any additional setup after loading the view.
     }
     
 
     @IBAction func submitTapped(_ sender: Any) {
-        let reason = reasonTextView.text ?? ""
+        let reason = reasonTextField.text ?? ""
                 delegate?.didProvideReason(reason)
                 self.dismiss(animated: true)
     }
     
     
-    @IBAction func doneTapped(_ sender: Any) {
-        self.dismiss(animated: true)
-    }
+
     
     
     

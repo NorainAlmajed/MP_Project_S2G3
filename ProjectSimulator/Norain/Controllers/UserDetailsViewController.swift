@@ -39,6 +39,7 @@ class UserDetailsViewController: UIViewController {
     }
     
     func configure(appUser:AppUser){
+
         
         guard isViewLoaded else { return }
         self.currentUser = appUser

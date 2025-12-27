@@ -124,6 +124,7 @@
                                     <constraint firstAttribute="width" constant="393" id="EPz-0L-zzR"/>
                                     <constraint firstAttribute="height" constant="44" id="crf-9t-QGK"/>
                                 </constraints>
+                                <color key="barTintColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                 <items>
                                     <navigationItem title="Nourish Users" id="MIf-2b-ZPO">
                                         <barButtonItem key="rightBarButtonItem" systemItem="add" id="Spw-93-Kz7"/>
@@ -142,9 +143,10 @@
                                         <state key="normal" title="Button"/>
                                         <buttonConfiguration key="configuration" style="filled" title="Pending" cornerStyle="capsule">
                                             <backgroundConfiguration key="background">
-                                                <color key="backgroundColor" name="greenCol"/>
+                                                <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                                 <color key="strokeColor" name="greenCol"/>
                                             </backgroundConfiguration>
+                                            <color key="baseForegroundColor" name="greenCol"/>
                                         </buttonConfiguration>
                                         <connections>
                                             <action selector="btnPendingFilter:" destination="Fwt-11-JKb" eventType="touchUpInside" id="E77-X7-tux"/>
@@ -159,9 +161,10 @@
                                         <state key="normal" title="Button"/>
                                         <buttonConfiguration key="configuration" style="filled" title="Approved" cornerStyle="capsule">
                                             <backgroundConfiguration key="background">
-                                                <color key="backgroundColor" name="greenCol"/>
+                                                <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                                 <color key="strokeColor" name="greenCol"/>
                                             </backgroundConfiguration>
+                                            <color key="baseForegroundColor" name="greenCol"/>
                                         </buttonConfiguration>
                                         <connections>
                                             <action selector="btnApprovedFilter:" destination="Fwt-11-JKb" eventType="touchUpInside" id="ooa-jy-Ras"/>
@@ -176,9 +179,10 @@
                                         <state key="normal" title="Button"/>
                                         <buttonConfiguration key="configuration" style="filled" title="Rejected" cornerStyle="capsule">
                                             <backgroundConfiguration key="background">
-                                                <color key="backgroundColor" name="greenCol"/>
+                                                <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                                 <color key="strokeColor" name="greenCol"/>
                                             </backgroundConfiguration>
+                                            <color key="baseForegroundColor" name="greenCol"/>
                                         </buttonConfiguration>
                                         <connections>
                                             <action selector="btnRejectedFilter:" destination="Fwt-11-JKb" eventType="touchUpInside" id="eOO-TN-Yfb"/>
@@ -232,7 +236,7 @@
                         <rect key="frame" x="0.0" y="0.0" width="402" height="874"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" ambiguous="YES" text="Bio" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="iL7-gF-HXv">
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Bio" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="iL7-gF-HXv">
                                 <rect key="frame" x="21" y="261" width="39" height="37.666666666666686"/>
                                 <fontDescription key="fontDescription" style="UICTFontTextStyleTitle1"/>
                                 <nil key="textColor"/>
@@ -249,7 +253,7 @@
                                 <fontDescription key="fontDescription" type="system" pointSize="14"/>
                                 <textInputTraits key="textInputTraits" autocapitalizationType="sentences"/>
                             </textView>
-                            <view contentMode="scaleToFill" misplaced="YES" translatesAutoresizingMaskIntoConstraints="NO" id="3kF-ax-tzq">
+                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="3kF-ax-tzq">
                                 <rect key="frame" x="29" y="616" width="344" height="135"/>
                                 <subviews>
                                     <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="tUa-HP-E9w" userLabel="Accept Btn">
@@ -285,8 +289,8 @@
                                 </subviews>
                                 <color key="backgroundColor" systemColor="systemBackgroundColor"/>
                             </view>
-                            <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" ambiguous="YES" image="photo" catalog="system" translatesAutoresizingMaskIntoConstraints="NO" id="Uq7-FY-Kid">
-                                <rect key="frame" x="21" y="151" width="122" height="102"/>
+                            <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" image="photo" catalog="system" translatesAutoresizingMaskIntoConstraints="NO" id="Uq7-FY-Kid">
+                                <rect key="frame" x="21" y="152.66666666666666" width="122" height="99"/>
                                 <color key="tintColor" white="0.66666666669999997" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                 <constraints>
                                     <constraint firstAttribute="width" constant="122" id="B9o-I3-Vh9"/>
@@ -341,18 +345,18 @@
                             <constraint firstItem="yaA-hF-rib" firstAttribute="leading" secondItem="Snj-fJ-bWQ" secondAttribute="leading" constant="347" id="1gF-xv-ONC"/>
                             <constraint firstItem="sbg-AB-1RT" firstAttribute="top" secondItem="iL7-gF-HXv" secondAttribute="bottom" constant="0.33333333333331439" id="3FO-b9-OvK"/>
                             <constraint firstItem="Snj-fJ-bWQ" firstAttribute="trailing" secondItem="sbg-AB-1RT" secondAttribute="trailing" constant="20" id="9Sp-7m-aZx"/>
-                            <constraint firstItem="3kF-ax-tzq" firstAttribute="top" secondItem="sbg-AB-1RT" secondAttribute="bottom" constant="8" symbolic="YES" id="9sk-ZT-Txf"/>
+                            <constraint firstItem="3kF-ax-tzq" firstAttribute="top" secondItem="sbg-AB-1RT" secondAttribute="bottom" constant="100" id="9sk-ZT-Txf"/>
                             <constraint firstItem="Uq7-FY-Kid" firstAttribute="top" secondItem="Ooc-NS-jiZ" secondAttribute="top" constant="-15" id="Gch-Vx-aQ4"/>
-                            <constraint firstItem="3kF-ax-tzq" firstAttribute="top" secondItem="sbg-AB-1RT" secondAttribute="bottom" constant="8" id="JBo-7Y-DrY"/>
+                            <constraint firstItem="3kF-ax-tzq" firstAttribute="top" secondItem="sbg-AB-1RT" secondAttribute="bottom" constant="100" id="JBo-7Y-DrY"/>
                             <constraint firstItem="3kF-ax-tzq" firstAttribute="leading" secondItem="Snj-fJ-bWQ" secondAttribute="leading" constant="29" id="KBQ-5C-4g7"/>
                             <constraint firstItem="Ooc-NS-jiZ" firstAttribute="top" secondItem="Snj-fJ-bWQ" secondAttribute="top" constant="42" id="POn-hk-nw9"/>
                             <constraint firstItem="3kF-ax-tzq" firstAttribute="centerX" secondItem="YhB-D2-Fqs" secondAttribute="centerX" id="TCc-uq-ah8"/>
                             <constraint firstItem="sbg-AB-1RT" firstAttribute="leading" secondItem="iL7-gF-HXv" secondAttribute="leading" id="aGA-4S-15s"/>
-                            <constraint firstItem="3kF-ax-tzq" firstAttribute="top" secondItem="YhB-D2-Fqs" secondAttribute="top" constant="524" id="d6B-NK-L94"/>
+                            <constraint firstItem="3kF-ax-tzq" firstAttribute="top" secondItem="YhB-D2-Fqs" secondAttribute="top" constant="616" id="d6B-NK-L94"/>
                             <constraint firstItem="sbg-AB-1RT" firstAttribute="leading" secondItem="Uq7-FY-Kid" secondAttribute="leading" id="i7w-DR-Pqo"/>
                             <constraint firstItem="Uq7-FY-Kid" firstAttribute="leading" secondItem="YhB-D2-Fqs" secondAttribute="leadingMargin" constant="5" id="mia-5F-lce"/>
                             <constraint firstItem="Ooc-NS-jiZ" firstAttribute="leading" secondItem="Uq7-FY-Kid" secondAttribute="trailing" constant="8" symbolic="YES" id="xGg-6l-1MG"/>
-                            <constraint firstItem="Snj-fJ-bWQ" firstAttribute="bottom" secondItem="3kF-ax-tzq" secondAttribute="bottom" constant="147" id="yiK-7I-bl8"/>
+                            <constraint firstItem="Snj-fJ-bWQ" firstAttribute="bottom" secondItem="3kF-ax-tzq" secondAttribute="bottom" constant="55" id="yiK-7I-bl8"/>
                             <constraint firstItem="iL7-gF-HXv" firstAttribute="top" secondItem="Uq7-FY-Kid" secondAttribute="bottom" constant="8" symbolic="YES" id="zbl-J5-Eyy"/>
                         </constraints>
                     </view>
@@ -402,9 +406,13 @@
                                                     </imageView>
                                                     <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="kDE-b6-zcq">
                                                         <rect key="frame" x="20" y="172" width="152" height="38.333333333333343"/>
+                                                        <color key="backgroundColor" systemColor="systemGray5Color"/>
                                                         <color key="tintColor" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                                         <state key="normal" title="Button"/>
-                                                        <buttonConfiguration key="configuration" style="tinted" image="square.and.arrow.up" catalog="system" title="Upload Photo"/>
+                                                        <buttonConfiguration key="configuration" style="tinted" image="square.and.arrow.up" catalog="system" title="Upload Photo">
+                                                            <color key="baseForegroundColor" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                                            <color key="baseBackgroundColor" systemColor="systemGray5Color"/>
+                                                        </buttonConfiguration>
                                                         <connections>
                                                             <action selector="uploadPhotoTapped:" destination="mxA-aF-9jl" eventType="touchUpInside" id="Knz-6U-oBC"/>
                                                         </connections>
@@ -439,13 +447,15 @@
                                                             </label>
                                                             <button opaque="NO" contentMode="left" semanticContentAttribute="forceRightToLeft" showsMenuAsPrimaryAction="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" changesSelectionAsPrimaryAction="YES" translatesAutoresizingMaskIntoConstraints="NO" id="ZmY-0e-DvU">
                                                                 <rect key="frame" x="0.0" y="30.333333333333375" width="341" height="38.333333333333343"/>
+                                                                <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                                                 <constraints>
                                                                     <constraint firstAttribute="width" constant="341" id="tBu-dc-F3J"/>
                                                                 </constraints>
-                                                                <color key="tintColor" systemColor="secondarySystemGroupedBackgroundColor"/>
+                                                                <color key="tintColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                                                 <state key="normal" title="Cause"/>
                                                                 <buttonConfiguration key="configuration" style="tinted" image="chevron.down" catalog="system" title="Cause">
                                                                     <backgroundConfiguration key="background">
+                                                                        <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                                                         <color key="strokeColor" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                                                     </backgroundConfiguration>
                                                                     <color key="baseForegroundColor" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
@@ -560,13 +570,15 @@
                                                             </label>
                                                             <button opaque="NO" contentMode="scaleToFill" semanticContentAttribute="forceRightToLeft" showsMenuAsPrimaryAction="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" changesSelectionAsPrimaryAction="YES" translatesAutoresizingMaskIntoConstraints="NO" id="DG7-7Z-bDD">
                                                                 <rect key="frame" x="0.0" y="29.333333333333375" width="341" height="38.333333333333343"/>
+                                                                <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                                                 <constraints>
                                                                     <constraint firstAttribute="width" constant="341" id="CkP-hT-d9b"/>
                                                                 </constraints>
-                                                                <color key="tintColor" systemColor="secondarySystemGroupedBackgroundColor"/>
+                                                                <color key="tintColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                                                 <state key="normal" title="Cause"/>
                                                                 <buttonConfiguration key="configuration" style="filled" image="chevron.down" catalog="system" title="Governorate">
                                                                     <backgroundConfiguration key="background">
+                                                                        <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                                                         <color key="strokeColor" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                                                     </backgroundConfiguration>
                                                                 </buttonConfiguration>
@@ -611,7 +623,13 @@
                                                                 </constraints>
                                                                 <color key="tintColor" name="greenCol"/>
                                                                 <state key="normal" title="Button"/>
-                                                                <buttonConfiguration key="configuration" style="filled" title="Save Changes"/>
+                                                                <buttonConfiguration key="configuration" style="filled" title="Save Changes">
+                                                                    <backgroundConfiguration key="background">
+                                                                        <color key="backgroundColor" name="greenCol"/>
+                                                                    </backgroundConfiguration>
+                                                                    <color key="baseForegroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                                                    <color key="baseBackgroundColor" name="greenCol"/>
+                                                                </buttonConfiguration>
                                                                 <connections>
                                                                     <action selector="saveChangesTapped:" destination="mxA-aF-9jl" eventType="touchUpInside" id="iit-5N-LTu"/>
                                                                 </connections>
@@ -622,7 +640,13 @@
                                                                     <constraint firstAttribute="width" constant="341" id="pAW-bG-Ure"/>
                                                                 </constraints>
                                                                 <color key="tintColor" name="greyCol"/>
-                                                                <buttonConfiguration key="configuration" style="filled" image="photo.artframe" catalog="system" title="View License"/>
+                                                                <buttonConfiguration key="configuration" style="filled" image="photo.artframe" catalog="system" title="View License">
+                                                                    <backgroundConfiguration key="background">
+                                                                        <color key="backgroundColor" name="greyCol"/>
+                                                                    </backgroundConfiguration>
+                                                                    <color key="baseForegroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                                                    <color key="baseBackgroundColor" name="greyCol"/>
+                                                                </buttonConfiguration>
                                                             </button>
                                                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="mzr-d4-KO1">
                                                                 <rect key="frame" x="0.0" y="92.666666666666742" width="341" height="38.333333333333343"/>
@@ -631,7 +655,13 @@
                                                                 </constraints>
                                                                 <color key="tintColor" name="redCol"/>
                                                                 <state key="normal" title="Button"/>
-                                                                <buttonConfiguration key="configuration" style="filled" title="Delete Account"/>
+                                                                <buttonConfiguration key="configuration" style="filled" title="Delete Account">
+                                                                    <backgroundConfiguration key="background">
+                                                                        <color key="backgroundColor" name="redCol"/>
+                                                                    </backgroundConfiguration>
+                                                                    <color key="baseForegroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                                                    <color key="baseBackgroundColor" name="redCol"/>
+                                                                </buttonConfiguration>
                                                                 <connections>
                                                                     <action selector="deleteBtnTapped:" destination="mxA-aF-9jl" eventType="touchUpInside" id="VZW-fx-E06"/>
                                                                 </connections>
@@ -710,60 +740,62 @@
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Rejection Reason" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="ca3-do-aqH">
-                                <rect key="frame" x="16" y="93" width="137" height="22.333333333333329"/>
+                                <rect key="frame" x="16" y="123.99999999999999" width="137" height="22.333333333333329"/>
                                 <fontDescription key="fontDescription" style="UICTFontTextStyleHeadline"/>
                                 <nil key="textColor"/>
                                 <nil key="highlightedColor"/>
                             </label>
-                            <textView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" textAlignment="natural" translatesAutoresizingMaskIntoConstraints="NO" id="VBm-Hq-80B">
-                                <rect key="frame" x="16" y="123.33333333333334" width="370" height="273.33333333333326"/>
-                                <color key="backgroundColor" systemColor="systemBackgroundColor"/>
-                                <string key="text">Lorem ipsum dolor sit er elit lamet, consectetaur cillium adipisicing pecu, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum. Nam liber te conscient to factor tum poen legum odioque civiuda.</string>
-                                <color key="textColor" systemColor="labelColor"/>
-                                <fontDescription key="fontDescription" type="system" pointSize="14"/>
-                                <textInputTraits key="textInputTraits" autocapitalizationType="sentences"/>
-                            </textView>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="UKc-LN-KKN">
-                                <rect key="frame" x="121" y="454.66666666666669" width="160" height="38.333333333333314"/>
+                                <rect key="frame" x="121" y="491" width="160" height="38.333333333333371"/>
                                 <state key="normal" title="Button"/>
                                 <buttonConfiguration key="configuration" style="gray" title="Submit"/>
+                                <connections>
+                                    <action selector="submitTapped:" destination="Slp-CZ-vfp" eventType="touchUpInside" id="INY-tv-TB3"/>
+                                </connections>
                             </button>
+                            <textField opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="248" contentHorizontalAlignment="left" contentVerticalAlignment="top" borderStyle="roundedRect" placeholder="Type Rejection Reason (optional)" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="mng-Er-wGb">
+                                <rect key="frame" x="16" y="179" width="370" height="250"/>
+                                <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                <color key="tintColor" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="250" id="11h-fp-6vb"/>
+                                </constraints>
+                                <fontDescription key="fontDescription" type="system" pointSize="14"/>
+                                <textInputTraits key="textInputTraits"/>
+                            </textField>
                             <navigationBar contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="HqH-LP-a4N">
-                                <rect key="frame" x="0.0" y="0.0" width="402" height="44"/>
+                                <rect key="frame" x="0.0" y="61" width="402" height="44"/>
+                                <color key="barTintColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                 <items>
-                                    <navigationItem title="Rejection Reason (Optional)" id="QZl-HI-pJR">
-                                        <barButtonItem key="rightBarButtonItem" systemItem="done" id="D5x-h5-IEG"/>
-                                    </navigationItem>
+                                    <navigationItem title="Rejection Reason (Optional)" id="QZl-HI-pJR"/>
                                 </items>
                             </navigationBar>
                         </subviews>
                         <viewLayoutGuide key="safeArea" id="SV4-tZ-Hou"/>
                         <color key="backgroundColor" systemColor="systemBackgroundColor"/>
                         <constraints>
-                            <constraint firstItem="UKc-LN-KKN" firstAttribute="centerX" secondItem="VBm-Hq-80B" secondAttribute="centerX" id="01n-K1-CoR"/>
                             <constraint firstItem="ca3-do-aqH" firstAttribute="leading" secondItem="iFG-CT-uMY" secondAttribute="leadingMargin" id="4rR-hU-ZgT"/>
                             <constraint firstItem="HqH-LP-a4N" firstAttribute="centerX" secondItem="UKc-LN-KKN" secondAttribute="centerX" id="BYQ-AD-Tl4"/>
+                            <constraint firstItem="mng-Er-wGb" firstAttribute="centerX" secondItem="HqH-LP-a4N" secondAttribute="centerX" id="FZr-56-Eod"/>
                             <constraint firstItem="HqH-LP-a4N" firstAttribute="centerX" secondItem="iFG-CT-uMY" secondAttribute="centerX" id="PkT-jh-lPV"/>
-                            <constraint firstItem="UKc-LN-KKN" firstAttribute="top" secondItem="VBm-Hq-80B" secondAttribute="bottom" constant="58" id="T40-1j-89V"/>
                             <constraint firstItem="HqH-LP-a4N" firstAttribute="leading" secondItem="SV4-tZ-Hou" secondAttribute="leading" id="YIp-YJ-5S8"/>
-                            <constraint firstItem="ca3-do-aqH" firstAttribute="top" secondItem="HqH-LP-a4N" secondAttribute="bottom" constant="49" id="a0c-Bd-yWh"/>
-                            <constraint firstItem="ca3-do-aqH" firstAttribute="top" secondItem="HqH-LP-a4N" secondAttribute="bottom" constant="49" id="ewL-Ua-8EU"/>
+                            <constraint firstItem="mng-Er-wGb" firstAttribute="leading" secondItem="ca3-do-aqH" secondAttribute="leading" id="Z7j-h2-T2V"/>
+                            <constraint firstItem="ca3-do-aqH" firstAttribute="top" secondItem="HqH-LP-a4N" secondAttribute="bottom" constant="18.999999999999986" id="a0c-Bd-yWh"/>
+                            <constraint firstItem="ca3-do-aqH" firstAttribute="top" secondItem="HqH-LP-a4N" secondAttribute="bottom" constant="18.999999999999986" id="ewL-Ua-8EU"/>
                             <constraint firstItem="UKc-LN-KKN" firstAttribute="leading" secondItem="SV4-tZ-Hou" secondAttribute="leading" constant="121" id="gBN-ka-jFd"/>
-                            <constraint firstItem="HqH-LP-a4N" firstAttribute="centerX" secondItem="VBm-Hq-80B" secondAttribute="centerX" id="gk3-VB-TuW"/>
-                            <constraint firstItem="HqH-LP-a4N" firstAttribute="top" secondItem="iFG-CT-uMY" secondAttribute="top" id="jQf-Ax-8ia"/>
-                            <constraint firstItem="VBm-Hq-80B" firstAttribute="top" secondItem="ca3-do-aqH" secondAttribute="bottom" constant="8" id="oCY-iw-orc"/>
-                            <constraint firstItem="HqH-LP-a4N" firstAttribute="top" secondItem="iFG-CT-uMY" secondAttribute="top" id="qRm-IH-28G"/>
-                            <constraint firstItem="ca3-do-aqH" firstAttribute="leading" secondItem="VBm-Hq-80B" secondAttribute="leading" id="qrI-IW-CFP"/>
-                            <constraint firstItem="SV4-tZ-Hou" firstAttribute="bottom" secondItem="UKc-LN-KKN" secondAttribute="bottom" constant="313" id="vtM-VO-2ov"/>
+                            <constraint firstItem="mng-Er-wGb" firstAttribute="top" secondItem="HqH-LP-a4N" secondAttribute="bottom" constant="74" id="iug-jL-Pg9"/>
+                            <constraint firstItem="HqH-LP-a4N" firstAttribute="top" secondItem="iFG-CT-uMY" secondAttribute="top" constant="61" id="jQf-Ax-8ia"/>
+                            <constraint firstItem="HqH-LP-a4N" firstAttribute="top" secondItem="iFG-CT-uMY" secondAttribute="top" constant="61" id="qRm-IH-28G"/>
+                            <constraint firstItem="SV4-tZ-Hou" firstAttribute="bottom" secondItem="UKc-LN-KKN" secondAttribute="bottom" constant="276.66666666666663" id="vtM-VO-2ov"/>
                         </constraints>
                     </view>
                     <connections>
-                        <outlet property="reasonTextView" destination="VBm-Hq-80B" id="82L-Zv-1DH"/>
+                        <outlet property="reasonTextField" destination="mng-Er-wGb" id="h1e-NS-cjE"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="UWf-as-685" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="1770" y="-166"/>
+            <point key="canvasLocation" x="1768.6567164179103" y="-166.13272311212813"/>
         </scene>
     </scenes>
     <resources>
@@ -787,11 +819,11 @@
         <systemColor name="labelColor">
             <color white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
         </systemColor>
-        <systemColor name="secondarySystemGroupedBackgroundColor">
-            <color white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-        </systemColor>
         <systemColor name="systemBackgroundColor">
             <color white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+        </systemColor>
+        <systemColor name="systemGray5Color">
+            <color red="0.8980392157" green="0.8980392157" blue="0.91764705879999997" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
         </systemColor>
     </resources>
 </document>

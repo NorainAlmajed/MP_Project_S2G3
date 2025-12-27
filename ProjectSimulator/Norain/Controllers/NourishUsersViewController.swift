@@ -7,7 +7,7 @@
 
 import UIKit
 
-class NourishUsersViewController: UIViewController,UITableViewDelegate,UITableViewDataSource
+class NourishUsersViewController: UIViewController,UITableViewDelegate,UITableViewDataSource,UISearchBarDelegate
 {
 
   
@@ -26,18 +26,55 @@ class NourishUsersViewController: UIViewController,UITableViewDelegate,UITableVi
     override func viewDidLoad() {
         super.viewDidLoad()
         
+        searchUsers.delegate = self
         self.displayedUsers = self.users
         setButtonsHidden(false)
         self.usersTableView.reloadData()
-        
         usersTableView.delegate = self
         usersTableView.dataSource = self
+        let tap = UITapGestureRecognizer(target: self, action: #selector(dismissKeyboard))
+        tap.cancelsTouchesInView = false
+        view.addGestureRecognizer(tap)
+
         
     }
     
+    func searchBar(_ searchBar: UISearchBar, textDidChange searchText: String) {
+        // Determine the current filter based on Segmented Control
+        let currentSegmentList: [AppUser]
+        switch segmentUsers.selectedSegmentIndex {
+        case 1: currentSegmentList = users.filter { $0 is NGO }
+        case 2: currentSegmentList = users.filter { $0 is Donor }
+        default: currentSegmentList = users
+        }
+
+        if searchText.isEmpty {
+            displayedUsers = currentSegmentList
+        } else {
+            displayedUsers = currentSegmentList.filter { user in
+                user.name.lowercased().contains(searchText.lowercased())
+            }
+        }
+        usersTableView.reloadData()
+    }
     
+    func searchBarSearchButtonClicked(_ searchBar: UISearchBar) {
+        searchBar.resignFirstResponder() // Hides keyboard
+    }
+
+    func searchBarCancelButtonClicked(_ searchBar: UISearchBar) {
+        searchBar.text = ""
+        displayedUsers = users
+        searchBar.resignFirstResponder()
+        usersTableView.reloadData()
+    }
+    @objc func dismissKeyboard() {
+
+        view.endEditing(true)
+    }
     
     @IBAction func SegDidChange(_ sender: UISegmentedControl) {
+        resetFilterButtonColors()
         switch sender.selectedSegmentIndex {
         case 1:
             // NGO Segment selected
@@ -78,19 +115,44 @@ class NourishUsersViewController: UIViewController,UITableViewDelegate,UITableVi
         btnRejected.isEnabled = hidden
     }
     
-    
+    private func resetFilterButtonColors() {
+        let buttons = [btnPending, btnApproved, btnRejected]
+        buttons.forEach { button in
+            // Set these to your default "unselected" colors
+            button?.backgroundColor = .systemGray6 // or any default color
+            button?.setTitleColor(.darkGray, for: .normal)
+            button?.tintColor = .darkGray
+        }
+    }
     @IBAction func btnPendingFilter(_ sender: Any) {
+        resetFilterButtonColors()
+        
+            btnPending.layer.cornerRadius = btnPending.frame.height / 2
+        btnPending.backgroundColor = .greenCol
+            btnPending.clipsToBounds = true
+            btnPending.setTitleColor(.white, for: .normal)
+        
         displayedUsers = users.compactMap { $0 as? NGO }.filter { $0.status == .pending}
         usersTableView.reloadData()
     }
     
     @IBAction func btnApprovedFilter(_ sender: Any) {
+        resetFilterButtonColors()
+            
+            btnApproved.backgroundColor = .greenCol
+            btnApproved.tintColor = .white
+            btnApproved.setTitleColor(.white, for: .normal)
         displayedUsers = users.compactMap { $0 as? NGO }.filter { $0.status == .approved }
         usersTableView.reloadData()
     }
     
     
     @IBAction func btnRejectedFilter(_ sender: Any) {
+        resetFilterButtonColors()
+            
+            btnRejected.backgroundColor = .greenCol
+            btnRejected.tintColor = .white
+            btnRejected.setTitleColor(.white, for: .normal)
         displayedUsers = users.compactMap { $0 as? NGO }.filter { $0.status == .rejected }
         usersTableView.reloadData()
     }
@@ -219,7 +281,7 @@ class NourishUsersViewController: UIViewController,UITableViewDelegate,UITableVi
         let storyboard = UIStoryboard(name: "norain-admin-controls1", bundle: nil)
         if let popupVC = storyboard.instantiateViewController(withIdentifier: "RejectionPopupViewController") as? RejectionPopupViewController {
             popupVC.delegate = self
-            popupVC.modalPresentationStyle = .overCurrentContext
+            popupVC.modalPresentationStyle = .pageSheet
             popupVC.modalTransitionStyle = .crossDissolve // Smoother appearance
             self.present(popupVC, animated: true)
         }

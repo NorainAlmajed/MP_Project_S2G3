@@ -7,7 +7,7 @@
 
 import UIKit
 
-struct Address {
+struct ZahraaAddress {
     var building: Int
     var road: Int
     var block: Int

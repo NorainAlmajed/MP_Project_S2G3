@@ -353,7 +353,7 @@ class DonationViewController: UIViewController {
 
                     guard let addressData = addressSnap?.data() else { return }
 
-                    let address = Address(
+                    let address = ZahraaAddress(
                         building: addressData["building"] as? Int ?? 0,
                         road: addressData["road"] as? Int ?? 0,
                         block: addressData["block"] as? Int ?? 0,

@@ -15,7 +15,7 @@ class Donation {
     var ngo: ZahraaUser            // Reference to NGO in Firestore
     var creationDate: Timestamp
     var donor: ZahraaUser          // Reference to donor in Firestore§
-    var address: Address        // Reference to address in Firestore
+    var address: ZahraaAddress        // Reference to address in Firestore
     var pickupDate: Timestamp
     var pickupTime: String
     var foodImageUrl: String
@@ -34,7 +34,7 @@ class Donation {
         ngo: ZahraaUser,
         creationDate: Timestamp,
         donor: ZahraaUser,
-        address: Address,
+        address: ZahraaAddress,
         pickupDate: Timestamp,
         pickupTime: String,
         foodImageUrl: String,

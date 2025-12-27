@@ -30,7 +30,7 @@
 		48D2941B2EFEF13C005A8DA2 /* TestViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 48D2940A2EFEF13C005A8DA2 /* TestViewController.swift */; };
 		48D2941C2EFEF13C005A8DA2 /* UIImageView+URLZH.swift in Sources */ = {isa = PBXBuildFile; fileRef = 48D2940B2EFEF13C005A8DA2 /* UIImageView+URLZH.swift */; };
 		48D2941E2EFEF13C005A8DA2 /* ZHRejectionReasonViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 48D2940E2EFEF13C005A8DA2 /* ZHRejectionReasonViewController.swift */; };
-		48D2941F2EFEF13C005A8DA2 /* Address.swift in Sources */ = {isa = PBXBuildFile; fileRef = 48D293F62EFEF13C005A8DA2 /* Address.swift */; };
+		48D2941F2EFEF13C005A8DA2 /* ZahraaAddress.swift in Sources */ = {isa = PBXBuildFile; fileRef = 48D293F62EFEF13C005A8DA2 /* ZahraaAddress.swift */; };
 		48D294202EFEF13C005A8DA2 /* NotificationsCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 48D294032EFEF13C005A8DA2 /* NotificationsCollectionViewCell.swift */; };
 		48D294212EFEF13C005A8DA2 /* NotificationsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 48D294042EFEF13C005A8DA2 /* NotificationsViewController.swift */; };
 		48D294242EFEF13C005A8DA2 /* Donations.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 48D293FC2EFEF13C005A8DA2 /* Donations.storyboard */; };
@@ -75,7 +75,7 @@
 		481E6C202EFF147100F61C65 /* ZahraaSection7TableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ZahraaSection7TableViewCell.swift; sourceTree = "<group>"; };
 		481E6C222EFF149300F61C65 /* ZahraaSection8TableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ZahraaSection8TableViewCell.swift; sourceTree = "<group>"; };
 		481E6C282EFFEAD800F61C65 /* ZahraaAddressTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ZahraaAddressTableViewCell.swift; sourceTree = "<group>"; };
-		48D293F62EFEF13C005A8DA2 /* Address.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Address.swift; sourceTree = "<group>"; };
+		48D293F62EFEF13C005A8DA2 /* ZahraaAddress.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ZahraaAddress.swift; sourceTree = "<group>"; };
 		48D293FA2EFEF13C005A8DA2 /* Donation.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Donation.swift; sourceTree = "<group>"; };
 		48D293FB2EFEF13C005A8DA2 /* DonationCollectionViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DonationCollectionViewCell.swift; sourceTree = "<group>"; };
 		48D293FC2EFEF13C005A8DA2 /* Donations.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; path = Donations.storyboard; sourceTree = "<group>"; };
@@ -195,7 +195,7 @@
 		48D294302EFEF2C7005A8DA2 /* Zahraa Hubail */ = {
 			isa = PBXGroup;
 			children = (
-				48D293F62EFEF13C005A8DA2 /* Address.swift */,
+				48D293F62EFEF13C005A8DA2 /* ZahraaAddress.swift */,
 				48D293FA2EFEF13C005A8DA2 /* Donation.swift */,
 				48D293FB2EFEF13C005A8DA2 /* DonationCollectionViewCell.swift */,
 				48D293FD2EFEF13C005A8DA2 /* DonationViewController.swift */,
@@ -429,7 +429,7 @@
 				48D2941C2EFEF13C005A8DA2 /* UIImageView+URLZH.swift in Sources */,
 				481E6C1D2EFF144100F61C65 /* ZahraaSection5TableViewCell.swift in Sources */,
 				48D2941E2EFEF13C005A8DA2 /* ZHRejectionReasonViewController.swift in Sources */,
-				48D2941F2EFEF13C005A8DA2 /* Address.swift in Sources */,
+				48D2941F2EFEF13C005A8DA2 /* ZahraaAddress.swift in Sources */,
 				48D294202EFEF13C005A8DA2 /* NotificationsCollectionViewCell.swift in Sources */,
 				48D294212EFEF13C005A8DA2 /* NotificationsViewController.swift in Sources */,
 				481E6C172EFF13D700F61C65 /* ZahraaSection2TableViewCell.swift in Sources */,

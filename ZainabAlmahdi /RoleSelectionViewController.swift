@@ -18,7 +18,6 @@ class RoleSelectionViewController: UIViewController {
         styleActionButton(donorSignup)
         styleActionButton(ngoSignup)
 
-        // Do any additional setup after loading the view.
     }
     
     private func styleActionButton(_ button: UIButton) {

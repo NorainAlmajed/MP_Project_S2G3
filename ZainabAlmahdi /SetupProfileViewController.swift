@@ -13,9 +13,8 @@ class SetupProfileViewController: UIViewController,
                                   UIImagePickerControllerDelegate,
                                   UINavigationControllerDelegate,
                                   UITextViewDelegate {
-    // MARK: ADDED BY FATIMA
-    private let cloudinaryService = CloudinaryService()
 
+    // MARK: - Outlets
     @IBOutlet weak var continueButton: UIButton!
     @IBOutlet weak var uploadButton: UIButton!
     @IBOutlet weak var profileImageView: UIImageView!
@@ -24,6 +23,7 @@ class SetupProfileViewController: UIViewController,
     @IBOutlet weak var notificationsSwitch: UISwitch!
     @IBOutlet weak var bioCounterLabel: UILabel!
 
+    // MARK: - Lifecycle
     override func viewDidLoad() {
         super.viewDidLoad()
 
@@ -32,10 +32,11 @@ class SetupProfileViewController: UIViewController,
 
         bioTextView.delegate = self
         bioCounterLabel.text = "0 / 240"
-        
+
         navigationItem.hidesBackButton = true
     }
 
+    // MARK: - Notification Toggle
     @IBAction func notificationSwitchChanged(_ sender: UISwitch) {
         if sender.isOn == false {
             let alert = UIAlertController(
@@ -44,18 +45,17 @@ class SetupProfileViewController: UIViewController,
                 preferredStyle: .alert
             )
 
-            let cancel = UIAlertAction(title: "Cancel", style: .cancel) { _ in
+            alert.addAction(UIAlertAction(title: "Cancel", style: .cancel) { _ in
                 sender.setOn(true, animated: true)
-            }
+            })
 
-            let confirm = UIAlertAction(title: "Disable", style: .destructive)
+            alert.addAction(UIAlertAction(title: "Disable", style: .destructive))
 
-            alert.addAction(cancel)
-            alert.addAction(confirm)
             present(alert, animated: true)
         }
     }
 
+    // MARK: - Image Picker
     @IBAction func addPhotoTapped(_ sender: UIButton) {
         let picker = UIImagePickerController()
         picker.delegate = self
@@ -82,27 +82,28 @@ class SetupProfileViewController: UIViewController,
 
     // MARK: - Continue
     @IBAction func continueTapped(_ sender: UIButton) {
-        
+
         guard let fullName = fullNameTextField.text, !fullName.isEmpty else {
             showAlert(title: "Missing Name", message: "Please enter your full name.")
             return
         }
-        
+
         guard let bio = bioTextView.text, !bio.isEmpty else {
             showAlert(title: "Missing Bio", message: "Please add a short bio.")
             return
         }
-        
+
         guard let image = profileImageView.image else {
             showAlert(title: "Missing Photo", message: "Please upload a profile photo.")
             return
         }
-        
+
         continueButton.isEnabled = false
-        // fatima
+
+        let cloudinaryService = CloudinaryService()
         cloudinaryService.uploadImage(image) { [weak self] imageUrl in
             guard let self = self else { return }
-            
+
             if let imageUrl = imageUrl {
                 self.saveProfile(
                     fullName: fullName,
@@ -113,29 +114,11 @@ class SetupProfileViewController: UIViewController,
                 self.continueButton.isEnabled = true
                 self.showAlert(
                     title: "Upload Failed",
-                    message: "Image upload failed. Please try again."
+                    message: "Could not upload profile image."
                 )
             }
         }
     }
-// zainab's function
-        /*CloudinaryService.shared.uploadImage(image) { [weak self] result in
-            guard let self = self else { return }
-
-            switch result {
-            case .success(let imageUrl):
-                self.saveProfile(
-                    fullName: fullName,
-                    bio: bio,
-                    profileImageUrl: imageUrl
-                )
-
-            case .failure(let error):
-                self.continueButton.isEnabled = true
-                self.showAlert(title: "Upload Failed", message: error.localizedDescription)
-            }
-        }
-    }*/
 
     // MARK: - Firestore
     func saveProfile(fullName: String, bio: String, profileImageUrl: String) {
@@ -161,7 +144,11 @@ class SetupProfileViewController: UIViewController,
                     return
                 }
 
-                self.routeToDashboard()
+                SessionManager.shared.fetchUserRole { success in
+                    DispatchQueue.main.async {
+                        self.routeToDashboard()
+                    }
+                }
             }
     }
 
@@ -209,7 +196,9 @@ class SetupProfileViewController: UIViewController,
 
     // MARK: - Helpers
     func showAlert(title: String, message: String) {
-        let alert = UIAlertController(title: title, message: message, preferredStyle: .alert)
+        let alert = UIAlertController(title: title,
+                                      message: message,
+                                      preferredStyle: .alert)
         alert.addAction(UIAlertAction(title: "OK", style: .default))
         present(alert, animated: true)
     }
@@ -219,3 +208,4 @@ class SetupProfileViewController: UIViewController,
         button.clipsToBounds = true
     }
 }
+

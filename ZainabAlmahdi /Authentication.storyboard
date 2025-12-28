@@ -187,7 +187,6 @@
         <!--Donor Signup View Controller-->
         <scene sceneID="sKG-GC-Ar0">
             <objects>
-                <placeholder placeholderIdentifier="IBFirstResponder" id="5jL-qE-E0s" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
                 <viewController storyboardIdentifier="DonorSignupViewController" useStoryboardIdentifierAsRestorationIdentifier="YES" id="5kY-ip-UkT" customClass="DonorSignupViewController" customModule="ProjectSimulator" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="ile-MD-13I">
                         <rect key="frame" x="0.0" y="0.0" width="393" height="852"/>
@@ -329,6 +328,7 @@
                                                 <state key="normal" title="Button"/>
                                                 <buttonConfiguration key="configuration" style="plain" title="Already have an account? Login"/>
                                                 <connections>
+                                                    <action selector="goToLoginTapped:" destination="5kY-ip-UkT" eventType="touchUpInside" id="4Vb-VF-JCz"/>
                                                     <action selector="registerButtonTapped:" destination="5kY-ip-UkT" eventType="touchUpInside" id="gpO-Ht-P00"/>
                                                 </connections>
                                             </button>
@@ -365,6 +365,7 @@
                         <outlet property="usernameTextField" destination="CdS-eR-EVI" id="uPQ-yQ-TMs"/>
                     </connections>
                 </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="5jL-qE-E0s" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
             </objects>
             <point key="canvasLocation" x="3738" y="275"/>
         </scene>
@@ -846,7 +847,7 @@
             <objects>
                 <viewController storyboardIdentifier="HomeViewController" useStoryboardIdentifierAsRestorationIdentifier="YES" id="u4r-Hv-ASR" customClass="HomeViewController" customModule="ProjectSimulator" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="FCo-MS-bdm">
-                        <rect key="frame" x="0.0" y="0.0" width="393" height="783"/>
+                        <rect key="frame" x="0.0" y="0.0" width="393" height="852"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="GLC-kj-dOD">
@@ -889,7 +890,7 @@
         </scene>
     </scenes>
     <inferredMetricsTieBreakers>
-        <segue reference="z8O-0s-SCj"/>
+        <segue reference="lzc-NA-AGZ"/>
     </inferredMetricsTieBreakers>
     <resources>
         <image name="person.crop.circle" catalog="system" width="128" height="123"/>

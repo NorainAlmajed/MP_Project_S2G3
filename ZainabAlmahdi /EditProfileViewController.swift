@@ -4,7 +4,6 @@ import FirebaseFirestore
 
 class EditProfileViewController: UIViewController {
 
-    // MARK: - Outlets
     @IBOutlet weak var nameField: UITextField!
     @IBOutlet weak var phoneField: UITextField!
     @IBOutlet weak var addressField: UITextField!
@@ -105,5 +104,10 @@ class EditProfileViewController: UIViewController {
                                       preferredStyle: .alert)
         alert.addAction(UIAlertAction(title: "OK", style: .default))
         present(alert, animated: true)
+    }
+    
+    private func styleActionButton(_ button: UIButton) {
+        button.layer.cornerRadius = button.frame.height / 2
+        button.clipsToBounds = true
     }
 }

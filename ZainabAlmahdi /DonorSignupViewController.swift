@@ -43,7 +43,6 @@ class DonorSignupViewController: UIViewController {
     }
 
 
-    // MARK: - Validation
     func validateInputs() -> Bool {
 
 
@@ -99,7 +98,6 @@ class DonorSignupViewController: UIViewController {
     }
 
 
-    // MARK: - Firebase Signup
     func createDonorAccount() {
         signupButton.isEnabled = false
 
@@ -175,8 +173,6 @@ class DonorSignupViewController: UIViewController {
             }
     }
 
-
-    // MARK: - UI Helpers
     func showAlert(title: String, message: String) {
         let alert = UIAlertController(
             title: title,

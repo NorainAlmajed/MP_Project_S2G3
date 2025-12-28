@@ -1,10 +1,3 @@
-//
-//  SessionManager.swift
-//  ProjectSimulator
-//
-//  Created by Zainab Almahdi on 12/24/25.
-//
-
 import Foundation
 import FirebaseAuth
 import FirebaseFirestore
@@ -12,7 +5,6 @@ import FirebaseFirestore
 final class SessionManager {
 
     static let shared = SessionManager()
-
     private init() {}
 
     enum UserRole: Int {
@@ -22,14 +14,25 @@ final class SessionManager {
         case unknown = 0
     }
 
+    // MARK: - Stored properties
     private(set) var role: UserRole = .unknown
+    private(set) var fullName: String?
 
-    // MARK: - Public helpers
+    // MARK: - Helpers
     var isAdmin: Bool { role == .admin }
     var isDonor: Bool { role == .donor }
     var isNGO: Bool { role == .ngo }
 
-    // MARK: - Fetch role once after login
+    var roleDisplayName: String {
+        switch role {
+        case .admin: return "Admin"
+        case .donor: return "Donor"
+        case .ngo: return "NGO"
+        case .unknown: return "User"
+        }
+    }
+
+    // MARK: - Fetch session (call after login)
     func fetchUserRole(completion: @escaping (Bool) -> Void) {
 
         guard let uid = Auth.auth().currentUser?.uid else {
@@ -40,32 +43,32 @@ final class SessionManager {
         Firestore.firestore()
             .collection("users")
             .document(uid)
-            .getDocument { snapshot, error in
+            .getDocument { snapshot, _ in
 
-                guard
-                    let data = snapshot?.data(),
-                    let roleString = data["role"] as? String
-                else {
+                guard let data = snapshot?.data() else {
                     completion(false)
                     return
                 }
 
-                switch roleString {
-                case "1":
-                    self.role = .admin
-                case "2":
-                    self.role = .donor
-                case "3":
-                    self.role = .ngo
-                default:
-                    self.role = .unknown
+                self.fullName = data["full_name"] as? String
+
+                if let roleString = data["role"] as? String {
+                    switch roleString {
+                    case "1": self.role = .admin
+                    case "2": self.role = .donor
+                    case "3": self.role = .ngo
+                    default: self.role = .unknown
+                    }
                 }
 
                 completion(true)
             }
     }
 
+    // MARK: - Clear on logout
     func clear() {
         role = .unknown
+        fullName = nil
     }
 }
+

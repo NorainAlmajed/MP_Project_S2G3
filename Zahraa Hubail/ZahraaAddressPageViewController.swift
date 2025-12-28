@@ -36,17 +36,32 @@ class ZahraaAddressPageViewController: UIViewController {
             
     
     
-        override func viewDidLoad() {
-            super.viewDidLoad()
-            setupUI()
-            // Do any additional setup after loading the view.
-            // Make saveButton rounded
-                saveButton.layer.cornerRadius = saveButton.frame.height / 2
-                saveButton.clipsToBounds = true
-            
-            // Prefill address fields
-                configureAddressFields()
+    override func viewDidLoad() {
+        super.viewDidLoad()
+        
+        setupUI()
+
+        // Make saveButton rounded
+        saveButton.layer.cornerRadius = saveButton.frame.height / 2
+        saveButton.clipsToBounds = true
+
+        // Prefill address fields
+        configureAddressFields()
+
+        // ✅ CORRECT way to style governorateButton (system button)
+        var config = governorateButton.configuration ?? .plain()
+
+        config.baseBackgroundColor = UIColor { trait in
+            trait.userInterfaceStyle == .dark ? .black : .clear
         }
+
+        config.baseForegroundColor = UIColor { trait in
+            trait.userInterfaceStyle == .dark ? .white : .systemBlue
+        }
+
+        governorateButton.configuration = config
+    }
+
     
     
     

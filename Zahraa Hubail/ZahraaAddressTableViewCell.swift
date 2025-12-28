@@ -32,8 +32,6 @@ class ZahraaAddressTableViewCell: UITableViewCell {
         // Configure the view for the selected state
     }
     
-    
-    
     func configure(with donation: Donation) {
         // Full address
         let address = donation.address
@@ -64,18 +62,17 @@ class ZahraaAddressTableViewCell: UITableViewCell {
             return trait.userInterfaceStyle == .dark ? .white : .black
         }
         
-        // Border
-        config.background.strokeWidth = 0.5
+        // Apply same subtle border as txtQuantity
+        config.background.strokeWidth = 1
         config.background.strokeColor = UIColor { trait in
-            return trait.userInterfaceStyle == .dark ? UIColor.white.withAlphaComponent(0.3) : UIColor.systemGray4
+            return UIColor.systemGray4
         }
         config.background.cornerRadius = 8
 
-        
         // Apply configuration
         addressBtn.configuration = config
         addressBtn.contentHorizontalAlignment = .leading
-        addressBtn.adjustsImageWhenHighlighted = false // prevents text dimming
+        addressBtn.adjustsImageWhenHighlighted = false
     }
 
 

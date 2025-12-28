@@ -71,24 +71,42 @@ extension ZahraaPickUpTimeTableViewCell: UITableViewDelegate, UITableViewDataSou
         return timeframes.count
     }
 
+    
+    
+    
+    
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: "TimeframeCell", for: indexPath)
         let time = timeframes[indexPath.row]
         cell.textLabel?.text = time
 
-        // ✅ Text color: white only in dark mode, default in light mode
-        if traitCollection.userInterfaceStyle == .dark {
-            cell.textLabel?.textColor = .white
-        } else {
-            cell.textLabel?.textColor = nil // default color (black in light mode)
+        // ✅ Always set text color based on current trait collection
+        cell.textLabel?.textColor = UIColor { trait in
+            trait.userInterfaceStyle == .dark ? .white : .black
         }
 
+        // Background
         cell.backgroundColor = .clear   // shows the table view background
+
+        // Checkmark for selected
         cell.accessoryType = (time == _selectedTimeframe) ? .checkmark : .none
         cell.tintColor = .systemBlue
 
         return cell
     }
+
+    // ✅ Override traitCollectionDidChange to update text colors if theme changes dynamically
+    override func traitCollectionDidChange(_ previousTraitCollection: UITraitCollection?) {
+        super.traitCollectionDidChange(previousTraitCollection)
+        if previousTraitCollection?.userInterfaceStyle != traitCollection.userInterfaceStyle {
+            timeframeTableView.reloadData()
+        }
+    }
+
+    
+    
+    
+    
 
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         guard indexPath.row < timeframes.count else { return }

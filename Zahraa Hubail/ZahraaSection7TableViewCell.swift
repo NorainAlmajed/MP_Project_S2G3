@@ -23,41 +23,45 @@ class ZahraaSection7TableViewCell: UITableViewCell, UITextViewDelegate {
     @IBOutlet weak var txtDescription: UITextView!
 
         private let placeholder = "Enter a Short Description"
+    override func awakeFromNib() {
+        super.awakeFromNib()
 
-        override func awakeFromNib() {
-            super.awakeFromNib()
+        backgroundColor = .clear
+        contentView.backgroundColor = .clear
 
-            backgroundColor = .clear
-            contentView.backgroundColor = .clear
-            
-            //  MATCH other input fields (Quantity / Weight / Expiration / Choose Donor)
-                txtDescription.layer.borderWidth = 1
-                txtDescription.layer.borderColor = UIColor.systemGray4.cgColor
-                txtDescription.layer.cornerRadius = 8
-                txtDescription.clipsToBounds = true
-            txtDescription.backgroundColor = UIColor { trait in
-                trait.userInterfaceStyle == .dark ? .black : .white
-            }
-            txtDescription.textColor = .label
+        // MARK: - txtDescription styling (adaptive)
+        txtDescription.layer.borderWidth = 1
+        txtDescription.layer.cornerRadius = 8
+        txtDescription.clipsToBounds = true
 
-                // Padding inside the text view
-                txtDescription.textContainerInset = UIEdgeInsets(top: 10, left: 8, bottom: 10, right: 8)
+        // ✅ Dynamic border color like txtQuantity / addressBtn
+        txtDescription.layer.borderColor = UIColor { trait in
+            return UIColor.systemGray4
+        }.cgColor
 
-                txtDescription.delegate = self
 
-                setPlaceholder()
-                updateCounter(currentCount: 0)
-                //addDoneButton()
-            
-            
+        // ✅ Background color adaptive
+        txtDescription.backgroundColor = UIColor { trait in
+            trait.userInterfaceStyle == .dark ? .black : .white
+        }
 
-            if txtDescription.inputAccessoryView == nil { addDoneButton() }
+        // ✅ Text color adaptive: dark gray in light mode, white in dark mode
+        txtDescription.textColor = UIColor { trait in
+            trait.userInterfaceStyle == .dark ? .white : .label
+        }
 
-            
+        // Padding inside the text view
+        txtDescription.textContainerInset = UIEdgeInsets(top: 10, left: 8, bottom: 10, right: 8)
+        txtDescription.delegate = self
 
-            
-            
-            }
+        // Placeholder setup
+        setPlaceholder()
+        updateCounter(currentCount: 0)
+
+        // Done button for keyboard
+        if txtDescription.inputAccessoryView == nil { addDoneButton() }
+    }
+
     
 
     private func setPlaceholder() {

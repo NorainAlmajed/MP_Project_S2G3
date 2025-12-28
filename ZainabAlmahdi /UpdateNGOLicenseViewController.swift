@@ -10,6 +10,8 @@ class UpdateNGOLicenseViewController: UIViewController,
     @IBOutlet weak var selectButton: UIButton!
     @IBOutlet weak var uploadButton: UIButton!
 
+   
+
     override func viewDidLoad() {
         super.viewDidLoad()
         title = "Update NGO License"
@@ -53,16 +55,32 @@ class UpdateNGOLicenseViewController: UIViewController,
 
         uploadButton.isEnabled = false
 
-        CloudinaryService.shared.uploadImage(image) { result in
-            switch result {
-            case .success(let url):
-                self.updateLicense(uid: uid, url: url)
+        
+        
+        
+//       let cloudinaryService = CloudinaryService() //28 dec added this after merging with the main
+//        
+//        cloudinaryService.uploadImage(image) { result in
+//            switch result {
+//            case .success(let url):
+//                self.updateLicense(uid: uid, url: url)
+//            case .failure(let error):
+//                self.uploadButton.isEnabled = true
+//                self.showAlert("Upload Failed", error.localizedDescription)
+//            }
+//        }
 
-            case .failure(let error):
-                self.uploadButton.isEnabled = true
-                self.showAlert("Upload Failed", error.localizedDescription)
-            }
-        }
+        
+//        CloudinaryService.shared.uploadImage(image) { result in
+//            switch result {
+//            case .success(let url):
+//                self.updateLicense(uid: uid, url: url)
+//
+//            case .failure(let error):
+//                self.uploadButton.isEnabled = true
+//                self.showAlert("Upload Failed", error.localizedDescription)
+//            }
+//        }
     }
 
     // MARK: - Firestore Update

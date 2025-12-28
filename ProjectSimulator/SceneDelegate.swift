@@ -24,21 +24,31 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         window?.makeKeyAndVisible()
     }
 
+    
+    
+//    func setRootViewController() {
+//
+//        if Auth.auth().currentUser != nil {
+//            // Logged in → Main app
+//            let storyboard = UIStoryboard(name: "Main", bundle: nil)
+//            let rootVC = storyboard.instantiateInitialViewController()
+//            window?.rootViewController = rootVC
+//
+//        } else {
+//           
+//            let storyboard = UIStoryboard(name: "Settings", bundle: nil)
+//
+//            let rootVC = storyboard.instantiateInitialViewController()
+//            window?.rootViewController = rootVC
+//        }
+//    }
+
+    
+    
     func setRootViewController() {
-
-        if Auth.auth().currentUser != nil {
-            // Logged in → Main app
-            let storyboard = UIStoryboard(name: "Main", bundle: nil)
-            let rootVC = storyboard.instantiateInitialViewController()
-            window?.rootViewController = rootVC
-
-        } else {
-           
-            let storyboard = UIStoryboard(name: "Settings", bundle: nil)
-
-            let rootVC = storyboard.instantiateInitialViewController()
-            window?.rootViewController = rootVC
-        }
+        let storyboard = UIStoryboard(name: "Raghad1", bundle: nil)
+        let rootVC = storyboard.instantiateInitialViewController()
+        window?.rootViewController = rootVC
     }
 
 

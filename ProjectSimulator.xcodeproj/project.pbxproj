@@ -8,6 +8,7 @@
 
 /* Begin PBXBuildFile section */
 		5FEF8BFB2EDB8B59007D3A97 /* DonationDetailViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5FEF8BFA2EDB8B59007D3A97 /* DonationDetailViewController.swift */; };
+		7AC530B32F013AE1006DA079 /* Raghad1.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 7AC530B22F013AE1006DA079 /* Raghad1.storyboard */; };
 		D06572672EFDC18B00F89FB8 /* Cloudinary in Frameworks */ = {isa = PBXBuildFile; productRef = D06572662EFDC18B00F89FB8 /* Cloudinary */; };
 		D0DEA5592F0060990008C402 /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = D0DEA5582F0060990008C402 /* GoogleService-Info.plist */; };
 		D0DEA55A2F0060990008C402 /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = D0DEA5582F0060990008C402 /* GoogleService-Info.plist */; };
@@ -46,6 +47,7 @@
 		5FEF8B782EDA363A007D3A97 /* ProjectSimulatorTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = ProjectSimulatorTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		5FEF8B822EDA363A007D3A97 /* ProjectSimulatorUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = ProjectSimulatorUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		5FEF8BFA2EDB8B59007D3A97 /* DonationDetailViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DonationDetailViewController.swift; sourceTree = "<group>"; };
+		7AC530B22F013AE1006DA079 /* Raghad1.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; path = Raghad1.storyboard; sourceTree = "<group>"; };
 		D0DEA5582F0060990008C402 /* GoogleService-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
 		D0E725412F009AB300365A28 /* SecuritySettingsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SecuritySettingsViewController.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -160,6 +162,7 @@
 		5FEF8B592EDA3636007D3A97 = {
 			isa = PBXGroup;
 			children = (
+				7AC530B22F013AE1006DA079 /* Raghad1.storyboard */,
 				D0E725412F009AB300365A28 /* SecuritySettingsViewController.swift */,
 				D0DEA5582F0060990008C402 /* GoogleService-Info.plist */,
 				5FEF8BFA2EDB8B59007D3A97 /* DonationDetailViewController.swift */,
@@ -323,6 +326,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				D0DEA55A2F0060990008C402 /* GoogleService-Info.plist in Resources */,
+				7AC530B32F013AE1006DA079 /* Raghad1.storyboard in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

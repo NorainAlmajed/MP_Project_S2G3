@@ -32,7 +32,7 @@ class DonationCollectionViewCell: UICollectionViewCell {
     
     
     // MARK: - Configure Cell With Donation Data
-    func setup(with donation: Donation, currentUser: ZahraaUser) {
+    func setup(with donation: ZahraaDonation, currentUser: ZahraaUser) {
 
         // Set the correct logo URL depending on the current user role
         //var logoURL: String?

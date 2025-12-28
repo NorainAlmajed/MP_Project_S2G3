@@ -31,7 +31,7 @@ class ZahraaAddress {
     }
 }
 
-struct Notification {
+struct ZahraaNotification {
     var title: String
     var description: String
     var date: Date
@@ -64,7 +64,7 @@ struct Address {
 }
 
 
-class Donation {
+class ZahraaDonation {
     var firestoreID: String?
     var donationID: Int                   // Firestore auto-generated document ID
     var ngo: ZahraaUser            // Reference to NGO in Firestore

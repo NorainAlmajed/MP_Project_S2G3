@@ -21,7 +21,7 @@
                                             ZahraaAddressDelegate
                                              {
         
-        var donation: Donation?
+        var donation: ZahraaDonation?
         private var saveRequestedWhileUploading = false
         // Add this with other private VC state variables
         private var selectedRecurrence: Int = 0
@@ -38,7 +38,7 @@
 
         
         // In EditDonationViewController.swift
-        var onDonationUpdated: ((Donation) -> Void)?
+        var onDonationUpdated: ((ZahraaDonation) -> Void)?
 
         
         
@@ -961,7 +961,7 @@
         
         // MARK: - Send notifications to donor and NGO
         // MARK: - Send notifications to donor and NGO
-        private func sendUpdateNotifications(for donation: Donation) {
+        private func sendUpdateNotifications(for donation: ZahraaDonation) {
             let db = Firestore.firestore()
             
             // ✅ Use exact title and description format

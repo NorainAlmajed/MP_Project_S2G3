@@ -11,7 +11,7 @@ import UIKit
 class ZahraaAddressPageViewController: UIViewController {
 
     
-        var donation: Donation?
+        var donation: ZahraaDonation?
 
         
         weak var delegate: ZahraaAddressDelegate?

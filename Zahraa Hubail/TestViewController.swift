@@ -13,7 +13,7 @@ import FirebaseFirestore
 
 class DonationDetailsViewController: UIViewController, UITableViewDelegate, UITableViewDataSource {
     
-    var donation: Donation?
+    var donation: ZahraaDonation?
     var currentUser: ZahraaUser?
     var donationImage: UIImage?
 
@@ -73,7 +73,7 @@ class DonationDetailsViewController: UIViewController, UITableViewDelegate, UITa
     
     
         
-    private func buildDonationReport(for donation: Donation) -> NSAttributedString {
+    private func buildDonationReport(for donation: ZahraaDonation) -> NSAttributedString {
         let dateFormatter = DateFormatter()
         dateFormatter.dateStyle = .medium
         dateFormatter.timeStyle = .none
@@ -611,7 +611,7 @@ class DonationDetailsViewController: UIViewController, UITableViewDelegate, UITa
         }
 
     //Prepating pdf
-    private func buildDonationPDF(for donation: Donation) -> Data {
+    private func buildDonationPDF(for donation: ZahraaDonation) -> Data {
 
         let pdfMetaData = [
             kCGPDFContextCreator: "ProjectSimulator",

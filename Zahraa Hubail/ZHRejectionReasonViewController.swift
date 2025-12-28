@@ -9,7 +9,7 @@ import FirebaseFirestore
 
 class ZHRejectionReasonViewController: UIViewController, UITextViewDelegate {
 
-    var donation: Donation?
+    var donation: ZahraaDonation?
     var onRejectionCompleted: (() -> Void)?
     
     @IBOutlet weak var rejectionTextArea: UITextView!

@@ -32,7 +32,7 @@ class ZahraaAddressTableViewCell: UITableViewCell {
         // Configure the view for the selected state
     }
     
-    func configure(with donation: Donation) {
+    func configure(with donation: ZahraaDonation) {
         // Full address
         let address = donation.address
         var addressParts: [String] = []

@@ -38,7 +38,7 @@ class Section2TableViewCell: UITableViewCell {
         // Configure the view for the selected state
     }
     
-    func setup(with donation: Donation) {
+    func setup(with donation: ZahraaDonation) {
         donorLbl.text = donation.donor.username
         
         //  Setting the format of the address

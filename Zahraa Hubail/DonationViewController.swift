@@ -24,8 +24,8 @@ class DonationViewController: UIViewController {
         let statuses = ["All", "Pending", "Accepted", "Collected", "Rejected", "Cancelled"]
         var selectedIndex = 0
 
-        var allDonations: [Donation] = []
-        var displayedDonations: [Donation] = []
+        var allDonations: [ZahraaDonation] = []
+        var displayedDonations: [ZahraaDonation] = []
         var allUsers: [ZahraaUser] = []
 
         private var searchBar: UISearchBar!
@@ -364,7 +364,7 @@ class DonationViewController: UIViewController {
 
 
 
-                    let donation = Donation(
+                    let donation = ZahraaDonation(
                         firestoreID: firestoreID,
                         donationID: donationID,
                         ngo: ngo,

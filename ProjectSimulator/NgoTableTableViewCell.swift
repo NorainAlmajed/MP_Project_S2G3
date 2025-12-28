@@ -37,7 +37,7 @@ class NgoTableTableViewCell: UITableViewCell {
         )
         
         
-        imgNgoPhotot.layer.cornerRadius = 7   // 🔵 change this value as you like
+        imgNgoPhotot.layer.cornerRadius = 7   // change this value as you like
            imgNgoPhotot.clipsToBounds = true
     }
 

@@ -104,7 +104,7 @@ var users: [User] = [
 var user = users [0]
 
 extension User {
-    var isAdmin: Bool { userType == 2 }   // ✅ Admin = 1 donor= 2
+    var isAdmin: Bool { userType == 1 }   // ✅ Admin = 1 donor= 2
 }
 
 

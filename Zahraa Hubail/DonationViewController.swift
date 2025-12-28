@@ -223,7 +223,7 @@ class DonationViewController: UIViewController {
 
         // MARK: - Firebase.
     func fetchCurrentUser(completion: @escaping (Bool) -> Void) {
-        let tempUserID = "EApETXLDaQaG1Az0T9nbastpMtG2" // temporary user
+        let tempUserID = "donor4" // temporary user
 
         db.collection("users").document(tempUserID).getDocument { [weak self] snapshot, error in
             if let error = error {
@@ -354,13 +354,14 @@ class DonationViewController: UIViewController {
                     guard let addressData = addressSnap?.data() else { return }
 
                     let address = ZahraaAddress(
-                        building: String(addressData["building"] as? Int ?? 0),
-                        road: String(addressData["road"] as? Int ?? 0),
-                        block: String(addressData["block"] as? Int ?? 0),
-                        flat: (addressData["flat"] as? Int).map { String($0) }, // optional
+                        building: addressData["building"] as? String ?? "",
+                        road: addressData["road"] as? String ?? "",
+                        block: addressData["block"] as? String ?? "",
+                        flat: addressData["flat"] as? String ?? "",
                         area: addressData["area"] as? String ?? "",
                         governorate: addressData["governorate"] as? String ?? ""
                     )
+
 
 
                     let donation = Donation(

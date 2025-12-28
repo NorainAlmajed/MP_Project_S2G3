@@ -102,17 +102,22 @@ class SettingViewController: UITableViewController {
             goToUpdateNGOLicense()
         }
     }
-
+    
+    
     func goToEditProfile() {
         print("Edit Profile tapped")
     }
 
     func goToSecurity() {
-        print("Security Settings tapped")
+        let vc = UIStoryboard(name: "Settings", bundle: nil)
+            .instantiateViewController(withIdentifier: "SecuritySettingsViewController")
+        navigationController?.pushViewController(vc, animated: true)
     }
 
     func goToSavedAddresses() {
-        print("Saved Addresses tapped")
+        let vc = UIStoryboard(name: "Settings", bundle: nil)
+            .instantiateViewController(withIdentifier: "SavedAddressesViewController")
+        navigationController?.pushViewController(vc, animated: true)
     }
 
     func goToNotifications() {

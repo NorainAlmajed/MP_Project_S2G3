@@ -19,6 +19,9 @@
 		D0DEA5662F00627B0008C402 /* FirebaseDatabase in Frameworks */ = {isa = PBXBuildFile; productRef = D0DEA5652F00627B0008C402 /* FirebaseDatabase */; };
 		D0DEA5682F00627B0008C402 /* FirebaseFirestore in Frameworks */ = {isa = PBXBuildFile; productRef = D0DEA5672F00627B0008C402 /* FirebaseFirestore */; };
 		D0DEA56A2F00627B0008C402 /* FirebaseMessaging in Frameworks */ = {isa = PBXBuildFile; productRef = D0DEA5692F00627B0008C402 /* FirebaseMessaging */; };
+		D0E725422F009AB300365A28 /* SecuritySettingsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D0E725412F009AB300365A28 /* SecuritySettingsViewController.swift */; };
+		D0E725432F009AB300365A28 /* SecuritySettingsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D0E725412F009AB300365A28 /* SecuritySettingsViewController.swift */; };
+		D0E725442F009AB300365A28 /* SecuritySettingsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D0E725412F009AB300365A28 /* SecuritySettingsViewController.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -44,6 +47,7 @@
 		5FEF8B822EDA363A007D3A97 /* ProjectSimulatorUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = ProjectSimulatorUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		5FEF8BFA2EDB8B59007D3A97 /* DonationDetailViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DonationDetailViewController.swift; sourceTree = "<group>"; };
 		D0DEA5582F0060990008C402 /* GoogleService-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
+		D0E725412F009AB300365A28 /* SecuritySettingsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SecuritySettingsViewController.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFileSystemSynchronizedBuildFileExceptionSet section */
@@ -61,9 +65,11 @@
 				AccViewController.swift,
 				Authentication.storyboard,
 				LoginViewController.swift,
+				SavedAddressesViewController.swift,
 				SessionManager.swift,
 				Settings.storyboard,
 				SettingViewController.swift,
+				UpdateNGOLicenseViewController.swift,
 			);
 			target = 5FEF8B772EDA363A007D3A97 /* ProjectSimulatorTests */;
 		};
@@ -74,9 +80,11 @@
 				AccViewController.swift,
 				Authentication.storyboard,
 				LoginViewController.swift,
+				SavedAddressesViewController.swift,
 				SessionManager.swift,
 				Settings.storyboard,
 				SettingViewController.swift,
+				UpdateNGOLicenseViewController.swift,
 			);
 			target = 5FEF8B812EDA363A007D3A97 /* ProjectSimulatorUITests */;
 		};
@@ -148,6 +156,7 @@
 		5FEF8B592EDA3636007D3A97 = {
 			isa = PBXGroup;
 			children = (
+				D0E725412F009AB300365A28 /* SecuritySettingsViewController.swift */,
 				D0DEA5582F0060990008C402 /* GoogleService-Info.plist */,
 				5FEF8BFA2EDB8B59007D3A97 /* DonationDetailViewController.swift */,
 				D0FCA2B52EEEC14000D8AFFF /* ZainabAlmahdi  */,
@@ -336,6 +345,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				D0E725422F009AB300365A28 /* SecuritySettingsViewController.swift in Sources */,
 				5FEF8BFB2EDB8B59007D3A97 /* DonationDetailViewController.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -344,6 +354,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				D0E725432F009AB300365A28 /* SecuritySettingsViewController.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -351,6 +362,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				D0E725442F009AB300365A28 /* SecuritySettingsViewController.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

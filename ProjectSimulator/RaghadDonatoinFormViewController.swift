@@ -690,11 +690,28 @@ class RaghadDonatoinFormViewController: UIViewController,
                 return
             }
 
-            // ✅ Tutor can see it now in Firebase
-            self.showSimpleAlert(
-                title: "Saved",
-                message: "Donation draft saved successfully."
-            )
+//            // now i can see it now in Firebase
+//            self.showSimpleAlert(
+//                title: "Saved",
+//                message: "Donation draft saved successfully."
+//            )
+            
+            
+            saveDonationDraftToFirebase(payload: payload) { [weak self] draftId in
+                guard let self = self else { return }
+
+                if draftId == nil {
+                    self.showSimpleAlert(
+                        title: "Error",
+                        message: "Could not save donation draft."
+                    )
+                    return
+                }
+
+                // ✅ SUCCESS: do nothing (no popup)
+                print("✅ Donation draft saved successfully")
+            }
+
         }
 
         

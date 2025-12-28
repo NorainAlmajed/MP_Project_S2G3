@@ -1,3 +1,8 @@
+//
+//  SceneDelegate.swift
+//  ProjectSimulator
+//
+
 import UIKit
 import FirebaseAuth
 
@@ -17,22 +22,42 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         window?.makeKeyAndVisible()
     }
 
-    private func setRootViewController() {
+    // ✅ WORKING FIREBASE-BASED ROOT LOGIC (ACTIVE)
+    func setRootViewController() {
+        let authStoryboard = UIStoryboard(name: "Authentication", bundle: nil)
 
         if Auth.auth().currentUser != nil {
-            // Logged in → Main app
-            let storyboard = UIStoryboard(name: "Main", bundle: nil)
-            let rootVC = storyboard.instantiateInitialViewController()
-            window?.rootViewController = rootVC
+            // User already logged in
+            let homeVC = authStoryboard.instantiateViewController(
+                withIdentifier: "HomeViewController"
+            )
+            window?.rootViewController = homeVC
         } else {
-            // Not logged in → Authentication flow
-            let storyboard = UIStoryboard(name: "Authentication", bundle: nil)
-            let rootVC = storyboard.instantiateInitialViewController()
-            window?.rootViewController = rootVC
+            // User NOT logged in → show Login
+            let loginVC = authStoryboard.instantiateViewController(
+                withIdentifier: "LoginViewController"
+            )
+            window?.rootViewController = loginVC
         }
     }
 
-    // MARK: - Scene lifecycle (empty is fine)
+    /*
+    // ❌ NEW DASHBOARD-BASED ROOT LOGIC (COMMENTED – KEEP FOR LATER)
+    private func setRootViewController_NewDashboardFlow() {
+
+        if Auth.auth().currentUser != nil {
+            let dashboardStoryboard = UIStoryboard(name: "Dashboard_Fatima", bundle: nil)
+            let dashboardVC = dashboardStoryboard.instantiateInitialViewController()
+            window?.rootViewController = dashboardVC
+        } else {
+            let authStoryboard = UIStoryboard(name: "Authentication", bundle: nil)
+            let loginVC = authStoryboard.instantiateInitialViewController()
+            window?.rootViewController = loginVC
+        }
+    }
+    */
+
+    // MARK: - Scene lifecycle
     func sceneDidDisconnect(_ scene: UIScene) {}
     func sceneDidBecomeActive(_ scene: UIScene) {}
     func sceneWillResignActive(_ scene: UIScene) {}

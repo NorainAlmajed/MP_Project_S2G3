@@ -11,6 +11,8 @@ class NGOSignupViewController: UIViewController,
     // MARK: - Pickers
     let causePicker = UIPickerView()
     let governoratePicker = UIPickerView()
+// fatima
+    private let cloudinaryService = CloudinaryService()
 
     let causes = [
         "Orphans",
@@ -147,7 +149,7 @@ class NGOSignupViewController: UIViewController,
 
         signupButton.isEnabled = false
 
-        CloudinaryService.shared.uploadImage(licenseImage) { [weak self] result in
+        /*CloudinaryService.shared.uploadImage(licenseImage) { [weak self] result in
             guard let self = self else { return }
 
             switch result {
@@ -158,7 +160,22 @@ class NGOSignupViewController: UIViewController,
                 self.signupButton.isEnabled = true
                 self.showAlert(title: "Upload Failed", message: error.localizedDescription)
             }
+        }*/
+        // fatima
+        cloudinaryService.uploadImage(licenseImage) { [weak self] licenseUrl in
+            guard let self = self else { return }
+
+            if let licenseUrl = licenseUrl {
+                self.createNGOAccount(licenseUrl: licenseUrl)
+            } else {
+                self.signupButton.isEnabled = true
+                self.showAlert(
+                    title: "Upload Failed",
+                    message: "Image upload failed. Please try again."
+                )
+            }
         }
+
     }
 
     // MARK: - Validation

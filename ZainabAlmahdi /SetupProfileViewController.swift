@@ -13,6 +13,8 @@ class SetupProfileViewController: UIViewController,
                                   UIImagePickerControllerDelegate,
                                   UINavigationControllerDelegate,
                                   UITextViewDelegate {
+    // MARK: ADDED BY FATIMA
+    private let cloudinaryService = CloudinaryService()
 
     @IBOutlet weak var continueButton: UIButton!
     @IBOutlet weak var uploadButton: UIButton!
@@ -80,25 +82,44 @@ class SetupProfileViewController: UIViewController,
 
     // MARK: - Continue
     @IBAction func continueTapped(_ sender: UIButton) {
-
+        
         guard let fullName = fullNameTextField.text, !fullName.isEmpty else {
             showAlert(title: "Missing Name", message: "Please enter your full name.")
             return
         }
-
+        
         guard let bio = bioTextView.text, !bio.isEmpty else {
             showAlert(title: "Missing Bio", message: "Please add a short bio.")
             return
         }
-
+        
         guard let image = profileImageView.image else {
             showAlert(title: "Missing Photo", message: "Please upload a profile photo.")
             return
         }
-
+        
         continueButton.isEnabled = false
-
-        CloudinaryService.shared.uploadImage(image) { [weak self] result in
+        // fatima
+        cloudinaryService.uploadImage(image) { [weak self] imageUrl in
+            guard let self = self else { return }
+            
+            if let imageUrl = imageUrl {
+                self.saveProfile(
+                    fullName: fullName,
+                    bio: bio,
+                    profileImageUrl: imageUrl
+                )
+            } else {
+                self.continueButton.isEnabled = true
+                self.showAlert(
+                    title: "Upload Failed",
+                    message: "Image upload failed. Please try again."
+                )
+            }
+        }
+    }
+// zainab's function
+        /*CloudinaryService.shared.uploadImage(image) { [weak self] result in
             guard let self = self else { return }
 
             switch result {
@@ -114,7 +135,7 @@ class SetupProfileViewController: UIViewController,
                 self.showAlert(title: "Upload Failed", message: error.localizedDescription)
             }
         }
-    }
+    }*/
 
     // MARK: - Firestore
     func saveProfile(fullName: String, bio: String, profileImageUrl: String) {

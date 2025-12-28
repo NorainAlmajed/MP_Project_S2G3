@@ -80,8 +80,25 @@ class LoginViewController: UIViewController {
 
     // MARK: - Navigation
 
-
     func routeToHome() {
+
+        // ✅ NEW CORRECT DASHBOARD ROUTING (ACTIVE)
+        let dashboardStoryboard = UIStoryboard(name: "Dashboard_Fatima", bundle: nil)
+
+        guard let rootVC = dashboardStoryboard.instantiateInitialViewController() else {
+            showAlert(title: "Error", message: "Dashboard not found.")
+            return
+        }
+
+        if let sceneDelegate = UIApplication.shared.connectedScenes
+            .first?.delegate as? SceneDelegate {
+
+            sceneDelegate.window?.rootViewController = rootVC
+            sceneDelegate.window?.makeKeyAndVisible()
+        }
+
+        /*
+        // ❌ OLD ROLE-SPECIFIC ROUTING (COMMENTED – CAUSED CRASH)
         let storyboard = UIStoryboard(name: "Main", bundle: nil)
         let identifier: String
 
@@ -104,7 +121,9 @@ class LoginViewController: UIViewController {
             sceneDelegate.window?.rootViewController = homeVC
             sceneDelegate.window?.makeKeyAndVisible()
         }
+        */
     }
+
 
     // MARK: - UI Helpers
 

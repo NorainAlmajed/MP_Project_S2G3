@@ -8,6 +8,8 @@ struct ImpactData {
     let mealsProvided: Int
     let livesImpacted: Int
 }
+// Shared dashboard for Admin / Donor / NGO
+
 
 class DonorDashboardViewController: UIViewController {
 

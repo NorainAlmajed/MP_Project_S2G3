@@ -14,6 +14,7 @@ class LoginViewController: UIViewController {
     override func viewDidLayoutSubviews() {
         super.viewDidLayoutSubviews()
         styleActionButton(loginButton)
+        navigationItem.title = ""
     }
 
     // MARK: - Forgot Password

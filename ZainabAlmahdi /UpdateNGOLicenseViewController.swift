@@ -14,6 +14,8 @@ class UpdateNGOLicenseViewController: UIViewController,
         super.viewDidLoad()
         title = "Update NGO License"
         uploadButton.isEnabled = false
+        styleActionButton(selectButton)
+        styleActionButton(uploadButton)
     }
 
     @IBAction func selectLicenseTapped(_ sender: UIButton) {

@@ -29,7 +29,7 @@ class SetupProfileViewController: UIViewController,
 
         styleActionButton(continueButton)
         styleActionButton(uploadButton)
-
+        title = "Setup Profile"
         bioTextView.delegate = self
         bioCounterLabel.text = "0 / 240"
 

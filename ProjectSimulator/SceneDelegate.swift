@@ -28,13 +28,13 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
 
         if Auth.auth().currentUser != nil {
             // Logged in → Main app
-            let storyboard = UIStoryboard(name: "Main", bundle: nil)
+            let storyboard = UIStoryboard(name: "Authentication", bundle: nil)
             let rootVC = storyboard.instantiateInitialViewController()
             window?.rootViewController = rootVC
 
         } else {
            
-            let storyboard = UIStoryboard(name: "Settings", bundle: nil)
+            let storyboard = UIStoryboard(name: "Authentication", bundle: nil)
 
             let rootVC = storyboard.instantiateInitialViewController()
             window?.rootViewController = rootVC

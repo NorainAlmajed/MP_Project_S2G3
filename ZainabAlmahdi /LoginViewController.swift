@@ -5,85 +5,106 @@ class LoginViewController: UIViewController {
 
     @IBOutlet weak var emailTextField: UITextField!
     @IBOutlet weak var passwordTextField: UITextField!
-    
+    @IBOutlet weak var loginButton: UIButton!
+
     override func viewDidLoad() {
         super.viewDidLoad()
     }
-    @IBAction func signupButtonTapped(_ sender: UIButton) {
-        performSegue(withIdentifier: "goToRoleSelection", sender: self)
-    }
-    
-    @IBAction func forgotPasswordTapped(_ sender: UIButton) {
 
-        guard let email = emailTextField.text, !email.isEmpty else {
-            showAlert(
-                title: "Email Required",
-                message: "Please enter your email to reset your password."
-            )
+    override func viewDidLayoutSubviews() {
+        super.viewDidLayoutSubviews()
+        styleActionButton(loginButton)
+    }
+
+    // MARK: - Forgot Password
+    @IBAction func forgotPasswordTapped(_ sender: UIButton) {
+        guard let email = emailTextField.text?.trimmingCharacters(in: .whitespacesAndNewlines),
+              !email.isEmpty else {
+            showAlert(title: "Email Required", message: "Please enter your email.")
             return
         }
 
         Auth.auth().sendPasswordReset(withEmail: email) { [weak self] error in
             if let error = error {
-                self?.showAlert(
-                    title: "Error",
-                    message: error.localizedDescription
-                )
+                self?.showAlert(title: "Error", message: error.localizedDescription)
                 return
             }
-
-            self?.showAlert(
-                title: "Email Sent",
-                message: "A password reset link has been sent to your email."
-            )
+            self?.showAlert(title: "Email Sent", message: "Check your inbox.")
         }
     }
-    
+
+    // MARK: - Login
     @IBAction func loginButtonTapped(_ sender: UIButton) {
 
-        guard let email = emailTextField.text, !email.isEmpty else {
-            showAlert(
-                title: "Missing Email",
-                message: "Please enter your email address."
-            )
+        guard let email = emailTextField.text?.trimmingCharacters(in: .whitespacesAndNewlines),
+              !email.isEmpty else {
+            showAlert(title: "Missing Email", message: "Enter your email.")
             return
         }
 
         guard let password = passwordTextField.text, !password.isEmpty else {
-            showAlert(
-                title: "Missing Password",
-                message: "Please enter your password."
-            )
+            showAlert(title: "Missing Password", message: "Enter your password.")
             return
         }
 
-        Auth.auth().signIn(withEmail: email, password: password) { [weak self] authResult, error in
+        loginButton.isEnabled = false
+
+        Auth.auth().signIn(withEmail: email, password: password) { [weak self] _, error in
+            guard let self = self else { return }
 
             if let error = error {
-                self?.showAlert(
-                    title: "Login Failed",
-                    message: error.localizedDescription
-                )
+                self.loginButton.isEnabled = true
+                self.showAlert(title: "Login Failed", message: error.localizedDescription)
                 return
             }
 
-            // Login successful - save user ID to UserDefaults
-            if let userID = authResult?.user.uid {
-                UserDefaults.standard.set(userID, forKey: "userID")
-            }
+            SessionManager.shared.fetchUserRole { success in
+                DispatchQueue.main.async {
+                    self.loginButton.isEnabled = true
 
-            // Navigate to home screen
-            self?.performSegue(withIdentifier: "goToHome", sender: sender)
+                    if success {
+                        self.routeToHome()
+                    } else {
+                        self.showAlert(title: "Error", message: "Failed to load user role.")
+                    }
+                }
+            }
         }
     }
 
+    // MARK: - Routing
+    func routeToHome() {
+        let storyboard = UIStoryboard(name: "Main", bundle: nil)
+        let identifier: String
+
+        if SessionManager.shared.isAdmin {
+            identifier = "AdminHomeViewController"
+        } else if SessionManager.shared.isNGO {
+            identifier = "NGOHomeViewController"
+        } else if SessionManager.shared.isDonor {
+            identifier = "DonorHomeViewController"
+        } else {
+            showAlert(title: "Error", message: "Unknown role.")
+            return
+        }
+
+        let homeVC = storyboard.instantiateViewController(withIdentifier: identifier)
+
+        if let sceneDelegate = UIApplication.shared.connectedScenes.first?.delegate as? SceneDelegate {
+            sceneDelegate.window?.rootViewController = homeVC
+            sceneDelegate.window?.makeKeyAndVisible()
+        }
+    }
+
+    // MARK: - Helpers
     func showAlert(title: String, message: String) {
-        let alert = UIAlertController(
-            title: title,
-            message: message,
-            preferredStyle: .alert
-        )
+        let alert = UIAlertController(title: title, message: message, preferredStyle: .alert)
         alert.addAction(UIAlertAction(title: "OK", style: .default))
         present(alert, animated: true)
+    }
+
+    private func styleActionButton(_ button: UIButton) {
+        button.layer.cornerRadius = button.frame.height / 2
+        button.clipsToBounds = true
     }
 }

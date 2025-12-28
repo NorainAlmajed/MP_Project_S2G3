@@ -46,7 +46,7 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
     
     
     func setRootViewController() {
-        let storyboard = UIStoryboard(name: "Raghad1", bundle: nil)
+        let storyboard = UIStoryboard(name: "Donations", bundle: nil)
         let rootVC = storyboard.instantiateInitialViewController()
         window?.rootViewController = rootVC
     }

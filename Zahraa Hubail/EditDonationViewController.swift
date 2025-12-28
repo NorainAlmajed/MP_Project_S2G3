@@ -841,7 +841,8 @@
             guard let donationId = donation?.firestoreID else { return }  // use donation ID instead
 
             let draft = DonationDraft(
-                ngoId: donationId,  // you can just use this as the key; it doesn't need to be the real NGO
+                ngoId: "donationId",  // you can just use this as the key; it doesn't need to be the real NGO
+                ngoName:    "",
                 foodCategory: selectedFoodCategory,
                 quantity: selectedQuantity,
                 weight: weightValue,

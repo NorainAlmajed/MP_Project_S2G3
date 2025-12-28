@@ -35,8 +35,36 @@ class NourishUsersViewController: UIViewController,UITableViewDelegate,UITableVi
         let tap = UITapGestureRecognizer(target: self, action: #selector(dismissKeyboard))
         tap.cancelsTouchesInView = false
         view.addGestureRecognizer(tap)
+        setupButtonStyles()
 
         
+    }
+    
+    
+    private func setupButtonStyles() {
+        let buttons = [btnPending, btnApproved, btnRejected]
+        
+        for button in buttons {
+            guard let btn = button else { continue }
+            
+            // Make capsule shape
+            btn.layer.cornerRadius = btn.frame.height / 2
+            btn.clipsToBounds = true
+            
+            btn.setBackgroundImage(nil, for: .normal)
+                    btn.setBackgroundImage(nil, for: .highlighted)
+                    
+                    // Set custom styling
+                    btn.backgroundColor = .white
+                    btn.layer.borderWidth = 2
+                    btn.layer.borderColor = UIColor.greenCol.cgColor
+                    btn.setTitleColor(.greenCol, for: .normal)
+            // Green stroke, white fill, green text (default state)
+            btn.backgroundColor = .white
+            btn.layer.borderWidth = 2
+            btn.layer.borderColor = UIColor.greenCol.cgColor
+            btn.setTitleColor(.greenCol, for: .normal)
+        }
     }
     
     func searchBar(_ searchBar: UISearchBar, textDidChange searchText: String) {
@@ -117,46 +145,67 @@ class NourishUsersViewController: UIViewController,UITableViewDelegate,UITableVi
     
     private func resetFilterButtonColors() {
         let buttons = [btnPending, btnApproved, btnRejected]
-        buttons.forEach { button in
-            // Set these to your default "unselected" colors
-            button?.backgroundColor = .systemGray6 // or any default color
-            button?.setTitleColor(.darkGray, for: .normal)
-            button?.tintColor = .darkGray
-        }
+            
+            for button in buttons {
+                guard let btn = button else { continue }
+                
+                var config = btn.configuration ?? UIButton.Configuration.filled()
+                config.background.backgroundColor = .white
+                config.baseForegroundColor = .greenCol
+                config.background.strokeColor = .greenCol
+                config.background.strokeWidth = 2
+                btn.configuration = config
+            }
     }
+    
     @IBAction func btnPendingFilter(_ sender: Any) {
         resetFilterButtonColors()
-        
-            btnPending.layer.cornerRadius = btnPending.frame.height / 2
-        btnPending.backgroundColor = .greenCol
-            btnPending.clipsToBounds = true
-            btnPending.setTitleColor(.white, for: .normal)
-        
-        displayedUsers = users.compactMap { $0 as? NGO }.filter { $0.status == .pending}
-        usersTableView.reloadData()
+           
+           var config = btnPending.configuration ?? UIButton.Configuration.filled()
+           config.background.backgroundColor = .greenCol
+           config.baseForegroundColor = .white
+           config.background.strokeWidth = 0
+           btnPending.configuration = config
+           
+           displayedUsers = users.compactMap { $0 as? NGO }.filter { $0.status == .pending }
+           usersTableView.reloadData()
     }
     
     @IBAction func btnApprovedFilter(_ sender: Any) {
         resetFilterButtonColors()
-            
-            btnApproved.backgroundColor = .greenCol
-            btnApproved.tintColor = .white
-            btnApproved.setTitleColor(.white, for: .normal)
+           
+           var config = btnApproved.configuration ?? UIButton.Configuration.filled()
+           config.background.backgroundColor = .greenCol
+           config.baseForegroundColor = .white
+           config.background.strokeWidth = 0
+           btnApproved.configuration = config
+           
         displayedUsers = users.compactMap { $0 as? NGO }.filter { $0.status == .approved }
-        usersTableView.reloadData()
+           usersTableView.reloadData()
     }
     
     
     @IBAction func btnRejectedFilter(_ sender: Any) {
         resetFilterButtonColors()
-            
-            btnRejected.backgroundColor = .greenCol
-            btnRejected.tintColor = .white
-            btnRejected.setTitleColor(.white, for: .normal)
+           
+           var config = btnRejected.configuration ?? UIButton.Configuration.filled()
+           config.background.backgroundColor = .greenCol
+           config.baseForegroundColor = .white
+           config.background.strokeWidth = 0
+           btnRejected.configuration = config
+           
         displayedUsers = users.compactMap { $0 as? NGO }.filter { $0.status == .rejected }
-        usersTableView.reloadData()
+           usersTableView.reloadData()
     }
     
+    override func viewDidLayoutSubviews() {
+        super.viewDidLayoutSubviews()
+        
+        // Update corner radius after layout (ensures correct capsule shape)
+        btnPending?.layer.cornerRadius = btnPending.frame.height / 2
+        btnApproved?.layer.cornerRadius = btnApproved.frame.height / 2
+        btnRejected?.layer.cornerRadius = btnRejected.frame.height / 2
+    }
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         return displayedUsers.count

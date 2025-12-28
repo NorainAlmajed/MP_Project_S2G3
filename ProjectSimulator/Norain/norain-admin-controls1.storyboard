@@ -139,14 +139,10 @@
                                         <constraints>
                                             <constraint firstAttribute="height" constant="38.329999999999998" id="UuV-PD-5Hg"/>
                                         </constraints>
-                                        <color key="tintColor" name="greenCol"/>
                                         <state key="normal" title="Button"/>
                                         <buttonConfiguration key="configuration" style="filled" title="Pending" cornerStyle="capsule">
-                                            <backgroundConfiguration key="background">
-                                                <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-                                                <color key="strokeColor" name="greenCol"/>
-                                            </backgroundConfiguration>
                                             <color key="baseForegroundColor" name="greenCol"/>
+                                            <color key="baseBackgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                         </buttonConfiguration>
                                         <connections>
                                             <action selector="btnPendingFilter:" destination="Fwt-11-JKb" eventType="touchUpInside" id="E77-X7-tux"/>
@@ -157,14 +153,10 @@
                                         <constraints>
                                             <constraint firstAttribute="height" constant="38.329999999999998" id="96b-cK-FBy"/>
                                         </constraints>
-                                        <color key="tintColor" name="greenCol"/>
                                         <state key="normal" title="Button"/>
                                         <buttonConfiguration key="configuration" style="filled" title="Approved" cornerStyle="capsule">
-                                            <backgroundConfiguration key="background">
-                                                <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-                                                <color key="strokeColor" name="greenCol"/>
-                                            </backgroundConfiguration>
                                             <color key="baseForegroundColor" name="greenCol"/>
+                                            <color key="baseBackgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                         </buttonConfiguration>
                                         <connections>
                                             <action selector="btnApprovedFilter:" destination="Fwt-11-JKb" eventType="touchUpInside" id="ooa-jy-Ras"/>
@@ -175,14 +167,10 @@
                                         <constraints>
                                             <constraint firstAttribute="height" constant="38.329999999999998" id="kba-gw-Jq7"/>
                                         </constraints>
-                                        <color key="tintColor" name="greenCol"/>
                                         <state key="normal" title="Button"/>
                                         <buttonConfiguration key="configuration" style="filled" title="Rejected" cornerStyle="capsule">
-                                            <backgroundConfiguration key="background">
-                                                <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-                                                <color key="strokeColor" name="greenCol"/>
-                                            </backgroundConfiguration>
                                             <color key="baseForegroundColor" name="greenCol"/>
+                                            <color key="baseBackgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                         </buttonConfiguration>
                                         <connections>
                                             <action selector="btnRejectedFilter:" destination="Fwt-11-JKb" eventType="touchUpInside" id="eOO-TN-Yfb"/>

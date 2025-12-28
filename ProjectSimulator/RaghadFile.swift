@@ -93,18 +93,12 @@ struct User {
 var users: [User] = [
     User(username: "zahraa_hubail",userType: 1),//admin
     User(username: "raghad_aleskafi",userType: 2),//donor
-    User(username: "norain_almajed",userType: 3),
-    User(username: "fatima_alaiwi",userType: 1),
-    User(username: "zainab_mahdi",userType: 2),
-    User(username: "ali_ahmed",userType: 1),
-    User(username: "yousif_ali",userType: 1),
-    User(username: "hassan_mahdi",userType: 2)
 ]
 
 var user = users [0]
 
 extension User {
-    var isAdmin: Bool { userType == 1 }   // ✅ Admin = 1 donor= 2
+    var isAdmin: Bool { userType == 2 }   // ✅ Admin = 1 donor= 2
 }
 
 
@@ -116,6 +110,8 @@ extension User {
 
 struct DonationDraft {
     var ngoId: String
+    var ngoName: String          // ✅ ADD THIS
+
     var donorName: String?
     var foodCategory: String?
     var quantity: Int?
@@ -150,9 +146,25 @@ final class DonationDraftStore {
 
 
 
+//struct DonationPayload {
+//    let ngoId: String
+//    
+//    let donorName: String        // nil if donor is donating for themselves
+//    
+//    let foodCategory: String
+//    let quantity: Int
+//    let weight: Double?
+//    let expiryDate: Date
+//    let shortDescription: String?
+//    let imageUrl: String
+//    let ngoName: String          // ✅ NEW
+//
+//}
+
 struct DonationPayload {
     let ngoId: String
-    let donorName: String?        // nil if donor is donating for themselves
+    let ngoName: String
+    let donorName: String?
     let foodCategory: String
     let quantity: Int
     let weight: Double?
@@ -160,5 +172,3 @@ struct DonationPayload {
     let shortDescription: String?
     let imageUrl: String
 }
-
-

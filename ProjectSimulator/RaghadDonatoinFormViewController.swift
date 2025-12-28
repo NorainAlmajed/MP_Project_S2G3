@@ -1,27 +1,4 @@
-////
-////  RaghadDonatoinFormViewController.swift
-////  ProjectSimulator
-////
-////  Created by Raghad Aleskafi on 13/12/2025.
-////
 
-//
-//
-//    
-//    
-//
-//
-//  RaghadDonatoinFormViewController.swift
-//  ProjectSimulator
-//
-//  Created by Raghad Aleskafi on 13/12/2025.
-//
-//
-//  RaghadDonatoinFormViewController.swift
-//  ProjectSimulator
-//
-//  Created by Raghad Aleskafi on 13/12/2025.
-//
 //
 //  RaghadDonatoinFormViewController.swift
 //  ProjectSimulator
@@ -83,9 +60,9 @@ class RaghadDonatoinFormViewController: UIViewController,
     // 🟢 BASE WHITE SPACE under button (always)
     private let baseBottomSpace: CGFloat = 20  // 👈 change 24~40 as you like (small)
     private var isKeyboardShowing = false
-
-
-
+    
+    
+    
     
     private var isAdminUser: Bool { user.isAdmin }
     
@@ -111,7 +88,7 @@ class RaghadDonatoinFormViewController: UIViewController,
     private var draftDescription: String?     // keeps description text
     private var selectedQuantity: Int = 1
     private var selectedShortDescription: String?   // ✅ keeps text even after reload
-
+    
     
     
     
@@ -143,42 +120,42 @@ class RaghadDonatoinFormViewController: UIViewController,
         
         
         //for the last elemnt button 👤  👤  👤  👤  👤  👤  👤  👤  👤  👤
-//        let extra: CGFloat = view.safeAreaInsets.bottom + 40   // ✅ enough space for button
-//        donationFormTableview.contentInset.bottom = extra
-//        donationFormTableview.verticalScrollIndicatorInsets.bottom = extra
-//        
-//        // ✅ also add a footer so you can always scroll past last cell
-//        if donationFormTableview.tableFooterView == nil || donationFormTableview.tableFooterView?.frame.height != extra {
-//            donationFormTableview.tableFooterView = UIView(frame: CGRect(x: 0, y: 0, width: 1, height: extra))
-//        }
+        //        let extra: CGFloat = view.safeAreaInsets.bottom + 40   // ✅ enough space for button
+        //        donationFormTableview.contentInset.bottom = extra
+        //        donationFormTableview.verticalScrollIndicatorInsets.bottom = extra
+        //
+        //        // ✅ also add a footer so you can always scroll past last cell
+        //        if donationFormTableview.tableFooterView == nil || donationFormTableview.tableFooterView?.frame.height != extra {
+        //            donationFormTableview.tableFooterView = UIView(frame: CGRect(x: 0, y: 0, width: 1, height: extra))
+        //        }
         
         
         // ✅ NO permanent extra space (keyboard code will handle it)
-//        donationFormTableview.contentInset.bottom = 0
-////        donationFormTableview.scrollIndicatorInsets.bottom = 0
-//        donationFormTableview.verticalScrollIndicatorInsets.bottom = 0
-//
-//        donationFormTableview.tableFooterView = UIView(frame: .zero)
-       
-
-
+        //        donationFormTableview.contentInset.bottom = 0
+        ////        donationFormTableview.scrollIndicatorInsets.bottom = 0
+        //        donationFormTableview.verticalScrollIndicatorInsets.bottom = 0
+        //
+        //        donationFormTableview.tableFooterView = UIView(frame: .zero)
+        
+        
+        
         setupKeyboardAvoidance()
-
-       
-
-
-       
-
+        
+        
+        
+        
+        
+        
     }
     
     
     // 🟢 ALWAYS keep small white space under the last cell (even with no keyboard)
     private func applyBaseBottomInset() {
         let base = baseBottomSpace + view.safeAreaInsets.bottom  // ✅ includes home indicator safe area
-
+        
         donationFormTableview.contentInset.bottom = base
         donationFormTableview.verticalScrollIndicatorInsets.bottom = base
-
+        
         // ✅ footer lets you scroll a bit past the button
         if donationFormTableview.tableFooterView?.frame.height != base {
             donationFormTableview.tableFooterView = UIView(frame: CGRect(x: 0, y: 0, width: 1, height: base))
@@ -188,7 +165,7 @@ class RaghadDonatoinFormViewController: UIViewController,
         super.viewDidLayoutSubviews()
         if !isKeyboardShowing { applyBaseBottomInset() }   // ✅ only when keyboard is NOT showing
     }
-
+    
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
         if !isKeyboardShowing { applyBaseBottomInset() }   // ✅ fixes “first time open page” issue
@@ -276,57 +253,31 @@ class RaghadDonatoinFormViewController: UIViewController,
         }
         
         
-        
-//        if adjustedSection == 3 {
-//            let cell = tableView.dequeueReusableCell(withIdentifier: "Section4Cell", for: indexPath) as! RaghadSection4TableViewCell
-//            cell.selectionStyle = .none
-//            
-//            // ✅ restore saved value (prevents flipping back to 1)
-//            let q = quantityValue ?? Int(cell.stepperQuantity.value)
-//            cell.txtQuantity.text = "\(max(q, 1))"
-//            cell.stepperQuantity.value = Double(max(q, 1))
-//            
-//            // ✅ SAVE whenever user changes
-//            cell.onQuantityChanged = { [weak self] value in
-//                guard let self = self else { return }
-//                self.quantityValue = value
-//                self.shouldShowQuantityError = (value == nil || (value ?? 0) <= 0)
-//            }
-//            
-//            // ✅ show/hide error if you use it
-//            cell.configure(showError: shouldShowQuantityError)
-//            
-//            return cell
-//        }
-        
-        
-        
-        
         if adjustedSection == 3 {
             let cell = tableView.dequeueReusableCell(
                 withIdentifier: "Section4Cell",
                 for: indexPath
             ) as! RaghadSection4TableViewCell
-
+            
             cell.selectionStyle = .none
-
+            
             // ✅ ALWAYS restore from VC state
             cell.txtQuantity.text = "\(selectedQuantity)"
             cell.stepperQuantity.value = Double(selectedQuantity)
-
+            
             // ✅ ALWAYS update VC state when user changes
             cell.onQuantityChanged = { [weak self] value in
                 guard let self = self else { return }
-
+                
                 let q = value ?? 0
                 self.selectedQuantity = max(q, 1)
                 self.shouldShowQuantityError = q <= 0
             }
-
+            
             cell.configure(showError: shouldShowQuantityError)
             return cell
         }
-
+        
         
         
         
@@ -374,22 +325,12 @@ class RaghadDonatoinFormViewController: UIViewController,
         }
         
         
-        //i dont have i just added this
+     
         
-//        if adjustedSection == 6 {
-//            let cell = tableView.dequeueReusableCell(withIdentifier: "Section7Cell", for: indexPath) as! RaghadSection7TableViewCell
-//            cell.onBeginEditing = { [weak self] in
-//                guard let self = self else { return }
-//                self.activeIndexPath = indexPath
-//                self.donationFormTableview.scrollToRow(at: indexPath, at: UITableView.ScrollPosition.middle, animated: true)
-//            }
-//            return cell
-//        }
-
         if adjustedSection == 6 {
             let cell = tableView.dequeueReusableCell(withIdentifier: "Section7Cell", for: indexPath) as! RaghadSection7TableViewCell
             cell.selectionStyle = .none
-
+            
             // ✅ Restore saved text
             if let text = selectedShortDescription, !text.isEmpty {
                 cell.txtDescription.text = text
@@ -397,22 +338,22 @@ class RaghadDonatoinFormViewController: UIViewController,
                 // update counter to match (calls your method indirectly via didChange)
                 cell.textViewDidChange(cell.txtDescription)
             }
-
+            
             // ✅ Save live edits
             cell.onTextChanged = { [weak self] text in
                 self?.selectedShortDescription = text
             }
-
+            
             // keep your keyboard scroll
             cell.onBeginEditing = { [weak self] in
                 guard let self = self else { return }
                 self.activeIndexPath = indexPath
                 self.donationFormTableview.scrollToRow(at: indexPath, at: .middle, animated: true)
             }
-
+            
             return cell
         }
-
+        
         
         
         
@@ -546,7 +487,6 @@ class RaghadDonatoinFormViewController: UIViewController,
         present(picker, animated: true)
     }
     
-     
     
     
     
@@ -555,34 +495,34 @@ class RaghadDonatoinFormViewController: UIViewController,
         didFinishPickingMediaWithInfo info: [UIImagePickerController.InfoKey : Any]
     ) {
         picker.dismiss(animated: true)
-
+        
         let image =
-            (info[.editedImage] as? UIImage) ??
-            (info[.originalImage] as? UIImage)
-
+        (info[.editedImage] as? UIImage) ??
+        (info[.originalImage] as? UIImage)
+        
         guard let img = image else { return }
-
+        
         // ✅ 1) Save image in VC state
         selectedDonationImage = img
         shouldShowImageError = false
-
+        
         // ✅ 2) Reload ONLY the image section
         UIView.performWithoutAnimation {
             self.donationFormTableview.reloadSections(IndexSet(integer: 0), with: .none)
         }
-
+        
         // ✅ 3) Upload to Cloudinary
         isUploadingImage = true
         uploadedDonationImageUrl = nil
-
+        
         cloudinaryService.uploadImage(img) { [weak self] url in
             guard let self = self else { return }
-        
+            
             self.isUploadingImage = false
             self.uploadedDonationImageUrl = url
-
+            
             print("✅ CLOUDINARY IMAGE URL:", url ?? "nil")
-
+            
             if url == nil {
                 self.shouldShowImageError = true
                 self.showSimpleAlert(
@@ -592,111 +532,74 @@ class RaghadDonatoinFormViewController: UIViewController,
             }
         }
     }
-
     
     
     
     
-
+    
+    
     // MARK: - Helpers
     /// Reads the Quantity from Section 4 cell (index 3). Falls back to cached `quantityValue`.
-//    private func getQuantityValue() -> Int? {
-//        // adjustedSection 3 = Quantity
-//        let tableSection = isAdminUser ? 3 : 2   // ✅ IMPORTANT (admin shifts sections)
-//        let indexPath = IndexPath(row: 0, section: tableSection)
-//
-//        if let cell = donationFormTableview.cellForRow(at: indexPath) as? RaghadSection4TableViewCell {
-//            return cell.getQuantityValue()
-//        }
-//        return quantityValue
-//    }
+    //    private func getQuantityValue() -> Int? {
+    //        // adjustedSection 3 = Quantity
+    //        let tableSection = isAdminUser ? 3 : 2   // ✅ IMPORTANT (admin shifts sections)
+    //        let indexPath = IndexPath(row: 0, section: tableSection)
+    //
+    //        if let cell = donationFormTableview.cellForRow(at: indexPath) as? RaghadSection4TableViewCell {
+    //            return cell.getQuantityValue()
+    //        }
+    //        return quantityValue
+    //    }
     
     private func getQuantityValue() -> Int? {
         return selectedQuantity
     }
-
     
     
     
     
     
-
-    // Reads the optional short description from the form.
-    // Returns nil if empty or placeholder.
-//    private func getShortDescription() -> String? {
-//
-//        // Description section index differs for admin vs donor
-//        let descSection = isAdminUser ? 6 : 5
-//        let indexPath = IndexPath(row: 0, section: descSection)
-//
-//        // Get description cell safely
-//        guard let cell = donationFormTableview.cellForRow(at: indexPath)
-//                as? RaghadSection7TableViewCell else {
-//            return nil
-//        }
-//
-//        // Clean text
-//        let text = (cell.txtDescription.text ?? "")
-//            .trimmingCharacters(in: .whitespacesAndNewlines)
-//
-//        // Ignore empty / placeholder
-//        if text.isEmpty || text == "Enter a Short Description" {
-//            return nil
-//        }
-//
-//        // Valid user input
-//        return text
-//    }
-
+  
+    
     
     private func getShortDescription() -> String? {
         let t = (selectedShortDescription ?? "").trimmingCharacters(in: .whitespacesAndNewlines)
         return t.isEmpty ? nil : t
     }
-
     
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
+ 
     
     
     // MARK: - Validation / Navigation
-    private func validateAndProceed() {
+    private func validateAndProceed()
+    {
         view.endEditing(true)
-
+        
         // 1) Compute validity
         let missingImage = (selectedDonationImage == nil)
         let missingUploadedUrl = (uploadedDonationImageUrl == nil)
-
+        
         
         let missingDonor = isAdminUser ? (selectedDonorName == nil) : false
         let missingFoodCategory = (selectedFoodCategory == nil)
-
+        
         // Quantity
         let qty = getQuantityValue() ?? 0
         let invalidQuantity = (qty <= 0)
-
+        
         // Weight (optional, only format validation)
         let invalidWeight = weightInvalidFormat
-
+        
         // Expiry
         let missingExpiry = (selectedExpiryDate == nil)
-
+        
         // 2) Flip error flags
         shouldShowImageError = missingImage
         shouldShowDonorError = missingDonor
         shouldShowFoodCategoryError = missingFoodCategory
         shouldShowQuantityError = invalidQuantity
         shouldShowWeightError = invalidWeight
-
+        
         // 3) Reload only affected sections (✅ correct indices)
         let sectionsToReload: [Int]
         if isAdminUser {
@@ -706,12 +609,12 @@ class RaghadDonatoinFormViewController: UIViewController,
             // [0] image, [1] food, [2] qty, [3] weight, [4] expiry
             sectionsToReload = [0, 1, 2, 3, 4]
         }
-
+        
         UIView.performWithoutAnimation {
             donationFormTableview.reloadSections(IndexSet(sectionsToReload), with: .none)
         }
-
-
+        
+        
         // ⛔ Still uploading to Cloudinary
         if isUploadingImage {
             showSimpleAlert(
@@ -720,76 +623,54 @@ class RaghadDonatoinFormViewController: UIViewController,
             )
             return
         }
-
+        
         // ⛔ Image selected but not uploaded yet
-       
-
+        
+        
         if missingImage ||
-           missingUploadedUrl ||
-           missingFoodCategory ||
-           invalidQuantity ||
-           invalidWeight ||
-           missingExpiry ||
-           missingDonor {
-
+            missingUploadedUrl ||
+            missingFoodCategory ||
+            invalidQuantity ||
+            invalidWeight ||
+            missingExpiry ||
+            missingDonor {
+            
             if missingUploadedUrl && !missingImage {
                 showSimpleAlert(
                     title: "Image Not Uploaded",
                     message: "Please wait or try selecting the image again."
                 )
             }
-
+            
             return
         }
-
+        
         
         
         //comment this 24 dec 2025 11:39
         
-
-        // 5) All good → go next
-//        performSegue(withIdentifier: "showSchedulePickup", sender: self)
         
-//        let sb = UIStoryboard(name: "Raghad1", bundle: nil)
-//        let vc = sb.instantiateViewController(withIdentifier: "SchedulePickupVC")
-//        navigationController?.pushViewController(vc, animated: true)
+        // 5) All good → go next
+        //        performSegue(withIdentifier: "showSchedulePickup", sender: self)
+        
+        //        let sb = UIStoryboard(name: "Raghad1", bundle: nil)
+        //        let vc = sb.instantiateViewController(withIdentifier: "SchedulePickupVC")
+        //        navigationController?.pushViewController(vc, animated: true)
         
         
         // 5) All good → create draft donation, then go next
-
+        
         guard let ngo = selectedNgo else {
             showSimpleAlert(title: "Error", message: "NGO not found.")
             return
         }
-
-        // ⚠️ IMPORTANT:
-        // You MUST have Firestore document IDs here.
-        // For now, we assume:
-        // - ngo.id = Firestore doc ID (users collection)
-        // - donor doc ID will be resolved below
-
-        
-        //waiting for norains page
-        
-//       // let donorDocId: String
-//        if isAdminUser {
-//            // ❗ TEMP SAFE SOLUTION (BEGINNER FRIENDLY):
-//            // Ask your teammate for donor docId OR use username = docId if same
-//            donorDocId = selectedDonorName ?? ""
-//        } else {
-//            donorDocId = user.username
-//        }
-//
-//        //let ngoDocId = ngo.id   // must be Firestore doc id (users collection)
-
-//
-//
-        
-        //❗❗❗❗❗❗❗❗❗❗❗NORAIN❗❗❗❗❗❗❗❗❗❗
         
         let payload = DonationPayload(
             ngoId: ngo.id,
-            donorName: isAdminUser ? selectedDonorName : nil,
+            ngoName: ngo.name,
+           // donorName: isAdminUser ? selectedDonorName : user.username,
+            donorName: isAdminUser ? (selectedDonorName ?? user.username) : user.username,
+
             foodCategory: selectedFoodCategory ?? "",
             quantity: getQuantityValue() ?? 0,
             weight: weightValue,
@@ -798,50 +679,177 @@ class RaghadDonatoinFormViewController: UIViewController,
             imageUrl: uploadedDonationImageUrl ?? ""
         )
 
+        saveDonationDraftToFirebase(payload: payload) { [weak self] draftId in
+            guard let self = self else { return }
+
+            if draftId == nil {
+                self.showSimpleAlert(
+                    title: "Error",
+                    message: "Could not save donation draft."
+                )
+                return
+            }
+
+            // ✅ Tutor can see it now in Firebase
+            self.showSimpleAlert(
+                title: "Saved",
+                message: "Donation draft saved successfully."
+            )
+        }
+
+        
+        
+        
+        
+        // ⚠️ IMPORTANT:
+        // You MUST have Firestore document IDs here.
+        // For now, we assume:
+        // - ngo.id = Firestore doc ID (users collection)
+        // - donor doc ID will be resolved below
+        
+        
+        //waiting for norains page
+        
+        //       // let donorDocId: String
+        //        if isAdminUser {
+        //            // ❗ TEMP SAFE SOLUTION (BEGINNER FRIENDLY):
+        //            // Ask your teammate for donor docId OR use username = docId if same
+        //            donorDocId = selectedDonorName ?? ""
+        //        } else {
+        //            donorDocId = user.username
+        //        }
+        //
+        //        //let ngoDocId = ngo.id   // must be Firestore doc id (users collection)
+        
+        //
+        //
+        
+        //❗❗❗❗❗❗❗❗❗❗❗NORAIN❗❗❗❗❗❗❗❗❗❗
+        
+//        let payload = DonationPayload(
+//            ngoId: ngo.id,
+//            ngoName: ngo.name,                 // ✅ ADD THIS
+//
+//            donorName: isAdminUser ? selectedDonorName : nil,
+//            foodCategory: selectedFoodCategory ?? "",
+//            quantity: getQuantityValue() ?? 0,
+//            weight: weightValue,
+//            expiryDate: selectedExpiryDate ?? Date(),
+//            shortDescription: getShortDescription(),
+//            imageUrl: uploadedDonationImageUrl ?? ""
+//        )
+//
+        
+        
+        
+//
+        
+        
         
         // ✅ TEMP: navigate only (no Firebase write)
         let sb = UIStoryboard(name: "Raghad1", bundle: nil)
         let vc = sb.instantiateViewController(withIdentifier: "SchedulePickupVC")
         
-        // TODO (Norain):❗❗❗❗❗❗❗❗❗❗❗❗❗❗❗❗❗❗❗❗❗❗❗❗❗❗❗❗❗❗❗❗❗❗❗❗
+        // TODO //(Norain):❗❗❗❗❗❗❗❗❗❗❗❗❗❗❗❗❗❗❗❗❗❗❗❗❗❗❗❗❗❗❗❗❗❗❗❗
         // After creating SchedulePickupViewController.swift
         // and setting the storyboard custom class,
         // uncomment the next line to receive the donation data.
-        // (vc as? SchedulePickupViewController)?.payload = payload
+        
+        //❗❗❗❗❗❗❗❗❗❗❗
+       // (vc as? SchedulePickupViewController)?.payload = payload   // ✅ PASS OBJECT uncomment this
+        //to pass the object to noorain's page
 
+        //❗❗❗❗❗❗❗❗❗❗❗ She adds ONLY this line to her VC:
+        //var payload: DonationPayload?❗❗❗❗❗❗❗❗❗❗❗
+
+        
         
         self.navigationController?.pushViewController(vc, animated: true)
-
+  
         
-        
-   }
-   
+    }
+    
     
     
     private var uploadingAlert: UIAlertController?
-
+    
     private func showUploadingAlert() {
         let alert = UIAlertController(title: "Uploading...", message: "Please wait", preferredStyle: .alert)
         uploadingAlert = alert
         present(alert, animated: true)
     }
-
+    
     private func hideUploadingAlert() {
         uploadingAlert?.dismiss(animated: true)
         uploadingAlert = nil
     }
-
+    
     private func showSimpleAlert(title: String, message: String) {
         let a = UIAlertController(title: title, message: message, preferredStyle: .alert)
         a.addAction(UIAlertAction(title: "OK", style: .default))
         present(a, animated: true)
     }
+    
+    
+    
+    
+    private func saveDonationDraftToFirebase(
+        payload: DonationPayload,
+        completion: @escaping (String?) -> Void
+    ) {
+        let db = Firestore.firestore()
+        let ref = db.collection("DonationDraftsRaghad").document()
+        let draftId = ref.documentID
+
+        let data: [String: Any] = [
+            "draftId": draftId,
+
+            // NGO
+            "ngoId": payload.ngoId,
+            "ngoName": payload.ngoName,
+
+            // Donor
+            "donorName": payload.donorName ?? user.username,
+
+            // Donation form data
+            "foodCategory": payload.foodCategory,
+            "quantity": payload.quantity,
+            "weight": payload.weight as Any,
+            "expiryDate": Timestamp(date: payload.expiryDate),
+            "shortDescription": payload.shortDescription as Any,
+            "imageUrl": payload.imageUrl,
+
+            // Meta (for tutor clarity)
+            "savedBy": "RaghadDonationForm",
+            "createdAt": FieldValue.serverTimestamp()
+        ]
+
+        ref.setData(data) { error in
+            if let error = error {
+                print("❌ Failed to save draft:", error.localizedDescription)
+                completion(nil)
+            } else {
+                print("✅ Draft saved in DonationDraftsRaghad:", draftId)
+                completion(draftId)
+            }
+        }
+    }
 
     
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
     // 🟡 KEYBOARD START (REPLACE YOUR OLD KEYBOARD CODE)
-
+    
     private func setupKeyboardAvoidance() {
-
+        
         let willShow = NotificationCenter.default.addObserver(
             forName: UIResponder.keyboardWillShowNotification,
             object: nil,
@@ -849,7 +857,7 @@ class RaghadDonatoinFormViewController: UIViewController,
         ) { [weak self] (note: Foundation.Notification) in
             self?.handleKeyboard(note: note, showing: true)
         }
-
+        
         let willHide = NotificationCenter.default.addObserver(
             forName: UIResponder.keyboardWillHideNotification,
             object: nil,
@@ -857,46 +865,51 @@ class RaghadDonatoinFormViewController: UIViewController,
         ) { [weak self] (note: Foundation.Notification) in
             self?.handleKeyboard(note: note, showing: false)
         }
-
+        
         keyboardObservers = [willShow, willHide]
     }
-
+    
     private func handleKeyboard(note: Foundation.Notification, showing: Bool) {
-
+        
         isKeyboardShowing = showing   // ✅ track state
-
+        
         let endFrame = (note.userInfo?[UIResponder.keyboardFrameEndUserInfoKey] as? CGRect) ?? .zero
         let keyboardHeight = showing ? endFrame.height : 0
-
+        
         let bottomSafe = view.safeAreaInsets.bottom
         let keyboardInset = max(0, keyboardHeight - bottomSafe)
-
+        
         // ✅ IMPORTANT:
         // base space ALWAYS exists (for the button),
         // keyboard space gets added on top when keyboard shows
         let base = baseBottomSpace + bottomSafe
         let finalBottom = base + keyboardInset + (showing ? 12 : 0)
-
+        
         donationFormTableview.contentInset.bottom = finalBottom
         donationFormTableview.verticalScrollIndicatorInsets.bottom = finalBottom
-
+        
         if showing, let ip = activeIndexPath {
             donationFormTableview.scrollToRow(at: ip, at: .middle, animated: true)
         }
-
+        
         if !showing {
             // ✅ when keyboard hides, return to the normal “nice” bottom space
             applyBaseBottomInset()
         }
     }
+ // 🟡 KEYBOARD END
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
 
-    // 🟡 KEYBOARD END
-    
-    
-    
-    
-    
-    
     
     //🟡🟡🟡🟡🟡🟡🟡🟡🟡🟡🟡🟡🟡🟡🟡🟡🟡🟡🟡🟡🟡🟡🟡🟡🟡🟡🟡🟡🟡🟡🟡🟡🟡🟡🟡🟡🟡🟡
     private func createDraftDonation(
@@ -959,22 +972,40 @@ class RaghadDonatoinFormViewController: UIViewController,
     
     //to save a draft of the form when useful for back navigation
     
+//    private func saveDraft() {
+//        guard let ngo = selectedNgo else { return }
+//
+//        let draft = DonationDraft(
+//            ngoId: ngo.id,
+//            donorName: selectedDonorName,
+//            foodCategory: selectedFoodCategory,
+//            quantity: selectedQuantity,
+//            weight: weightValue,
+//            expiryDate: selectedExpiryDate,
+//            //shortDescription: getShortDescription(),
+//            shortDescription: selectedShortDescription,
+//
+//
+//            imageUrl: uploadedDonationImageUrl,
+//            imageData: selectedDonationImage?.jpegData(compressionQuality: 0.9) // ✅ NEW
+//        )
+//
+//        DonationDraftStore.shared.save(draft)
+//    }
     private func saveDraft() {
         guard let ngo = selectedNgo else { return }
 
         let draft = DonationDraft(
             ngoId: ngo.id,
+            ngoName: ngo.name,               // ✅ ADD THIS
             donorName: selectedDonorName,
             foodCategory: selectedFoodCategory,
             quantity: selectedQuantity,
             weight: weightValue,
             expiryDate: selectedExpiryDate,
-            //shortDescription: getShortDescription(),
             shortDescription: selectedShortDescription,
-
-
             imageUrl: uploadedDonationImageUrl,
-            imageData: selectedDonationImage?.jpegData(compressionQuality: 0.9) // ✅ NEW
+            imageData: selectedDonationImage?.jpegData(compressionQuality: 0.9)
         )
 
         DonationDraftStore.shared.save(draft)
@@ -1017,13 +1048,6 @@ class RaghadDonatoinFormViewController: UIViewController,
 
         donationFormTableview.reloadData()
     }
-
-    
-    
-    
-    
-    
-    
 
 
     override func viewWillAppear(_ animated: Bool) {

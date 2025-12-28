@@ -41,8 +41,8 @@ class NgoViewController: UIViewController,
     override func viewDidLoad() {
         super.viewDidLoad()
 
-        print("🔥 Firebase Project ID:", FirebaseApp.app()?.options.projectID ?? "nil")
-        print("🔥 Firebase Google App ID:", FirebaseApp.app()?.options.googleAppID ?? "nil")
+        print(" Firebase Project ID:", FirebaseApp.app()?.options.projectID ?? "nil")
+        print(" Firebase Google App ID:", FirebaseApp.app()?.options.googleAppID ?? "nil")
         
         title = "Browse NGOs"
 
@@ -102,6 +102,15 @@ class NgoViewController: UIViewController,
         }
 
 
+        
+        
+        let tap = UITapGestureRecognizer(target: self, action: #selector(dismissKeyboard))
+           tap.cancelsTouchesInView = false   // important: still allows tapping cells/buttons
+           view.addGestureRecognizer(tap)
+        
+        tableView.keyboardDismissMode = .onDrag//Dismiss keyboard when you scroll the table
+
+        
         
         
         
@@ -316,7 +325,7 @@ class NgoViewController: UIViewController,
                     )
                 }
 
-                print("✅ Parsed NGOs count:", ngos.count)
+                print(" Parsed NGOs count:", ngos.count)
 
                 self.allNgos = ngos
                 self.applySearchAndFilter()
@@ -325,7 +334,9 @@ class NgoViewController: UIViewController,
             }
     }
 
-    
+    @objc private func dismissKeyboard() { //for the keyboard
+        view.endEditing(true)
+    }
     
 }
 //  NgoViewController.swift

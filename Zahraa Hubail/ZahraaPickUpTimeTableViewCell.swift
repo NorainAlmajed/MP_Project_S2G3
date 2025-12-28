@@ -67,35 +67,52 @@ class ZahraaPickUpTimeTableViewCell: UITableViewCell {
 
 extension ZahraaPickUpTimeTableViewCell: UITableViewDelegate, UITableViewDataSource {
 
+    // Number of rows in the inner table view
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         return timeframes.count
     }
 
-    
-    
-    
-    
+    // Configure each cell in the inner table view
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: "TimeframeCell", for: indexPath)
         let time = timeframes[indexPath.row]
+        
+        // Set the text
         cell.textLabel?.text = time
-
-        // ✅ Always set text color based on current trait collection
+        
+        // Text color adapts to light/dark mode
         cell.textLabel?.textColor = UIColor { trait in
             trait.userInterfaceStyle == .dark ? .white : .black
         }
-
-        // Background
-        cell.backgroundColor = .clear   // shows the table view background
-
-        // Checkmark for selected
+        
+        // Show table view background
+        cell.backgroundColor = .clear
+        
+        // Show checkmark if selected
         cell.accessoryType = (time == _selectedTimeframe) ? .checkmark : .none
         cell.tintColor = .systemBlue
-
+        
         return cell
     }
 
-    // ✅ Override traitCollectionDidChange to update text colors if theme changes dynamically
+    // Handle selection of a timeframe
+    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        guard indexPath.row < timeframes.count else { return }
+        let selected = timeframes[indexPath.row]
+        _selectedTimeframe = selected
+
+        // Safely call closure only if it exists
+        if let callback = onTimeframeSelected {
+            callback(selected)
+        } else {
+            print("⚠️ Warning: onTimeframeSelected is nil!")
+        }
+
+        tableView.reloadData()
+    }
+
+
+    // Reload inner table if dark/light mode changes
     override func traitCollectionDidChange(_ previousTraitCollection: UITraitCollection?) {
         super.traitCollectionDidChange(previousTraitCollection)
         if previousTraitCollection?.userInterfaceStyle != traitCollection.userInterfaceStyle {
@@ -103,19 +120,7 @@ extension ZahraaPickUpTimeTableViewCell: UITableViewDelegate, UITableViewDataSou
         }
     }
 
-    
-    
-    
-    
-
-    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        guard indexPath.row < timeframes.count else { return }
-        let selected = timeframes[indexPath.row]
-        _selectedTimeframe = selected
-        onTimeframeSelected?(selected)
-        tableView.reloadData()
-    }
-
+    // Configure initial selected timeframe
     func configure(selected: String?) {
         self._selectedTimeframe = selected
         timeframeTableView.reloadData()

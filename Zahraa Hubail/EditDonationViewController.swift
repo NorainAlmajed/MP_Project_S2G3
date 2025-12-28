@@ -22,10 +22,14 @@
                                              {
         
         var donation: Donation?
+        private var saveRequestedWhileUploading = false
+        // Add this with other private VC state variables
+        private var selectedRecurrence: Int = 0
+
+
         
         // MARK: - Pickup time
         private var selectedPickupTime: String?  // or whatever type your timeframe uses
-        @IBOutlet weak var timeErrorLbl: UILabel!  // link this from storyboard
 
         
         private var timeframeCell: ZahraaPickUpTimeTableViewCell?
@@ -163,6 +167,12 @@
 
             //Populate donation data
             populateDonationDetails()
+            
+            // ✅ Step 1: Initialize draftAddress with the existing donation address
+               if draftAddress == nil {
+                   draftAddress = donation?.address
+               }
+            
             donationFormTableview.reloadData()
 
 
@@ -420,6 +430,7 @@
             
             
             //PickUp time cell
+            //PickUp time cell
             if adjustedSection == 9 {
                 let cell = tableView.dequeueReusableCell(withIdentifier: "PickUpTimeCell", for: indexPath) as! ZahraaPickUpTimeTableViewCell
 
@@ -430,7 +441,6 @@
                 // IMPORTANT: set the callback
                 cell.onTimeframeSelected = { [weak self] selected in
                     self?.selectedPickupTime = selected
-                    self?.timeErrorLbl.isHidden = true
                 }
 
                 return cell
@@ -447,7 +457,7 @@
 
                 // Keep VC state updated
                 cell.onFrequencySelected = { [weak self] value in
-                    self?.donation?.recurrence = value
+                    self?.selectedRecurrence = value
                 }
 
                 return cell
@@ -540,42 +550,51 @@
         ) {
             picker.dismiss(animated: true)
 
-            let image =
-                (info[.editedImage] as? UIImage) ??
-                (info[.originalImage] as? UIImage)
+            // 1️⃣ Get the selected image
+            guard let image =
+                    (info[.editedImage] as? UIImage) ??
+                    (info[.originalImage] as? UIImage) else { return }
 
-            guard let img = image else { return }
-
-            // ✅ 1) Save image in VC state
-            selectedDonationImage = img
+            // 2️⃣ Save image in VC state
+            selectedDonationImage = image
             shouldShowImageError = false
 
-            // ✅ 2) Reload ONLY the image section
+            // 3️⃣ Reload ONLY the image section
             UIView.performWithoutAnimation {
                 self.donationFormTableview.reloadSections(IndexSet(integer: 0), with: .none)
             }
 
-            // ✅ 3) Upload to Cloudinary
+            // 4️⃣ Start uploading
             isUploadingImage = true
             uploadedDonationImageUrl = nil
 
-            cloudinaryService.uploadImage(img) { [weak self] url in
+            cloudinaryService.uploadImage(image) { [weak self] url in
                 guard let self = self else { return }
 
-                self.isUploadingImage = false
-                self.uploadedDonationImageUrl = url
+                // ✅ Always update on main thread
+                DispatchQueue.main.async {
+                    self.isUploadingImage = false
+                    self.uploadedDonationImageUrl = url
 
-                print("✅ CLOUDINARY IMAGE URL:", url ?? "nil")
+                    if let url = url {
+                        print("✅ CLOUDINARY IMAGE URL:", url)
+                    } else {
+                        self.shouldShowImageError = true
+                        self.showSimpleAlert(
+                            title: "Upload Failed",
+                            message: "Please try selecting the image again."
+                        )
+                    }
 
-                if url == nil {
-                    self.shouldShowImageError = true
-                    self.showSimpleAlert(
-                        title: "Upload Failed",
-                        message: "Please try selecting the image again."
-                    )
+                    // ✅ Retry saving if user clicked save while uploading
+                    if self.saveRequestedWhileUploading {
+                        self.saveRequestedWhileUploading = false
+                        self.validateAndProceed()
+                    }
                 }
             }
         }
+
 
         
         
@@ -620,92 +639,107 @@
         private func validateAndProceed() {
             view.endEditing(true)
             
-            // 0️⃣ Stop if image is still uploading
-            if isUploadingImage {
-                showSimpleAlert(
-                    title: "Uploading Image",
-                    message: "Please wait until the image upload finishes."
-                )
-                return
-            }
-
-            // 1️⃣ Compute validity
-            let missingImage = (uploadedDonationImageUrl == nil && selectedDonationImage == nil)
-            let missingFoodCategory = (selectedFoodCategory == nil || selectedFoodCategory?.isEmpty == true)
-            let invalidQuantity = (selectedQuantity <= 0)
+            // 1️⃣ Check quantity and weight only
+            let invalidQuantity = selectedQuantity <= 0
             let invalidWeight = weightInvalidFormat
-            let missingExpiry = (selectedExpiryDate == nil)
-            let missingPickupDate = (selectedPickupDate == nil)
-            let missingPickupTime = (selectedPickupTime == nil)
 
-            // 2️⃣ Flip error flags
-            shouldShowImageError = missingImage
-            shouldShowFoodCategoryError = missingFoodCategory
             shouldShowQuantityError = invalidQuantity
             shouldShowWeightError = invalidWeight
-            timeErrorLbl.isHidden = !missingPickupTime
 
-            // 3️⃣ Reload affected sections
-            var sectionsToReload = [0, 2, 3, 4, 5, 8, 9, 10] // include recurrence section
+            // Reload only sections with errors
+            let sectionsToReload = [3, 4] // quantity and weight sections
             UIView.performWithoutAnimation {
                 donationFormTableview.reloadSections(IndexSet(sectionsToReload), with: .none)
             }
 
-            // 4️⃣ Stop if validation failed
-            if missingImage || missingFoodCategory || invalidQuantity || invalidWeight || missingExpiry || missingPickupDate || missingPickupTime {
+            // Stop if validation fails
+            if invalidQuantity || invalidWeight {
                 return
             }
 
-            // 5️⃣ Update donation object with draft address if exists
-            if let draft = draftAddress, let address = donation?.address {
-                address.building = draft.building
-                address.road = draft.road
-                address.block = draft.block
-                address.area = draft.area
-                address.governorate = draft.governorate
-                address.flat = draft.flat
-            }
-
-            // 6️⃣ Prepare Firestore update
-            guard let donation = donation, let donationId = donation.firestoreID else { return }
-            let db = Firestore.firestore()
-            let donationRef = db.collection("Donation").document(donationId)
-
-            var updatedData: [String: Any] = [
-                "Category": selectedFoodCategory ?? "",
-                "quantity": selectedQuantity,
-                "expiryDate": Timestamp(date: selectedExpiryDate ?? Date()),
-                "recurrence": donation.recurrence // ✅ include recurrence
-            ]
-
-            if let weight = weightValue { updatedData["weight"] = weight }
-            if let description = selectedShortDescription { updatedData["description"] = description }
-            if let imageUrl = uploadedDonationImageUrl { updatedData["foodImageUrl"] = imageUrl }
-            if let pickupDate = selectedPickupDate { updatedData["pickupDate"] = Timestamp(date: pickupDate) }
-            if let pickupTime = selectedPickupTime { updatedData["pickupTime"] = pickupTime }
-
-            // ✅ Include address only if draft exists
-            if let address = draftAddress {
-                updatedData["address"] = [
-                    "building": address.building,
-                    "road": address.road,
-                    "block": address.block,
-                    "area": address.area,
-                    "governorate": address.governorate,
-                    "flat": address.flat as Any
+            // 2️⃣ If image is new, upload to Cloudinary
+            func proceedWithUpdate(imageUrl: String?) {
+                guard let donation = donation, let donationId = donation.firestoreID else { return }
+                let db = Firestore.firestore()
+                let donationRef = db.collection("Donation").document(donationId)
+                
+                // Prepare updated data
+                var updatedData: [String: Any] = [
+                    "Category": selectedFoodCategory ?? donation.category,
+                    "quantity": selectedQuantity,
+                    "recurrence": selectedRecurrence,
+                    "pickupTime": selectedPickupTime ?? donation.pickupTime,
+                    "pickupDate": Timestamp(date: selectedPickupDate ?? donation.pickupDate.dateValue()),
+                    "expiryDate": Timestamp(date: selectedExpiryDate ?? donation.expiryDate.dateValue())
                 ]
+
+                if let weight = weightValue { updatedData["weight"] = weight }
+                if let desc = selectedShortDescription { updatedData["description"] = desc }
+                if let imgUrl = imageUrl { updatedData["foodImageUrl"] = imgUrl }
+
+                // Update donation document in Firebase
+                donationRef.updateData(updatedData) { [weak self] error in
+                    guard let self = self else { return }
+                    
+                    if let error = error {
+                        self.showSimpleAlert(title: "Update Failed", message: error.localizedDescription)
+                        return
+                    }
+                    
+                    // Update local donation object
+                    self.donation?.category = updatedData["Category"] as? String ?? donation.category
+                    self.donation?.quantity = updatedData["quantity"] as? Int ?? donation.quantity
+                    self.donation?.recurrence = updatedData["recurrence"] as? Int ?? donation.recurrence
+                    self.donation?.pickupTime = updatedData["pickupTime"] as? String ?? donation.pickupTime
+                    self.donation?.pickupDate = updatedData["pickupDate"] as? Timestamp ?? donation.pickupDate
+                    self.donation?.expiryDate = updatedData["expiryDate"] as? Timestamp ?? donation.expiryDate
+                    self.donation?.weight = updatedData["weight"] as? Double
+                    self.donation?.description = updatedData["description"] as? String
+                    self.donation?.foodImageUrl = updatedData["foodImageUrl"] as? String ?? donation.foodImageUrl
+                    
+                    // Update address if edited
+                    if let draftAddress = self.draftAddress, let addressRef = donation.address as? DocumentReference {
+                        let addressData: [String: Any] = [
+                            "building": draftAddress.building ?? "",
+                            "road": draftAddress.road ?? "",
+                            "block": draftAddress.block ?? "",
+                            "area": draftAddress.area ?? "",
+                            "governorate": draftAddress.governorate ?? "",
+                            "flat": draftAddress.flat as Any
+                        ]
+                        addressRef.updateData(addressData) { err in
+                            if let err = err { print("❌ Address update failed:", err.localizedDescription) }
+                        }
+                    }
+                    
+                    // Notify donor & NGO
+                    self.sendUpdateNotifications(for: self.donation!)
+                    
+                    // Callback
+                    self.onDonationUpdated?(self.donation!)
+                    
+                    // Show success popup and close page
+                    let alert = UIAlertController(title: "Success", message: "Donation details updated.", preferredStyle: .alert)
+                    alert.addAction(UIAlertAction(title: "Dismiss", style: .default) { _ in
+                        self.navigationController?.popViewController(animated: true)
+                    })
+                    self.present(alert, animated: true)
+                }
             }
 
-            // 7️⃣ Firestore update
-            donationRef.updateData(updatedData) { [weak self] error in
-                if let error = error {
-                    self?.showSimpleAlert(title: "Update Failed", message: error.localizedDescription)
-                    return
+            // If user selected a new image, upload it first
+            if let image = selectedDonationImage {
+                isUploadingImage = true
+                cloudinaryService.uploadImage(image) { [weak self] url in
+                    guard let self = self else { return }
+                    DispatchQueue.main.async {
+                        self.isUploadingImage = false
+                        proceedWithUpdate(imageUrl: url ?? self.uploadedDonationImageUrl)
+                    }
                 }
-
-                print("✅ Donation updated successfully")
-                self?.onDonationUpdated?(donation)
-                self?.navigationController?.popViewController(animated: true)
+            } else {
+                // No new image, use existing URL
+                proceedWithUpdate(imageUrl: uploadedDonationImageUrl)
             }
         }
 

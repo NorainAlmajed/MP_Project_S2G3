@@ -8,6 +8,7 @@ protocol AddAddressDelegate: AnyObject {
 
 class SchedulePickupViewController: UIViewController {
     
+    
     // MARK: - IBOutlets
     @IBOutlet weak var addressContainerView: UIView!
     @IBOutlet weak var addressNameLbl: UILabel!
@@ -63,6 +64,8 @@ class SchedulePickupViewController: UIViewController {
         signInAnonymously()
         fetchExistingAddresses()
         setupTestDonation() // 🧪 Remove for production
+        
+
     }
     
     // MARK: - Setup Methods
@@ -290,7 +293,7 @@ class SchedulePickupViewController: UIViewController {
     }
 
     private func saveDonationToFirebase(addressRef: DocumentReference, date: Date, timeframe: String, userId: String) {
-        let donorRef = db.collection("users").document(userId)
+        let donorRef = db.collection("users").document("donor4")
         
         // 1. Calculate the recurrence value
         var recurrenceValue = 0
@@ -324,8 +327,9 @@ class SchedulePickupViewController: UIViewController {
             if let weight = donation.weight { donationData["weight"] = weight }
             if let imageUrl = donation.foodImageUrl { donationData["foodImageUrl"] = imageUrl }
             if let id = donation.donationID { donationData["donationID"] = id }
-            if let ngoRef = donation.ngo { donationData["ngo"] = ngoRef }
-            
+            let ngoRef = db.collection("users").document("ngo1") // hardcoded NGO
+            donationData["ngo"] = ngoRef
+
             // Handle expiry date specifically as a Timestamp
             if let expiry = donation.expiryDate {
                 donationData["expiryDate"] = Timestamp(date: expiry)
@@ -333,7 +337,11 @@ class SchedulePickupViewController: UIViewController {
         }
         
         // 4. Save to Firestore
-        db.collection("Donation").addDocument(data: donationData) { [weak self] error in
+        // 1️⃣ Create a document reference first
+        let donationRef = db.collection("Donation").document()
+
+        // 2️⃣ Save data
+        donationRef.setData(donationData) { [weak self] error in
             self?.confirmBtn.isEnabled = true
             self?.confirmBtn.setTitle("Confirm Pickup Schedule", for: .normal)
             
@@ -342,9 +350,14 @@ class SchedulePickupViewController: UIViewController {
                 self?.showAlert(title: "Error", message: "Failed to save donation.")
             } else {
                 print("✅ Donation saved successfully with recurrence: \(recurrenceValue)")
+                
+                // 3️⃣ Call the notification method here
+                self?.sendNotification(for: donationRef)
+                
                 self?.showSuccessAlert()
             }
         }
+
     }
     
     private func showAlert(title: String, message: String) {
@@ -388,6 +401,89 @@ class SchedulePickupViewController: UIViewController {
         
         return isValid
     }
+    
+    
+    
+    //Zahraa Notifications method
+    func sendNotification(for donationRef: DocumentReference) {
+        let db = Firestore.firestore()
+        
+        
+
+        
+        // 1️⃣ Fetch the donation document
+        donationRef.getDocument { donationSnapshot, error in
+            guard let donationData = donationSnapshot?.data(), error == nil else {
+                print("❌ Failed to fetch donation document: \(error?.localizedDescription ?? "")")
+                return
+            }
+            
+            // 2️⃣ Get donor and NGO references
+            guard let donorRef = donationData["donor"] as? DocumentReference,
+                  let ngoRef = donationData["ngo"] as? DocumentReference else {
+                print("❌ Missing donor or NGO reference")
+                return
+            }
+            
+            // 3️⃣ Fetch donor username
+            donorRef.getDocument { donorSnapshot, error in
+                let donorUsername = donorSnapshot?.get("username") as? String ?? "Unknown Donor"
+                
+                let currentRole = SessionManager.shared.role
+                
+                // Helper function to create notification
+                func createNotification(for userID: String) {
+                    let notificationData: [String: Any] = [
+                        "date": Timestamp(date: Date()),
+                        "title": "New Donation Received",
+                        "description": "Donor \(donorUsername) has made a new donation.",
+                        "userID": userID
+                    ]
+                    
+                    db.collection("Notification").addDocument(data: notificationData) { error in
+                        if let error = error {
+                            print("❌ Failed to create notification: \(error.localizedDescription)")
+                        } else {
+                            print("✅ Notification created for user: \(userID)")
+                        }
+                    }
+                }
+                
+                // 4️⃣ Role-based logic
+                if currentRole == .admin {
+                    // Admin: notify NGO only if enabled
+                    ngoRef.getDocument { ngoSnapshot, error in
+                        let ngoNotificationsEnabled = ngoSnapshot?.get("notifications_enabled") as? Bool ?? false
+                        if ngoNotificationsEnabled {
+                            createNotification(for: ngoRef.documentID)
+                        }
+                    }
+                    
+                } else if currentRole == .donor {
+                    // Donor: notify NGO and Admin if enabled
+                    
+                    // 4a️⃣ Notify NGO
+                    ngoRef.getDocument { ngoSnapshot, error in
+                        let ngoNotificationsEnabled = ngoSnapshot?.get("notifications_enabled") as? Bool ?? false
+                        if ngoNotificationsEnabled {
+                            createNotification(for: ngoRef.documentID)
+                        }
+                    }
+                    
+                    // 4b️⃣ Notify Admin
+                    let adminRef = db.collection("users").document("admin")
+                    adminRef.getDocument { adminSnapshot, error in
+                        let adminNotificationsEnabled = adminSnapshot?.get("notifications_enabled") as? Bool ?? false
+                        if adminNotificationsEnabled {
+                            createNotification(for: "admin")
+                        }
+                    }
+                }
+            }
+        }
+    }
+    
+    
 }
 
 // MARK: - TableView & Delegate Extensions

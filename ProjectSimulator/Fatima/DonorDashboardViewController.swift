@@ -246,7 +246,7 @@ extension DonorDashboardViewController: UITableViewDataSource, UITableViewDelega
             // diso
             switch currentRole {
             case .admin:
-                label.text = "Welcome back, Admin \(currentUserName)"
+                label.text = "Welcome back, Nourish Bahrain Admin!"
             case .donor:
                 label.text = "Hi \(currentUserName), thank you for your generosity!"
             case .ngo:

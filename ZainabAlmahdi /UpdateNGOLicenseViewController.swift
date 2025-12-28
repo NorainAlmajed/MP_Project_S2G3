@@ -10,15 +10,12 @@ class UpdateNGOLicenseViewController: UIViewController,
     @IBOutlet weak var selectButton: UIButton!
     @IBOutlet weak var uploadButton: UIButton!
 
-   
-
     override func viewDidLoad() {
         super.viewDidLoad()
         title = "Update NGO License"
         uploadButton.isEnabled = false
     }
 
-    // MARK: - Select Image
     @IBAction func selectLicenseTapped(_ sender: UIButton) {
         let picker = UIImagePickerController()
         picker.delegate = self
@@ -40,7 +37,6 @@ class UpdateNGOLicenseViewController: UIViewController,
         dismiss(animated: true)
     }
 
-    // MARK: - Upload & Update
     @IBAction func uploadLicenseTapped(_ sender: UIButton) {
 
         guard let image = licenseImageView.image else {
@@ -55,34 +51,18 @@ class UpdateNGOLicenseViewController: UIViewController,
 
         uploadButton.isEnabled = false
 
-        
-        
-        
-//       let cloudinaryService = CloudinaryService() //28 dec added this after merging with the main
-//        
-//        cloudinaryService.uploadImage(image) { result in
-//            switch result {
-//            case .success(let url):
-//                self.updateLicense(uid: uid, url: url)
-//            case .failure(let error):
-//                self.uploadButton.isEnabled = true
-//                self.showAlert("Upload Failed", error.localizedDescription)
-//            }
-//        }
-
-        
-//        CloudinaryService.shared.uploadImage(image) { result in
-//            switch result {
-//            case .success(let url):
-//                self.updateLicense(uid: uid, url: url)
-//
-//            case .failure(let error):
-//                self.uploadButton.isEnabled = true
-//                self.showAlert("Upload Failed", error.localizedDescription)
-//            }
-//        }
+        let cloudinaryService = CloudinaryService()
+        cloudinaryService.uploadImage(image) { url in
+            DispatchQueue.main.async {
+                if let url = url {
+                    self.updateLicense(uid: uid, url: url)
+                } else {
+                    self.uploadButton.isEnabled = true
+                    self.showAlert("Upload Failed", "Could not upload image.")
+                }
+            }
+        }
     }
-
     // MARK: - Firestore Update
     func updateLicense(uid: String, url: String) {
         Firestore.firestore()
@@ -115,5 +95,10 @@ class UpdateNGOLicenseViewController: UIViewController,
         )
         alert.addAction(UIAlertAction(title: "OK", style: .default))
         present(alert, animated: true)
+    }
+    
+    private func styleActionButton(_ button: UIButton) {
+        button.layer.cornerRadius = button.frame.height / 2
+        button.clipsToBounds = true
     }
 }

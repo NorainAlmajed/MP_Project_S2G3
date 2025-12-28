@@ -58,7 +58,6 @@ class NotificationSettingsViewController: UIViewController {
         present(alert, animated: true)
     }
 
-    // MARK: - Save setting
     func saveSetting() {
         guard let uid = Auth.auth().currentUser?.uid else { return }
 

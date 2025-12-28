@@ -684,52 +684,54 @@
                 donationRef.updateData(updatedData) { [weak self] error in
                     guard let self = self else { return }
 
-                    // ✅ Hide the "Uploading..." pop-up
-                    self.hideUploadingAlert()
+                    // ✅ Dismiss the "Uploading..." pop-up first
+                    self.uploadingAlert?.dismiss(animated: true) {
+                        self.uploadingAlert = nil
 
-                    if let error = error {
-                        self.showSimpleAlert(title: "Update Failed", message: error.localizedDescription)
-                        return
-                    }
-                    
-                    // Update local donation object
-                    self.donation?.category = updatedData["Category"] as? String ?? donation.category
-                    self.donation?.quantity = updatedData["quantity"] as? Int ?? donation.quantity
-                    self.donation?.recurrence = updatedData["recurrence"] as? Int ?? donation.recurrence
-                    self.donation?.pickupTime = updatedData["pickupTime"] as? String ?? donation.pickupTime
-                    self.donation?.pickupDate = updatedData["pickupDate"] as? Timestamp ?? donation.pickupDate
-                    self.donation?.expiryDate = updatedData["expiryDate"] as? Timestamp ?? donation.expiryDate
-                    self.donation?.weight = updatedData["weight"] as? Double
-                    self.donation?.description = updatedData["description"] as? String
-                    self.donation?.foodImageUrl = updatedData["foodImageUrl"] as? String ?? donation.foodImageUrl
-                    
-                    // Update address if edited
-                    if let draftAddress = self.draftAddress, let addressRef = donation.address as? DocumentReference {
-                        let addressData: [String: Any] = [
-                            "building": draftAddress.building ?? "",
-                            "road": draftAddress.road ?? "",
-                            "block": draftAddress.block ?? "",
-                            "area": draftAddress.area ?? "",
-                            "governorate": draftAddress.governorate ?? "",
-                            "flat": draftAddress.flat as Any
-                        ]
-                        addressRef.updateData(addressData) { err in
-                            if let err = err { print("❌ Address update failed:", err.localizedDescription) }
+                        if let error = error {
+                            self.showSimpleAlert(title: "Update Failed", message: error.localizedDescription)
+                            return
                         }
+                        
+                        // Update local donation object
+                        self.donation?.category = updatedData["Category"] as? String ?? donation.category
+                        self.donation?.quantity = updatedData["quantity"] as? Int ?? donation.quantity
+                        self.donation?.recurrence = updatedData["recurrence"] as? Int ?? donation.recurrence
+                        self.donation?.pickupTime = updatedData["pickupTime"] as? String ?? donation.pickupTime
+                        self.donation?.pickupDate = updatedData["pickupDate"] as? Timestamp ?? donation.pickupDate
+                        self.donation?.expiryDate = updatedData["expiryDate"] as? Timestamp ?? donation.expiryDate
+                        self.donation?.weight = updatedData["weight"] as? Double
+                        self.donation?.description = updatedData["description"] as? String
+                        self.donation?.foodImageUrl = updatedData["foodImageUrl"] as? String ?? donation.foodImageUrl
+                        
+                        // Update address if edited
+                        if let draftAddress = self.draftAddress, let addressRef = donation.address as? DocumentReference {
+                            let addressData: [String: Any] = [
+                                "building": draftAddress.building ?? "",
+                                "road": draftAddress.road ?? "",
+                                "block": draftAddress.block ?? "",
+                                "area": draftAddress.area ?? "",
+                                "governorate": draftAddress.governorate ?? "",
+                                "flat": draftAddress.flat as Any
+                            ]
+                            addressRef.updateData(addressData) { err in
+                                if let err = err { print("❌ Address update failed:", err.localizedDescription) }
+                            }
+                        }
+                        
+                        // Notify donor & NGO
+                        self.sendUpdateNotifications(for: self.donation!)
+                        
+                        // Callback
+                        self.onDonationUpdated?(self.donation!)
+                        
+                        // ✅ Show the success message AFTER dismissing uploading
+                        let alert = UIAlertController(title: "Success", message: "Donation details updated.", preferredStyle: .alert)
+                        alert.addAction(UIAlertAction(title: "Dismiss", style: .default) { _ in
+                            self.navigationController?.popViewController(animated: true)
+                        })
+                        self.present(alert, animated: true)
                     }
-                    
-                    // Notify donor & NGO
-                    self.sendUpdateNotifications(for: self.donation!)
-                    
-                    // Callback
-                    self.onDonationUpdated?(self.donation!)
-                    
-                    // ✅ Show the original success message AFTER dismissing the uploading popup
-                    let alert = UIAlertController(title: "Success", message: "Donation details updated.", preferredStyle: .alert)
-                    alert.addAction(UIAlertAction(title: "Dismiss", style: .default) { _ in
-                        self.navigationController?.popViewController(animated: true)
-                    })
-                    self.present(alert, animated: true)
                 }
             }
 
@@ -747,6 +749,7 @@
                 proceedWithUpdate(imageUrl: uploadedDonationImageUrl)
             }
         }
+
 
 
 

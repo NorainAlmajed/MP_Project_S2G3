@@ -34,7 +34,7 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
 
         } else {
            
-            let storyboard = UIStoryboard(name: "Authentication", bundle: nil)
+            let storyboard = UIStoryboard(name: "Settings", bundle: nil)
 
             let rootVC = storyboard.instantiateInitialViewController()
             window?.rootViewController = rootVC

@@ -105,7 +105,9 @@ class SettingViewController: UITableViewController {
     
     
     func goToEditProfile() {
-        print("Edit Profile tapped")
+        let vc = UIStoryboard(name: "Settings", bundle: nil)
+            .instantiateViewController(withIdentifier: "EditProfileViewController")
+        navigationController?.pushViewController(vc, animated: true)
     }
 
     func goToSecurity() {
@@ -121,10 +123,14 @@ class SettingViewController: UITableViewController {
     }
 
     func goToNotifications() {
-        print("Notification Settings tapped")
+        let vc = UIStoryboard(name: "Settings", bundle: nil)
+            .instantiateViewController(withIdentifier: "NotificationSettingsViewController")
+        navigationController?.pushViewController(vc, animated: true)
     }
 
     func goToUpdateNGOLicense() {
-        print("Update NGO License tapped")
+        let vc = UIStoryboard(name: "Settings", bundle: nil)
+            .instantiateViewController(withIdentifier: "UpdateNGOLicenseViewController")
+        navigationController?.pushViewController(vc, animated: true)
     }
 }

@@ -41,7 +41,6 @@
 				Donation.swift,
 				DonationCollectionViewCell.swift,
 				DonationDetailsViewController.swift,
-				DonationDetailViewController.swift,
 				Donations.storyboard,
 				DonationViewController.swift,
 				Norain/Controllers/EditUsersViewController.swift,
@@ -74,11 +73,9 @@
 				Donation.swift,
 				DonationCollectionViewCell.swift,
 				DonationDetailsViewController.swift,
-				DonationDetailViewController.swift,
 				Donations.storyboard,
 				DonationViewController.swift,
 				Info.plist,
-				"Norain/norain-admin-controls1.storyboard",
 				NotificationsCollectionViewCell.swift,
 				NotificationsViewController.swift,
 				SceneDelegate.swift,
@@ -91,6 +88,18 @@
 			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
 			membershipExceptions = (
 				"/Localized: Main.storyboard",
+				Norain/Controllers/EditUsersViewController.swift,
+				Norain/Controllers/NourishUsersViewController.swift,
+				Norain/Controllers/RejectionPopupViewController.swift,
+				Norain/Controllers/UserDetailsViewController.swift,
+				Norain/Helpers/Alerts.swift,
+				Norain/Helpers/AppData.swift,
+				Norain/Helpers/Keys.swift,
+				Norain/Models/AppUser.swift,
+				Norain/Models/Donor.swift,
+				Norain/Models/NGO.swift,
+				"Norain/norain-admin-controls1.storyboard",
+				Norain/Views/UserTableViewCell.swift,
 			);
 			target = 5FEF8B772EDA363A007D3A97 /* ProjectSimulatorTests */;
 		};

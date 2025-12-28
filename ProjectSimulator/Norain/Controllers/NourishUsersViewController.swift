@@ -57,13 +57,13 @@ class NourishUsersViewController: UIViewController,UITableViewDelegate,UITableVi
                     // Set custom styling
                     btn.backgroundColor = .white
                     btn.layer.borderWidth = 2
-                    btn.layer.borderColor = UIColor.greenCol.cgColor
-                    btn.setTitleColor(.greenCol, for: .normal)
+            btn.layer.borderColor = UIColor(named: "greenCol")?.cgColor
+            btn.setTitleColor(UIColor(named: "greenCol"), for: .normal)
             // Green stroke, white fill, green text (default state)
             btn.backgroundColor = .white
             btn.layer.borderWidth = 2
-            btn.layer.borderColor = UIColor.greenCol.cgColor
-            btn.setTitleColor(.greenCol, for: .normal)
+            btn.layer.borderColor = UIColor(named: "greenCol")?.cgColor
+            btn.setTitleColor(UIColor(named: "greenCol"), for: .normal)
         }
     }
     
@@ -144,25 +144,25 @@ class NourishUsersViewController: UIViewController,UITableViewDelegate,UITableVi
     }
     
     private func resetFilterButtonColors() {
-        let buttons = [btnPending, btnApproved, btnRejected]
-            
-            for button in buttons {
-                guard let btn = button else { continue }
-                
-                var config = btn.configuration ?? UIButton.Configuration.filled()
-                config.background.backgroundColor = .white
-                config.baseForegroundColor = .greenCol
-                config.background.strokeColor = .greenCol
-                config.background.strokeWidth = 2
-                btn.configuration = config
-            }
-    }
+         let buttons = [btnPending, btnApproved, btnRejected]
+             
+             for button in buttons {
+                 guard let btn = button else { continue }
+                 
+                 var config = btn.configuration ?? UIButton.Configuration.filled()
+                 config.background.backgroundColor = .white
+                 config.baseForegroundColor = .greenCol
+                 config.background.strokeColor = .greenCol
+                 config.background.strokeWidth = 2
+                 btn.configuration = config
+             }
+     }
     
     @IBAction func btnPendingFilter(_ sender: Any) {
         resetFilterButtonColors()
            
            var config = btnPending.configuration ?? UIButton.Configuration.filled()
-           config.background.backgroundColor = .greenCol
+           config.background.backgroundColor = UIColor(named: "greenCol")
            config.baseForegroundColor = .white
            config.background.strokeWidth = 0
            btnPending.configuration = config
@@ -175,7 +175,7 @@ class NourishUsersViewController: UIViewController,UITableViewDelegate,UITableVi
         resetFilterButtonColors()
            
            var config = btnApproved.configuration ?? UIButton.Configuration.filled()
-           config.background.backgroundColor = .greenCol
+           config.background.backgroundColor = UIColor(named: "greenCol")
            config.baseForegroundColor = .white
            config.background.strokeWidth = 0
            btnApproved.configuration = config
@@ -189,7 +189,7 @@ class NourishUsersViewController: UIViewController,UITableViewDelegate,UITableVi
         resetFilterButtonColors()
            
            var config = btnRejected.configuration ?? UIButton.Configuration.filled()
-           config.background.backgroundColor = .greenCol
+           config.background.backgroundColor = UIColor(named: "greenCol")
            config.baseForegroundColor = .white
            config.background.strokeWidth = 0
            btnRejected.configuration = config
@@ -283,7 +283,7 @@ class NourishUsersViewController: UIViewController,UITableViewDelegate,UITableVi
                 completionHandler(true)
             
         }
-        editAction.backgroundColor = .blueCol
+        editAction.backgroundColor = UIColor(named: "blueCol")
         
         var actions: [UIContextualAction] = [editAction,deleteAction]
         
@@ -310,7 +310,7 @@ class NourishUsersViewController: UIViewController,UITableViewDelegate,UITableVi
             self.usersTableView.reloadRows(at: [indexPath], with: .automatic)
             completionHandler(true)
         }
-        action.backgroundColor = .greenCol
+        action.backgroundColor = UIColor(named: "greenCol")
         return action
     }
     

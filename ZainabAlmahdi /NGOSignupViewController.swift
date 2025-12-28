@@ -48,6 +48,7 @@ class NGOSignupViewController: UIViewController,
 
         styleActionButton(uploadButton)
         styleActionButton(signupButton)
+        navigationItem.title = "Sign Up"
 
         causeTextField.tintColor = .clear
         governorateTextField.tintColor = .clear
@@ -67,6 +68,7 @@ class NGOSignupViewController: UIViewController,
         addToolbar(to: governorateTextField)
     }
 
+    // MARK: - Navigation
     @IBAction func goToLoginTapped(_ sender: UIButton) {
         navigationController?.popToRootViewController(animated: true)
     }
@@ -82,11 +84,13 @@ class NGOSignupViewController: UIViewController,
 
     func imagePickerController(_ picker: UIImagePickerController,
                                didFinishPickingMediaWithInfo info: [UIImagePickerController.InfoKey : Any]) {
+
         if let image = info[.editedImage] as? UIImage {
             licenseImageView.image = image
         } else if let image = info[.originalImage] as? UIImage {
             licenseImageView.image = image
         }
+
         dismiss(animated: true)
     }
 
@@ -97,7 +101,8 @@ class NGOSignupViewController: UIViewController,
     // MARK: - Picker View
     func numberOfComponents(in pickerView: UIPickerView) -> Int { 1 }
 
-    func pickerView(_ pickerView: UIPickerView, numberOfRowsInComponent component: Int) -> Int {
+    func pickerView(_ pickerView: UIPickerView,
+                    numberOfRowsInComponent component: Int) -> Int {
         pickerView.tag == 1 ? causes.count : governorates.count
     }
 
@@ -157,7 +162,8 @@ class NGOSignupViewController: UIViewController,
             }
         }
     }
-    
+
+    // MARK: - Validation
     func validateInputs() -> Bool {
         let email = emailTextField.text ?? ""
         let password = passwordTextField.text ?? ""
@@ -175,7 +181,7 @@ class NGOSignupViewController: UIViewController,
         return true
     }
 
-    // MARK: - Firebase
+    // MARK: - Firebase Auth
     func createNGOAccount(licenseUrl: String) {
         let email = emailTextField.text!
         let password = passwordTextField.text!
@@ -194,33 +200,77 @@ class NGOSignupViewController: UIViewController,
         }
     }
 
+    // MARK: - Firestore
     func saveNGO(uid: String, licenseUrl: String) {
-        Firestore.firestore().collection("users").document(uid).setData([
-            "role": "3",
-            "email": emailTextField.text ?? "",
-            "username": usernameTextField.text ?? "",
-            "organization_name": nameTextField.text ?? "",
-            "phone_number": phoneNumberTextField.text ?? "",
-            "address": addressTextField.text ?? "",
-            "cause": causeTextField.text ?? "",
-            "governorate": governorateTextField.text ?? "",
-            "ngo_license_url": licenseUrl,
-            "profile_completed": false,
-            "created_at": Timestamp()
-        ]) { [weak self] error in
-            guard let self = self else { return }
+        Firestore.firestore()
+            .collection("users")
+            .document(uid)
+            .setData([
+                "role": "3",
+                "email": emailTextField.text ?? "",
+                "username": usernameTextField.text ?? "",
+                "organization_name": nameTextField.text ?? "",
+                "phone_number": phoneNumberTextField.text ?? "",
+                "address": addressTextField.text ?? "",
+                "cause": causeTextField.text ?? "",
+                "governorate": governorateTextField.text ?? "",
+                "ngo_license_url": licenseUrl,
+                "profile_completed": false,
+                "created_at": Timestamp()
+            ]) { [weak self] error in
+                guard let self = self else { return }
 
-            if let error = error {
-                self.signupButton.isEnabled = true
-                self.showAlert(title: "Error", message: error.localizedDescription)
-                return
+                if let error = error {
+                    self.signupButton.isEnabled = true
+                    self.showAlert(title: "Error", message: error.localizedDescription)
+                    return
+                }
+
+                self.loadSessionAndRoute()
+            }
+    }
+
+    // MARK: - Session + Routing
+    func loadSessionAndRoute() {
+
+        SessionManager.shared.fetchUserRole { success in
+            DispatchQueue.main.async {
+                if success {
+
+                    let vc = UIStoryboard(
+                        name: "Authentication",
+                        bundle: nil
+                    ).instantiateViewController(
+                        withIdentifier: "SetupProfileViewController"
+                    )
+
+                    let nav = UINavigationController(rootViewController: vc)
+
+                    if let sceneDelegate = UIApplication.shared.connectedScenes
+                        .first?.delegate as? SceneDelegate {
+
+                        sceneDelegate.window?.rootViewController = nav
+                        sceneDelegate.window?.makeKeyAndVisible()
+                    }
+
+                } else {
+                    self.signupButton.isEnabled = true
+                    self.showAlert(
+                        title: "Error",
+                        message: "Unable to load user session."
+                    )
+                }
             }
         }
     }
 
     // MARK: - UI Helpers
     func showAlert(title: String, message: String) {
-        let alert = UIAlertController(title: title, message: message, preferredStyle: .alert)
+        let alert = UIAlertController(
+            title: title,
+            message: message,
+            preferredStyle: .alert
+        )
         alert.addAction(UIAlertAction(title: "OK", style: .default))
         present(alert, animated: true)
     }

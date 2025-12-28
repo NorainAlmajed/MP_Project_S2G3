@@ -25,7 +25,6 @@
 		485AB4982F009C2F005781FB /* ZahraaFile.swift in Sources */ = {isa = PBXBuildFile; fileRef = 485AB4972F009C2F005781FB /* ZahraaFile.swift */; };
 		48C4D03D2EF993110025325A /* Cloudinary in Frameworks */ = {isa = PBXBuildFile; productRef = 48C4D03C2EF993110025325A /* Cloudinary */; };
 		48D294132EFEF13C005A8DA2 /* Section1TableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 48D294062EFEF13C005A8DA2 /* Section1TableViewCell.swift */; };
-		48D294142EFEF13C005A8DA2 /* Donation.swift in Sources */ = {isa = PBXBuildFile; fileRef = 48D293FA2EFEF13C005A8DA2 /* Donation.swift */; };
 		48D294152EFEF13C005A8DA2 /* DonationCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 48D293FB2EFEF13C005A8DA2 /* DonationCollectionViewCell.swift */; };
 		48D294162EFEF13C005A8DA2 /* Section2TableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 48D294072EFEF13C005A8DA2 /* Section2TableViewCell.swift */; };
 		48D294172EFEF13C005A8DA2 /* Section3TableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 48D294082EFEF13C005A8DA2 /* Section3TableViewCell.swift */; };
@@ -84,7 +83,6 @@
 		481E6D0B2F004C7600F61C65 /* ZahraaPickUpTimeTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ZahraaPickUpTimeTableViewCell.swift; sourceTree = "<group>"; };
 		481E6D0D2F005E4F00F61C65 /* ZahraaRecurrenceTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ZahraaRecurrenceTableViewCell.swift; sourceTree = "<group>"; };
 		485AB4972F009C2F005781FB /* ZahraaFile.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ZahraaFile.swift; sourceTree = "<group>"; };
-		48D293FA2EFEF13C005A8DA2 /* Donation.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Donation.swift; sourceTree = "<group>"; };
 		48D293FB2EFEF13C005A8DA2 /* DonationCollectionViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DonationCollectionViewCell.swift; sourceTree = "<group>"; };
 		48D293FC2EFEF13C005A8DA2 /* Donations.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; path = Donations.storyboard; sourceTree = "<group>"; };
 		48D293FD2EFEF13C005A8DA2 /* DonationViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DonationViewController.swift; sourceTree = "<group>"; };
@@ -204,7 +202,6 @@
 			isa = PBXGroup;
 			children = (
 				485AB4972F009C2F005781FB /* ZahraaFile.swift */,
-				48D293FA2EFEF13C005A8DA2 /* Donation.swift */,
 				48D293FB2EFEF13C005A8DA2 /* DonationCollectionViewCell.swift */,
 				48D293FD2EFEF13C005A8DA2 /* DonationViewController.swift */,
 				48D293FE2EFEF13C005A8DA2 /* ExcelExporter.swift */,
@@ -424,7 +421,6 @@
 			buildActionMask = 2147483647;
 			files = (
 				48D294132EFEF13C005A8DA2 /* Section1TableViewCell.swift in Sources */,
-				48D294142EFEF13C005A8DA2 /* Donation.swift in Sources */,
 				481E6C212EFF147100F61C65 /* ZahraaSection7TableViewCell.swift in Sources */,
 				481E6C232EFF149300F61C65 /* ZahraaSection8TableViewCell.swift in Sources */,
 				48D294152EFEF13C005A8DA2 /* DonationCollectionViewCell.swift in Sources */,

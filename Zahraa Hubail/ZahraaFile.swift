@@ -6,6 +6,8 @@
 //
 
 import UIKit
+import FirebaseFirestore
+
 
 protocol ZahraaAddressDelegate: AnyObject {
     func didAddAddress(_ address: ZahraaAddress)
@@ -58,5 +60,64 @@ struct Address {
     var governorate: String
     var fullAddress: String {
         return "\(building), \(road), \(block)\n\(area), \(governorate)"
+    }
+}
+
+
+class Donation {
+    var firestoreID: String?
+    var donationID: Int                   // Firestore auto-generated document ID
+    var ngo: ZahraaUser            // Reference to NGO in Firestore
+    var creationDate: Timestamp
+    var donor: ZahraaUser          // Reference to donor in Firestore§
+    var address: ZahraaAddress        // Reference to address in Firestore
+    var pickupDate: Timestamp
+    var pickupTime: String
+    var foodImageUrl: String
+    var status: Int
+    var category: String
+    var quantity: Int
+    var weight: Double?
+    var expiryDate: Timestamp
+    var description: String?
+    var rejectionReason: String?
+    var recurrence: Int
+
+    init(
+        firestoreID: String,
+        donationID: Int,
+        ngo: ZahraaUser,
+        creationDate: Timestamp,
+        donor: ZahraaUser,
+        address: ZahraaAddress,
+        pickupDate: Timestamp,
+        pickupTime: String,
+        foodImageUrl: String,
+        status: Int,
+        category: String,
+        quantity: Int,
+        weight: Double? = nil,
+        expiryDate: Timestamp,
+        description: String? = nil,
+        rejectionReason: String? = nil,
+        recurrence: Int = 0
+    ) {
+        self.firestoreID = firestoreID
+        self.donationID = donationID
+        self.ngo = ngo
+        self.creationDate = creationDate
+        self.donor = donor
+        self.address = address
+        self.pickupDate = pickupDate
+        self.pickupTime = pickupTime
+        self.foodImageUrl = foodImageUrl
+        self.status = status
+        self.category = category
+        self.quantity = quantity
+        self.weight = weight
+        self.expiryDate = expiryDate
+        self.description = description
+        self.rejectionReason = rejectionReason
+        self.recurrence = recurrence
     }
 }

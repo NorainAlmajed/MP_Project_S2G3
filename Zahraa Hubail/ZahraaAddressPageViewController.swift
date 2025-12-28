@@ -38,29 +38,55 @@ class ZahraaAddressPageViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        
+
         setupUI()
 
-        // Make saveButton rounded
+        // Make save button rounded
         saveButton.layer.cornerRadius = saveButton.frame.height / 2
         saveButton.clipsToBounds = true
 
         // Prefill address fields
         configureAddressFields()
 
-        // ✅ CORRECT way to style governorateButton (system button)
+        // Governorate button styling (DARK & LIGHT MODE)
         var config = governorateButton.configuration ?? .plain()
-
         config.baseBackgroundColor = UIColor { trait in
             trait.userInterfaceStyle == .dark ? .black : .clear
         }
-
         config.baseForegroundColor = UIColor { trait in
-            trait.userInterfaceStyle == .dark ? .white : .systemBlue
+            trait.userInterfaceStyle == .dark ? .white : .black
+        }
+        governorateButton.configuration = config
+
+        // Add subtle border like txtQuantity (systemGray4) for all text fields and governorateButton
+        let textFields = [
+            buildingTextField,
+            roadTextField,
+            blockTextField,
+            flatTextField,
+            areaTextField
+        ]
+
+        textFields.forEach { textField in
+            textField?.layer.borderWidth = 1
+            textField?.layer.cornerRadius = 8
+            textField?.layer.borderColor = UIColor { trait in
+                trait.userInterfaceStyle == .dark
+                    ? UIColor.systemGray4
+                    : UIColor.systemGray4  // slightly darker in light mode, matches txtQuantity
+            }.cgColor
         }
 
-        governorateButton.configuration = config
+        // Apply same subtle border to governorateButton
+        governorateButton.layer.borderWidth = 1
+        governorateButton.layer.cornerRadius = 8
+        governorateButton.layer.borderColor = UIColor { trait in
+            UIColor.systemGray4
+        }.cgColor
+
     }
+
+
 
     
     

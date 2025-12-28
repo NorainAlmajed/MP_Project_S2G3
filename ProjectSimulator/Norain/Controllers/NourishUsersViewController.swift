@@ -6,40 +6,155 @@
 //
 
 import UIKit
+import FirebaseFirestore
 
 class NourishUsersViewController: UIViewController,UITableViewDelegate,UITableViewDataSource,UISearchBarDelegate
 {
 
   
     @IBOutlet weak var searchUsers: UISearchBar!
-    var users = AppData.users
-    var displayedUsers = AppData.users
-    var ngoBeingProcessed: NGO?
     @IBOutlet weak var NavBar: UINavigationItem!
-    
     @IBOutlet weak var usersTableView: UITableView!
     @IBOutlet weak var segmentUsers: UISegmentedControl!
     @IBOutlet weak var btnPending: UIButton!
     @IBOutlet weak var btnApproved: UIButton!
     @IBOutlet weak var btnRejected: UIButton!
     
+    private let db = Firestore.firestore()
+    private var listener: ListenerRegistration?
+    
+    var users: [AppUser] = []
+    var displayedUsers : [AppUser] = []
+    var ngoBeingProcessed: NGO?
+    
+    
     override func viewDidLoad() {
         super.viewDidLoad()
-        
+        setupButtonStyles()
+        fetchUsersFromFirestore()
         searchUsers.delegate = self
         self.displayedUsers = self.users
         setButtonsHidden(false)
+        
         self.usersTableView.reloadData()
         usersTableView.delegate = self
         usersTableView.dataSource = self
+        
         let tap = UITapGestureRecognizer(target: self, action: #selector(dismissKeyboard))
         tap.cancelsTouchesInView = false
         view.addGestureRecognizer(tap)
-        setupButtonStyles()
-
         
     }
     
+    private func fetchUsersFromFirestore() {
+            // We listen to the "users" collection (adjust name if your collection is different)
+            listener = db.collection("users").addSnapshotListener { [weak self] (querySnapshot, error) in
+                guard let self = self else { return }
+                
+                if let error = error {
+                    print("Error fetching users: \(error)")
+                    return
+                }
+
+                self.users = querySnapshot?.documents.compactMap { document -> AppUser? in
+                    let data = document.data()
+                    let role = data["role"] as? Int ?? 0
+                    
+                    if role == 3 {
+                        return self.mapToNGO(data: data)
+                    } else if role == 2 {
+                        return self.mapToDonor(data: data)
+                    }
+                    return nil
+                } ?? []
+
+                // Refresh the UI based on current segment
+                self.applyCurrentFilters()
+            }
+        }
+    
+    private func applyCurrentFilters() {
+        let searchText = searchUsers.text?.lowercased() ?? ""
+        
+        // Filter by Segment
+        var filtered = users
+        switch segmentUsers.selectedSegmentIndex {
+        case 1: filtered = users.filter { $0 is NGO }
+        case 2: filtered = users.filter { $0 is Donor }
+        default: break
+        }
+        if !searchText.isEmpty {
+                    filtered = filtered.filter { $0.name.lowercased().contains(searchText) }
+                }
+                
+                self.displayedUsers = filtered
+                self.usersTableView.reloadData()
+    }
+    func createAcceptAction(for ngo: NGO, indexPath: IndexPath) -> UIContextualAction {
+            let action = UIContextualAction(style: .normal, title: "Accept") { [weak self] (_, _, completionHandler) in
+                // ⭐ Update Firestore: status = "Approved"
+                self?.db.collection("users").document(ngo.userName).updateData([
+                    "status": NGOStatus.approved.rawValue
+                ]) { error in
+                    completionHandler(error == nil)
+                }
+            }
+            action.backgroundColor = .greenCol
+            return action
+        }
+
+        func deleteUserFromFirestore(user: AppUser, indexPath: IndexPath, completion: @escaping (Bool) -> Void) {
+            // ⭐ Delete from Firestore
+            db.collection("users").document(user.userName).delete { error in
+                if let error = error {
+                    print("Error removing document: \(error)")
+                    completion(false)
+                } else {
+                    completion(true)
+                }
+            }
+        }
+
+        // MARK: - Rejection Delegate (Firestore Update)
+        func didProvideReason(_ reason: String) {
+            if let ngo = self.ngoBeingProcessed {
+                let finalReason = reason.isEmpty ? "No specific reason provided." : reason
+                
+                // ⭐ Update Firestore: status = "Rejected" and provide reason
+                db.collection("users").document(ngo.userName).updateData([
+                    "status": NGOStatus.rejected.rawValue,
+                    "rejectionReason": finalReason
+                ]) { [weak self] error in
+                    if error == nil {
+                        print("Successfully updated rejection in Firestore")
+                    }
+                    self?.ngoBeingProcessed = nil
+                }
+            }
+        }
+
+        // MARK: - Helper Mappers (Matches your JSON fields)
+        private func mapToNGO(data: [String: Any]) -> NGO {
+            let ngo = NGO() // Assuming you have an init or use properties
+            ngo.userName = data["userName"] as? String ?? ""
+            ngo.name = data["name"] as? String ?? ""
+            ngo.email = data["email"] as? String ?? ""
+            ngo.userImg = data["userImg"] as? String ?? ""
+            ngo.status = NGOStatus(rawValue: data["status"] as? String ?? "Pending") ?? .pending
+            ngo.rejectionReason = data["rejectionReason"] as? String
+            // Add other NGO specific fields...
+            return ngo
+        }
+
+        private func mapToDonor(data: [String: Any]) -> Donor {
+            let donor = Donor()
+            donor.userName = data["userName"] as? String ?? ""
+            donor.name = data["name"] as? String ?? ""
+            donor.email = data["email"] as? String ?? ""
+            donor.userImg = data["userImg"] as? String ?? ""
+            // Add other Donor specific fields...
+            return donor
+        }
     
     private func setupButtonStyles() {
         let buttons = [btnPending, btnApproved, btnRejected]
@@ -251,24 +366,31 @@ class NourishUsersViewController: UIViewController,UITableViewDelegate,UITableVi
         let editVC = storyboard.instantiateViewController(withIdentifier: "EditUsersViewController") as! EditUsersViewController
         let nav = UINavigationController(rootViewController: editVC)
         
-        let deleteAction = UIContextualAction(style: .destructive, title: "Delete") { action, view, completionHandler in
-            
-            Alerts.confirmation(on: self, title: "Delete Confirmation", message: "Are you sure you want to remove User?") {
+//        let deleteAction = UIContextualAction(style: .destructive, title: "Delete") { action, view, completionHandler in
+//            
+//            Alerts.confirmation(on: self, title: "Delete Confirmation", message: "Are you sure you want to remove User?") {
+//                
+//                // 1. Get the specific user from the displayed list
+//                let userToRemove = self.displayedUsers[indexPath.row]
+//                
+//                // 2. Remove from the list the TableView is currently using (CRITICAL FIX)
+//                self.displayedUsers.remove(at: indexPath.row)
+//                
+//                // 3. Remove from the other lists by matching the ID
+//                self.users.removeAll { $0.userName == userToRemove.userName }
+//                AppData.users.removeAll { $0.userName == userToRemove.userName }
+//                
+//                // 4. Update the UI
+//                tableView.deleteRows(at: [indexPath], with: .fade)
+//                
+//                completionHandler(true)
+        let userToRemove = self.displayedUsers[indexPath.row]
                 
-                // 1. Get the specific user from the displayed list
-                let userToRemove = self.displayedUsers[indexPath.row]
-                
-                // 2. Remove from the list the TableView is currently using (CRITICAL FIX)
-                self.displayedUsers.remove(at: indexPath.row)
-                
-                // 3. Remove from the other lists by matching the ID
-                self.users.removeAll { $0.userName == userToRemove.userName }
-                AppData.users.removeAll { $0.userName == userToRemove.userName }
-                
-                // 4. Update the UI
-                tableView.deleteRows(at: [indexPath], with: .fade)
-                
-                completionHandler(true)
+                let deleteAction = UIContextualAction(style: .destructive, title: "Delete") { [weak self] action, view, completionHandler in
+                    Alerts.confirmation(on: self!, title: "Delete", message: "Confirm removal?") {
+                        self?.deleteUserFromFirestore(user: userToRemove, indexPath: indexPath) { success in
+                            completionHandler(success)
+                        }
             }
         }
         let editAction = UIContextualAction(style: .normal, title: "Edit") { (action, view, completionHandler) in

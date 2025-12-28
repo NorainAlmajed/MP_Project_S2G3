@@ -8,16 +8,10 @@ import FirebaseAuth
 
 class AccViewController: UITableViewController {
 
-    // MARK: - Roles
-    enum UserRole {
-        case admin
-        case ngo
-        case donor
-    }
-
-    var currentRole: UserRole = .admin
-
-    // MARK: - Rows
+    @IBOutlet weak var nameLabel: UILabel!
+    
+    @IBOutlet weak var roleLabel: UILabel!
+    
     enum AccountRow {
         case settings
         case createDonor
@@ -36,16 +30,26 @@ class AccViewController: UITableViewController {
         configureRows()
     }
 
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        
+        nameLabel.text = SessionManager.shared.fullName ?? "User"
+        roleLabel.text = SessionManager.shared.roleDisplayName
+        
+        configureRows()
+        tableView.reloadData()
+    }
+
     // MARK: - Configure Rows
     func configureRows() {
         rows = [.settings]
 
-        switch currentRole {
-        case .admin:
+        if SessionManager.shared.isAdmin {
             rows.append(.createDonor)
             rows.append(.createNGO)
+        }
 
-        case .donor, .ngo:
+        if SessionManager.shared.isDonor || SessionManager.shared.isNGO {
             rows.append(.contactSupport)
         }
 
@@ -98,31 +102,30 @@ class AccViewController: UITableViewController {
     // MARK: - Handle Taps
     override func tableView(_ tableView: UITableView,
                             didSelectRowAt indexPath: IndexPath) {
-
+        
         tableView.deselectRow(at: indexPath, animated: true)
-
+        
         switch rows[indexPath.row] {
         case .settings:
             goToSettings()
-
+            
         case .createDonor:
             goToCreateDonor()
-
+            
         case .createNGO:
             goToCreateNGO()
-
+            
         case .contactSupport:
             goToContactSupport()
-
+            
         case .terms:
             goToTerms()
-
+            
         case .logout:
             logoutUser()
         }
     }
-
-    // MARK: - Navigation Helpers
+    
     func goToSettings() {
         let vc = UIStoryboard(name: "Settings", bundle: nil)
             .instantiateViewController(withIdentifier: "SettingViewController")
@@ -153,6 +156,7 @@ class AccViewController: UITableViewController {
         navigationController?.pushViewController(vc, animated: true)
     }
 
+    // MARK: - Logout
     func logoutUser() {
         let alert = UIAlertController(
             title: "Logout",
@@ -161,9 +165,11 @@ class AccViewController: UITableViewController {
         )
 
         alert.addAction(UIAlertAction(title: "Cancel", style: .cancel))
+
         alert.addAction(UIAlertAction(title: "Logout", style: .destructive) { _ in
             do {
                 try Auth.auth().signOut()
+                SessionManager.shared.clear()
                 self.navigationController?.popToRootViewController(animated: true)
             } catch {
                 self.showLogoutError()

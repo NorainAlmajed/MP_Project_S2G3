@@ -8,7 +8,8 @@ import FirebaseAuth
 
 class SecuritySettingsViewController: UIViewController {
 
-    // MARK: - Outlets
+    
+    
     @IBOutlet weak var currentPasswordField: UITextField!
     @IBOutlet weak var newPasswordField: UITextField!
     @IBOutlet weak var confirmPasswordField: UITextField!
@@ -75,7 +76,6 @@ class SecuritySettingsViewController: UIViewController {
         }
     }
 
-    // MARK: - Change Email (UPDATED & NOT DEPRECATED)
     @IBAction func updateEmailTapped(_ sender: UIButton) {
 
         guard let user = Auth.auth().currentUser else {
@@ -103,7 +103,6 @@ class SecuritySettingsViewController: UIViewController {
         }
     }
 
-    // MARK: - Helpers
     func clearPasswordFields() {
         currentPasswordField.text = ""
         newPasswordField.text = ""
@@ -118,5 +117,10 @@ class SecuritySettingsViewController: UIViewController {
         )
         alert.addAction(UIAlertAction(title: "OK", style: .default))
         present(alert, animated: true)
+    }
+    
+    private func styleActionButton(_ button: UIButton) {
+        button.layer.cornerRadius = button.frame.height / 2
+        button.clipsToBounds = true
     }
 }

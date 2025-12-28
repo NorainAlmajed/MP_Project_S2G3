@@ -4,7 +4,6 @@
     <dependencies>
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="23721"/>
         <capability name="Image references" minToolsVersion="12.0"/>
-        <capability name="Named colors" minToolsVersion="9.0"/>
         <capability name="Safe area layout guides" minToolsVersion="9.0"/>
         <capability name="System colors in document resources" minToolsVersion="11.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
@@ -37,7 +36,7 @@
                                     <nil key="highlightedColor"/>
                                 </label>
                                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Role" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="MGQ-00-HkY">
-                                    <rect key="frame" x="179.66666666666674" y="142" width="34" height="21"/>
+                                    <rect key="frame" x="179.66666666666666" y="142" width="34" height="21"/>
                                     <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                     <nil key="textColor"/>
                                     <nil key="highlightedColor"/>
@@ -80,6 +79,10 @@
                         </connections>
                     </tableView>
                     <navigationItem key="navigationItem" id="kpp-16-XDd"/>
+                    <connections>
+                        <outlet property="nameLabel" destination="je4-rP-wgO" id="Z1g-Hj-8dC"/>
+                        <outlet property="roleLabel" destination="MGQ-00-HkY" id="DH3-sm-6tL"/>
+                    </connections>
                 </tableViewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="hh2-zh-Wao" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
             </objects>
@@ -194,7 +197,7 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="oiA-Xb-zGz" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="6898.4732824427474" y="1180.2816901408451"/>
+            <point key="canvasLocation" x="6805" y="1180"/>
         </scene>
         <!--Navigation Controller-->
         <scene sceneID="cwy-Xv-Ntu">
@@ -284,6 +287,10 @@
                         </connections>
                     </tableView>
                     <navigationItem key="navigationItem" id="YTl-td-V05"/>
+                    <connections>
+                        <outlet property="nameLabel" destination="fph-tT-7t0" id="Ikz-NC-jR3"/>
+                        <outlet property="roleLabel" destination="gHb-dH-i3x" id="X97-a8-O9s"/>
+                    </connections>
                 </tableViewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="AOy-8O-PGV" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
             </objects>
@@ -344,6 +351,9 @@
                                                 <buttonConfiguration key="configuration" style="filled" title="Update Password">
                                                     <color key="baseBackgroundColor" name="greenCol"/>
                                                 </buttonConfiguration>
+                                                <connections>
+                                                    <action selector="updatePasswordTapped:" destination="E9Y-gE-1Iw" eventType="touchUpInside" id="K3H-Oh-yXc"/>
+                                                </connections>
                                             </button>
                                         </subviews>
                                     </stackView>
@@ -372,9 +382,12 @@
                                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Y0H-RC-YmL">
                                                 <rect key="frame" x="0.0" y="104.33333333333337" width="319" height="34.333333333333343"/>
                                                 <state key="normal" title="Button"/>
-                                                <buttonConfiguration key="configuration" style="filled" title="Update Password">
+                                                <buttonConfiguration key="configuration" style="filled" title="Update Email">
                                                     <color key="baseBackgroundColor" name="greenCol"/>
                                                 </buttonConfiguration>
+                                                <connections>
+                                                    <action selector="updateEmailTapped:" destination="E9Y-gE-1Iw" eventType="touchUpInside" id="ZWd-ZA-muv"/>
+                                                </connections>
                                             </button>
                                         </subviews>
                                     </stackView>
@@ -441,7 +454,6 @@
         <!--Edit Profile-->
         <scene sceneID="tsS-Ez-2U2">
             <objects>
-                <placeholder placeholderIdentifier="IBFirstResponder" id="Yxq-ke-gcJ" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
                 <viewController storyboardIdentifier="EditProfileViewController" title="Edit Profile" useStoryboardIdentifierAsRestorationIdentifier="YES" id="I2q-oq-qt5" customClass="EditProfileViewController" customModule="ProjectSimulator" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="9HI-79-Dvm">
                         <rect key="frame" x="0.0" y="0.0" width="393" height="852"/>
@@ -568,6 +580,7 @@
                         <outlet property="saveButton" destination="2c0-Zq-Xfg" id="xdS-uh-QJB"/>
                     </connections>
                 </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="Yxq-ke-gcJ" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
             </objects>
             <point key="canvasLocation" x="2930.5343511450383" y="1807.7464788732395"/>
         </scene>
@@ -638,7 +651,6 @@
         <!--Edit Profile-->
         <scene sceneID="WPk-Yc-UQg">
             <objects>
-                <placeholder placeholderIdentifier="IBFirstResponder" id="RjH-iW-uAf" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
                 <navigationController title="Edit Profile" automaticallyAdjustsScrollViewInsets="NO" id="Lzv-oL-AxE" sceneMemberID="viewController">
                     <toolbarItems/>
                     <navigationBar key="navigationBar" contentMode="scaleToFill" id="zOt-A1-5ZX">
@@ -650,6 +662,7 @@
                         <segue destination="I2q-oq-qt5" kind="relationship" relationship="rootViewController" id="d9R-pg-nqR"/>
                     </connections>
                 </navigationController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="RjH-iW-uAf" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
             </objects>
             <point key="canvasLocation" x="2003.8167938931297" y="1807.7464788732395"/>
         </scene>

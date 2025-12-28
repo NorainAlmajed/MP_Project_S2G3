@@ -147,21 +147,17 @@ class NGOSignupViewController: UIViewController,
 
         signupButton.isEnabled = false
 
-        CloudinaryService.shared.uploadImage(licenseImage) { [weak self] result in
-            guard let self = self else { return }
-
-            switch result {
-            case .success(let licenseUrl):
-                self.createNGOAccount(licenseUrl: licenseUrl)
-
-            case .failure(let error):
+        let cloudinaryService = CloudinaryService()
+        cloudinaryService.uploadImage(licenseImage) { url in
+            if let url = url {
+                self.createNGOAccount(licenseUrl: url)
+            } else {
                 self.signupButton.isEnabled = true
-                self.showAlert(title: "Upload Failed", message: error.localizedDescription)
+                self.showAlert(title: "Upload Failed", message: "Could not upload NGO license.")
             }
         }
     }
-
-    // MARK: - Validation
+    
     func validateInputs() -> Bool {
         let email = emailTextField.text ?? ""
         let password = passwordTextField.text ?? ""

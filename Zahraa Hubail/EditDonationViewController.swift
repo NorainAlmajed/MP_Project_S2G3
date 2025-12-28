@@ -657,6 +657,9 @@
                 return
             }
 
+            // ✅ Show "Uploading..." pop-up
+            showUploadingAlert()
+
             // 2️⃣ If image is new, upload to Cloudinary
             func proceedWithUpdate(imageUrl: String?) {
                 guard let donation = donation, let donationId = donation.firestoreID else { return }
@@ -680,7 +683,10 @@
                 // Update donation document in Firebase
                 donationRef.updateData(updatedData) { [weak self] error in
                     guard let self = self else { return }
-                    
+
+                    // ✅ Hide the "Uploading..." pop-up
+                    self.hideUploadingAlert()
+
                     if let error = error {
                         self.showSimpleAlert(title: "Update Failed", message: error.localizedDescription)
                         return
@@ -718,7 +724,7 @@
                     // Callback
                     self.onDonationUpdated?(self.donation!)
                     
-                    // Show success popup and close page
+                    // ✅ Show the original success message AFTER dismissing the uploading popup
                     let alert = UIAlertController(title: "Success", message: "Donation details updated.", preferredStyle: .alert)
                     alert.addAction(UIAlertAction(title: "Dismiss", style: .default) { _ in
                         self.navigationController?.popViewController(animated: true)
@@ -733,7 +739,6 @@
                 cloudinaryService.uploadImage(image) { [weak self] url in
                     guard let self = self else { return }
                     DispatchQueue.main.async {
-                        self.isUploadingImage = false
                         proceedWithUpdate(imageUrl: url ?? self.uploadedDonationImageUrl)
                     }
                 }
@@ -742,6 +747,7 @@
                 proceedWithUpdate(imageUrl: uploadedDonationImageUrl)
             }
         }
+
 
 
         

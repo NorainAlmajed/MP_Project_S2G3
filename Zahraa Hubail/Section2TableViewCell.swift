@@ -65,8 +65,8 @@ class Section2TableViewCell: UITableViewCell {
         //Update date
         // Convert Timestamp to Date
         let formatter = DateFormatter()
-        formatter.dateFormat = "dd/MM/yyyy, h:mm a"
-        pickupDatelbl.text = "\(formatter.string(from: donation.pickupDate.dateValue())) - \(donation.pickupTime)"
+        formatter.dateFormat = "dd/MM/yyyy"
+        pickupDatelbl.text = "\(formatter.string(from: donation.pickupDate.dateValue())), \(donation.pickupTime)"
         
         // Set recurrence label based on integer value
         switch donation.recurrence {

@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="23727" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="Ixr-Px-X5Z">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="23727" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="Ctb-CI-NYX">
     <device id="retina6_12" orientation="portrait" appearance="light"/>
     <dependencies>
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="23721"/>
@@ -134,15 +134,15 @@
                                         </connections>
                                     </tableViewCell>
                                     <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="default" indentationWidth="10" reuseIdentifier="ImpactGraphCell" id="EJ4-hC-Xwi">
-                                        <rect key="frame" x="0.0" y="273" width="393" height="43.666667938232422"/>
+                                        <rect key="frame" x="0.0" y="273" width="393" height="57.666667938232422"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" preservesSuperviewLayoutMargins="YES" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="EJ4-hC-Xwi" id="a9q-W4-4kK">
-                                            <rect key="frame" x="0.0" y="0.0" width="393" height="43.666667938232422"/>
+                                            <rect key="frame" x="0.0" y="0.0" width="393" height="57.666667938232422"/>
                                             <autoresizingMask key="autoresizingMask"/>
                                         </tableViewCellContentView>
                                     </tableViewCell>
                                     <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="default" indentationWidth="10" reuseIdentifier="RecommendedNGOsCell" rowHeight="214" id="mOg-uj-JJQ" customClass="RecommendedNGOsTableViewCell" customModule="ProjectSimulator" customModuleProvider="target">
-                                        <rect key="frame" x="0.0" y="316.66666793823242" width="393" height="214"/>
+                                        <rect key="frame" x="0.0" y="330.66666793823242" width="393" height="214"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" preservesSuperviewLayoutMargins="YES" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="mOg-uj-JJQ" id="plx-AD-p4T">
                                             <rect key="frame" x="0.0" y="0.0" width="393" height="214"/>
@@ -227,7 +227,7 @@
                                         </connections>
                                     </tableViewCell>
                                     <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="default" indentationWidth="10" reuseIdentifier="RecentDonationsCell" rowHeight="467" id="ajM-XV-9YQ" customClass="RecentDonationTableViewCell" customModule="ProjectSimulator">
-                                        <rect key="frame" x="0.0" y="530.66666793823242" width="393" height="467"/>
+                                        <rect key="frame" x="0.0" y="544.66666793823242" width="393" height="467"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" preservesSuperviewLayoutMargins="YES" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="ajM-XV-9YQ" id="866-Un-i78" userLabel="recentDonationContent">
                                             <rect key="frame" x="0.0" y="0.0" width="393" height="467"/>
@@ -373,31 +373,14 @@
             </objects>
             <point key="canvasLocation" x="2092.3664122137402" y="-563.38028169014092"/>
         </scene>
-        <!--Tab Bar Controller-->
-        <scene sceneID="yH8-we-uIj">
-            <objects>
-                <tabBarController id="Ixr-Px-X5Z" sceneMemberID="viewController">
-                    <tabBar key="tabBar" contentMode="scaleToFill" insetsLayoutMarginsFromSafeArea="NO" id="sqy-Wi-Poa">
-                        <rect key="frame" x="0.0" y="0.0" width="393" height="49"/>
-                        <autoresizingMask key="autoresizingMask"/>
-                        <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-                    </tabBar>
-                    <connections>
-                        <segue destination="Ctb-CI-NYX" kind="relationship" relationship="viewControllers" id="8u9-Eq-IRF"/>
-                    </connections>
-                </tabBarController>
-                <placeholder placeholderIdentifier="IBFirstResponder" id="WoD-DU-f3H" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
-            </objects>
-            <point key="canvasLocation" x="358" y="-563"/>
-        </scene>
         <!--Home-->
         <scene sceneID="wzs-2R-bD7">
             <objects>
-                <navigationController title="Home" automaticallyAdjustsScrollViewInsets="NO" id="Ctb-CI-NYX" sceneMemberID="viewController">
-                    <tabBarItem key="tabBarItem" title="home" image="house" catalog="system" id="Kgg-Lx-xIl"/>
+                <navigationController automaticallyAdjustsScrollViewInsets="NO" id="Ctb-CI-NYX" sceneMemberID="viewController">
+                    <tabBarItem key="tabBarItem" title="Home" image="house.fill" catalog="system" id="Kgg-Lx-xIl"/>
                     <toolbarItems/>
                     <navigationBar key="navigationBar" contentMode="scaleToFill" largeTitles="YES" id="sGz-qs-L3b">
-                        <rect key="frame" x="0.0" y="118" width="393" height="96"/>
+                        <rect key="frame" x="0.0" y="118" width="393" height="101"/>
                         <autoresizingMask key="autoresizingMask"/>
                         <textAttributes key="titleTextAttributes">
                             <color key="textColor" name="greenCol"/>
@@ -417,7 +400,7 @@
     <resources>
         <image name="basket" width="1200" height="1200"/>
         <image name="chevron.right" catalog="system" width="97" height="128"/>
-        <image name="house" catalog="system" width="128" height="104"/>
+        <image name="house.fill" catalog="system" width="128" height="104"/>
         <namedColor name="BeigeCol">
             <color red="0.97254901960784312" green="0.8901960784313725" blue="0.74901960784313726" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
         </namedColor>
@@ -434,7 +417,7 @@
             <color white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
         </systemColor>
         <systemColor name="tintColor">
-            <color red="0.0" green="0.47843137254901963" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+            <color red="0.0" green="0.47843137250000001" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
         </systemColor>
     </resources>
 </document>

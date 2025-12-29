@@ -199,11 +199,13 @@
             </objects>
             <point key="canvasLocation" x="6805" y="1180"/>
         </scene>
-        <!--Navigation Controller-->
+        <!--Account-->
         <scene sceneID="cwy-Xv-Ntu">
             <objects>
                 <navigationController automaticallyAdjustsScrollViewInsets="NO" id="PDF-AL-IeH" sceneMemberID="viewController">
+                    <tabBarItem key="tabBarItem" title="Account" image="person.crop.circle.fill" catalog="system" selectedImage="person.crop.circle.fill" id="mN9-8N-cvL"/>
                     <toolbarItems/>
+                    <simulatedTabBarMetrics key="simulatedBottomBarMetrics"/>
                     <navigationBar key="navigationBar" contentMode="scaleToFill" id="raJ-Tx-3Db">
                         <rect key="frame" x="0.0" y="118" width="393" height="44"/>
                         <autoresizingMask key="autoresizingMask"/>
@@ -305,10 +307,10 @@
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" spacing="50" translatesAutoresizingMaskIntoConstraints="NO" id="7LA-jQ-LHj">
-                                <rect key="frame" x="37" y="203.33333333333334" width="319" height="445.33333333333326"/>
+                                <rect key="frame" x="37" y="194.33333333333334" width="319" height="463.33333333333326"/>
                                 <subviews>
                                     <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" spacing="25" translatesAutoresizingMaskIntoConstraints="NO" id="h0Y-zh-YUW">
-                                        <rect key="frame" x="0.0" y="0.0" width="319" height="256.66666666666669"/>
+                                        <rect key="frame" x="0.0" y="0.0" width="319" height="265.66666666666669"/>
                                         <subviews>
                                             <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" alignment="top" spacing="25" translatesAutoresizingMaskIntoConstraints="NO" id="WAF-nI-vVT">
                                                 <rect key="frame" x="0.0" y="0.0" width="319" height="79.333333333333329"/>
@@ -346,7 +348,7 @@
                                                 <textInputTraits key="textInputTraits" secureTextEntry="YES" textContentType="password"/>
                                             </textField>
                                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="yP9-JI-5Ob">
-                                                <rect key="frame" x="0.0" y="222.33333333333334" width="319" height="34.333333333333343"/>
+                                                <rect key="frame" x="0.0" y="222.33333333333334" width="319" height="43.333333333333343"/>
                                                 <state key="normal" title="Button"/>
                                                 <buttonConfiguration key="configuration" style="filled" title="Update Password">
                                                     <color key="baseBackgroundColor" name="greenCol"/>
@@ -358,7 +360,7 @@
                                         </subviews>
                                     </stackView>
                                     <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" spacing="25" translatesAutoresizingMaskIntoConstraints="NO" id="LXM-gi-eXH">
-                                        <rect key="frame" x="0.0" y="306.66666666666663" width="319" height="138.66666666666663"/>
+                                        <rect key="frame" x="0.0" y="315.66666666666663" width="319" height="147.66666666666663"/>
                                         <subviews>
                                             <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" alignment="top" spacing="25" translatesAutoresizingMaskIntoConstraints="NO" id="XJv-pQ-3uo">
                                                 <rect key="frame" x="0.0" y="0.0" width="319" height="79.333333333333329"/>
@@ -380,7 +382,7 @@
                                                 </subviews>
                                             </stackView>
                                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Y0H-RC-YmL">
-                                                <rect key="frame" x="0.0" y="104.33333333333337" width="319" height="34.333333333333343"/>
+                                                <rect key="frame" x="0.0" y="104.33333333333337" width="319" height="43.333333333333343"/>
                                                 <state key="normal" title="Button"/>
                                                 <buttonConfiguration key="configuration" style="filled" title="Update Email">
                                                     <color key="baseBackgroundColor" name="greenCol"/>
@@ -687,6 +689,7 @@
     </scenes>
     <resources>
         <image name="person.crop.circle" catalog="system" width="128" height="123"/>
+        <image name="person.crop.circle.fill" catalog="system" width="128" height="123"/>
         <image name="square.and.arrow.up" catalog="system" width="110" height="128"/>
         <namedColor name="greenCol">
             <color red="0.070588235294117646" green="0.38823529411764707" blue="0.070588235294117646" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>

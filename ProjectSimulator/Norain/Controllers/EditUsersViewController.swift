@@ -307,6 +307,8 @@ class EditUsersViewController: UIViewController, UIImagePickerControllerDelegate
     }
     
     func setupView() {
+        ImagePickerEditView.isUserInteractionEnabled = true
+        uploadPicBtn.isUserInteractionEnabled = true
         let isNGO = userToEdit is NGO
         causeStack.isHidden = !isNGO
         addressStack.isHidden = !isNGO
@@ -350,14 +352,14 @@ class EditUsersViewController: UIViewController, UIImagePickerControllerDelegate
     
     func imagePickerController(_ picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [UIImagePickerController.InfoKey: Any]) {
         dismiss(animated: true, completion: nil)
-        guard let image = info[.editedImage] as? UIImage else {
-            print("Image not found")
-            return
-        }
+        
+        guard let image = info[.editedImage] as? UIImage else { return }
+        
+        // 1. Immediately show the image locally so the UI feels fast
         ImagePickerEditView.image = image
         
-        // TODO: Upload image to Firebase Storage and update userImg URL
-        // uploadImageToFirebaseStorage(image)
+        // 2. Start the upload process
+        uploadImageToFirebaseStorage(image)
     }
     
     func imagePickerControllerDidCancel(_ picker: UIImagePickerController) {
@@ -366,24 +368,40 @@ class EditUsersViewController: UIViewController, UIImagePickerControllerDelegate
     
     // MARK: - Optional: Upload Image to Firebase Storage
     private func uploadImageToFirebaseStorage(_ image: UIImage) {
-        guard let imageData = image.jpegData(compressionQuality: 0.8) else { return }
+        guard let user = userToEdit else { return }
+        guard let imageData = image.jpegData(compressionQuality: 0.7) else { return } // 0.7 is better for mobile data
         
-        // It's fine to name the FILE after the username,
-        // but the DATABASE update must use the documentID.
-        let storageRef = Storage.storage().reference().child("userImages/\(userToEdit.username).jpg")
+        // Show a small indicator or disable the save button so they don't leave early
+        self.saveBtn.isEnabled = false
+        self.saveBtn.setTitle("Uploading Image...", for: .normal)
         
-        storageRef.putData(imageData, metadata: nil) { metadata, error in
+        // Path: use documentID to ensure uniqueness
+        let storageRef = Storage.storage().reference().child("userImages/\(user.documentID).jpg")
+        
+        storageRef.putData(imageData, metadata: nil) { [weak self] metadata, error in
+            guard let self = self else { return }
+            
             if let error = error {
-                print("Error uploading image: \(error)")
+                print("❌ Storage Error: \(error.localizedDescription)")
+                self.saveBtn.isEnabled = true
                 return
             }
             
             storageRef.downloadURL { url, error in
                 if let downloadURL = url {
-                    // ✅ FIX: Use userToEdit.documentID here
-                    self.db.collection("users").document(self.userToEdit.documentID).updateData([
-                        "userImg": downloadURL.absoluteString
-                    ])
+                    // ✅ MATCH YOUR FIELDS: Use "profile_image_url" to match your fetch logic
+                    self.db.collection("users").document(user.documentID).updateData([
+                        "profile_image_url": downloadURL.absoluteString
+                    ]) { error in
+                        self.saveBtn.isEnabled = true
+                        self.saveBtn.setTitle("Save Changes", for: .normal)
+                        
+                        if error == nil {
+                            print("✅ Image URL synced to Firestore")
+                            // Update local object so it's ready if they hit 'Save' for other fields
+                            self.userToEdit.userImg = downloadURL.absoluteString
+                        }
+                    }
                 }
             }
         }

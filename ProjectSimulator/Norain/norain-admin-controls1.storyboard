@@ -244,9 +244,11 @@
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="3kF-ax-tzq">
                                 <rect key="frame" x="29" y="616" width="344" height="135"/>
                                 <subviews>
-                                    <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="tUa-HP-E9w" userLabel="Accept Btn">
-                                        <rect key="frame" x="185" y="20" width="143" height="39"/>
-                                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="tUa-HP-E9w" userLabel="Accept Btn">
+                                        <rect key="frame" x="185" y="20.000000000000004" width="143" height="38.333333333333343"/>
+                                        <constraints>
+                                            <constraint firstAttribute="width" constant="143" id="Qf4-Gr-6ej"/>
+                                        </constraints>
                                         <color key="tintColor" name="greenCol"/>
                                         <state key="normal" title="Button"/>
                                         <buttonConfiguration key="configuration" style="filled" title="Accept"/>
@@ -254,9 +256,12 @@
                                             <action selector="acceptBtn:" destination="Omg-aE-SIU" eventType="touchUpInside" id="6go-pG-JOO"/>
                                         </connections>
                                     </button>
-                                    <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="2vV-LF-RgL" userLabel="Reject Btn">
-                                        <rect key="frame" x="20" y="20" width="143" height="39"/>
-                                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="2vV-LF-RgL" userLabel="Reject Btn">
+                                        <rect key="frame" x="20" y="20.000000000000004" width="143" height="38.333333333333343"/>
+                                        <constraints>
+                                            <constraint firstAttribute="width" constant="143" id="AtN-0K-c2e"/>
+                                            <constraint firstAttribute="height" constant="38.329999999999998" id="PFC-gM-mUr"/>
+                                        </constraints>
                                         <color key="tintColor" name="redCol"/>
                                         <state key="normal" title="Button"/>
                                         <buttonConfiguration key="configuration" style="filled" title="Reject"/>
@@ -264,9 +269,12 @@
                                             <action selector="rejectBtn:" destination="Omg-aE-SIU" eventType="touchUpInside" id="Bkw-Hr-BOo"/>
                                         </connections>
                                     </button>
-                                    <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="sLy-g3-fFV">
-                                        <rect key="frame" x="20" y="67" width="308" height="39"/>
-                                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="sLy-g3-fFV">
+                                        <rect key="frame" x="20" y="66.333333333333371" width="308" height="39"/>
+                                        <constraints>
+                                            <constraint firstAttribute="width" constant="308" id="Kwe-v9-Jmp"/>
+                                            <constraint firstAttribute="height" constant="39" id="u0o-9f-LhT"/>
+                                        </constraints>
                                         <color key="tintColor" name="blueCol"/>
                                         <state key="normal" title="Button"/>
                                         <buttonConfiguration key="configuration" style="filled" title="Edit"/>
@@ -276,6 +284,14 @@
                                     </button>
                                 </subviews>
                                 <color key="backgroundColor" systemColor="systemBackgroundColor"/>
+                                <constraints>
+                                    <constraint firstItem="tUa-HP-E9w" firstAttribute="trailing" secondItem="sLy-g3-fFV" secondAttribute="trailing" id="SPJ-Is-2jt"/>
+                                    <constraint firstItem="tUa-HP-E9w" firstAttribute="baseline" secondItem="2vV-LF-RgL" secondAttribute="baseline" id="YRR-NQ-ulC"/>
+                                    <constraint firstItem="tUa-HP-E9w" firstAttribute="top" secondItem="3kF-ax-tzq" secondAttribute="top" constant="20" id="gBn-5I-qSx"/>
+                                    <constraint firstItem="tUa-HP-E9w" firstAttribute="leading" secondItem="2vV-LF-RgL" secondAttribute="trailing" constant="22" id="gWc-4d-1d7"/>
+                                    <constraint firstItem="sLy-g3-fFV" firstAttribute="top" secondItem="tUa-HP-E9w" secondAttribute="bottom" constant="8" symbolic="YES" id="k53-8P-u3B"/>
+                                    <constraint firstAttribute="trailing" secondItem="tUa-HP-E9w" secondAttribute="trailing" constant="16" id="kXp-0A-06K"/>
+                                </constraints>
                             </view>
                             <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" image="photo" catalog="system" translatesAutoresizingMaskIntoConstraints="NO" id="Uq7-FY-Kid">
                                 <rect key="frame" x="21" y="152.66666666666666" width="122" height="99"/>
@@ -302,7 +318,7 @@
                                 <nil key="textColor"/>
                                 <nil key="highlightedColor"/>
                             </label>
-                            <stackView opaque="NO" contentMode="scaleToFill" misplaced="YES" axis="vertical" alignment="top" spacing="8" translatesAutoresizingMaskIntoConstraints="NO" id="Ooc-NS-jiZ">
+                            <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" alignment="top" spacing="8" translatesAutoresizingMaskIntoConstraints="NO" id="Ooc-NS-jiZ">
                                 <rect key="frame" x="151" y="162" width="121.66666666666669" height="80.666666666666686"/>
                                 <subviews>
                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Name" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" preferredMaxLayoutWidth="55" translatesAutoresizingMaskIntoConstraints="NO" id="zHc-VW-AnJ">
@@ -337,10 +353,10 @@
                             <constraint firstItem="sbg-AB-1RT" firstAttribute="top" secondItem="iL7-gF-HXv" secondAttribute="bottom" constant="0.33333333333331439" id="3FO-b9-OvK"/>
                             <constraint firstItem="Snj-fJ-bWQ" firstAttribute="trailing" secondItem="sbg-AB-1RT" secondAttribute="trailing" constant="20" id="9Sp-7m-aZx"/>
                             <constraint firstItem="3kF-ax-tzq" firstAttribute="top" secondItem="sbg-AB-1RT" secondAttribute="bottom" constant="100" id="9sk-ZT-Txf"/>
-                            <constraint firstItem="Uq7-FY-Kid" firstAttribute="top" secondItem="Ooc-NS-jiZ" secondAttribute="top" constant="-15" id="Gch-Vx-aQ4"/>
+                            <constraint firstItem="Uq7-FY-Kid" firstAttribute="top" secondItem="Ooc-NS-jiZ" secondAttribute="top" constant="-11" id="Gch-Vx-aQ4"/>
                             <constraint firstItem="3kF-ax-tzq" firstAttribute="top" secondItem="sbg-AB-1RT" secondAttribute="bottom" constant="100" id="JBo-7Y-DrY"/>
                             <constraint firstItem="3kF-ax-tzq" firstAttribute="leading" secondItem="Snj-fJ-bWQ" secondAttribute="leading" constant="29" id="KBQ-5C-4g7"/>
-                            <constraint firstItem="Ooc-NS-jiZ" firstAttribute="top" secondItem="Snj-fJ-bWQ" secondAttribute="top" constant="42" id="POn-hk-nw9"/>
+                            <constraint firstItem="Ooc-NS-jiZ" firstAttribute="top" secondItem="Snj-fJ-bWQ" secondAttribute="top" constant="38" id="POn-hk-nw9"/>
                             <constraint firstItem="3kF-ax-tzq" firstAttribute="centerX" secondItem="YhB-D2-Fqs" secondAttribute="centerX" id="TCc-uq-ah8"/>
                             <constraint firstItem="sbg-AB-1RT" firstAttribute="leading" secondItem="iL7-gF-HXv" secondAttribute="leading" id="aGA-4S-15s"/>
                             <constraint firstItem="3kF-ax-tzq" firstAttribute="top" secondItem="YhB-D2-Fqs" secondAttribute="top" constant="616" id="d6B-NK-L94"/>
@@ -353,6 +369,7 @@
                     </view>
                     <connections>
                         <outlet property="acceptBtn" destination="tUa-HP-E9w" id="SgS-Pt-J5U"/>
+                        <outlet property="acceptBtnWidthConstraint" destination="Qf4-Gr-6ej" id="W4R-kZ-0aX"/>
                         <outlet property="bioOrDescLbl" destination="iL7-gF-HXv" id="jin-Bh-sg8"/>
                         <outlet property="bioOrDesctxt" destination="sbg-AB-1RT" id="gcT-Li-cE2"/>
                         <outlet property="editBtn" destination="sLy-g3-fFV" id="ppP-55-QyA"/>
@@ -401,6 +418,7 @@
                                                         <color key="tintColor" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                                         <state key="normal" title="Button"/>
                                                         <buttonConfiguration key="configuration" style="tinted" image="square.and.arrow.up" catalog="system" title="Upload Photo">
+                                                            <backgroundConfiguration key="background" cornerRadius="8"/>
                                                             <color key="baseForegroundColor" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                                             <color key="baseBackgroundColor" systemColor="systemGray5Color"/>
                                                         </buttonConfiguration>

@@ -28,6 +28,9 @@ class UserDetailsViewController: UIViewController {
     @IBOutlet weak var phoneOrStatusLbl: UILabel!
     @IBOutlet weak var editBtn: UIButton!
     
+    
+    @IBOutlet weak var acceptBtnWidthConstraint: NSLayoutConstraint!
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         
@@ -134,10 +137,12 @@ class UserDetailsViewController: UIViewController {
                 phoneOrStatusLbl.textColor = .red
                 reasonLabel.text = "Reason: \(ngo.rejectionReason ?? "None")"
                 reasonLabel.isHidden = false
-                acceptBtn.isHidden = false  // Allow re-approval
+                acceptBtnWidthConstraint.constant = 308
+                acceptBtn.isHidden = false
                 rejectBtn.isHidden = true
                 
             case .approved:
+                acceptBtnWidthConstraint.constant = 143
                 phoneOrStatusLbl.text = "Approved"
                 phoneOrStatusLbl.textColor = UIColor(named: "greenCol")
                 reasonLabel.isHidden = true

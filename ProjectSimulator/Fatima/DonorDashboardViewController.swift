@@ -102,6 +102,9 @@ class DonorDashboardViewController: UIViewController {
             ]
         }
     }
+    @objc private func browseNGOsTapped() {
+        goToBrowseNGOs()
+    }
 
     // MARK: - User
     private func loadCurrentUser() {
@@ -193,6 +196,17 @@ class DonorDashboardViewController: UIViewController {
             }
     }
 
+    private func goToBrowseNGOs() {
+        let storyboard = UIStoryboard(name: "Raghad1", bundle: nil)
+
+        guard let ngoVC = storyboard.instantiateViewController(
+            withIdentifier: "NgoViewController"
+        ) as? NgoViewController else {
+            fatalError("❌ NgoViewController not found in Raghad1.storyboard")
+        }
+
+        navigationController?.pushViewController(ngoVC, animated: true)
+    }
 
     // MARK: - Firestore listeners
     private func startListeningForNGOs() {
@@ -349,6 +363,12 @@ extension DonorDashboardViewController: UITableViewDataSource, UITableViewDelega
                 firstButton?.setTitle("View Donations", for: .normal)
                 secondButton?.setTitle("Browse NGOs", for: .normal)
 
+                secondButton?.addTarget(
+                    self,
+                    action: #selector(browseNGOsTapped),
+                    for: .touchUpInside
+                )
+
             case .ngo:
                 firstButton?.setTitle("Manage Donations", for: .normal)
                 secondButton?.setTitle("Manage Profile", for: .normal)
@@ -382,7 +402,9 @@ extension DonorDashboardViewController: UITableViewDataSource, UITableViewDelega
         case .browseNGOs:
             let cell = tableView.dequeueReusableCell(withIdentifier: "RecommendedNGOsCell", for: indexPath) as! RecommendedNGOsTableViewCell
             cell.configure(with: ngosFromFirestore)
-            cell.onSeeAllTapped = { print("Go to NGO discovery page") }
+            cell.onSeeAllTapped = { [weak self] in
+                self?.goToBrowseNGOs()
+            }
             cell.onNGOSelected = { ngo in print("Open NGO page: \(ngo.organizationName)") }
             cell.selectionStyle = .none
             return cell

@@ -14,12 +14,20 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
 
         window = UIWindow(windowScene: windowScene)
 
-        let storyboard = UIStoryboard(name: "Authentication", bundle: nil)
-        let loginVC = storyboard.instantiateViewController(
-            withIdentifier: "LoginViewController"
-        )
+//        let storyboard = UIStoryboard(name: "Authentication", bundle: nil)
+//        let loginVC = storyboard.instantiateViewController(
+//            withIdentifier: "LoginViewController"
+//        )
 
-        window?.rootViewController = loginVC
+        let storyboard = UIStoryboard(name: "Raghad1", bundle: nil)
+        let firstVC = storyboard.instantiateInitialViewController()!
+        window?.rootViewController = firstVC
+        window?.makeKeyAndVisible()
+
+        
+        
+        
+        //window?.rootViewController = loginVC
         window?.makeKeyAndVisible()
     }
 

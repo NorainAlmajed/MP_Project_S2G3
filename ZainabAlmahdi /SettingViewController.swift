@@ -16,7 +16,6 @@ class SettingViewController: UITableViewController {
 
     var rows: [SettingsRow] = []
 
-    // MARK: - Lifecycle
     override func viewDidLoad() {
         super.viewDidLoad()
         title = "Settings"
@@ -33,7 +32,6 @@ class SettingViewController: UITableViewController {
         tableView.reloadData()
     }
 
-    // MARK: - Configure Rows
     func configureRows() {
         rows = [.editProfile, .security]
 
@@ -51,7 +49,6 @@ class SettingViewController: UITableViewController {
         }
     }
 
-    // MARK: - Table Data Source
     override func tableView(_ tableView: UITableView,
                             numberOfRowsInSection section: Int) -> Int {
         rows.count
@@ -88,7 +85,6 @@ class SettingViewController: UITableViewController {
         return cell
     }
 
-    // MARK: - Handle Taps
     override func tableView(_ tableView: UITableView,
                             didSelectRowAt indexPath: IndexPath) {
 
@@ -112,7 +108,6 @@ class SettingViewController: UITableViewController {
         }
     }
 
-    // MARK: - Navigation
     func goToEditProfile() {
         let vc = UIStoryboard(name: "Settings", bundle: nil)
             .instantiateViewController(withIdentifier: "EditProfileViewController")

@@ -17,7 +17,6 @@ class NotificationSettingsViewController: UIViewController {
         loadSetting()
     }
 
-    // MARK: - Load setting
     func loadSetting() {
         guard let uid = Auth.auth().currentUser?.uid else { return }
 
@@ -32,7 +31,6 @@ class NotificationSettingsViewController: UIViewController {
         }
     }
 
-    // MARK: - Switch toggle with confirmation
     @IBAction func realtimeSwitchChanged(_ sender: UISwitch) {
 
         let newValue = sender.isOn

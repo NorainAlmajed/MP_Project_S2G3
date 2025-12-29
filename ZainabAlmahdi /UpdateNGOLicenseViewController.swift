@@ -65,7 +65,7 @@ class UpdateNGOLicenseViewController: UIViewController,
             }
         }
     }
-    // MARK: - Firestore Update
+
     func updateLicense(uid: String, url: String) {
         Firestore.firestore()
             .collection("users")
@@ -88,7 +88,6 @@ class UpdateNGOLicenseViewController: UIViewController,
             }
     }
 
-    // MARK: - Alert Helper
     func showAlert(_ title: String, _ message: String) {
         let alert = UIAlertController(
             title: title,

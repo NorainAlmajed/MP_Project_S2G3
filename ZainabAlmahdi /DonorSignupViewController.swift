@@ -25,18 +25,15 @@ class DonorSignupViewController: UIViewController {
         navigationItem.title = "Sign Up"
     }
 
-    // MARK: - Navigation
     @IBAction func goToLoginTapped(_ sender: UIButton) {
         navigationController?.popToRootViewController(animated: true)
     }
 
-    // MARK: - Register
     @IBAction func registerButtonTapped(_ sender: UIButton) {
         guard validateInputs() else { return }
         createDonorAccount()
     }
 
-    // MARK: - Validation
     func validateInputs() -> Bool {
 
         let email = emailTextField.text?.trimmingCharacters(in: .whitespacesAndNewlines) ?? ""
@@ -82,7 +79,6 @@ class DonorSignupViewController: UIViewController {
         return true
     }
 
-    // MARK: - Firebase Auth
     func createDonorAccount() {
         signupButton.isEnabled = false
 
@@ -107,14 +103,13 @@ class DonorSignupViewController: UIViewController {
         }
     }
 
-    // MARK: - Firestore
     func saveDonorToFirestore(uid: String, email: String) {
 
         Firestore.firestore()
             .collection("users")
             .document(uid)
             .setData([
-                "role": "2",
+                "role": 2,
                 "username": usernameTextField.text ?? "",
                 "full_name": nameTextField.text ?? "",
                 "phone_number": phoneNumberTextField.text ?? "",
@@ -134,7 +129,6 @@ class DonorSignupViewController: UIViewController {
             }
     }
 
-    // MARK: - Session + Routing
     func loadSessionAndRoute() {
 
         SessionManager.shared.fetchUserRole { success in
@@ -168,7 +162,6 @@ class DonorSignupViewController: UIViewController {
         }
     }
 
-    // MARK: - Helpers
     func showAlert(title: String, message: String) {
         let alert = UIAlertController(
             title: title,

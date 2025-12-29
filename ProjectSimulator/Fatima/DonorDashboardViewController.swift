@@ -12,6 +12,21 @@ struct ImpactData {
 
 
 class DonorDashboardViewController: UIViewController {
+    @objc private func browseNgoTapped() {
+        goToBrowseNGOs()
+    }
+    @objc private func manageDonationsTapped() {
+        let storyboard = UIStoryboard(name: "Donations", bundle: nil)
+
+        guard let vc = storyboard.instantiateViewController(
+            withIdentifier: "DonationViewController"
+        ) as? DonationViewController else {
+            print("❌ DonationViewController not found")
+            return
+        }
+
+        navigationController?.pushViewController(vc, animated: true)
+    }
 
     // MARK: - Roles
     enum UserRole: Int {
@@ -246,6 +261,22 @@ class DonorDashboardViewController: UIViewController {
             livesImpacted: meals / 3
         )
     }
+    private func goToDonationDetails(_ donation: Donation1) {
+        let storyboard = UIStoryboard(name: "Donations", bundle: nil)
+
+        guard let detailsVC = storyboard.instantiateViewController(
+            withIdentifier: "DonationDetailsViewController"
+        ) as? DonationDetailsViewController else {
+            print("❌ DonationDetailsViewController not found")
+            return
+        }
+
+        // ⚠️ This is where models must align
+        // You may need a mapper Donation1 → ZahraaDonation
+        // depending on how ZahraaDonation is created
+
+        navigationController?.pushViewController(detailsVC, animated: true)
+    }
 
     // MARK: - Menu and ellipses
     private func setupEllipsisMenu() {
@@ -349,14 +380,32 @@ extension DonorDashboardViewController: UITableViewDataSource, UITableViewDelega
                 firstButton?.setTitle("View Donations", for: .normal)
                 secondButton?.setTitle("Browse NGOs", for: .normal)
 
+                secondButton?.removeTarget(nil, action: nil, for: .allEvents)
+                secondButton?.addTarget(
+                    self,
+                    action: #selector(browseNgoTapped),
+                    for: .touchUpInside
+                )
+
+                // MARK: - Quick Action Button Handler
+               
+
+
             case .ngo:
                 firstButton?.setTitle("Manage Donations", for: .normal)
                 secondButton?.setTitle("Manage Profile", for: .normal)
+                
 
             case .admin:
                 firstButton?.setTitle("Manage Users", for: .normal)
                 secondButton?.setTitle("Manage Donations", for: .normal)
             }
+            firstButton?.removeTarget(nil, action: nil, for: .allEvents)
+            firstButton?.addTarget(
+                self,
+                action: #selector(manageDonationsTapped),
+                for: .touchUpInside
+            )
 
             return cell
 // MARK: impact tracker
@@ -367,6 +416,7 @@ extension DonorDashboardViewController: UITableViewDataSource, UITableViewDelega
                 mealsProvided: impactData.mealsProvided,
                 livesImpacted: impactData.livesImpacted
             )
+            
             cell.selectionStyle = .none
             return cell
             // MARK: GRAPH
@@ -382,8 +432,14 @@ extension DonorDashboardViewController: UITableViewDataSource, UITableViewDelega
         case .browseNGOs:
             let cell = tableView.dequeueReusableCell(withIdentifier: "RecommendedNGOsCell", for: indexPath) as! RecommendedNGOsTableViewCell
             cell.configure(with: ngosFromFirestore)
-            cell.onSeeAllTapped = { print("Go to NGO discovery page") }
-            cell.onNGOSelected = { ngo in print("Open NGO page: \(ngo.organizationName)") }
+            cell.onSeeAllTapped = { [weak self] in
+                self?.goToBrowseNGOs()
+            }
+
+            cell.onNGOSelected = { [weak self] ngo in
+                self?.goToNgoDetails(ngo)
+            }
+
             cell.selectionStyle = .none
             return cell
             // MARK: donations section
@@ -395,8 +451,20 @@ extension DonorDashboardViewController: UITableViewDataSource, UITableViewDelega
 
             cell.headerView.text = "Recent Donations"
             cell.configure(with: recentDonations)
+
+            // ✅ Donation card → Donations page
+            cell.onDonationSelected = { [weak self] _ in
+                self?.manageDonationsTapped()
+            }
+
+            // ✅ Header → Donations page
+            cell.onHeaderTapped = { [weak self] in
+                self?.manageDonationsTapped()
+            }
+
             return cell
 
+                // admin all donations
         case .allDonations:
             let cell = tableView.dequeueReusableCell(
                 withIdentifier: "RecentDonationsCell",
@@ -405,9 +473,21 @@ extension DonorDashboardViewController: UITableViewDataSource, UITableViewDelega
 
             cell.headerView.text = "Latest Donations"
             cell.configure(with: roleBasedDonations)
+
+            // ✅ Donation card → Donations page
+            cell.onDonationSelected = { [weak self] _ in
+                self?.manageDonationsTapped()
+            }
+
+            // ✅ Header → Donations page
+            cell.onHeaderTapped = { [weak self] in
+                self?.manageDonationsTapped()
+            }
+
             return cell
 
-            
+
+// for the ngo
         case .pendingDonations:
             let cell = tableView.dequeueReusableCell(
                 withIdentifier: "RecentDonationsCell",
@@ -416,9 +496,20 @@ extension DonorDashboardViewController: UITableViewDataSource, UITableViewDelega
 
             cell.headerView.text = "Pending Donations"
             cell.configure(with: roleBasedDonations)
+
+            // ✅ Donation card → Donations page
+            cell.onDonationSelected = { [weak self] _ in
+                self?.manageDonationsTapped()
+            }
+
+            // ✅ Header → Donations page
+            cell.onHeaderTapped = { [weak self] in
+                self?.manageDonationsTapped()
+            }
+
             return cell
 
-            
+
         case .manageUsers:
             let cell = UITableViewCell()
             cell.selectionStyle = .none
@@ -427,4 +518,43 @@ extension DonorDashboardViewController: UITableViewDataSource, UITableViewDelega
             return cell
         }
     }
+    // MARK: - Navigation to Raghad1 storyboard
+
+    private func goToBrowseNGOs() {
+        let storyboard = UIStoryboard(name: "Raghad1", bundle: nil)
+
+        guard let ngoVC = storyboard.instantiateViewController(
+            withIdentifier: "NgoViewController"
+        ) as? NgoViewController else {
+            print("❌ NgoViewController not found in Raghad1 storyboard")
+            return
+        }
+
+        navigationController?.pushViewController(ngoVC, animated: true)
+    }
+
+    private func goToNgoDetails(_ ngo: FatimaNGO) {
+        let storyboard = UIStoryboard(name: "Raghad1", bundle: nil)
+
+        guard let detailsVC = storyboard.instantiateViewController(
+            withIdentifier: "NgoDetailsViewController"
+        ) as? NgoDetailsViewController else {
+            print("❌ NgoDetailsViewController not found")
+            return
+        }
+
+        // 🔁 Convert FatimaNGO → NGO (Raghad’s model)
+        detailsVC.selectedNgo = NGO(
+            id: ngo.id,
+            name: ngo.organizationName,
+            category: ngo.cause,
+            photo: ngo.profileImageURL,
+            mission: ngo.mission,
+            phoneNumber: ngo.number,
+            email: ngo.email
+        )
+
+        navigationController?.pushViewController(detailsVC, animated: true)
+    }
+
 }

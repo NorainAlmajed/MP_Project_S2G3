@@ -29,7 +29,7 @@ class NGOCardCollectionViewCell: UICollectionViewCell {
         ngoImageView.image = UIImage(systemName: "building.2")
     }
 
-    func configure(with ngo: NGO) {
+    func configure(with ngo: FatimaNGO) {
         ngoNameLabel.text = ngo.organizationName
         ngoTypeLabel.text = ngo.cause
 

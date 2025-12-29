@@ -45,7 +45,7 @@ class DonorDashboardViewController: UIViewController {
 
     private let db = Firestore.firestore()
 
-    private var ngosFromFirestore: [NGO] = []
+    private var ngosFromFirestore: [FatimaNGO] = []
     // for donor
     private var recentDonations: [Donation1] = []
     // for thr admin
@@ -202,7 +202,7 @@ class DonorDashboardViewController: UIViewController {
             .whereField("role", isEqualTo: 3)
             .addSnapshotListener { [weak self] snapshot, _ in
                 guard let self = self else { return }
-                self.ngosFromFirestore = snapshot?.documents.compactMap { NGO(document: $0) } ?? []
+                self.ngosFromFirestore = snapshot?.documents.compactMap { FatimaNGO(document: $0) } ?? []
                 self.mainTableView.reloadData()
             }
     }

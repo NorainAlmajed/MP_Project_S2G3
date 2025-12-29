@@ -1,7 +1,7 @@
 import Foundation
 import FirebaseFirestore
 
-struct NGO {
+struct FatimaNGO {
     let id: String
     let organizationName: String
     let cause: String

@@ -9,11 +9,11 @@ class RecommendedNGOsTableViewCell: UITableViewCell {
     //@IBOutlet weak var headerView: UIView!
     @IBOutlet weak var headerView: UIView!
     // MARK: - Data
-    private var ngos: [NGO] = []
+    private var ngos: [FatimaNGO] = []
 
     // Callbacks
     var onSeeAllTapped: (() -> Void)?
-    var onNGOSelected: ((NGO) -> Void)?
+    var onNGOSelected: ((FatimaNGO) -> Void)?
 
     // MARK: - Lifecycle
     override func awakeFromNib() {
@@ -73,7 +73,7 @@ class RecommendedNGOsTableViewCell: UITableViewCell {
     }
 
     // MARK: - Data (Random + Limit)
-    func configure(with ngos: [NGO]) {
+    func configure(with ngos: [FatimaNGO]) {
         self.ngos = Array(ngos.shuffled().prefix(6))
         collectionView.reloadData()
     }

@@ -6,7 +6,7 @@
 //
 
 import Foundation
-class Donor: AppUser{
+class NorainDonor: NorainAppUser{
     var bio: String
     
     init(documentID: String,dictionary: [String: Any]) {

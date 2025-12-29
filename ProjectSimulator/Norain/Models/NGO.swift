@@ -13,7 +13,7 @@ enum NGOStatus: String, CaseIterable {
     case rejected = "Rejected"
 }
 
-class NGO: AppUser {
+class NorainNGO: NorainAppUser {
     var cause:String
     var address:String
     var governorate:String

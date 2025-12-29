@@ -13,7 +13,7 @@ protocol UserUpdateDelegate: AnyObject {
 }
 
 class UserDetailsViewController: UIViewController {
-    var currentUser: AppUser?
+    var currentUser: NorainAppUser?
     weak var delegate: UserUpdateDelegate?
     private let db = Firestore.firestore()
     
@@ -78,19 +78,19 @@ class UserDetailsViewController: UIViewController {
         }
     }
     
-    private func mapToNGO(documentID: String,data: [String: Any]) -> NGO {
-        return NGO(documentID: documentID, dictionary: data)
+    private func mapToNGO(documentID: String,data: [String: Any]) -> NorainNGO {
+        return NorainNGO(documentID: documentID, dictionary: data)
     }
     
-    private func mapToDonor(documentID: String,data: [String: Any]) -> Donor {
-        return Donor(documentID: documentID, dictionary: data)
+    private func mapToDonor(documentID: String,data: [String: Any]) -> NorainDonor {
+        return NorainDonor(documentID: documentID, dictionary: data)
     }
     
     @IBAction func cancelBtn(_ sender: Any) {
         self.dismiss(animated: true, completion: nil)
     }
     
-    func configure(appUser: AppUser) {
+    func configure(appUser: NorainAppUser) {
         guard isViewLoaded else { return }
         self.currentUser = appUser
         
@@ -112,7 +112,7 @@ class UserDetailsViewController: UIViewController {
                 self.userImgV.image = UIImage(systemName: "person.circle.fill")
             }
         
-        if let donor = appUser as? Donor {
+        if let donor = appUser as? NorainDonor {
             phoneOrStatusLbl.text = donor.phoneNumber.description
             bioOrDescLbl.text = "Bio"
             bioOrDesctxt.text = donor.bio
@@ -120,7 +120,7 @@ class UserDetailsViewController: UIViewController {
             rejectBtn.isHidden = true
             reasonLabel.isHidden = true
             
-        } else if let ngo = appUser as? NGO {
+        } else if let ngo = appUser as? NorainNGO {
             bioOrDescLbl.text = "Mission"
             bioOrDesctxt.text = ngo.mission
             
@@ -154,7 +154,7 @@ class UserDetailsViewController: UIViewController {
     
     // MARK: - Firebase Write (Accept)
     @IBAction func acceptBtn(_ sender: Any) {
-        guard let ngo = currentUser as? NGO else { return }
+        guard let ngo = currentUser as? NorainNGO else { return }
         
         acceptBtn.isEnabled = false
         acceptBtn.setTitle("Accepting...", for: .normal)
@@ -185,7 +185,7 @@ class UserDetailsViewController: UIViewController {
     // MARK: - Firebase Write (Reject)
     @IBAction func rejectBtn(_ sender: Any) {
         Alerts.confirmation(on: self, title: "NGO Rejection", message: "Are you sure you want to reject this NGO?") { [weak self] in
-            guard let self = self, let ngo = self.currentUser as? NGO else { return }
+            guard let self = self, let ngo = self.currentUser as? NorainNGO else { return }
             
             // Show rejection popup to get reason
             self.showRejectionPopup()
@@ -226,7 +226,7 @@ class UserDetailsViewController: UIViewController {
 // MARK: - RejectionDelegate
 extension UserDetailsViewController: RejectionDelegate {
     func didProvideReason(_ reason: String) {
-        guard let ngo = self.currentUser as? NGO else { return }
+        guard let ngo = self.currentUser as? NorainNGO else { return }
         
         let finalReason = reason.isEmpty ? "No specific reason provided." : reason
         

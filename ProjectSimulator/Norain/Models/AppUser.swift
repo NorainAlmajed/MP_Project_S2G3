@@ -6,7 +6,7 @@
 //
 
 import Foundation
-class AppUser {
+class NorainAppUser {
     var documentID: String
     var username:String
     var name : String

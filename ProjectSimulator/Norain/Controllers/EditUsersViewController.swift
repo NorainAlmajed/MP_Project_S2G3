@@ -15,7 +15,7 @@ protocol EditUserDelegate: AnyObject {
 
 class EditUsersViewController: UIViewController, UIImagePickerControllerDelegate, UINavigationControllerDelegate {
     
-    var userToEdit: AppUser!
+    var userToEdit: NorainAppUser!
     weak var delegate: EditUserDelegate?
     private let db = Firestore.firestore()
     
@@ -42,7 +42,7 @@ class EditUsersViewController: UIViewController, UIImagePickerControllerDelegate
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        self.title = (userToEdit is NGO) ? "NGO Profile" : "Donor Profile"
+        self.title = (userToEdit is NorainNGO) ? "NGO Profile" : "Donor Profile"
         
         // Add a 'Save' button to the right side of the bar
         let saveButton = UIBarButtonItem(title: "Save", style: .done, target: self, action: #selector(saveTapped))
@@ -135,7 +135,7 @@ class EditUsersViewController: UIViewController, UIImagePickerControllerDelegate
                 self.ImagePickerEditView.image = UIImage(systemName: "person.circle.fill")
             }
         
-        if let ngo = user as? NGO {
+        if let ngo = user as? NorainNGO {
             addressField?.text = ngo.address
             causebtn?.setTitle(ngo.cause, for: .normal)
             statusBtn?.setTitle(ngo.status.rawValue, for: .normal)
@@ -165,7 +165,7 @@ class EditUsersViewController: UIViewController, UIImagePickerControllerDelegate
         ]
         
         // Add NGO-specific fields if this is an NGO
-        if let ngo = user as? NGO {
+        if let ngo = user as? NorainNGO {
             updateData["address"] = addressField.text?.trimmingCharacters(in: .whitespacesAndNewlines) ?? ""
             updateData["governorate"] = governorateBtn.currentTitle?.trimmingCharacters(in: .whitespacesAndNewlines) ?? ""
             updateData["cause"] = causebtn.currentTitle?.trimmingCharacters(in: .whitespacesAndNewlines) ?? ""
@@ -212,7 +212,7 @@ class EditUsersViewController: UIViewController, UIImagePickerControllerDelegate
         userToEdit.email = data["email"] as? String ?? userToEdit.email
         userToEdit.phoneNumber = data["phoneNumber"] as? Int ?? userToEdit.phoneNumber
         
-        if let ngo = userToEdit as? NGO {
+        if let ngo = userToEdit as? NorainNGO {
             ngo.address = data["address"] as? String ?? ngo.address
             ngo.governorate = data["governorate"] as? String ?? ngo.governorate
             ngo.cause = data["cause"] as? String ?? ngo.cause
@@ -309,7 +309,7 @@ class EditUsersViewController: UIViewController, UIImagePickerControllerDelegate
     func setupView() {
         ImagePickerEditView.isUserInteractionEnabled = true
         uploadPicBtn.isUserInteractionEnabled = true
-        let isNGO = userToEdit is NGO
+        let isNGO = userToEdit is NorainNGO
         causeStack.isHidden = !isNGO
         addressStack.isHidden = !isNGO
         govStack.isHidden = !isNGO

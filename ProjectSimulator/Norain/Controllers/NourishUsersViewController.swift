@@ -23,9 +23,9 @@ class NourishUsersViewController: UIViewController,UITableViewDelegate,UITableVi
     private let db = Firestore.firestore()
     private var listener: ListenerRegistration?
     
-    var users: [AppUser] = []
-    var displayedUsers : [AppUser] = []
-    var ngoBeingProcessed: NGO?
+    var users: [NorainAppUser] = []
+    var displayedUsers : [NorainAppUser] = []
+    var ngoBeingProcessed: NorainNGO?
     
     
     override func viewDidLoad() {
@@ -59,7 +59,7 @@ class NourishUsersViewController: UIViewController,UITableViewDelegate,UITableVi
             self.db.collection("users").addSnapshotListener { (querySnapshot, error) in
                 guard let documents = querySnapshot?.documents else { return }
                 
-                self.users = documents.compactMap { document -> AppUser? in
+                self.users = documents.compactMap { document -> NorainAppUser? in
                     let data = document.data()
 
                     let docID = document.documentID
@@ -68,9 +68,9 @@ class NourishUsersViewController: UIViewController,UITableViewDelegate,UITableVi
                     
                     // 2. Pass that ID into your initializer
                     if role == 3 {
-                        return NGO(documentID: docID, dictionary: data)
+                        return NorainNGO(documentID: docID, dictionary: data)
                     } else if role == 2 {
-                        return Donor(documentID: docID, dictionary: data)
+                        return NorainDonor(documentID: docID, dictionary: data)
                     }
                     return nil
                 }
@@ -87,8 +87,8 @@ class NourishUsersViewController: UIViewController,UITableViewDelegate,UITableVi
         // Filter by Segment
         var filtered = users
         switch segmentUsers.selectedSegmentIndex {
-        case 1: filtered = users.filter { $0 is NGO }
-        case 2: filtered = users.filter { $0 is Donor }
+        case 1: filtered = users.filter { $0 is NorainNGO }
+        case 2: filtered = users.filter { $0 is NorainDonor }
         default: break
         }
         if !searchText.isEmpty {
@@ -98,7 +98,7 @@ class NourishUsersViewController: UIViewController,UITableViewDelegate,UITableVi
                 self.displayedUsers = filtered
                 self.usersTableView.reloadData()
     }
-    func createAcceptAction(for ngo: NGO, indexPath: IndexPath) -> UIContextualAction {
+    func createAcceptAction(for ngo: NorainNGO, indexPath: IndexPath) -> UIContextualAction {
             let action = UIContextualAction(style: .normal, title: "Accept") { [weak self] (_, _, completionHandler) in
                 self?.db.collection("users").document(ngo.documentID).updateData([
                     "status": NGOStatus.approved.rawValue
@@ -110,7 +110,7 @@ class NourishUsersViewController: UIViewController,UITableViewDelegate,UITableVi
             return action
         }
 
-        func deleteUserFromFirestore(user: AppUser, indexPath: IndexPath, completion: @escaping (Bool) -> Void) {
+        func deleteUserFromFirestore(user: NorainAppUser, indexPath: IndexPath, completion: @escaping (Bool) -> Void) {
             // ⭐ Delete from Firestore
             db.collection("users").document(user.documentID).delete { error in
                 if let error = error {
@@ -125,11 +125,11 @@ class NourishUsersViewController: UIViewController,UITableViewDelegate,UITableVi
         
 
         // MARK: - Helper Mappers (Matches your JSON fields)
-    private func mapToNGO(documentID: String,data: [String: Any]) -> NGO {
-        return NGO(documentID: documentID, dictionary: data)    }
+    private func mapToNGO(documentID: String,data: [String: Any]) -> NorainNGO {
+        return NorainNGO(documentID: documentID, dictionary: data)    }
 
-    private func mapToDonor(documentID: String,data: [String: Any]) -> Donor {
-        return Donor(documentID: documentID, dictionary: data)
+    private func mapToDonor(documentID: String,data: [String: Any]) -> NorainDonor {
+        return NorainDonor(documentID: documentID, dictionary: data)
     }
     
     private func setupButtonStyles() {
@@ -160,10 +160,10 @@ class NourishUsersViewController: UIViewController,UITableViewDelegate,UITableVi
     
     func searchBar(_ searchBar: UISearchBar, textDidChange searchText: String) {
         // Determine the current filter based on Segmented Control
-        let currentSegmentList: [AppUser]
+        let currentSegmentList: [NorainAppUser]
         switch segmentUsers.selectedSegmentIndex {
-        case 1: currentSegmentList = users.filter { $0 is NGO }
-        case 2: currentSegmentList = users.filter { $0 is Donor }
+        case 1: currentSegmentList = users.filter { $0 is NorainNGO }
+        case 2: currentSegmentList = users.filter { $0 is NorainDonor }
         default: currentSegmentList = users
         }
 
@@ -197,12 +197,12 @@ class NourishUsersViewController: UIViewController,UITableViewDelegate,UITableVi
         switch sender.selectedSegmentIndex {
         case 1:
             // NGO Segment selected
-            displayedUsers = users.filter({ $0 is NGO })
+            displayedUsers = users.filter({ $0 is NorainNGO })
             setButtonsHidden(true) // Show buttons
             NavBar.title = "Nourish NGOs"
         case 2:
             // Donor Segment selected
-            displayedUsers = users.filter({ $0 is Donor })
+            displayedUsers = users.filter({ $0 is NorainDonor })
             setButtonsHidden(false) // Hide buttons
             NavBar.title = "Nourish Donors"
         case 0:
@@ -259,7 +259,7 @@ class NourishUsersViewController: UIViewController,UITableViewDelegate,UITableVi
            config.background.strokeWidth = 0
            btnPending.configuration = config
            
-           displayedUsers = users.compactMap { $0 as? NGO }.filter { $0.status == .pending }
+           displayedUsers = users.compactMap { $0 as? NorainNGO }.filter { $0.status == .pending }
            usersTableView.reloadData()
     }
     
@@ -272,7 +272,7 @@ class NourishUsersViewController: UIViewController,UITableViewDelegate,UITableVi
            config.background.strokeWidth = 0
            btnApproved.configuration = config
            
-        displayedUsers = users.compactMap { $0 as? NGO }.filter { $0.status == .approved }
+        displayedUsers = users.compactMap { $0 as? NorainNGO }.filter { $0.status == .approved }
            usersTableView.reloadData()
     }
     
@@ -286,7 +286,7 @@ class NourishUsersViewController: UIViewController,UITableViewDelegate,UITableVi
            config.background.strokeWidth = 0
            btnRejected.configuration = config
            
-        displayedUsers = users.compactMap { $0 as? NGO }.filter { $0.status == .rejected }
+        displayedUsers = users.compactMap { $0 as? NorainNGO }.filter { $0.status == .rejected }
            usersTableView.reloadData()
     }
     
@@ -337,7 +337,7 @@ class NourishUsersViewController: UIViewController,UITableViewDelegate,UITableVi
     func tableView(_ tableView: UITableView, trailingSwipeActionsConfigurationForRowAt indexPath: IndexPath) -> UISwipeActionsConfiguration? {
         
         let user = users[indexPath.row]
-        let ngo = user as? NGO
+        let ngo = user as? NorainNGO
         let userToRemove = self.displayedUsers[indexPath.row]
                 
                 let deleteAction = UIContextualAction(style: .destructive, title: "Delete") { [weak self] action, view, completionHandler in
@@ -382,7 +382,7 @@ class NourishUsersViewController: UIViewController,UITableViewDelegate,UITableVi
     
     
     //create Reject Action
-    func createRejectAction(for ngo: NGO, indexPath: IndexPath) -> UIContextualAction {
+    func createRejectAction(for ngo: NorainNGO, indexPath: IndexPath) -> UIContextualAction {
         let action = UIContextualAction(style: .normal, title: "Reject") { (_, _, completionHandler) in
                 // Save the NGO so the delegate knows which one to update later
                 self.ngoBeingProcessed = ngo

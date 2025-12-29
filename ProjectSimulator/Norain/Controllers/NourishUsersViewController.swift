@@ -47,31 +47,39 @@ class NourishUsersViewController: UIViewController,UITableViewDelegate,UITableVi
     }
     
     private func fetchUsersFromFirestore() {
-            // We listen to the "users" collection (adjust name if your collection is different)
-            listener = db.collection("users").addSnapshotListener { [weak self] (querySnapshot, error) in
-                guard let self = self else { return }
+        // We listen to the "users" collection (adjust name if your collection is different)
+        listener = db.collection("users").addSnapshotListener { [weak self] (querySnapshot, error) in
+            guard let self = self else { return }
+            
+            if let error = error {
+                print("Error fetching users: \(error)")
+                return
+            }
+            
+            self.db.collection("users").addSnapshotListener { (querySnapshot, error) in
+                guard let documents = querySnapshot?.documents else { return }
                 
-                if let error = error {
-                    print("Error fetching users: \(error)")
-                    return
-                }
-
-                self.users = querySnapshot?.documents.compactMap { document -> AppUser? in
+                self.users = documents.compactMap { document -> AppUser? in
                     let data = document.data()
+
+                    let docID = document.documentID
+                    
                     let role = data["role"] as? Int ?? 0
                     
+                    // 2. Pass that ID into your initializer
                     if role == 3 {
-                        return self.mapToNGO(data: data)
+                        return NGO(documentID: docID, dictionary: data)
                     } else if role == 2 {
-                        return self.mapToDonor(data: data)
+                        return Donor(documentID: docID, dictionary: data)
                     }
                     return nil
-                } ?? []
-
-                // Refresh the UI based on current segment
-                self.applyCurrentFilters()
+                }
+                DispatchQueue.main.async {
+                            self.applyCurrentFilters()
+                        }
             }
         }
+    }
     
     private func applyCurrentFilters() {
         let searchText = searchUsers.text?.lowercased() ?? ""
@@ -92,8 +100,7 @@ class NourishUsersViewController: UIViewController,UITableViewDelegate,UITableVi
     }
     func createAcceptAction(for ngo: NGO, indexPath: IndexPath) -> UIContextualAction {
             let action = UIContextualAction(style: .normal, title: "Accept") { [weak self] (_, _, completionHandler) in
-                // ⭐ Update Firestore: status = "Approved"
-                self?.db.collection("users").document(ngo.userName).updateData([
+                self?.db.collection("users").document(ngo.documentID).updateData([
                     "status": NGOStatus.approved.rawValue
                 ]) { error in
                     completionHandler(error == nil)
@@ -105,7 +112,7 @@ class NourishUsersViewController: UIViewController,UITableViewDelegate,UITableVi
 
         func deleteUserFromFirestore(user: AppUser, indexPath: IndexPath, completion: @escaping (Bool) -> Void) {
             // ⭐ Delete from Firestore
-            db.collection("users").document(user.userName).delete { error in
+            db.collection("users").document(user.documentID).delete { error in
                 if let error = error {
                     print("Error removing document: \(error)")
                     completion(false)
@@ -115,46 +122,15 @@ class NourishUsersViewController: UIViewController,UITableViewDelegate,UITableVi
             }
         }
 
-        // MARK: - Rejection Delegate (Firestore Update)
-        func didProvideReason(_ reason: String) {
-            if let ngo = self.ngoBeingProcessed {
-                let finalReason = reason.isEmpty ? "No specific reason provided." : reason
-                
-                // ⭐ Update Firestore: status = "Rejected" and provide reason
-                db.collection("users").document(ngo.userName).updateData([
-                    "status": NGOStatus.rejected.rawValue,
-                    "rejectionReason": finalReason
-                ]) { [weak self] error in
-                    if error == nil {
-                        print("Successfully updated rejection in Firestore")
-                    }
-                    self?.ngoBeingProcessed = nil
-                }
-            }
-        }
+        
 
         // MARK: - Helper Mappers (Matches your JSON fields)
-        private func mapToNGO(data: [String: Any]) -> NGO {
-            let ngo = NGO() // Assuming you have an init or use properties
-            ngo.userName = data["userName"] as? String ?? ""
-            ngo.name = data["name"] as? String ?? ""
-            ngo.email = data["email"] as? String ?? ""
-            ngo.userImg = data["userImg"] as? String ?? ""
-            ngo.status = NGOStatus(rawValue: data["status"] as? String ?? "Pending") ?? .pending
-            ngo.rejectionReason = data["rejectionReason"] as? String
-            // Add other NGO specific fields...
-            return ngo
-        }
+    private func mapToNGO(documentID: String,data: [String: Any]) -> NGO {
+        return NGO(documentID: documentID, dictionary: data)    }
 
-        private func mapToDonor(data: [String: Any]) -> Donor {
-            let donor = Donor()
-            donor.userName = data["userName"] as? String ?? ""
-            donor.name = data["name"] as? String ?? ""
-            donor.email = data["email"] as? String ?? ""
-            donor.userImg = data["userImg"] as? String ?? ""
-            // Add other Donor specific fields...
-            return donor
-        }
+    private func mapToDonor(documentID: String,data: [String: Any]) -> Donor {
+        return Donor(documentID: documentID, dictionary: data)
+    }
     
     private func setupButtonStyles() {
         let buttons = [btnPending, btnApproved, btnRejected]
@@ -235,6 +211,7 @@ class NourishUsersViewController: UIViewController,UITableViewDelegate,UITableVi
             setButtonsHidden(false) // Hide buttons
             NavBar.title = "Nourish Users"
         case UISegmentedControl.noSegment:
+            displayedUsers = users
             setButtonsHidden(false)
             NavBar.title = "Nourish Users"
             
@@ -361,29 +338,6 @@ class NourishUsersViewController: UIViewController,UITableViewDelegate,UITableVi
         
         let user = users[indexPath.row]
         let ngo = user as? NGO
-        
-        let storyboard = UIStoryboard(name: "norain-admin-controls1", bundle: nil)
-        let editVC = storyboard.instantiateViewController(withIdentifier: "EditUsersViewController") as! EditUsersViewController
-        let nav = UINavigationController(rootViewController: editVC)
-        
-//        let deleteAction = UIContextualAction(style: .destructive, title: "Delete") { action, view, completionHandler in
-//            
-//            Alerts.confirmation(on: self, title: "Delete Confirmation", message: "Are you sure you want to remove User?") {
-//                
-//                // 1. Get the specific user from the displayed list
-//                let userToRemove = self.displayedUsers[indexPath.row]
-//                
-//                // 2. Remove from the list the TableView is currently using (CRITICAL FIX)
-//                self.displayedUsers.remove(at: indexPath.row)
-//                
-//                // 3. Remove from the other lists by matching the ID
-//                self.users.removeAll { $0.userName == userToRemove.userName }
-//                AppData.users.removeAll { $0.userName == userToRemove.userName }
-//                
-//                // 4. Update the UI
-//                tableView.deleteRows(at: [indexPath], with: .fade)
-//                
-//                completionHandler(true)
         let userToRemove = self.displayedUsers[indexPath.row]
                 
                 let deleteAction = UIContextualAction(style: .destructive, title: "Delete") { [weak self] action, view, completionHandler in
@@ -399,6 +353,7 @@ class NourishUsersViewController: UIViewController,UITableViewDelegate,UITableVi
                 
               
                 editVC.userToEdit = self.displayedUsers[indexPath.row]
+                editVC.delegate = self
                 
                 let nav = UINavigationController(rootViewController: editVC)
                 self.present(nav, animated: true)
@@ -425,16 +380,6 @@ class NourishUsersViewController: UIViewController,UITableViewDelegate,UITableVi
         return configuration
     }
     
-    //create Accept Action
-    func createAcceptAction(for ngo: NGO, indexPath: IndexPath) -> UIContextualAction {
-        let action = UIContextualAction(style: .normal, title: "Accept") { (_, _, completionHandler) in
-            ngo.status = .approved
-            self.usersTableView.reloadRows(at: [indexPath], with: .automatic)
-            completionHandler(true)
-        }
-        action.backgroundColor = UIColor(named: "greenCol")
-        return action
-    }
     
     //create Reject Action
     func createRejectAction(for ngo: NGO, indexPath: IndexPath) -> UIContextualAction {
@@ -458,16 +403,7 @@ class NourishUsersViewController: UIViewController,UITableViewDelegate,UITableVi
         }
     }
         
-        /*
-         // MARK: - Navigation
-         
-         // In a storyboard-based application, you will often want to do a little preparation before navigation
-         override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-         // Get the new view controller using segue.destination.
-         // Pass the selected object to the new view controller.
-         }
-         */
-        
+
     }
 extension NourishUsersViewController: UserUpdateDelegate {
     func didUpdateUser() {
@@ -477,18 +413,35 @@ extension NourishUsersViewController: UserUpdateDelegate {
         }
     }
 }
+// 1. Add the protocol conformance here
 extension NourishUsersViewController: RejectionDelegate {
+    
     func didProvideReason(_ reason: String) {
         if let ngo = self.ngoBeingProcessed {
-            ngo.status = .rejected
+            let finalReason = reason.isEmpty ? "No specific reason provided." : reason
             
-            // If the user left it empty, maybe provide a default
-            ngo.rejectionReason = reason.isEmpty ? "No specific reason provided." : reason
-            
-            self.usersTableView.reloadData()
-            self.ngoBeingProcessed = nil // Reset for the next use
-            
-            print("Successfully rejected \(ngo.name) for: \(reason)")
+            // Update Firestore with the rejection status and reason
+            db.collection("users").document(ngo.documentID).updateData([
+                "status": NGOStatus.rejected.rawValue,
+                "rejectionReason": finalReason
+            ]) { [weak self] error in
+                if let error = error {
+                    print("Error updating rejection: \(error.localizedDescription)")
+                } else {
+                    print("Successfully rejected \(ngo.name)")
+                }
+                
+                // Reset and refresh UI
+                self?.ngoBeingProcessed = nil
+                self?.usersTableView.reloadData()
+            }
         }
+    }
+}
+extension NourishUsersViewController: EditUserDelegate {
+    func didEditUser() {
+
+        self.fetchUsersFromFirestore()
+
     }
 }

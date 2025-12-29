@@ -9,10 +9,20 @@ import Foundation
 class Donor: AppUser{
     var bio: String
     
-    init(userName: String, password: String, name: String, phoneNumber: Int, email: String, address: String,userImg: String,bio: String) {
-        self.bio = bio
-        super.init(userName: userName, password: password, name: name, phoneNumber: phoneNumber, email: email, userImg: userImg)
-    }
+    init(documentID: String,dictionary: [String: Any]) {
+            let username = dictionary["username"] as? String ?? ""
+            let name = dictionary["name"] as? String ?? ""
+            let email = dictionary["email"] as? String ?? ""
+            let userImg = dictionary["profile_image_url"] as? String ?? ""
+            let phoneNumber = dictionary["number"] as? Int ?? 12345678
+            let role = dictionary["role"] as? Int ?? 2
+            let notifications_enabled = dictionary["notifications_enabled"] as? Bool ?? true
+            let profile_completed = dictionary["profile_completed"] as? Bool ?? true
+        
+            self.bio = dictionary["bio"] as? String ?? ""
+        
+        super.init(documentID: documentID,username: username, name: name, phoneNumber: phoneNumber, email: email, userImg: userImg, role: 3,notifications_enabled: notifications_enabled)
+        }
     
     
     

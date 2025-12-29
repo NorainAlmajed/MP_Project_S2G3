@@ -6,12 +6,18 @@
 //
 
 import UIKit
+import FirebaseFirestore
+import FirebaseStorage
 
+protocol EditUserDelegate: AnyObject {
+    func didUpdateUser()
+}
 
-class EditUsersViewController: UIViewController, UIImagePickerControllerDelegate, UINavigationControllerDelegate{
+class EditUsersViewController: UIViewController, UIImagePickerControllerDelegate, UINavigationControllerDelegate {
     
-    var userToEdit:AppUser!
-    
+    var userToEdit: AppUser!
+    weak var delegate: EditUserDelegate?
+    private let db = Firestore.firestore()
     
     @IBOutlet weak var causeStack: UIStackView!
     @IBOutlet weak var addressStack: UIStackView!
@@ -34,7 +40,6 @@ class EditUsersViewController: UIViewController, UIImagePickerControllerDelegate
     @IBOutlet weak var saveBtn: UIButton!
     @IBOutlet weak var deleteBtn: UIButton!
     
-    
     override func viewDidLoad() {
         super.viewDidLoad()
         self.title = (userToEdit is NGO) ? "NGO Profile" : "Donor Profile"
@@ -46,137 +51,260 @@ class EditUsersViewController: UIViewController, UIImagePickerControllerDelegate
         let backButton = UIBarButtonItem(image: UIImage(systemName: "chevron.left"), style: .plain, target: self, action: #selector(backTapped))
         self.navigationItem.leftBarButtonItem = backButton
         backButton.tintColor = .black
+        
         self.setupView()
-        populateData()
+        fetchUserFromFirestore()
         setupMenus()
     }
     
-    @IBAction func saveChangesTapped(_ sender: Any) {
-        saveTapped()
-    }
-    
-    @objc func saveTapped() {
-        // 1. Update the local object data
-        userToEdit.userName = usernameField.text ?? ""
-        userToEdit.name = nameField.text ?? ""
-        userToEdit.email = emailField.text ?? ""
-        
-        if let phoneText = phoneField.text, let phoneValue = Int(phoneText) {
-            userToEdit.phoneNumber = phoneValue
-        }
-        
-        if let ngo = userToEdit as? NGO {
-            ngo.address = addressField.text ?? ""
-            ngo.governorate = governorateBtn.currentTitle ?? ""
-            ngo.cause = causebtn.currentTitle ?? ""
-            
-            if let statusTitle = statusBtn.currentTitle,
-               let newStatus = NGOStatus(rawValue: statusTitle) {
-                ngo.status = newStatus
-            }
-        }
-
-        // 2. Show Success Alert
-        let alert = UIAlertController(title: "Success", message: "Changes have been saved locally.", preferredStyle: .alert)
-        alert.addAction(UIAlertAction(title: "OK", style: .default, handler: { _ in
-            // Go back after user clicks OK
-            self.navigationController?.popViewController(animated: true)
-        }))
-        
-        present(alert, animated: true)
-    }
-    
-    
-    
-    @objc func backTapped() {
-        //  closes the full-screen modal and takes you back to the previous screen
-        self.dismiss(animated: true, completion: nil)
-    }
-    
-    @IBAction func deleteBtnTapped(_ sender: Any) {
-        // 1. Create the confirmation alert
-            let alert = UIAlertController(
-                title: "Delete Confirmation",
-                message: "Are you sure you want to remove this user? This action cannot be undone.",
-                preferredStyle: .actionSheet // .actionSheet looks good for delete actions
-            )
-            
-            // 2. Add the Delete action (Destructive style makes it red)
-            let deleteAction = UIAlertAction(title: "Delete", style: .destructive) { _ in
-                self.performDeletion()
-            }
-            
-            // 3. Add Cancel action
-            let cancelAction = UIAlertAction(title: "Cancel", style: .cancel)
-            
-            alert.addAction(deleteAction)
-            alert.addAction(cancelAction)
-            
-            present(alert, animated: true)
-    }
-    
-    func performDeletion() {
-        // Find the user in your global AppData list and remove them
-        // We use the unique ID (uId) to make sure we delete the right one
-        AppData.users.removeAll { $0.userName == userToEdit.userName }
-        
-        // Optional: Show a final confirmation or just pop back
-        self.navigationController?.popViewController(animated: true)
-    }
-    
-    @IBAction func uploadPhotoTapped(_ sender: UIButton) {
-        showPhotoAlert()
-    }
-    
-    func populateData() {
-        // 1. Ensure userToEdit is not nil
+    // MARK: - Firebase Read
+    private func fetchUserFromFirestore() {
         guard let user = userToEdit else {
             print("Error: userToEdit was not passed to this ViewController")
             return
         }
-
-        // 2. Use optional chaining to prevent crashes if Outlets are missing
-        usernameField?.text = user.userName
+        
+        // Fetch the user document from Firestore using username as document ID
+        db.collection("users").document(user.documentID).getDocument { [weak self] (document, error) in
+            guard let self = self else { return }
+            
+            if let error = error {
+                print("❌ Error fetching user: \(error.localizedDescription)")
+                // Fallback to local data if fetch fails
+                self.populateDataFromLocal()
+                return
+            }
+            
+            guard let document = document, document.exists, let data = document.data() else {
+                print("⚠️ Document does not exist, using local data")
+                self.populateDataFromLocal()
+                return
+            }
+            
+            // Update the UI with Firebase data
+            self.populateDataFromFirestore(data: data)
+            print("✅ User data fetched from Firestore")
+        }
+    }
+    
+    private func populateDataFromFirestore(data: [String: Any]) {
+        usernameField?.text = data["username"] as? String
+        nameField?.text = data["full_name"] as? String
+        phoneField?.text = "\(data["number"] as? Int ?? 0)"
+        emailField?.text = data["email"] as? String
+        
+        if let imageUrlString = data["profile_image_url"] as? String, !imageUrlString.isEmpty {
+                FetchImage.fetchImage(from: imageUrlString) { [weak self] image in
+                    if let downloadedImage = image {
+                        self?.ImagePickerEditView.image = downloadedImage
+                    } else {
+                        self?.ImagePickerEditView.image = UIImage(systemName: "person.circle.fill")
+                    }
+                }
+            } else {
+                self.ImagePickerEditView.image = UIImage(systemName: "person.circle.fill")
+            }
+        let role = data["role"] as? Int ?? 0
+        
+        if role == 3 { // NGO
+            addressField?.text = data["address"] as? String
+            nameField?.text = data["organization_name"] as? String
+            governorateBtn?.setTitle(data["governorate"] as? String, for: .normal)
+            causebtn?.setTitle(data["cause"] as? String, for: .normal)
+            
+            if let statusString = data["status"] as? String,
+               let status = NGOStatus(rawValue: statusString) {
+                statusBtn?.setTitle(status.rawValue, for: .normal)
+            }
+        }
+    }
+    
+    private func populateDataFromLocal() {
+        // Fallback to local object if Firebase fails
+        guard let user = userToEdit else { return }
+        
+        usernameField?.text = user.username
         nameField?.text = user.name
         phoneField?.text = "\(user.phoneNumber)"
         emailField?.text = user.email
+        if !user.userImg.isEmpty {
+                FetchImage.fetchImage(from: user.userImg) { [weak self] image in
+                    self?.ImagePickerEditView.image = image ?? UIImage(systemName: "person.circle.fill")
+                }
+            } else {
+                self.ImagePickerEditView.image = UIImage(systemName: "person.circle.fill")
+            }
         
         if let ngo = user as? NGO {
             addressField?.text = ngo.address
             causebtn?.setTitle(ngo.cause, for: .normal)
             statusBtn?.setTitle(ngo.status.rawValue, for: .normal)
-            
-            // Also set governorate title if it exists
             governorateBtn?.setTitle(ngo.governorate, for: .normal)
         }
     }
     
-    func setupMenus() {
-            // --- Governorate Menu ---
-            let govOptions = ["Capital", "Muharraq", "Northern", "Southern"]
-            let govActions = govOptions.map { title in
-                UIAction(title: title, handler: { _ in self.governorateBtn.setTitle(title, for: .normal) })
-            }
-            governorateBtn.menu = UIMenu(title: "Select Governorate", children: govActions)
-            governorateBtn.showsMenuAsPrimaryAction = true
-            
-            // --- Status Menu ---
-            let statusActions = NGOStatus.allCases.map { statusCase in
-                UIAction(title: statusCase.rawValue, handler: { _ in
-                    self.statusBtn.setTitle(statusCase.rawValue, for: .normal)
-                })
-            }
-            statusBtn.menu = UIMenu(title: "Select Status", children: statusActions)
-            statusBtn.showsMenuAsPrimaryAction = true
-            
-            // --- Causes Menu ---
-            let causeOptions = ["Orphans", "Chronically ill", "Disabled people", "Children", "Women", "Elderly"]
-            let causeActions = causeOptions.map { title in
-                UIAction(title: title, handler: { _ in self.causebtn.setTitle(title, for: .normal) })
-            }
-            causebtn.menu = UIMenu(title: "Select Cause", children: causeActions)
-            causebtn.showsMenuAsPrimaryAction = true
+    // MARK: - Firebase Write
+    @IBAction func saveChangesTapped(_ sender: Any) {
+        saveTapped()
+    }
+    
+    @objc func saveTapped() {
+        guard let user = userToEdit else {
+            showAlert(title: "Error", message: "No user to save")
+            return
         }
+        
+
+        
+        // Prepare the update data
+        var updateData: [String: Any] = [
+            "username": usernameField.text?.trimmingCharacters(in: .whitespacesAndNewlines) ?? "",
+            "name": nameField.text?.trimmingCharacters(in: .whitespacesAndNewlines) ?? "",
+            "email": emailField.text?.trimmingCharacters(in: .whitespacesAndNewlines) ?? "",
+            "phoneNumber": Int(phoneField.text ?? "0") ?? 0
+        ]
+        
+        // Add NGO-specific fields if this is an NGO
+        if let ngo = user as? NGO {
+            updateData["address"] = addressField.text?.trimmingCharacters(in: .whitespacesAndNewlines) ?? ""
+            updateData["governorate"] = governorateBtn.currentTitle?.trimmingCharacters(in: .whitespacesAndNewlines) ?? ""
+            updateData["cause"] = causebtn.currentTitle?.trimmingCharacters(in: .whitespacesAndNewlines) ?? ""
+            
+            if let statusTitle = statusBtn.currentTitle,
+               let newStatus = NGOStatus(rawValue: statusTitle) {
+                updateData["status"] = newStatus.rawValue
+            }
+        }
+        
+        // Show loading state
+        saveBtn.isEnabled = false
+        saveBtn.setTitle("Saving...", for: .normal)
+        
+        db.collection("users").document(user.documentID).updateData(updateData) { [weak self] error in
+            guard let self = self else { return }
+            
+            self.saveBtn.isEnabled = true
+            self.saveBtn.setTitle("Save Changes", for: .normal)
+            
+            if let error = error {
+                print("❌ Error updating user: \(error.localizedDescription)")
+                self.showAlert(title: "Error", message: "Failed to save changes: \(error.localizedDescription)")
+            } else {
+                print("✅ User updated successfully")
+                self.updateLocalObject(with: updateData)
+                
+                // Notify the list view that data has changed
+                self.delegate?.didUpdateUser()
+                
+                // Show success alert and pop
+                let alert = UIAlertController(title: "Success", message: "Changes saved.", preferredStyle: .alert)
+                alert.addAction(UIAlertAction(title: "OK", style: .default, handler: { _ in
+                    self.navigationController?.popViewController(animated: true)
+                }))
+                self.present(alert, animated: true)
+            }
+        }
+    }
+    
+    private func updateLocalObject(with data: [String: Any]) {
+        userToEdit.username = data["username"] as? String ?? userToEdit.username
+        userToEdit.name = data["name"] as? String ?? userToEdit.name
+        userToEdit.email = data["email"] as? String ?? userToEdit.email
+        userToEdit.phoneNumber = data["phoneNumber"] as? Int ?? userToEdit.phoneNumber
+        
+        if let ngo = userToEdit as? NGO {
+            ngo.address = data["address"] as? String ?? ngo.address
+            ngo.governorate = data["governorate"] as? String ?? ngo.governorate
+            ngo.cause = data["cause"] as? String ?? ngo.cause
+            
+            if let statusString = data["status"] as? String,
+               let status = NGOStatus(rawValue: statusString) {
+                ngo.status = status
+            }
+        }
+    }
+    
+    @objc func backTapped() {
+        self.dismiss(animated: true, completion: nil)
+    }
+    
+    // MARK: - Delete User
+    @IBAction func deleteBtnTapped(_ sender: Any) {
+        let alert = UIAlertController(
+            title: "Delete Confirmation",
+            message: "Are you sure you want to remove this user? This action cannot be undone.",
+            preferredStyle: .actionSheet
+        )
+        
+        let deleteAction = UIAlertAction(title: "Delete", style: .destructive) { _ in
+            self.performDeletion()
+        }
+        
+        let cancelAction = UIAlertAction(title: "Cancel", style: .cancel)
+        
+        alert.addAction(deleteAction)
+        alert.addAction(cancelAction)
+        
+        present(alert, animated: true)
+    }
+    
+    func performDeletion() {
+        guard let user = userToEdit else { return }
+        
+        // Show loading
+        deleteBtn.isEnabled = false
+        deleteBtn.setTitle("Deleting...", for: .normal)
+        
+        // Delete from Firestore
+        db.collection("users").document(user.documentID).delete { [weak self] error in
+            guard let self = self else { return }
+            
+            if let error = error {
+                print("❌ Error deleting user: \(error.localizedDescription)")
+                self.deleteBtn.isEnabled = true
+                self.deleteBtn.setTitle("Delete User", for: .normal)
+                self.showAlert(title: "Error", message: "Failed to delete user: \(error.localizedDescription)")
+            } else {
+                print("✅ User deleted from Firestore")
+                
+                            
+                // Show success and go back
+                let alert = UIAlertController(title: "Deleted", message: "User has been removed.", preferredStyle: .alert)
+                alert.addAction(UIAlertAction(title: "OK", style: .default, handler: { _ in
+                    self.navigationController?.popViewController(animated: true)
+                }))
+                self.present(alert, animated: true)
+            }
+        }
+    }
+    
+    // MARK: - Helper Methods
+    func setupMenus() {
+        // --- Governorate Menu ---
+        let govOptions = ["Capital", "Muharraq", "Northern", "Southern"]
+        let govActions = govOptions.map { title in
+            UIAction(title: title, handler: { _ in self.governorateBtn.setTitle(title, for: .normal) })
+        }
+        governorateBtn.menu = UIMenu(title: "Select Governorate", children: govActions)
+        governorateBtn.showsMenuAsPrimaryAction = true
+        
+        // --- Status Menu ---
+        let statusActions = NGOStatus.allCases.map { statusCase in
+            UIAction(title: statusCase.rawValue, handler: { _ in
+                self.statusBtn.setTitle(statusCase.rawValue, for: .normal)
+            })
+        }
+        statusBtn.menu = UIMenu(title: "Select Status", children: statusActions)
+        statusBtn.showsMenuAsPrimaryAction = true
+        
+        // --- Causes Menu ---
+        let causeOptions = ["Orphans", "Chronically ill", "Disabled people", "Children", "Women", "Elderly"]
+        let causeActions = causeOptions.map { title in
+            UIAction(title: title, handler: { _ in self.causebtn.setTitle(title, for: .normal) })
+        }
+        causebtn.menu = UIMenu(title: "Select Cause", children: causeActions)
+        causebtn.showsMenuAsPrimaryAction = true
+    }
     
     func setupView() {
         let isNGO = userToEdit is NGO
@@ -185,30 +313,34 @@ class EditUsersViewController: UIViewController, UIImagePickerControllerDelegate
         govStack.isHidden = !isNGO
         statusStack.isHidden = !isNGO
         licenseBtn.isHidden = !isNGO
-        
     }
     
+    private func showAlert(title: String, message: String) {
+        let alert = UIAlertController(title: title, message: message, preferredStyle: .alert)
+        alert.addAction(UIAlertAction(title: "OK", style: .default))
+        present(alert, animated: true)
+    }
     
+    // MARK: - Photo Upload
+    @IBAction func uploadPhotoTapped(_ sender: UIButton) {
+        showPhotoAlert()
+    }
     
-    func showPhotoAlert(){
+    func showPhotoAlert() {
         let alert = UIAlertController(title: "Choose Image", message: nil, preferredStyle: .actionSheet)
-        alert.addAction(UIAlertAction(title: "Take Photo", style: .default, handler: {action
-            in
+        alert.addAction(UIAlertAction(title: "Take Photo", style: .default, handler: { action in
             self.getPhoto(type: .camera)
-            
-            
         }))
         
-        alert.addAction(UIAlertAction(title: "Photo Library", style: .default, handler: {action in
+        alert.addAction(UIAlertAction(title: "Photo Library", style: .default, handler: { action in
             self.getPhoto(type: .photoLibrary)
-            
         }))
         alert.addAction(UIAlertAction(title: "Cancel", style: .cancel, handler: nil))
         
         present(alert, animated: true, completion: nil)
     }
     
-    func getPhoto(type:UIImagePickerController.SourceType){
+    func getPhoto(type: UIImagePickerController.SourceType) {
         let picker = UIImagePickerController()
         picker.sourceType = type
         picker.allowsEditing = true
@@ -216,31 +348,44 @@ class EditUsersViewController: UIViewController, UIImagePickerControllerDelegate
         present(picker, animated: true, completion: nil)
     }
     
-    func imagePickerController(_ _picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [UIImagePickerController.InfoKey: Any]){
+    func imagePickerController(_ picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [UIImagePickerController.InfoKey: Any]) {
         dismiss(animated: true, completion: nil)
         guard let image = info[.editedImage] as? UIImage else {
             print("Image not found")
-            return  }
+            return
+        }
         ImagePickerEditView.image = image
+        
+        // TODO: Upload image to Firebase Storage and update userImg URL
+        // uploadImageToFirebaseStorage(image)
     }
     
     func imagePickerControllerDidCancel(_ picker: UIImagePickerController) {
         dismiss(animated: true, completion: nil)
     }
     
-    
-    
-    
-    
-    /*
-     // MARK: - Navigation
-     
-     // In a storyboard-based application, you will often want to do a little preparation before navigation
-     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-     // Get the new view controller using segue.destination.
-     // Pass the selected object to the new view controller.
-     }
-     */
-    
-    
+    // MARK: - Optional: Upload Image to Firebase Storage
+    private func uploadImageToFirebaseStorage(_ image: UIImage) {
+        guard let imageData = image.jpegData(compressionQuality: 0.8) else { return }
+        
+        // It's fine to name the FILE after the username,
+        // but the DATABASE update must use the documentID.
+        let storageRef = Storage.storage().reference().child("userImages/\(userToEdit.username).jpg")
+        
+        storageRef.putData(imageData, metadata: nil) { metadata, error in
+            if let error = error {
+                print("Error uploading image: \(error)")
+                return
+            }
+            
+            storageRef.downloadURL { url, error in
+                if let downloadURL = url {
+                    // ✅ FIX: Use userToEdit.documentID here
+                    self.db.collection("users").document(self.userToEdit.documentID).updateData([
+                        "userImg": downloadURL.absoluteString
+                    ])
+                }
+            }
+        }
+    }
 }

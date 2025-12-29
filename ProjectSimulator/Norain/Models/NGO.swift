@@ -21,14 +21,26 @@ class NGO: AppUser {
     var mission:String
     var rejectionReason: String?
     
-    init( userName: String, password: String,name:String, phoneNumber: Int,email:String, cause: String, address: String, governorate: String, userImg:String,mission:String, status:NGOStatus = .pending,rejectionReason: String? = nil) {
-        self.cause = cause
-        self.address = address
-        self.mission = mission
-        self.governorate = governorate
-        self.status = status
-        self.rejectionReason = rejectionReason
-        super.init(userName: userName, password: password, name: name, phoneNumber:phoneNumber, email: email,userImg:userImg)
-    }
+    init(documentID: String,dictionary: [String: Any]) {
+            // 1. Extract values from dictionary (matching Firebase keys exactly)
+            let username = dictionary["username"] as? String ?? ""
+            let name = dictionary["organization_name"] as? String ?? ""
+            let email = dictionary["email"] as? String ?? ""
+            let userImg = dictionary["profile_image_url"] as? String ?? ""
+            let phoneNumber = dictionary["number"] as? Int ?? 12345678
+            let notifications_enabled = dictionary["notifications_enabled"] as? Bool ?? true
+        
+            self.status = NGOStatus(rawValue: dictionary["status"] as? String ?? "Pending") ?? .pending
+            self.rejectionReason = dictionary["rejectionReason"] as? String
+            self.cause = dictionary["cause"] as? String ?? ""
+            self.address = dictionary["address"] as? String ?? ""
+            self.mission = dictionary["mission"] as? String ?? ""
+            self.governorate = dictionary["governorate"] as? String ?? ""
+           
+            
+
+            // 2. Pass base data to super
+        super.init(documentID: documentID,username: username, name: name, phoneNumber: phoneNumber, email: email, userImg: userImg, role: 3,notifications_enabled: notifications_enabled)
+        }
     
 }

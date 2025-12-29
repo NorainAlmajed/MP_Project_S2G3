@@ -7,7 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		5FEF8BFB2EDB8B59007D3A97 /* DonationDetailViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5FEF8BFA2EDB8B59007D3A97 /* DonationDetailViewController.swift */; };
+		12A272992F021E3F00020DD6 /* FirebaseStorage in Frameworks */ = {isa = PBXBuildFile; productRef = 12A272982F021E3F00020DD6 /* FirebaseStorage */; };
 		D08304AC2F014FCA00289EEC /* FirebaseAnalytics in Frameworks */ = {isa = PBXBuildFile; productRef = D08304AB2F014FCA00289EEC /* FirebaseAnalytics */; };
 		D08304AE2F014FCA00289EEC /* FirebaseAuth in Frameworks */ = {isa = PBXBuildFile; productRef = D08304AD2F014FCA00289EEC /* FirebaseAuth */; };
 		D08304B02F014FCA00289EEC /* FirebaseCore in Frameworks */ = {isa = PBXBuildFile; productRef = D08304AF2F014FCA00289EEC /* FirebaseCore */; };
@@ -44,84 +44,17 @@
 		5FEF8B622EDA3636007D3A97 /* ProjectSimulator.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = ProjectSimulator.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		5FEF8B782EDA363A007D3A97 /* ProjectSimulatorTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = ProjectSimulatorTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		5FEF8B822EDA363A007D3A97 /* ProjectSimulatorUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = ProjectSimulatorUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
-		5FEF8BFA2EDB8B59007D3A97 /* DonationDetailViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DonationDetailViewController.swift; sourceTree = "<group>"; };
 		D0DEA5582F0060990008C402 /* GoogleService-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
 		D0E725412F009AB300365A28 /* SecuritySettingsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SecuritySettingsViewController.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFileSystemSynchronizedBuildFileExceptionSet section */
-		12BA7FB42EF37012002D936C /* Exceptions for "ProjectSimulator" folder in "ProjectSimulator" target */ = {
+		5FEF8B8A2EDA363A007D3A97 /* Exceptions for "ProjectSimulator" folder in "ProjectSimulator" target */ = {
 			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
 			membershipExceptions = (
-				"/Localized: LaunchScreen.storyboard",
-				"/Localized: Main.storyboard",
-				Address.swift,
-				AppDelegate.swift,
-				Assets.xcassets,
-				Donation.swift,
-				DonationCollectionViewCell.swift,
-				DonationDetailsViewController.swift,
-				Donations.storyboard,
-				DonationViewController.swift,
-				Norain/Controllers/EditUsersViewController.swift,
-				Norain/Controllers/NourishUsersViewController.swift,
-				Norain/Controllers/RejectionPopupViewController.swift,
-				Norain/Controllers/UserDetailsViewController.swift,
-				Norain/Helpers/Alerts.swift,
-				Norain/Helpers/AppData.swift,
-				Norain/Helpers/Keys.swift,
-				Norain/Models/AppUser.swift,
-				Norain/Models/Donor.swift,
-				Norain/Models/NGO.swift,
-				"Norain/norain-admin-controls1.storyboard",
-				Norain/Views/UserTableViewCell.swift,
-				NotificationsCollectionViewCell.swift,
-				NotificationsViewController.swift,
-				SceneDelegate.swift,
-				ViewController.swift,
-				zahraafet1.storyboard,
+				Info.plist,
 			);
 			target = 5FEF8B612EDA3636007D3A97 /* ProjectSimulator */;
-		};
-		12BA7FB52EF37012002D936C /* Exceptions for "ProjectSimulator" folder in "ProjectSimulatorUITests" target */ = {
-			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
-			membershipExceptions = (
-				"/Localized: LaunchScreen.storyboard",
-				Address.swift,
-				AppDelegate.swift,
-				Assets.xcassets,
-				Donation.swift,
-				DonationCollectionViewCell.swift,
-				DonationDetailsViewController.swift,
-				Donations.storyboard,
-				DonationViewController.swift,
-				Info.plist,
-				NotificationsCollectionViewCell.swift,
-				NotificationsViewController.swift,
-				SceneDelegate.swift,
-				ViewController.swift,
-				zahraafet1.storyboard,
-			);
-			target = 5FEF8B812EDA363A007D3A97 /* ProjectSimulatorUITests */;
-		};
-		12D3B0CE2EF44FE000DD9EA7 /* Exceptions for "ProjectSimulator" folder in "ProjectSimulatorTests" target */ = {
-			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
-			membershipExceptions = (
-				"/Localized: Main.storyboard",
-				Norain/Controllers/EditUsersViewController.swift,
-				Norain/Controllers/NourishUsersViewController.swift,
-				Norain/Controllers/RejectionPopupViewController.swift,
-				Norain/Controllers/UserDetailsViewController.swift,
-				Norain/Helpers/Alerts.swift,
-				Norain/Helpers/AppData.swift,
-				Norain/Helpers/Keys.swift,
-				Norain/Models/AppUser.swift,
-				Norain/Models/Donor.swift,
-				Norain/Models/NGO.swift,
-				"Norain/norain-admin-controls1.storyboard",
-				Norain/Views/UserTableViewCell.swift,
-			);
-			target = 5FEF8B772EDA363A007D3A97 /* ProjectSimulatorTests */;
 		};
 		D0FCA2BC2EEEC28F00D8AFFF /* Exceptions for "ZainabAlmahdi " folder in "ProjectSimulatorTests" target */ = {
 			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
@@ -160,12 +93,10 @@
 /* End PBXFileSystemSynchronizedBuildFileExceptionSet section */
 
 /* Begin PBXFileSystemSynchronizedRootGroup section */
-		12BA7FA32EF37012002D936C /* ProjectSimulator */ = {
+		5FEF8B642EDA3636007D3A97 /* ProjectSimulator */ = {
 			isa = PBXFileSystemSynchronizedRootGroup;
 			exceptions = (
-				12BA7FB42EF37012002D936C /* Exceptions for "ProjectSimulator" folder in "ProjectSimulator" target */,
-				12D3B0CE2EF44FE000DD9EA7 /* Exceptions for "ProjectSimulator" folder in "ProjectSimulatorTests" target */,
-				12BA7FB52EF37012002D936C /* Exceptions for "ProjectSimulator" folder in "ProjectSimulatorUITests" target */,
+				5FEF8B8A2EDA363A007D3A97 /* Exceptions for "ProjectSimulator" folder in "ProjectSimulator" target */,
 			);
 			path = ProjectSimulator;
 			sourceTree = "<group>";
@@ -201,6 +132,7 @@
 				D08304AC2F014FCA00289EEC /* FirebaseAnalytics in Frameworks */,
 				D08304B22F014FCA00289EEC /* FirebaseCrashlytics in Frameworks */,
 				D08304B02F014FCA00289EEC /* FirebaseCore in Frameworks */,
+				12A272992F021E3F00020DD6 /* FirebaseStorage in Frameworks */,
 				D08304B42F014FCA00289EEC /* FirebaseFirestore in Frameworks */,
 				D08304AE2F014FCA00289EEC /* FirebaseAuth in Frameworks */,
 			);
@@ -226,10 +158,8 @@
 		5FEF8B592EDA3636007D3A97 = {
 			isa = PBXGroup;
 			children = (
-				12BA7FA32EF37012002D936C /* ProjectSimulator */,
 				D0E725412F009AB300365A28 /* SecuritySettingsViewController.swift */,
 				D0DEA5582F0060990008C402 /* GoogleService-Info.plist */,
-				5FEF8BFA2EDB8B59007D3A97 /* DonationDetailViewController.swift */,
 				D0FCA2B52EEEC14000D8AFFF /* ZainabAlmahdi  */,
 				5FEF8B642EDA3636007D3A97 /* ProjectSimulator */,
 				5FEF8B7B2EDA363A007D3A97 /* ProjectSimulatorTests */,
@@ -284,6 +214,7 @@
 				D08304B32F014FCA00289EEC /* FirebaseFirestore */,
 				D08304B52F014FCA00289EEC /* FirebaseMessaging */,
 				D08304B82F01527400289EEC /* Cloudinary */,
+				12A272982F021E3F00020DD6 /* FirebaseStorage */,
 			);
 			productName = ProjectSimulator;
 			productReference = 5FEF8B622EDA3636007D3A97 /* ProjectSimulator.app */;
@@ -326,7 +257,6 @@
 				5FEF8B842EDA363A007D3A97 /* PBXTargetDependency */,
 			);
 			fileSystemSynchronizedGroups = (
-				12BA7FA32EF37012002D936C /* ProjectSimulator */,
 				5FEF8B852EDA363A007D3A97 /* ProjectSimulatorUITests */,
 			);
 			name = ProjectSimulatorUITests;
@@ -348,7 +278,6 @@
 				TargetAttributes = {
 					5FEF8B612EDA3636007D3A97 = {
 						CreatedOnToolsVersion = 16.4;
-						LastSwiftMigration = 1640;
 					};
 					5FEF8B772EDA363A007D3A97 = {
 						CreatedOnToolsVersion = 16.4;
@@ -418,7 +347,6 @@
 			buildActionMask = 2147483647;
 			files = (
 				D0E725422F009AB300365A28 /* SecuritySettingsViewController.swift in Sources */,
-				5FEF8BFB2EDB8B59007D3A97 /* DonationDetailViewController.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -459,16 +387,13 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
-				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = ProjectSimulator/Info.plist;
-				INFOPLIST_KEY_NSCameraUsageDescription = "This app wants to take pictures";
-				INFOPLIST_KEY_NSPhotoLibraryUsageDescription = "This app uses images";
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchStoryboardName = LaunchScreen;
-				INFOPLIST_KEY_UIMainStoryboardFile = "";
+				INFOPLIST_KEY_UIMainStoryboardFile = Main;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
 				LD_RUNPATH_SEARCH_PATHS = (
@@ -479,8 +404,6 @@
 				PRODUCT_BUNDLE_IDENTIFIER = com.bignerdranch.ProjectSimulator;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_EMIT_LOC_STRINGS = YES;
-				SWIFT_OBJC_BRIDGING_HEADER = "";
-				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
 			};
@@ -491,16 +414,13 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
-				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = ProjectSimulator/Info.plist;
-				INFOPLIST_KEY_NSCameraUsageDescription = "This app wants to take pictures";
-				INFOPLIST_KEY_NSPhotoLibraryUsageDescription = "This app uses images";
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchStoryboardName = LaunchScreen;
-				INFOPLIST_KEY_UIMainStoryboardFile = "";
+				INFOPLIST_KEY_UIMainStoryboardFile = Main;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
 				LD_RUNPATH_SEARCH_PATHS = (
@@ -511,7 +431,6 @@
 				PRODUCT_BUNDLE_IDENTIFIER = com.bignerdranch.ProjectSimulator;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_EMIT_LOC_STRINGS = YES;
-				SWIFT_OBJC_BRIDGING_HEADER = "";
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
 			};
@@ -765,6 +684,11 @@
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
+		12A272982F021E3F00020DD6 /* FirebaseStorage */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = D08304AA2F014FCA00289EEC /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */;
+			productName = FirebaseStorage;
+		};
 		D08304AB2F014FCA00289EEC /* FirebaseAnalytics */ = {
 			isa = XCSwiftPackageProductDependency;
 			package = D08304AA2F014FCA00289EEC /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */;

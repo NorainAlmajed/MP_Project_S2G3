@@ -22,7 +22,19 @@ class UserTableViewCell: UITableViewCell {
     func configure(appUser:AppUser){
         nameLbl.text = appUser.name
         emailLbl.text = ("Email: " + appUser.email)
-//        imgUserPhoto.image =
+        imgUserPhoto.image = UIImage(systemName: "person.circle.fill")
+
+            // 2. Fetch the actual image
+            if !appUser.userImg.isEmpty {
+                FetchImage.fetchImage(from: appUser.userImg) { [weak self] image in
+                    // Check if this cell is still displaying the same user (prevents flickering)
+                    if let downloadedImage = image {
+                        self?.imgUserPhoto.image = downloadedImage
+                    }
+                }
+    }
+        
+
         
         if let donor = appUser as? Donor{
 
@@ -50,6 +62,11 @@ class UserTableViewCell: UITableViewCell {
         }
         
         
+    }
+    override func prepareForReuse() {
+        super.prepareForReuse()
+
+        imgUserPhoto.image = UIImage(systemName: "person.circle.fill")
     }
     
 }

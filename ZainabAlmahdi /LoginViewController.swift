@@ -79,19 +79,20 @@ class LoginViewController: UIViewController {
 
     // MARK: - Routing
     func routeToHome() {
-        let dashboardStoryboard = UIStoryboard(name: "Dashboard_Fatima", bundle: nil)
+        let tabStoryboard = UIStoryboard(name: "Main", bundle: nil)
 
-        guard let dashboardRoot = dashboardStoryboard.instantiateInitialViewController() else {
-            showAlert(title: "Error", message: "Dashboard root not found")
+        guard let tabBarVC = tabStoryboard.instantiateInitialViewController() else {
+            showAlert(title: "Error", message: "Tab Bar not found")
             return
         }
 
         guard let sceneDelegate = UIApplication.shared.connectedScenes
             .first?.delegate as? SceneDelegate else { return }
 
-        sceneDelegate.window?.rootViewController = dashboardRoot
+        sceneDelegate.window?.rootViewController = tabBarVC
         sceneDelegate.window?.makeKeyAndVisible()
     }
+
 
 
 

@@ -9,9 +9,7 @@ import UIKit
 import FirebaseAuth
 import FirebaseFirestore
 
-
 class DonorSignupViewController: UIViewController {
-
 
     @IBOutlet weak var usernameTextField: UITextField!
     @IBOutlet weak var nameTextField: UITextField!
@@ -21,94 +19,74 @@ class DonorSignupViewController: UIViewController {
     @IBOutlet weak var confirmPasswordTextField: UITextField!
     @IBOutlet weak var signupButton: UIButton!
 
-
     override func viewDidLoad() {
         super.viewDidLoad()
         styleActionButton(signupButton)
+        navigationItem.title = "Sign Up"
     }
 
     @IBAction func goToLoginTapped(_ sender: UIButton) {
         navigationController?.popToRootViewController(animated: true)
     }
-    
-    override func viewDidAppear(_ animated: Bool) {
-        super.viewDidAppear(animated)
-        print("NAV:", navigationController as Any)
-    }
-
 
     @IBAction func registerButtonTapped(_ sender: UIButton) {
         guard validateInputs() else { return }
         createDonorAccount()
     }
 
-
     func validateInputs() -> Bool {
-
 
         let email = emailTextField.text?.trimmingCharacters(in: .whitespacesAndNewlines) ?? ""
         let password = passwordTextField.text?.trimmingCharacters(in: .whitespacesAndNewlines) ?? ""
         let confirm = confirmPasswordTextField.text?.trimmingCharacters(in: .whitespacesAndNewlines) ?? ""
         let phone = phoneNumberTextField.text?.trimmingCharacters(in: .whitespacesAndNewlines) ?? ""
 
-
         guard !email.isEmpty else {
             showAlert(title: "Missing Email", message: "Please enter an email address.")
             return false
         }
-
 
         guard !password.isEmpty else {
             showAlert(title: "Missing Password", message: "Please enter a password.")
             return false
         }
 
-
         guard password == confirm else {
             showAlert(title: "Password Mismatch", message: "Passwords do not match.")
             return false
         }
-
 
         guard password.count >= 6 else {
             showAlert(title: "Weak Password", message: "Password must be at least 6 characters long.")
             return false
         }
 
-
         guard !phone.isEmpty else {
             showAlert(title: "Missing Phone Number", message: "Please enter your phone number.")
             return false
         }
-
 
         guard phone.allSatisfy({ $0.isNumber }) else {
             showAlert(title: "Invalid Phone Number", message: "Phone number must contain digits only.")
             return false
         }
 
-
         guard phone.count >= 8 else {
             showAlert(title: "Invalid Phone Number", message: "Phone number must be at least 8 digits.")
             return false
         }
 
-
         return true
     }
-
 
     func createDonorAccount() {
         signupButton.isEnabled = false
 
-
         let email = emailTextField.text!.trimmingCharacters(in: .whitespacesAndNewlines)
         let password = passwordTextField.text!.trimmingCharacters(in: .whitespacesAndNewlines)
 
-
         Auth.auth().createUser(withEmail: email, password: password) { [weak self] result, error in
             guard let self = self else { return }
-
 
             if let error = error {
                 self.signupButton.isEnabled = true
@@ -116,28 +94,24 @@ class DonorSignupViewController: UIViewController {
                 return
             }
 
-
             guard let uid = result?.user.uid else {
                 self.signupButton.isEnabled = true
                 return
             }
 
-
             self.saveDonorToFirestore(uid: uid, email: email)
         }
     }
 
-
     func saveDonorToFirestore(uid: String, email: String) {
-
 
         Firestore.firestore()
             .collection("users")
             .document(uid)
             .setData([
-                "role": "2",
+                "role": 2,
                 "username": usernameTextField.text ?? "",
-                "name": nameTextField.text ?? "",
+                "full_name": nameTextField.text ?? "",
                 "phone_number": phoneNumberTextField.text ?? "",
                 "email": email,
                 "profile_completed": false,
@@ -145,32 +119,47 @@ class DonorSignupViewController: UIViewController {
             ]) { [weak self] error in
                 guard let self = self else { return }
 
-
                 if let error = error {
                     self.signupButton.isEnabled = true
                     self.showAlert(title: "Registration Failed", message: error.localizedDescription)
                     return
                 }
 
+                self.loadSessionAndRoute()
+            }
+    }
 
-                SessionManager.shared.fetchUserRole { success in
-                    DispatchQueue.main.async {
-                        if success {
-                            let vc = UIStoryboard(name: "Authentication", bundle: nil)
-                                .instantiateViewController(
-                                    withIdentifier: "SetupProfileViewController"
-                                ) as! SetupProfileViewController
+    func loadSessionAndRoute() {
 
-                        } else {
-                            self.signupButton.isEnabled = true
-                            self.showAlert(
-                                title: "Error",
-                                message: "Unable to load user session."
-                            )
-                        }
+        SessionManager.shared.fetchUserRole { success in
+            DispatchQueue.main.async {
+                if success {
+
+                    let vc = UIStoryboard(
+                        name: "Authentication",
+                        bundle: nil
+                    ).instantiateViewController(
+                        withIdentifier: "SetupProfileViewController"
+                    )
+
+                    let nav = UINavigationController(rootViewController: vc)
+
+                    if let sceneDelegate = UIApplication.shared.connectedScenes
+                        .first?.delegate as? SceneDelegate {
+
+                        sceneDelegate.window?.rootViewController = nav
+                        sceneDelegate.window?.makeKeyAndVisible()
                     }
+
+                } else {
+                    self.signupButton.isEnabled = true
+                    self.showAlert(
+                        title: "Error",
+                        message: "Unable to load user session."
+                    )
                 }
             }
+        }
     }
 
     func showAlert(title: String, message: String) {
@@ -182,7 +171,6 @@ class DonorSignupViewController: UIViewController {
         alert.addAction(UIAlertAction(title: "OK", style: .default))
         present(alert, animated: true)
     }
-
 
     private func styleActionButton(_ button: UIButton) {
         button.layer.cornerRadius = button.frame.height / 2

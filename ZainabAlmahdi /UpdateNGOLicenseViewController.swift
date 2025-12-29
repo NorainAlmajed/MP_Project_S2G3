@@ -14,6 +14,8 @@ class UpdateNGOLicenseViewController: UIViewController,
         super.viewDidLoad()
         title = "Update NGO License"
         uploadButton.isEnabled = false
+        styleActionButton(selectButton)
+        styleActionButton(uploadButton)
     }
 
     @IBAction func selectLicenseTapped(_ sender: UIButton) {
@@ -63,7 +65,7 @@ class UpdateNGOLicenseViewController: UIViewController,
             }
         }
     }
-    // MARK: - Firestore Update
+
     func updateLicense(uid: String, url: String) {
         Firestore.firestore()
             .collection("users")
@@ -86,7 +88,6 @@ class UpdateNGOLicenseViewController: UIViewController,
             }
     }
 
-    // MARK: - Alert Helper
     func showAlert(_ title: String, _ message: String) {
         let alert = UIAlertController(
             title: title,

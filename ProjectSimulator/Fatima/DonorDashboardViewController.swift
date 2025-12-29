@@ -37,6 +37,8 @@ class DonorDashboardViewController: UIViewController {
     // we set the current user to donor because its the safest state and most common & to avoid crashing
     private var currentRole: UserRole = .donor
     private var sections: [DashboardSection] = []
+    // for admin & ngo shared usage
+    private var roleBasedDonations: [Donation1] = []
 
     private var currentUserName: String = "there"
     private var currentUserID: String?
@@ -118,6 +120,9 @@ class DonorDashboardViewController: UIViewController {
 
             self.currentRole = role
             self.configureSections(for: role)
+            // added this for fetching donations based on role, just a test
+            self.startListeningForDonationsByRole()
+
             self.mainTableView.reloadData()
         }
 
@@ -128,9 +133,66 @@ class DonorDashboardViewController: UIViewController {
             currentUserName = email.components(separatedBy: "@").first?.capitalized ?? "there"
         }
 
-        startListeningForRecentDonations()
-        startListeningForImpactDonations()
+        //startListeningForRecentDonations()
+        //startListeningForImpactDonations()
     }
+    private func startListeningForDonationsByRole() {
+
+        donationsListener?.remove()
+
+        switch currentRole {
+
+        case .donor:
+            startListeningForRecentDonations()
+
+        case .admin:
+            startListeningForAdminDonations()
+
+        case .ngo:
+            startListeningForPendingDonations()
+        }
+    }
+    private func startListeningForAdminDonations() {
+
+        donationsListener = db.collection("Donation")
+            .order(by: "creationDate", descending: true)
+            .limit(to: 3)
+            .addSnapshotListener { [weak self] snapshot, _ in
+                guard let self = self else { return }
+
+                self.roleBasedDonations =
+                    snapshot?.documents.compactMap { Donation1(document: $0) } ?? []
+
+                self.mainTableView.reloadData()
+            }
+    }
+    private func startListeningForPendingDonations() {
+        guard let uid = currentUserID else { return }
+
+        let ngoRef = db.collection("users").document(uid)
+
+        donationsListener = db.collection("Donation")
+            .whereField("ngo", isEqualTo: ngoRef)   // 🔑 THIS WAS MISSING
+            .whereField("status", isEqualTo: 1)     // Pending
+            .order(by: "creationDate", descending: true)
+            .limit(to: 3)
+            .addSnapshotListener { [weak self] snapshot, error in
+                guard let self = self else { return }
+
+                if let error = error {
+                    print("❌ NGO donation error:", error)
+                    return
+                }
+
+                self.roleBasedDonations =
+                    snapshot?.documents.compactMap { Donation1(document: $0) } ?? []
+
+                print("🧪 NGO pending donations:", self.roleBasedDonations.count)
+
+                self.mainTableView.reloadData()
+            }
+    }
+
 
     // MARK: - Firestore listeners
     private func startListeningForNGOs() {
@@ -250,7 +312,14 @@ extension DonorDashboardViewController: UITableViewDataSource, UITableViewDelega
             case .donor:
                 label.text = "Hi \(currentUserName), thank you for your generosity!"
             case .ngo:
-                label.text = "Welcome back, \(currentUserName)"
+                let name = currentUserName.trimmingCharacters(in: .whitespacesAndNewlines)
+
+                if name.isEmpty || name.lowercased().hasPrefix("contact") {
+                    label.text = "Welcome back, our partner NGO"
+                } else {
+                    label.text = "Welcome back, \(name)"
+                }
+
             }
             
             cell.contentView.addSubview(label)
@@ -262,7 +331,7 @@ extension DonorDashboardViewController: UITableViewDataSource, UITableViewDelega
             ])
             
             return cell
-            
+            // MARK: quick actions
         case .quickActions:
             let cell = tableView.dequeueReusableCell(
                 withIdentifier: "QuickActionsCell",
@@ -290,7 +359,7 @@ extension DonorDashboardViewController: UITableViewDataSource, UITableViewDelega
             }
 
             return cell
-
+// MARK: impact tracker
         case .impactTracker:
             let cell = tableView.dequeueReusableCell(withIdentifier: "ImpactTrackerCell", for: indexPath) as! ImpactTrackerTableViewCell
             cell.configure(
@@ -300,7 +369,7 @@ extension DonorDashboardViewController: UITableViewDataSource, UITableViewDelega
             )
             cell.selectionStyle = .none
             return cell
-            
+            // MARK: GRAPH
         case .graph:
             // Placeholder (keep section, don’t remove)
             let cell = UITableViewCell()
@@ -309,7 +378,7 @@ extension DonorDashboardViewController: UITableViewDataSource, UITableViewDelega
             cell.textLabel?.textAlignment = .center
             cell.textLabel?.text = "📊 Graph (Placeholder)"
             return cell
-            
+          // MARK: browse ngo
         case .browseNGOs:
             let cell = tableView.dequeueReusableCell(withIdentifier: "RecommendedNGOsCell", for: indexPath) as! RecommendedNGOsTableViewCell
             cell.configure(with: ngosFromFirestore)
@@ -317,26 +386,38 @@ extension DonorDashboardViewController: UITableViewDataSource, UITableViewDelega
             cell.onNGOSelected = { ngo in print("Open NGO page: \(ngo.organizationName)") }
             cell.selectionStyle = .none
             return cell
-            
+            // MARK: donations section
         case .recentDonations:
-            let cell = tableView.dequeueReusableCell(withIdentifier: "RecentDonationsCell", for: indexPath) as! RecentDonationTableViewCell
+            let cell = tableView.dequeueReusableCell(
+                withIdentifier: "RecentDonationsCell",
+                for: indexPath
+            ) as! RecentDonationTableViewCell
+
+            cell.headerView.text = "Recent Donations"
             cell.configure(with: recentDonations)
-            cell.selectionStyle = .none
             return cell
-            
+
         case .allDonations:
-            let cell = UITableViewCell()
-            cell.selectionStyle = .none
-            cell.textLabel?.textAlignment = .center
-            cell.textLabel?.text = "🧾 Latest Donations (Admin) - Placeholder"
+            let cell = tableView.dequeueReusableCell(
+                withIdentifier: "RecentDonationsCell",
+                for: indexPath
+            ) as! RecentDonationTableViewCell
+
+            cell.headerView.text = "Latest Donations"
+            cell.configure(with: roleBasedDonations)
             return cell
+
             
         case .pendingDonations:
-            let cell = UITableViewCell()
-            cell.selectionStyle = .none
-            cell.textLabel?.textAlignment = .center
-            cell.textLabel?.text = "⏳ Pending Donations (NGO) - Placeholder"
+            let cell = tableView.dequeueReusableCell(
+                withIdentifier: "RecentDonationsCell",
+                for: indexPath
+            ) as! RecentDonationTableViewCell
+
+            cell.headerView.text = "Pending Donations"
+            cell.configure(with: roleBasedDonations)
             return cell
+
             
         case .manageUsers:
             let cell = UITableViewCell()

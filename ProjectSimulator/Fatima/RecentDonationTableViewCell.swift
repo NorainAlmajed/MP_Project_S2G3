@@ -59,7 +59,7 @@ class RecentDonationTableViewCell: UITableViewCell,
             headerView.topAnchor.constraint(equalTo: recentDonationContent.topAnchor),
             headerView.leadingAnchor.constraint(equalTo: recentDonationContent.leadingAnchor),
             headerView.trailingAnchor.constraint(equalTo: recentDonationContent.trailingAnchor),
-            headerView.heightAnchor.constraint(equalToConstant: 36),
+            headerView.heightAnchor.constraint(equalToConstant: 50),
 
             // Collection view BELOW header
             recentDonationsCollectionView.topAnchor.constraint(

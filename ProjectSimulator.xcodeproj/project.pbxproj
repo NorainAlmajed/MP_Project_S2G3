@@ -49,7 +49,7 @@
 /* End PBXFileReference section */
 
 /* Begin PBXFileSystemSynchronizedBuildFileExceptionSet section */
-		5FEF8B8A2EDA363A007D3A97 /* Exceptions for "ProjectSimulator" folder in "ProjectSimulator" target */ = {
+		BD7D26162F01836900C69F2D /* Exceptions for "ProjectSimulator" folder in "ProjectSimulator" target */ = {
 			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
 			membershipExceptions = (
 				Info.plist,
@@ -96,7 +96,7 @@
 		5FEF8B642EDA3636007D3A97 /* ProjectSimulator */ = {
 			isa = PBXFileSystemSynchronizedRootGroup;
 			exceptions = (
-				5FEF8B8A2EDA363A007D3A97 /* Exceptions for "ProjectSimulator" folder in "ProjectSimulator" target */,
+				BD7D26162F01836900C69F2D /* Exceptions for "ProjectSimulator" folder in "ProjectSimulator" target */,
 			);
 			path = ProjectSimulator;
 			sourceTree = "<group>";
@@ -389,6 +389,7 @@
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = 7FMYPPL38A;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = ProjectSimulator/Info.plist;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
@@ -416,6 +417,7 @@
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = 7FMYPPL38A;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = ProjectSimulator/Info.plist;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;

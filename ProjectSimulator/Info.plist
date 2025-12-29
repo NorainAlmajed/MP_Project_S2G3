@@ -16,7 +16,7 @@
 					<key>UISceneDelegateClassName</key>
 					<string>$(PRODUCT_MODULE_NAME).SceneDelegate</string>
 					<key>UISceneStoryboardFile</key>
-					<string>norain-admin-controls1</string>
+					<string>Settings</string>
 				</dict>
 			</array>
 		</dict>

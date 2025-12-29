@@ -17,13 +17,11 @@ class AccViewController: UITableViewController {
         case createDonor
         case createNGO
         case contactSupport
-        case terms
         case logout
     }
 
     var rows: [AccountRow] = []
 
-    // MARK: - Lifecycle
     override func viewDidLoad() {
         super.viewDidLoad()
         title = "Account"
@@ -40,7 +38,6 @@ class AccViewController: UITableViewController {
         tableView.reloadData()
     }
 
-    // MARK: - Configure Rows
     func configureRows() {
         rows = [.settings]
 
@@ -52,12 +49,9 @@ class AccViewController: UITableViewController {
         if SessionManager.shared.isDonor || SessionManager.shared.isNGO {
             rows.append(.contactSupport)
         }
-
-        rows.append(.terms)
         rows.append(.logout)
     }
 
-    // MARK: - Table Data Source
     override func tableView(_ tableView: UITableView,
                             numberOfRowsInSection section: Int) -> Int {
         rows.count
@@ -87,8 +81,6 @@ class AccViewController: UITableViewController {
         case .contactSupport:
             cell.textLabel?.text = "Contact Support"
 
-        case .terms:
-            cell.textLabel?.text = "Terms and Conditions"
 
         case .logout:
             cell.textLabel?.text = "Logout"
@@ -99,7 +91,6 @@ class AccViewController: UITableViewController {
         return cell
     }
 
-    // MARK: - Handle Taps
     override func tableView(_ tableView: UITableView,
                             didSelectRowAt indexPath: IndexPath) {
         
@@ -117,9 +108,6 @@ class AccViewController: UITableViewController {
             
         case .contactSupport:
             goToContactSupport()
-            
-        case .terms:
-            goToTerms()
             
         case .logout:
             logoutUser()
@@ -150,13 +138,6 @@ class AccViewController: UITableViewController {
         navigationController?.pushViewController(vc, animated: true)
     }
 
-    func goToTerms() {
-        let vc = UIStoryboard(name: "Authentication", bundle: nil)
-            .instantiateViewController(withIdentifier: "TermsViewController")
-        navigationController?.pushViewController(vc, animated: true)
-    }
-
-    // MARK: - Logout
     func logoutUser() {
         let alert = UIAlertController(
             title: "Logout",

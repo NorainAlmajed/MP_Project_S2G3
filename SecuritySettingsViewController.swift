@@ -22,6 +22,8 @@ class SecuritySettingsViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         title = "Security Settings"
+        styleActionButton(updatePasswordButton)
+        styleActionButton(updateEmailButton)
     }
 
     // MARK: - Change Password

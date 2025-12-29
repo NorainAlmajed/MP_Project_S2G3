@@ -226,7 +226,11 @@ extension Section3TableViewCell {
         }
 
         // Update the food image
-        foodImageView.loadImage(from: donation.foodImageUrl)
+        let placeholder = UIImage(systemName: "photo")?
+            .withRenderingMode(.alwaysTemplate)
+
+        foodImageView.tintColor = .systemGray3
+        foodImageView.loadImage(from: donation.foodImageUrl, placeholder: placeholder)
 
         // Update quantity, category, weight, expiration date
         quantityLbl.text = "\(donation.quantity)"
@@ -317,4 +321,31 @@ extension Section3TableViewCell {
     }
 
 
+}
+
+
+import UIKit
+
+extension UIImageView {
+
+    func loadImage(from urlString: String?, placeholder: UIImage?) {
+
+        // Show placeholder immediately
+        DispatchQueue.main.async {
+            self.image = placeholder
+        }
+
+        guard let urlString = urlString,
+              let url = URL(string: urlString) else {
+            return
+        }
+
+        URLSession.shared.dataTask(with: url) { data, _, _ in
+            if let data = data, let image = UIImage(data: data) {
+                DispatchQueue.main.async {
+                    self.image = image
+                }
+            }
+        }.resume()
+    }
 }

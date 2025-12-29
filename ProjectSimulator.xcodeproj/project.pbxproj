@@ -51,7 +51,7 @@
 /* End PBXFileReference section */
 
 /* Begin PBXFileSystemSynchronizedBuildFileExceptionSet section */
-		5FEF8B8A2EDA363A007D3A97 /* Exceptions for "ProjectSimulator" folder in "ProjectSimulator" target */ = {
+		BD7D26162F01836900C69F2D /* Exceptions for "ProjectSimulator" folder in "ProjectSimulator" target */ = {
 			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
 			membershipExceptions = (
 				Info.plist,
@@ -98,7 +98,7 @@
 		5FEF8B642EDA3636007D3A97 /* ProjectSimulator */ = {
 			isa = PBXFileSystemSynchronizedRootGroup;
 			exceptions = (
-				5FEF8B8A2EDA363A007D3A97 /* Exceptions for "ProjectSimulator" folder in "ProjectSimulator" target */,
+				BD7D26162F01836900C69F2D /* Exceptions for "ProjectSimulator" folder in "ProjectSimulator" target */,
 			);
 			path = ProjectSimulator;
 			sourceTree = "<group>";

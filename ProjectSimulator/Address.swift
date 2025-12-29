@@ -23,7 +23,7 @@ struct Notification {
 }
 
 
-struct User {
+struct AppUser {
     var fullName: String
     var username: String
     var notifications: [Notification]
@@ -32,9 +32,9 @@ struct User {
 }
 
 
-var users: [User] = [
+var appUsers: [AppUser] = [
     
-    User(fullName: "Zahraa Hubail", username: "zahraa.hubail",
+    AppUser(fullName: "Zahraa Hubail", username: "zahraa.hubail",
           notifications: [
             
             Notification(title: "NGO Awaiting Approval", description: "alnoor.association has just signed up and is awaiting your verification.", date: Date()),

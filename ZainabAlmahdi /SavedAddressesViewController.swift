@@ -26,7 +26,6 @@ class SavedAddressesViewController: UITableViewController {
         fetchAddresses()
     }
 
-    // MARK: - Fetch
     func fetchAddresses() {
         guard let uid = Auth.auth().currentUser?.uid else { return }
 
@@ -52,7 +51,6 @@ class SavedAddressesViewController: UITableViewController {
             }
     }
 
-    // MARK: - Add Address
     @objc func addAddressTapped() {
         let alert = UIAlertController(
             title: "New Address",
@@ -87,7 +85,6 @@ class SavedAddressesViewController: UITableViewController {
             }
     }
 
-    // MARK: - Table Data Source
     override func tableView(_ tableView: UITableView,
                             numberOfRowsInSection section: Int) -> Int {
         addresses.count
@@ -108,7 +105,6 @@ class SavedAddressesViewController: UITableViewController {
         return cell
     }
 
-    // MARK: - Delete
     override func tableView(_ tableView: UITableView,
                             commit editingStyle: UITableViewCell.EditingStyle,
                             forRowAt indexPath: IndexPath) {

@@ -507,7 +507,7 @@
             case 6: return 161
             case 7: return 114 // Address
             case 8: return 102 //Pickup Date
-            case 9: return 324 //Pickup Time
+            case 9: return 268 //Pickup Time
             case 10: return 152
             case 11: return UITableView.automaticDimension
             default: return UITableView.automaticDimension

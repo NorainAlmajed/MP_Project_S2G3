@@ -770,10 +770,7 @@ class RaghadDonatoinFormViewController: UIViewController,
         let sb = UIStoryboard(name: "norain-schedule-pickup", bundle: nil)
               let vc = sb.instantiateViewController(withIdentifier: "SchedulePickupViewController")
         
-        
-        
-        
-        
+
         
         // TODO //(Norain):❗❗❗❗❗❗❗❗❗❗❗❗❗❗❗❗❗❗❗❗❗❗❗❗❗❗❗❗❗❗❗❗❗❗❗❗
         // After creating SchedulePickupViewController.swift

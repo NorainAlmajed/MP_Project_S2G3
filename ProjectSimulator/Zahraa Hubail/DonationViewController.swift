@@ -223,25 +223,35 @@ class DonationViewController: UIViewController {
 
         // MARK: - Firebase.
     func fetchCurrentUser(completion: @escaping (Bool) -> Void) {
-        let tempUserID = "TwWqBSGX4ec4gxCWCZcbo7WocAI2" // temporary user
 
-        db.collection("users").document(tempUserID).getDocument { [weak self] snapshot, error in
+        // 1️⃣ Get logged-in Firebase user
+        guard let firebaseUser = Auth.auth().currentUser else {
+            print("❌ No logged-in user")
+            completion(false)
+            return
+        }
+
+        let userID = firebaseUser.uid   // ✅ REAL logged-in user ID
+
+        // 2️⃣ Fetch user document using REAL ID
+        db.collection("users").document(userID).getDocument { [weak self] snapshot, error in
             if let error = error {
-                print("Error fetching user: \(error)")
+                print("❌ Error fetching user:", error)
                 completion(false)
                 return
             }
+
             guard let data = snapshot?.data(),
                   let username = data["username"] as? String,
                   let role = data["role"] as? Int
             else {
-                print("User data missing or invalid")
+                print("❌ User data missing or invalid")
                 completion(false)
                 return
             }
 
             self?.currentUser = ZahraaUser(
-                userID: tempUserID,
+                userID: userID,   // ✅ FIXED
                 fullName: data["fullName"] as? String,
                 username: username,
                 role: role,
@@ -253,6 +263,10 @@ class DonationViewController: UIViewController {
             completion(true)
         }
     }
+
+    
+    
+    
 
     func fetchAllUsers(completion: @escaping () -> Void) {
         db.collection("users").getDocuments { [weak self] snapshot, error in

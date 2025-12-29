@@ -1,10 +1,3 @@
-//
-//  SessionManager.swift
-//  ProjectSimulator
-//
-//  Created by Zainab Almahdi on 12/24/25.
-//
-
 import Foundation
 import FirebaseAuth
 import FirebaseFirestore
@@ -12,7 +5,6 @@ import FirebaseFirestore
 final class SessionManager {
 
     static let shared = SessionManager()
-
     private init() {}
 
     enum UserRole: Int {
@@ -23,13 +15,21 @@ final class SessionManager {
     }
 
     private(set) var role: UserRole = .unknown
+    private(set) var fullName: String?
 
-    // MARK: - Public helpers
     var isAdmin: Bool { role == .admin }
     var isDonor: Bool { role == .donor }
     var isNGO: Bool { role == .ngo }
 
-    // MARK: - Fetch role once after login
+    var roleDisplayName: String {
+        switch role {
+        case .admin: return "Admin"
+        case .donor: return "Donor"
+        case .ngo: return "NGO"
+        case .unknown: return "User"
+        }
+    }
+
     func fetchUserRole(completion: @escaping (Bool) -> Void) {
 
         guard let uid = Auth.auth().currentUser?.uid else {
@@ -42,22 +42,19 @@ final class SessionManager {
             .document(uid)
             .getDocument { snapshot, error in
 
-                guard
-                    let data = snapshot?.data(),
-                    let roleString = data["role"] as? String
-                else {
+                guard let data = snapshot?.data() else {
                     completion(false)
                     return
                 }
 
-                switch roleString {
-                case "1":
-                    self.role = .admin
-                case "2":
-                    self.role = .donor
-                case "3":
-                    self.role = .ngo
-                default:
+                self.fullName =
+                    data["full_name"] as? String ??
+                    data["organization_name"] as? String
+
+                if let roleInt = data["role"] as? Int,
+                   let role = UserRole(rawValue: roleInt) {
+                    self.role = role
+                } else {
                     self.role = .unknown
                 }
 
@@ -67,5 +64,6 @@ final class SessionManager {
 
     func clear() {
         role = .unknown
+        fullName = nil
     }
 }

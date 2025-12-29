@@ -21,16 +21,17 @@ class SetupProfileViewController: UIViewController,
     @IBOutlet weak var bioTextView: UITextView!
     @IBOutlet weak var notificationsSwitch: UISwitch!
     @IBOutlet weak var bioCounterLabel: UILabel!
-
+    @IBOutlet weak var uploadbuttonwidth: NSLayoutConstraint!
+    
     override func viewDidLoad() {
         super.viewDidLoad()
 
         styleActionButton(continueButton)
         styleActionButton(uploadButton)
-
+        title = "Setup Profile"
         bioTextView.delegate = self
         bioCounterLabel.text = "0 / 240"
-        
+
         navigationItem.hidesBackButton = true
     }
 
@@ -42,14 +43,12 @@ class SetupProfileViewController: UIViewController,
                 preferredStyle: .alert
             )
 
-            let cancel = UIAlertAction(title: "Cancel", style: .cancel) { _ in
+            alert.addAction(UIAlertAction(title: "Cancel", style: .cancel) { _ in
                 sender.setOn(true, animated: true)
-            }
+            })
 
-            let confirm = UIAlertAction(title: "Disable", style: .destructive)
+            alert.addAction(UIAlertAction(title: "Disable", style: .destructive))
 
-            alert.addAction(cancel)
-            alert.addAction(confirm)
             present(alert, animated: true)
         }
     }
@@ -78,7 +77,6 @@ class SetupProfileViewController: UIViewController,
         dismiss(animated: true)
     }
 
-    // MARK: - Continue
     @IBAction func continueTapped(_ sender: UIButton) {
 
         guard let fullName = fullNameTextField.text, !fullName.isEmpty else {
@@ -98,25 +96,26 @@ class SetupProfileViewController: UIViewController,
 
         continueButton.isEnabled = false
 
-        CloudinaryService.shared.uploadImage(image) { [weak self] result in
+        let cloudinaryService = CloudinaryService()
+        cloudinaryService.uploadImage(image) { [weak self] imageUrl in
             guard let self = self else { return }
 
-            switch result {
-            case .success(let imageUrl):
+            if let imageUrl = imageUrl {
                 self.saveProfile(
                     fullName: fullName,
                     bio: bio,
                     profileImageUrl: imageUrl
                 )
-
-            case .failure(let error):
+            } else {
                 self.continueButton.isEnabled = true
-                self.showAlert(title: "Upload Failed", message: error.localizedDescription)
+                self.showAlert(
+                    title: "Upload Failed",
+                    message: "Could not upload profile image."
+                )
             }
         }
     }
 
-    // MARK: - Firestore
     func saveProfile(fullName: String, bio: String, profileImageUrl: String) {
 
         guard let uid = Auth.auth().currentUser?.uid else { return }
@@ -140,11 +139,14 @@ class SetupProfileViewController: UIViewController,
                     return
                 }
 
-                self.routeToDashboard()
+                SessionManager.shared.fetchUserRole { success in
+                    DispatchQueue.main.async {
+                        self.routeToDashboard()
+                    }
+                }
             }
     }
 
-    // MARK: - Routing
     func routeToDashboard() {
 
         let storyboard = UIStoryboard(name: "Main", bundle: nil)
@@ -168,7 +170,6 @@ class SetupProfileViewController: UIViewController,
         }
     }
 
-    // MARK: - Bio Counter
     func textViewDidChange(_ textView: UITextView) {
         let max = 240
         if textView.text.count > max {
@@ -186,9 +187,10 @@ class SetupProfileViewController: UIViewController,
         return updated.count <= 240
     }
 
-    // MARK: - Helpers
     func showAlert(title: String, message: String) {
-        let alert = UIAlertController(title: title, message: message, preferredStyle: .alert)
+        let alert = UIAlertController(title: title,
+                                      message: message,
+                                      preferredStyle: .alert)
         alert.addAction(UIAlertAction(title: "OK", style: .default))
         present(alert, animated: true)
     }
@@ -198,3 +200,4 @@ class SetupProfileViewController: UIViewController,
         button.clipsToBounds = true
     }
 }
+

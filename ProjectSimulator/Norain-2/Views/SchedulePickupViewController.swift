@@ -1,0 +1,423 @@
+import UIKit
+import FirebaseFirestore
+import FirebaseAuth
+
+protocol AddAddressDelegate: AnyObject {
+    func didAddAddress(_ address: Address)
+}
+
+class SchedulePickupViewController: UIViewController {
+    
+    // MARK: - IBOutlets
+    @IBOutlet weak var addressContainerView: UIView!
+    @IBOutlet weak var addressNameLbl: UILabel!
+    @IBOutlet weak var addressDetailsLbl: UILabel!
+    @IBOutlet weak var addNewAddressBtn: UIButton!
+    @IBOutlet weak var checkmarkImageView: UIImageView!
+    
+    @IBOutlet weak var dateTextField: UITextField!
+    @IBOutlet weak var dateBtn: UIButton!
+    
+    @IBOutlet weak var timeframeTableView: UITableView!
+    @IBOutlet weak var timeframeHeightConstraint: NSLayoutConstraint!
+    
+    @IBOutlet weak var reccuringSwitch: UISwitch!
+    @IBOutlet weak var frequencyBtn: UIButton!
+    @IBOutlet weak var frequencyContainer: UIView!
+    
+    @IBOutlet weak var confirmBtn: UIButton!
+    @IBOutlet weak var addressErrorLbl: UILabel!
+    @IBOutlet weak var dateErrorLbl: UILabel!
+    @IBOutlet weak var timeErrorLbl: UILabel!
+    // MARK: - Properties
+    var incompleteDonation: IncompleteDonation?
+    
+    // Fixed: Declared missing properties
+    private var selectedAddressRef: DocumentReference?
+    private var existingAddresses: [(ref: DocumentReference, data: [String: Any])] = []
+    
+    private var selectedAddress: Address?
+    private var selectedDate: Date?
+    private var selectedTimeframe: String?
+    private var isRecurring: Bool = false
+    private var selectedFrequency: String?
+    
+    private let timeframes = [
+        "Any Time : 9AM - 4PM",
+        "9AM - 11AM",
+        "12PM-1PM",
+        "2PM-4PM"
+    ]
+    
+    private let frequencies = ["Daily", "Weekly", "Monthly", "Yearly"]
+    
+    private let datePicker = UIDatePicker()
+    private let db = Firestore.firestore()
+    
+    // MARK: - Lifecycle
+    override func viewDidLoad() {
+        super.viewDidLoad()
+        setupUI()
+        setupDatePicker()
+        setupTableView()
+        signInAnonymously()
+        fetchExistingAddresses()
+        setupTestDonation() // 🧪 Remove for production
+    }
+    
+    // MARK: - Setup Methods
+    private func setupTestDonation() {
+        var testDonation = IncompleteDonation()
+        testDonation.category = "Food"
+        testDonation.description = "Fresh vegetables and fruits"
+        testDonation.quantity = 10
+        testDonation.weight = 5.5
+        self.incompleteDonation = testDonation
+        print("✅ Test donation data loaded!")
+    }
+
+    private func signInAnonymously() {
+        Auth.auth().signInAnonymously { [weak self] authResult, error in
+            if let error = error {
+                print("❌ Sign in error: \(error.localizedDescription)")
+            } else {
+                print("✅ Signed in as: \(authResult?.user.uid ?? "")")
+            }
+        }
+    }
+    
+    private func setupUI() {
+        reccuringSwitch.addTarget(self, action: #selector(recurringSwitchChanged), for: .valueChanged)
+        title = "Schedule Pick-up"
+        addressContainerView.layer.cornerRadius = 8
+        addressContainerView.layer.borderWidth = 1
+        addressContainerView.layer.borderColor = UIColor.systemGray4.cgColor
+        
+        addressNameLbl.isHidden = true
+        addressDetailsLbl.isHidden = true
+        checkmarkImageView.isHidden = true
+        
+        addressErrorLbl.isHidden = true
+        dateErrorLbl.isHidden = true
+        timeErrorLbl.isHidden = true
+        
+        confirmBtn.layer.cornerRadius = 8
+        confirmBtn.isEnabled = true
+        confirmBtn.alpha = 1.0
+        
+        frequencyContainer.isHidden = true
+    }
+    
+    private func setupDatePicker() {
+        datePicker.datePickerMode = .date
+        datePicker.preferredDatePickerStyle = .wheels
+        datePicker.minimumDate = Date()
+        datePicker.addTarget(self, action: #selector(dateChanged), for: .valueChanged)
+        dateTextField.inputView = datePicker
+        
+        let toolbar = UIToolbar()
+        toolbar.sizeToFit()
+        let doneButton = UIBarButtonItem(barButtonSystemItem: .done, target: self, action: #selector(doneDatePicker))
+        toolbar.setItems([UIBarButtonItem(barButtonSystemItem: .flexibleSpace, target: nil, action: nil), doneButton], animated: false)
+        dateTextField.inputAccessoryView = toolbar
+    }
+    
+    private func setupTableView() {
+        timeframeTableView.delegate = self
+        timeframeTableView.dataSource = self
+        timeframeTableView.register(UITableViewCell.self, forCellReuseIdentifier: "TimeframeCell")
+        timeframeHeightConstraint.constant = CGFloat(timeframes.count * 44)
+    }
+
+    private func validateForm() {
+        confirmBtn.isEnabled = true
+            confirmBtn.alpha = 1.0
+    }
+    
+    // MARK: - Actions
+    @IBAction func addNewAddressTapped(_ sender: UIButton) {
+        let alert = UIAlertController(title: "Select Address", message: nil, preferredStyle: .actionSheet)
+        
+        if !existingAddresses.isEmpty {
+            alert.addAction(UIAlertAction(title: "Choose Saved Address", style: .default) { _ in
+                self.showExistingAddressesList()
+            })
+        }
+        
+        alert.addAction(UIAlertAction(title: "Add New Address", style: .default) { _ in
+            self.navigateToAddAddress()
+        })
+        
+        alert.addAction(UIAlertAction(title: "Cancel", style: .cancel))
+        present(alert, animated: true)
+    }
+    
+    private func navigateToAddAddress() {
+        let storyboard = UIStoryboard(name: "norain-schedule-pickup", bundle: nil)
+        if let vc = storyboard.instantiateViewController(withIdentifier: "AddAddressViewController") as? AddAddressViewController {
+            vc.delegate = self
+            navigationController?.pushViewController(vc, animated: true)
+        }
+    }
+
+    private func showExistingAddressesList() {
+        let alert = UIAlertController(title: "Saved Addresses", message: nil, preferredStyle: .actionSheet)
+        for (ref, data) in existingAddresses {
+            let name = data["name"] as? String ?? "Address"
+            alert.addAction(UIAlertAction(title: name, style: .default) { _ in
+                self.selectExistingAddress(ref: ref, data: data)
+            })
+        }
+        alert.addAction(UIAlertAction(title: "Cancel", style: .cancel))
+        present(alert, animated: true)
+    }
+
+    private func selectExistingAddress(ref: DocumentReference, data: [String: Any]) {
+        addressErrorLbl.isHidden = true
+        selectedAddressRef = ref
+        let address = Address(
+            name: data["name"] as? String ?? "",
+            building: data["building"] as? String ?? "",
+            road: data["road"] as? String ?? "",
+            block: data["block"] as? String ?? "",
+            flat: data["flat"] as? String ?? "",
+            area: data["area"] as? String ?? "",
+            governorate: data["governorate"] as? String ?? ""
+        )
+        selectedAddress = address
+        addressNameLbl.text = address.name
+        addressDetailsLbl.text = address.fullAddress
+        addressNameLbl.isHidden = false
+        addressDetailsLbl.isHidden = false
+        checkmarkImageView.isHidden = false
+        validateForm()
+    }
+    
+    @IBAction func dateButtonTapped(_ sender: UIButton) {
+
+        dateTextField.becomeFirstResponder()
+    }
+
+    @objc private func dateChanged() {
+        dateErrorLbl.isHidden = true
+        selectedDate = datePicker.date
+        let formatter = DateFormatter()
+        formatter.dateFormat = "dd/MM/yyyy"
+        dateTextField.text = formatter.string(from: datePicker.date)
+        validateForm()
+    }
+
+    @objc private func doneDatePicker() {
+        dateTextField.resignFirstResponder()
+    }
+
+    @objc private func recurringSwitchChanged(_ sender: UISwitch) {
+        isRecurring = sender.isOn
+        frequencyContainer.isHidden = !sender.isOn
+        selectedFrequency = sender.isOn ? "Weekly" : nil
+        validateForm()
+    }
+
+    @IBAction func frequencyButtonTapped(_ sender: UIButton) {
+        let alert = UIAlertController(title: "Select Frequency", message: nil, preferredStyle: .actionSheet)
+        for freq in frequencies {
+            alert.addAction(UIAlertAction(title: freq, style: .default) { _ in
+                self.selectedFrequency = freq
+                self.frequencyBtn.setTitle(freq, for: .normal)
+                self.validateForm()
+            })
+        }
+        alert.addAction(UIAlertAction(title: "Cancel", style: .cancel))
+        present(alert, animated: true)
+    }
+
+    @IBAction func confirmButtonTapped(_ sender: UIButton) {
+        
+        view.endEditing(true)
+            
+            // Run our custom validation
+            if validateAndShowErrors() {
+                // If all labels are hidden and data is there, proceed!
+                print("✅ Validation passed. Starting upload...")
+                completeDonation()
+            } else {
+                // If validation fails, provide haptic feedback (optional)
+                let generator = UINotificationFeedbackGenerator()
+                generator.notificationOccurred(.error)
+                print("❌ Validation failed. Showing error labels.")
+            }
+    }
+    
+    // MARK: - Firebase Operations
+    private func fetchExistingAddresses() {
+        db.collection("Address").getDocuments { [weak self] snapshot, error in
+            self?.existingAddresses = snapshot?.documents.compactMap { (ref: $0.reference, data: $0.data()) } ?? []
+        }
+    }
+
+    private func completeDonation() {
+        guard let userId = Auth.auth().currentUser?.uid,
+              let address = selectedAddress,
+              let date = selectedDate,
+              let timeframe = selectedTimeframe else { return }
+
+        confirmBtn.isEnabled = false
+        confirmBtn.setTitle("Saving...", for: .normal)
+
+        if let existingRef = selectedAddressRef {
+            saveDonationToFirebase(addressRef: existingRef, date: date, timeframe: timeframe, userId: userId)
+        } else {
+            saveAddressToFirebase(address: address) { [weak self] ref in
+                if let ref = ref {
+                    self?.saveDonationToFirebase(addressRef: ref, date: date, timeframe: timeframe, userId: userId)
+                } else {
+                    self?.confirmBtn.isEnabled = true
+                }
+            }
+        }
+    }
+
+    private func saveAddressToFirebase(address: Address, completion: @escaping (DocumentReference?) -> Void) {
+        let data: [String: Any] = [
+            "name": address.name ?? "Saved Address",
+            "building": address.building, "road": address.road, "block": address.block,
+            "flat": address.flat, "area": address.area, "governorate": address.governorate
+        ]
+        let ref = db.collection("Address").document()
+        ref.setData(data) { error in
+            completion(error == nil ? ref : nil)
+        }
+    }
+
+    private func saveDonationToFirebase(addressRef: DocumentReference, date: Date, timeframe: String, userId: String) {
+        let donorRef = db.collection("users").document(userId)
+        
+        // 1. Calculate the recurrence value
+        var recurrenceValue = 0
+        if isRecurring {
+            switch selectedFrequency {
+            case "Daily": recurrenceValue = 1
+            case "Weekly": recurrenceValue = 2
+            case "Monthly": recurrenceValue = 3
+            case "Yearly": recurrenceValue = 4
+            default: recurrenceValue = 0
+            }
+        }
+        
+        // 2. Build the donation data dictionary
+        var donationData: [String: Any] = [
+            "address": addressRef,
+            "pickupDate": Timestamp(date: date),
+            "pickupTime": timeframe,
+            "status": 1, // 1 = pending
+            "creationDate": Timestamp(date: Date()),
+            "donor": donorRef,
+            "recurrence": recurrenceValue,
+            "rejectionReason": ""
+        ]
+        
+        // 3. Add incomplete donation data if it exists
+        if let donation = incompleteDonation {
+            if let category = donation.category { donationData["category"] = category }
+            if let desc = donation.description { donationData["description"] = desc }
+            if let qty = donation.quantity { donationData["quantity"] = qty }
+            if let weight = donation.weight { donationData["weight"] = weight }
+            if let imageUrl = donation.foodImageUrl { donationData["foodImageUrl"] = imageUrl }
+            if let id = donation.donationID { donationData["donationID"] = id }
+            if let ngoRef = donation.ngo { donationData["ngo"] = ngoRef }
+            
+            // Handle expiry date specifically as a Timestamp
+            if let expiry = donation.expiryDate {
+                donationData["expiryDate"] = Timestamp(date: expiry)
+            }
+        }
+        
+        // 4. Save to Firestore
+        db.collection("Donation").addDocument(data: donationData) { [weak self] error in
+            self?.confirmBtn.isEnabled = true
+            self?.confirmBtn.setTitle("Confirm Pickup Schedule", for: .normal)
+            
+            if let error = error {
+                print("❌ Error saving donation: \(error.localizedDescription)")
+                self?.showAlert(title: "Error", message: "Failed to save donation.")
+            } else {
+                print("✅ Donation saved successfully with recurrence: \(recurrenceValue)")
+                self?.showSuccessAlert()
+            }
+        }
+    }
+    
+    private func showAlert(title: String, message: String) {
+        let alert = UIAlertController(title: title, message: message, preferredStyle: .alert)
+        alert.addAction(UIAlertAction(title: "OK", style: .default))
+        present(alert, animated: true)
+    }
+    private func showSuccessAlert() {
+        let alert = UIAlertController(title: "Success", message: "Pickup Scheduled!", preferredStyle: .alert)
+        alert.addAction(UIAlertAction(title: "OK", style: .default) { _ in
+            self.navigationController?.popToRootViewController(animated: true)
+        })
+        present(alert, animated: true)
+    }
+    private func validateAndShowErrors() -> Bool {
+        var isValid = true
+        
+        // Check Address
+        if selectedAddress == nil {
+            addressErrorLbl.isHidden = false
+            isValid = false
+        } else {
+            addressErrorLbl.isHidden = true
+        }
+        
+        // Check Date
+        if selectedDate == nil {
+            dateErrorLbl.isHidden = false
+            isValid = false
+        } else {
+            dateErrorLbl.isHidden = true
+        }
+        
+        // Check Timeframe
+        if selectedTimeframe == nil {
+            timeErrorLbl.isHidden = false
+            isValid = false
+        } else {
+            timeErrorLbl.isHidden = true
+        }
+        
+        return isValid
+    }
+}
+
+// MARK: - TableView & Delegate Extensions
+extension SchedulePickupViewController: UITableViewDelegate, UITableViewDataSource, AddAddressDelegate {
+    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int { return timeframes.count }
+    
+    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+        let cell = tableView.dequeueReusableCell(withIdentifier: "TimeframeCell", for: indexPath)
+        let time = timeframes[indexPath.row]
+        cell.textLabel?.text = time
+        cell.accessoryType = (time == selectedTimeframe) ? .checkmark : .none
+        return cell
+    }
+    
+    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        timeErrorLbl.isHidden = true
+        selectedTimeframe = timeframes[indexPath.row]
+        tableView.reloadData()
+        validateForm()
+    }
+    
+    func didAddAddress(_ address: Address) {
+        addressErrorLbl.isHidden = true
+        selectedAddressRef = nil
+        selectedAddress = address
+        addressNameLbl.text = address.name
+        addressDetailsLbl.text = address.fullAddress
+        addressNameLbl.isHidden = false
+        addressDetailsLbl.isHidden = false
+        checkmarkImageView.isHidden = false
+        validateForm()
+    }
+}

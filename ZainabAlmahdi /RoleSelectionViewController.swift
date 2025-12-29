@@ -17,22 +17,13 @@ class RoleSelectionViewController: UIViewController {
         super.viewDidLoad()
         styleActionButton(donorSignup)
         styleActionButton(ngoSignup)
+        navigationItem.title = ""
 
-        // Do any additional setup after loading the view.
     }
     
     private func styleActionButton(_ button: UIButton) {
         button.layer.cornerRadius = button.frame.height / 2
         button.clipsToBounds = true
     }
-   
-    /*
-
-    // In a storyboard-based application, you will often want to do a little preparation before navigation
-    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-        // Get the new view controller using segue.destination.
-        // Pass the selected object to the new view controller.
-    }
-    */
 
 }

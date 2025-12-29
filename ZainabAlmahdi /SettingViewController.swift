@@ -2,13 +2,9 @@ import UIKit
 
 class SettingViewController: UITableViewController {
 
-    enum UserRole {
-        case admin
-        case donor
-        case ngo
-    }
+    @IBOutlet weak var nameLabel: UILabel!
     
-    var currentRole: UserRole = .ngo
+    @IBOutlet weak var roleLabel: UILabel!
     
     enum SettingsRow {
         case editProfile
@@ -26,20 +22,29 @@ class SettingViewController: UITableViewController {
         configureRows()
     }
 
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        
+        nameLabel.text = SessionManager.shared.fullName ?? "User"
+        roleLabel.text = SessionManager.shared.roleDisplayName
+        
+        configureRows()
+        tableView.reloadData()
+    }
+
     func configureRows() {
         rows = [.editProfile, .security]
 
-        switch currentRole {
-        case .admin:
-            rows.append(.notifications)
-
-        case .donor:
+        if SessionManager.shared.isDonor || SessionManager.shared.isNGO {
             rows.append(.savedAddresses)
             rows.append(.notifications)
+        }
 
-        case .ngo:
-            rows.append(.savedAddresses)
+        if SessionManager.shared.isAdmin {
             rows.append(.notifications)
+        }
+
+        if SessionManager.shared.isNGO {
             rows.append(.updateNGOLicense)
         }
     }
@@ -102,8 +107,7 @@ class SettingViewController: UITableViewController {
             goToUpdateNGOLicense()
         }
     }
-    
-    
+
     func goToEditProfile() {
         let vc = UIStoryboard(name: "Settings", bundle: nil)
             .instantiateViewController(withIdentifier: "EditProfileViewController")

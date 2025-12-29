@@ -19,7 +19,7 @@ class UserTableViewCell: UITableViewCell {
     
     
     
-    func configure(appUser:AppUser){
+    func configure(appUser:NorainAppUser){
         nameLbl.text = appUser.name
         emailLbl.text = ("Email: " + appUser.email)
         imgUserPhoto.image = UIImage(systemName: "person.circle.fill")
@@ -36,12 +36,12 @@ class UserTableViewCell: UITableViewCell {
         
 
         
-        if let donor = appUser as? Donor{
+        if let donor = appUser as? NorainDonor{
 
             statusLbl.text = ""
             phoneOrStatusLbl.text = ("Phone Number: " + donor.phoneNumber.description)
 
-        }else if let ngo = appUser as? NGO{
+        }else if let ngo = appUser as? NorainNGO{
             phoneOrStatusLbl.text = "Status: "
             if (ngo.status == .pending){
                 statusLbl.text = "Pending"

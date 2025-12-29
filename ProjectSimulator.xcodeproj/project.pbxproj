@@ -8,6 +8,93 @@
 
 /* Begin PBXBuildFile section */
 		12A272992F021E3F00020DD6 /* FirebaseStorage in Frameworks */ = {isa = PBXBuildFile; productRef = 12A272982F021E3F00020DD6 /* FirebaseStorage */; };
+		7A8446202F02A42A00DCB566 /* ZahraaSection2TableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7A8446172F02A42A00DCB566 /* ZahraaSection2TableViewCell.swift */; };
+		7A8446212F02A42A00DCB566 /* DonationViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7A8446052F02A42A00DCB566 /* DonationViewController.swift */; };
+		7A8446222F02A42A00DCB566 /* ExcelExporter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7A8446072F02A42A00DCB566 /* ExcelExporter.swift */; };
+		7A8446232F02A42A00DCB566 /* ZahraaAddressPageViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7A8446102F02A42A00DCB566 /* ZahraaAddressPageViewController.swift */; };
+		7A8446242F02A42A00DCB566 /* Section3TableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7A84460C2F02A42A00DCB566 /* Section3TableViewCell.swift */; };
+		7A8446252F02A42A00DCB566 /* UIImageView+URLZH.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7A84460F2F02A42A00DCB566 /* UIImageView+URLZH.swift */; };
+		7A8446262F02A42A00DCB566 /* TestViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7A84460E2F02A42A00DCB566 /* TestViewController.swift */; };
+		7A8446272F02A42A00DCB566 /* Section1TableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7A84460A2F02A42A00DCB566 /* Section1TableViewCell.swift */; };
+		7A8446282F02A42A00DCB566 /* ZHRejectionReasonViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7A84461E2F02A42A00DCB566 /* ZHRejectionReasonViewController.swift */; };
+		7A8446292F02A42A00DCB566 /* StatusCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7A84460D2F02A42A00DCB566 /* StatusCollectionViewCell.swift */; };
+		7A84462A2F02A42A00DCB566 /* ZahraaSection1TableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7A8446162F02A42A00DCB566 /* ZahraaSection1TableViewCell.swift */; };
+		7A84462B2F02A42A00DCB566 /* Section2TableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7A84460B2F02A42A00DCB566 /* Section2TableViewCell.swift */; };
+		7A84462C2F02A42A00DCB566 /* ZahraaSection3TableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7A8446182F02A42A00DCB566 /* ZahraaSection3TableViewCell.swift */; };
+		7A84462D2F02A42A00DCB566 /* ZahraaPickUpDateTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7A8446132F02A42A00DCB566 /* ZahraaPickUpDateTableViewCell.swift */; };
+		7A84462E2F02A42A00DCB566 /* ZahraaPickUpTimeTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7A8446142F02A42A00DCB566 /* ZahraaPickUpTimeTableViewCell.swift */; };
+		7A84462F2F02A42A00DCB566 /* EditDonationViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7A8446062F02A42A00DCB566 /* EditDonationViewController.swift */; };
+		7A8446302F02A42A00DCB566 /* NotificationsCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7A8446082F02A42A00DCB566 /* NotificationsCollectionViewCell.swift */; };
+		7A8446312F02A42A00DCB566 /* ZahraaSection6TableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7A84461B2F02A42A00DCB566 /* ZahraaSection6TableViewCell.swift */; };
+		7A8446322F02A42A00DCB566 /* ZahraaFile.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7A8446122F02A42A00DCB566 /* ZahraaFile.swift */; };
+		7A8446332F02A42A00DCB566 /* DonationCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7A8446032F02A42A00DCB566 /* DonationCollectionViewCell.swift */; };
+		7A8446342F02A42A00DCB566 /* ZahraaRecurrenceTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7A8446152F02A42A00DCB566 /* ZahraaRecurrenceTableViewCell.swift */; };
+		7A8446352F02A42A00DCB566 /* ZahraaAddressTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7A8446112F02A42A00DCB566 /* ZahraaAddressTableViewCell.swift */; };
+		7A8446362F02A42A00DCB566 /* NotificationsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7A8446092F02A42A00DCB566 /* NotificationsViewController.swift */; };
+		7A8446372F02A42A00DCB566 /* ZahraaSection8TableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7A84461D2F02A42A00DCB566 /* ZahraaSection8TableViewCell.swift */; };
+		7A8446382F02A42A00DCB566 /* ZahraaSection4TableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7A8446192F02A42A00DCB566 /* ZahraaSection4TableViewCell.swift */; };
+		7A8446392F02A42A00DCB566 /* ZahraaSection5TableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7A84461A2F02A42A00DCB566 /* ZahraaSection5TableViewCell.swift */; };
+		7A84463A2F02A42A00DCB566 /* ZahraaSection7TableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7A84461C2F02A42A00DCB566 /* ZahraaSection7TableViewCell.swift */; };
+		7A84463B2F02A42A00DCB566 /* Donations.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 7A8446042F02A42A00DCB566 /* Donations.storyboard */; };
+		7A84463C2F02A42A00DCB566 /* ZahraaSection2TableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7A8446172F02A42A00DCB566 /* ZahraaSection2TableViewCell.swift */; };
+		7A84463D2F02A42A00DCB566 /* DonationViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7A8446052F02A42A00DCB566 /* DonationViewController.swift */; };
+		7A84463E2F02A42A00DCB566 /* ExcelExporter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7A8446072F02A42A00DCB566 /* ExcelExporter.swift */; };
+		7A84463F2F02A42A00DCB566 /* ZahraaAddressPageViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7A8446102F02A42A00DCB566 /* ZahraaAddressPageViewController.swift */; };
+		7A8446402F02A42A00DCB566 /* Section3TableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7A84460C2F02A42A00DCB566 /* Section3TableViewCell.swift */; };
+		7A8446412F02A42A00DCB566 /* UIImageView+URLZH.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7A84460F2F02A42A00DCB566 /* UIImageView+URLZH.swift */; };
+		7A8446422F02A42A00DCB566 /* TestViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7A84460E2F02A42A00DCB566 /* TestViewController.swift */; };
+		7A8446432F02A42A00DCB566 /* Section1TableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7A84460A2F02A42A00DCB566 /* Section1TableViewCell.swift */; };
+		7A8446442F02A42A00DCB566 /* ZHRejectionReasonViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7A84461E2F02A42A00DCB566 /* ZHRejectionReasonViewController.swift */; };
+		7A8446452F02A42A00DCB566 /* StatusCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7A84460D2F02A42A00DCB566 /* StatusCollectionViewCell.swift */; };
+		7A8446462F02A42A00DCB566 /* ZahraaSection1TableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7A8446162F02A42A00DCB566 /* ZahraaSection1TableViewCell.swift */; };
+		7A8446472F02A42A00DCB566 /* Section2TableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7A84460B2F02A42A00DCB566 /* Section2TableViewCell.swift */; };
+		7A8446482F02A42A00DCB566 /* ZahraaSection3TableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7A8446182F02A42A00DCB566 /* ZahraaSection3TableViewCell.swift */; };
+		7A8446492F02A42A00DCB566 /* ZahraaPickUpDateTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7A8446132F02A42A00DCB566 /* ZahraaPickUpDateTableViewCell.swift */; };
+		7A84464A2F02A42A00DCB566 /* ZahraaPickUpTimeTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7A8446142F02A42A00DCB566 /* ZahraaPickUpTimeTableViewCell.swift */; };
+		7A84464B2F02A42A00DCB566 /* EditDonationViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7A8446062F02A42A00DCB566 /* EditDonationViewController.swift */; };
+		7A84464C2F02A42A00DCB566 /* NotificationsCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7A8446082F02A42A00DCB566 /* NotificationsCollectionViewCell.swift */; };
+		7A84464D2F02A42A00DCB566 /* ZahraaSection6TableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7A84461B2F02A42A00DCB566 /* ZahraaSection6TableViewCell.swift */; };
+		7A84464E2F02A42A00DCB566 /* ZahraaFile.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7A8446122F02A42A00DCB566 /* ZahraaFile.swift */; };
+		7A84464F2F02A42A00DCB566 /* DonationCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7A8446032F02A42A00DCB566 /* DonationCollectionViewCell.swift */; };
+		7A8446502F02A42A00DCB566 /* ZahraaRecurrenceTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7A8446152F02A42A00DCB566 /* ZahraaRecurrenceTableViewCell.swift */; };
+		7A8446512F02A42A00DCB566 /* ZahraaAddressTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7A8446112F02A42A00DCB566 /* ZahraaAddressTableViewCell.swift */; };
+		7A8446522F02A42A00DCB566 /* NotificationsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7A8446092F02A42A00DCB566 /* NotificationsViewController.swift */; };
+		7A8446532F02A42A00DCB566 /* ZahraaSection8TableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7A84461D2F02A42A00DCB566 /* ZahraaSection8TableViewCell.swift */; };
+		7A8446542F02A42A00DCB566 /* ZahraaSection4TableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7A8446192F02A42A00DCB566 /* ZahraaSection4TableViewCell.swift */; };
+		7A8446552F02A42A00DCB566 /* ZahraaSection5TableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7A84461A2F02A42A00DCB566 /* ZahraaSection5TableViewCell.swift */; };
+		7A8446562F02A42A00DCB566 /* ZahraaSection7TableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7A84461C2F02A42A00DCB566 /* ZahraaSection7TableViewCell.swift */; };
+		7A8446572F02A42A00DCB566 /* Donations.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 7A8446042F02A42A00DCB566 /* Donations.storyboard */; };
+		7A8446582F02A42A00DCB566 /* ZahraaSection2TableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7A8446172F02A42A00DCB566 /* ZahraaSection2TableViewCell.swift */; };
+		7A8446592F02A42A00DCB566 /* DonationViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7A8446052F02A42A00DCB566 /* DonationViewController.swift */; };
+		7A84465A2F02A42A00DCB566 /* ExcelExporter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7A8446072F02A42A00DCB566 /* ExcelExporter.swift */; };
+		7A84465B2F02A42A00DCB566 /* ZahraaAddressPageViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7A8446102F02A42A00DCB566 /* ZahraaAddressPageViewController.swift */; };
+		7A84465C2F02A42A00DCB566 /* Section3TableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7A84460C2F02A42A00DCB566 /* Section3TableViewCell.swift */; };
+		7A84465D2F02A42A00DCB566 /* UIImageView+URLZH.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7A84460F2F02A42A00DCB566 /* UIImageView+URLZH.swift */; };
+		7A84465E2F02A42A00DCB566 /* TestViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7A84460E2F02A42A00DCB566 /* TestViewController.swift */; };
+		7A84465F2F02A42A00DCB566 /* Section1TableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7A84460A2F02A42A00DCB566 /* Section1TableViewCell.swift */; };
+		7A8446602F02A42A00DCB566 /* ZHRejectionReasonViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7A84461E2F02A42A00DCB566 /* ZHRejectionReasonViewController.swift */; };
+		7A8446612F02A42A00DCB566 /* StatusCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7A84460D2F02A42A00DCB566 /* StatusCollectionViewCell.swift */; };
+		7A8446622F02A42A00DCB566 /* ZahraaSection1TableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7A8446162F02A42A00DCB566 /* ZahraaSection1TableViewCell.swift */; };
+		7A8446632F02A42A00DCB566 /* Section2TableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7A84460B2F02A42A00DCB566 /* Section2TableViewCell.swift */; };
+		7A8446642F02A42A00DCB566 /* ZahraaSection3TableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7A8446182F02A42A00DCB566 /* ZahraaSection3TableViewCell.swift */; };
+		7A8446652F02A42A00DCB566 /* ZahraaPickUpDateTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7A8446132F02A42A00DCB566 /* ZahraaPickUpDateTableViewCell.swift */; };
+		7A8446662F02A42A00DCB566 /* ZahraaPickUpTimeTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7A8446142F02A42A00DCB566 /* ZahraaPickUpTimeTableViewCell.swift */; };
+		7A8446672F02A42A00DCB566 /* EditDonationViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7A8446062F02A42A00DCB566 /* EditDonationViewController.swift */; };
+		7A8446682F02A42A00DCB566 /* NotificationsCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7A8446082F02A42A00DCB566 /* NotificationsCollectionViewCell.swift */; };
+		7A8446692F02A42A00DCB566 /* ZahraaSection6TableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7A84461B2F02A42A00DCB566 /* ZahraaSection6TableViewCell.swift */; };
+		7A84466A2F02A42A00DCB566 /* ZahraaFile.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7A8446122F02A42A00DCB566 /* ZahraaFile.swift */; };
+		7A84466B2F02A42A00DCB566 /* DonationCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7A8446032F02A42A00DCB566 /* DonationCollectionViewCell.swift */; };
+		7A84466C2F02A42A00DCB566 /* ZahraaRecurrenceTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7A8446152F02A42A00DCB566 /* ZahraaRecurrenceTableViewCell.swift */; };
+		7A84466D2F02A42A00DCB566 /* ZahraaAddressTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7A8446112F02A42A00DCB566 /* ZahraaAddressTableViewCell.swift */; };
+		7A84466E2F02A42A00DCB566 /* NotificationsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7A8446092F02A42A00DCB566 /* NotificationsViewController.swift */; };
+		7A84466F2F02A42A00DCB566 /* ZahraaSection8TableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7A84461D2F02A42A00DCB566 /* ZahraaSection8TableViewCell.swift */; };
+		7A8446702F02A42A00DCB566 /* ZahraaSection4TableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7A8446192F02A42A00DCB566 /* ZahraaSection4TableViewCell.swift */; };
+		7A8446712F02A42A00DCB566 /* ZahraaSection5TableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7A84461A2F02A42A00DCB566 /* ZahraaSection5TableViewCell.swift */; };
+		7A8446722F02A42A00DCB566 /* ZahraaSection7TableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7A84461C2F02A42A00DCB566 /* ZahraaSection7TableViewCell.swift */; };
+		7A8446732F02A42A00DCB566 /* Donations.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 7A8446042F02A42A00DCB566 /* Donations.storyboard */; };
+		7A8446752F02A4DD00DCB566 /* Raghad1.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 7A8446742F02A4DD00DCB566 /* Raghad1.storyboard */; };
+		7A8446762F02A4DD00DCB566 /* Raghad1.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 7A8446742F02A4DD00DCB566 /* Raghad1.storyboard */; };
+		7A8446772F02A4DD00DCB566 /* Raghad1.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 7A8446742F02A4DD00DCB566 /* Raghad1.storyboard */; };
 		D08304AC2F014FCA00289EEC /* FirebaseAnalytics in Frameworks */ = {isa = PBXBuildFile; productRef = D08304AB2F014FCA00289EEC /* FirebaseAnalytics */; };
 		D08304AE2F014FCA00289EEC /* FirebaseAuth in Frameworks */ = {isa = PBXBuildFile; productRef = D08304AD2F014FCA00289EEC /* FirebaseAuth */; };
 		D08304B02F014FCA00289EEC /* FirebaseCore in Frameworks */ = {isa = PBXBuildFile; productRef = D08304AF2F014FCA00289EEC /* FirebaseCore */; };
@@ -44,6 +131,35 @@
 		5FEF8B622EDA3636007D3A97 /* ProjectSimulator.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = ProjectSimulator.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		5FEF8B782EDA363A007D3A97 /* ProjectSimulatorTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = ProjectSimulatorTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		5FEF8B822EDA363A007D3A97 /* ProjectSimulatorUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = ProjectSimulatorUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		7A8446032F02A42A00DCB566 /* DonationCollectionViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DonationCollectionViewCell.swift; sourceTree = "<group>"; };
+		7A8446042F02A42A00DCB566 /* Donations.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; path = Donations.storyboard; sourceTree = "<group>"; };
+		7A8446052F02A42A00DCB566 /* DonationViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DonationViewController.swift; sourceTree = "<group>"; };
+		7A8446062F02A42A00DCB566 /* EditDonationViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EditDonationViewController.swift; sourceTree = "<group>"; };
+		7A8446072F02A42A00DCB566 /* ExcelExporter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ExcelExporter.swift; sourceTree = "<group>"; };
+		7A8446082F02A42A00DCB566 /* NotificationsCollectionViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NotificationsCollectionViewCell.swift; sourceTree = "<group>"; };
+		7A8446092F02A42A00DCB566 /* NotificationsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NotificationsViewController.swift; sourceTree = "<group>"; };
+		7A84460A2F02A42A00DCB566 /* Section1TableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Section1TableViewCell.swift; sourceTree = "<group>"; };
+		7A84460B2F02A42A00DCB566 /* Section2TableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Section2TableViewCell.swift; sourceTree = "<group>"; };
+		7A84460C2F02A42A00DCB566 /* Section3TableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Section3TableViewCell.swift; sourceTree = "<group>"; };
+		7A84460D2F02A42A00DCB566 /* StatusCollectionViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StatusCollectionViewCell.swift; sourceTree = "<group>"; };
+		7A84460E2F02A42A00DCB566 /* TestViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TestViewController.swift; sourceTree = "<group>"; };
+		7A84460F2F02A42A00DCB566 /* UIImageView+URLZH.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIImageView+URLZH.swift"; sourceTree = "<group>"; };
+		7A8446102F02A42A00DCB566 /* ZahraaAddressPageViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ZahraaAddressPageViewController.swift; sourceTree = "<group>"; };
+		7A8446112F02A42A00DCB566 /* ZahraaAddressTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ZahraaAddressTableViewCell.swift; sourceTree = "<group>"; };
+		7A8446122F02A42A00DCB566 /* ZahraaFile.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ZahraaFile.swift; sourceTree = "<group>"; };
+		7A8446132F02A42A00DCB566 /* ZahraaPickUpDateTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ZahraaPickUpDateTableViewCell.swift; sourceTree = "<group>"; };
+		7A8446142F02A42A00DCB566 /* ZahraaPickUpTimeTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ZahraaPickUpTimeTableViewCell.swift; sourceTree = "<group>"; };
+		7A8446152F02A42A00DCB566 /* ZahraaRecurrenceTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ZahraaRecurrenceTableViewCell.swift; sourceTree = "<group>"; };
+		7A8446162F02A42A00DCB566 /* ZahraaSection1TableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ZahraaSection1TableViewCell.swift; sourceTree = "<group>"; };
+		7A8446172F02A42A00DCB566 /* ZahraaSection2TableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ZahraaSection2TableViewCell.swift; sourceTree = "<group>"; };
+		7A8446182F02A42A00DCB566 /* ZahraaSection3TableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ZahraaSection3TableViewCell.swift; sourceTree = "<group>"; };
+		7A8446192F02A42A00DCB566 /* ZahraaSection4TableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ZahraaSection4TableViewCell.swift; sourceTree = "<group>"; };
+		7A84461A2F02A42A00DCB566 /* ZahraaSection5TableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ZahraaSection5TableViewCell.swift; sourceTree = "<group>"; };
+		7A84461B2F02A42A00DCB566 /* ZahraaSection6TableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ZahraaSection6TableViewCell.swift; sourceTree = "<group>"; };
+		7A84461C2F02A42A00DCB566 /* ZahraaSection7TableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ZahraaSection7TableViewCell.swift; sourceTree = "<group>"; };
+		7A84461D2F02A42A00DCB566 /* ZahraaSection8TableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ZahraaSection8TableViewCell.swift; sourceTree = "<group>"; };
+		7A84461E2F02A42A00DCB566 /* ZHRejectionReasonViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ZHRejectionReasonViewController.swift; sourceTree = "<group>"; };
+		7A8446742F02A4DD00DCB566 /* Raghad1.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; path = Raghad1.storyboard; sourceTree = "<group>"; };
 		D0DEA5582F0060990008C402 /* GoogleService-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
 		D0E725412F009AB300365A28 /* SecuritySettingsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SecuritySettingsViewController.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -158,6 +274,8 @@
 		5FEF8B592EDA3636007D3A97 = {
 			isa = PBXGroup;
 			children = (
+				7A8446742F02A4DD00DCB566 /* Raghad1.storyboard */,
+				7A84461F2F02A42A00DCB566 /* Zahraa Hubail */,
 				D0E725412F009AB300365A28 /* SecuritySettingsViewController.swift */,
 				D0DEA5582F0060990008C402 /* GoogleService-Info.plist */,
 				D0FCA2B52EEEC14000D8AFFF /* ZainabAlmahdi  */,
@@ -177,6 +295,41 @@
 				5FEF8B822EDA363A007D3A97 /* ProjectSimulatorUITests.xctest */,
 			);
 			name = Products;
+			sourceTree = "<group>";
+		};
+		7A84461F2F02A42A00DCB566 /* Zahraa Hubail */ = {
+			isa = PBXGroup;
+			children = (
+				7A8446032F02A42A00DCB566 /* DonationCollectionViewCell.swift */,
+				7A8446042F02A42A00DCB566 /* Donations.storyboard */,
+				7A8446052F02A42A00DCB566 /* DonationViewController.swift */,
+				7A8446062F02A42A00DCB566 /* EditDonationViewController.swift */,
+				7A8446072F02A42A00DCB566 /* ExcelExporter.swift */,
+				7A8446082F02A42A00DCB566 /* NotificationsCollectionViewCell.swift */,
+				7A8446092F02A42A00DCB566 /* NotificationsViewController.swift */,
+				7A84460A2F02A42A00DCB566 /* Section1TableViewCell.swift */,
+				7A84460B2F02A42A00DCB566 /* Section2TableViewCell.swift */,
+				7A84460C2F02A42A00DCB566 /* Section3TableViewCell.swift */,
+				7A84460D2F02A42A00DCB566 /* StatusCollectionViewCell.swift */,
+				7A84460E2F02A42A00DCB566 /* TestViewController.swift */,
+				7A84460F2F02A42A00DCB566 /* UIImageView+URLZH.swift */,
+				7A8446102F02A42A00DCB566 /* ZahraaAddressPageViewController.swift */,
+				7A8446112F02A42A00DCB566 /* ZahraaAddressTableViewCell.swift */,
+				7A8446122F02A42A00DCB566 /* ZahraaFile.swift */,
+				7A8446132F02A42A00DCB566 /* ZahraaPickUpDateTableViewCell.swift */,
+				7A8446142F02A42A00DCB566 /* ZahraaPickUpTimeTableViewCell.swift */,
+				7A8446152F02A42A00DCB566 /* ZahraaRecurrenceTableViewCell.swift */,
+				7A8446162F02A42A00DCB566 /* ZahraaSection1TableViewCell.swift */,
+				7A8446172F02A42A00DCB566 /* ZahraaSection2TableViewCell.swift */,
+				7A8446182F02A42A00DCB566 /* ZahraaSection3TableViewCell.swift */,
+				7A8446192F02A42A00DCB566 /* ZahraaSection4TableViewCell.swift */,
+				7A84461A2F02A42A00DCB566 /* ZahraaSection5TableViewCell.swift */,
+				7A84461B2F02A42A00DCB566 /* ZahraaSection6TableViewCell.swift */,
+				7A84461C2F02A42A00DCB566 /* ZahraaSection7TableViewCell.swift */,
+				7A84461D2F02A42A00DCB566 /* ZahraaSection8TableViewCell.swift */,
+				7A84461E2F02A42A00DCB566 /* ZHRejectionReasonViewController.swift */,
+			);
+			path = "Zahraa Hubail";
 			sourceTree = "<group>";
 		};
 		D06572652EFDC17D00F89FB8 /* Frameworks */ = {
@@ -320,6 +473,8 @@
 			buildActionMask = 2147483647;
 			files = (
 				D0DEA55A2F0060990008C402 /* GoogleService-Info.plist in Resources */,
+				7A8446572F02A42A00DCB566 /* Donations.storyboard in Resources */,
+				7A8446752F02A4DD00DCB566 /* Raghad1.storyboard in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -327,7 +482,9 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				7A8446772F02A4DD00DCB566 /* Raghad1.storyboard in Resources */,
 				D0DEA5592F0060990008C402 /* GoogleService-Info.plist in Resources */,
+				7A84463B2F02A42A00DCB566 /* Donations.storyboard in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -335,7 +492,9 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				7A8446762F02A4DD00DCB566 /* Raghad1.storyboard in Resources */,
 				D0DEA55B2F0060990008C402 /* GoogleService-Info.plist in Resources */,
+				7A8446732F02A42A00DCB566 /* Donations.storyboard in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -346,6 +505,33 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				7A84463C2F02A42A00DCB566 /* ZahraaSection2TableViewCell.swift in Sources */,
+				7A84463D2F02A42A00DCB566 /* DonationViewController.swift in Sources */,
+				7A84463E2F02A42A00DCB566 /* ExcelExporter.swift in Sources */,
+				7A84463F2F02A42A00DCB566 /* ZahraaAddressPageViewController.swift in Sources */,
+				7A8446402F02A42A00DCB566 /* Section3TableViewCell.swift in Sources */,
+				7A8446412F02A42A00DCB566 /* UIImageView+URLZH.swift in Sources */,
+				7A8446422F02A42A00DCB566 /* TestViewController.swift in Sources */,
+				7A8446432F02A42A00DCB566 /* Section1TableViewCell.swift in Sources */,
+				7A8446442F02A42A00DCB566 /* ZHRejectionReasonViewController.swift in Sources */,
+				7A8446452F02A42A00DCB566 /* StatusCollectionViewCell.swift in Sources */,
+				7A8446462F02A42A00DCB566 /* ZahraaSection1TableViewCell.swift in Sources */,
+				7A8446472F02A42A00DCB566 /* Section2TableViewCell.swift in Sources */,
+				7A8446482F02A42A00DCB566 /* ZahraaSection3TableViewCell.swift in Sources */,
+				7A8446492F02A42A00DCB566 /* ZahraaPickUpDateTableViewCell.swift in Sources */,
+				7A84464A2F02A42A00DCB566 /* ZahraaPickUpTimeTableViewCell.swift in Sources */,
+				7A84464B2F02A42A00DCB566 /* EditDonationViewController.swift in Sources */,
+				7A84464C2F02A42A00DCB566 /* NotificationsCollectionViewCell.swift in Sources */,
+				7A84464D2F02A42A00DCB566 /* ZahraaSection6TableViewCell.swift in Sources */,
+				7A84464E2F02A42A00DCB566 /* ZahraaFile.swift in Sources */,
+				7A84464F2F02A42A00DCB566 /* DonationCollectionViewCell.swift in Sources */,
+				7A8446502F02A42A00DCB566 /* ZahraaRecurrenceTableViewCell.swift in Sources */,
+				7A8446512F02A42A00DCB566 /* ZahraaAddressTableViewCell.swift in Sources */,
+				7A8446522F02A42A00DCB566 /* NotificationsViewController.swift in Sources */,
+				7A8446532F02A42A00DCB566 /* ZahraaSection8TableViewCell.swift in Sources */,
+				7A8446542F02A42A00DCB566 /* ZahraaSection4TableViewCell.swift in Sources */,
+				7A8446552F02A42A00DCB566 /* ZahraaSection5TableViewCell.swift in Sources */,
+				7A8446562F02A42A00DCB566 /* ZahraaSection7TableViewCell.swift in Sources */,
 				D0E725422F009AB300365A28 /* SecuritySettingsViewController.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -354,6 +540,33 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				7A8446202F02A42A00DCB566 /* ZahraaSection2TableViewCell.swift in Sources */,
+				7A8446212F02A42A00DCB566 /* DonationViewController.swift in Sources */,
+				7A8446222F02A42A00DCB566 /* ExcelExporter.swift in Sources */,
+				7A8446232F02A42A00DCB566 /* ZahraaAddressPageViewController.swift in Sources */,
+				7A8446242F02A42A00DCB566 /* Section3TableViewCell.swift in Sources */,
+				7A8446252F02A42A00DCB566 /* UIImageView+URLZH.swift in Sources */,
+				7A8446262F02A42A00DCB566 /* TestViewController.swift in Sources */,
+				7A8446272F02A42A00DCB566 /* Section1TableViewCell.swift in Sources */,
+				7A8446282F02A42A00DCB566 /* ZHRejectionReasonViewController.swift in Sources */,
+				7A8446292F02A42A00DCB566 /* StatusCollectionViewCell.swift in Sources */,
+				7A84462A2F02A42A00DCB566 /* ZahraaSection1TableViewCell.swift in Sources */,
+				7A84462B2F02A42A00DCB566 /* Section2TableViewCell.swift in Sources */,
+				7A84462C2F02A42A00DCB566 /* ZahraaSection3TableViewCell.swift in Sources */,
+				7A84462D2F02A42A00DCB566 /* ZahraaPickUpDateTableViewCell.swift in Sources */,
+				7A84462E2F02A42A00DCB566 /* ZahraaPickUpTimeTableViewCell.swift in Sources */,
+				7A84462F2F02A42A00DCB566 /* EditDonationViewController.swift in Sources */,
+				7A8446302F02A42A00DCB566 /* NotificationsCollectionViewCell.swift in Sources */,
+				7A8446312F02A42A00DCB566 /* ZahraaSection6TableViewCell.swift in Sources */,
+				7A8446322F02A42A00DCB566 /* ZahraaFile.swift in Sources */,
+				7A8446332F02A42A00DCB566 /* DonationCollectionViewCell.swift in Sources */,
+				7A8446342F02A42A00DCB566 /* ZahraaRecurrenceTableViewCell.swift in Sources */,
+				7A8446352F02A42A00DCB566 /* ZahraaAddressTableViewCell.swift in Sources */,
+				7A8446362F02A42A00DCB566 /* NotificationsViewController.swift in Sources */,
+				7A8446372F02A42A00DCB566 /* ZahraaSection8TableViewCell.swift in Sources */,
+				7A8446382F02A42A00DCB566 /* ZahraaSection4TableViewCell.swift in Sources */,
+				7A8446392F02A42A00DCB566 /* ZahraaSection5TableViewCell.swift in Sources */,
+				7A84463A2F02A42A00DCB566 /* ZahraaSection7TableViewCell.swift in Sources */,
 				D0E725432F009AB300365A28 /* SecuritySettingsViewController.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -362,6 +575,33 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				7A8446582F02A42A00DCB566 /* ZahraaSection2TableViewCell.swift in Sources */,
+				7A8446592F02A42A00DCB566 /* DonationViewController.swift in Sources */,
+				7A84465A2F02A42A00DCB566 /* ExcelExporter.swift in Sources */,
+				7A84465B2F02A42A00DCB566 /* ZahraaAddressPageViewController.swift in Sources */,
+				7A84465C2F02A42A00DCB566 /* Section3TableViewCell.swift in Sources */,
+				7A84465D2F02A42A00DCB566 /* UIImageView+URLZH.swift in Sources */,
+				7A84465E2F02A42A00DCB566 /* TestViewController.swift in Sources */,
+				7A84465F2F02A42A00DCB566 /* Section1TableViewCell.swift in Sources */,
+				7A8446602F02A42A00DCB566 /* ZHRejectionReasonViewController.swift in Sources */,
+				7A8446612F02A42A00DCB566 /* StatusCollectionViewCell.swift in Sources */,
+				7A8446622F02A42A00DCB566 /* ZahraaSection1TableViewCell.swift in Sources */,
+				7A8446632F02A42A00DCB566 /* Section2TableViewCell.swift in Sources */,
+				7A8446642F02A42A00DCB566 /* ZahraaSection3TableViewCell.swift in Sources */,
+				7A8446652F02A42A00DCB566 /* ZahraaPickUpDateTableViewCell.swift in Sources */,
+				7A8446662F02A42A00DCB566 /* ZahraaPickUpTimeTableViewCell.swift in Sources */,
+				7A8446672F02A42A00DCB566 /* EditDonationViewController.swift in Sources */,
+				7A8446682F02A42A00DCB566 /* NotificationsCollectionViewCell.swift in Sources */,
+				7A8446692F02A42A00DCB566 /* ZahraaSection6TableViewCell.swift in Sources */,
+				7A84466A2F02A42A00DCB566 /* ZahraaFile.swift in Sources */,
+				7A84466B2F02A42A00DCB566 /* DonationCollectionViewCell.swift in Sources */,
+				7A84466C2F02A42A00DCB566 /* ZahraaRecurrenceTableViewCell.swift in Sources */,
+				7A84466D2F02A42A00DCB566 /* ZahraaAddressTableViewCell.swift in Sources */,
+				7A84466E2F02A42A00DCB566 /* NotificationsViewController.swift in Sources */,
+				7A84466F2F02A42A00DCB566 /* ZahraaSection8TableViewCell.swift in Sources */,
+				7A8446702F02A42A00DCB566 /* ZahraaSection4TableViewCell.swift in Sources */,
+				7A8446712F02A42A00DCB566 /* ZahraaSection5TableViewCell.swift in Sources */,
+				7A8446722F02A42A00DCB566 /* ZahraaSection7TableViewCell.swift in Sources */,
 				D0E725442F009AB300365A28 /* SecuritySettingsViewController.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

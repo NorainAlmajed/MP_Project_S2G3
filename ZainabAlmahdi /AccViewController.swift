@@ -23,7 +23,6 @@ class AccViewController: UITableViewController {
 
     var rows: [AccountRow] = []
 
-    // MARK: - Lifecycle
     override func viewDidLoad() {
         super.viewDidLoad()
         title = "Account"
@@ -40,7 +39,6 @@ class AccViewController: UITableViewController {
         tableView.reloadData()
     }
 
-    // MARK: - Configure Rows
     func configureRows() {
         rows = [.settings]
 
@@ -57,7 +55,6 @@ class AccViewController: UITableViewController {
         rows.append(.logout)
     }
 
-    // MARK: - Table Data Source
     override func tableView(_ tableView: UITableView,
                             numberOfRowsInSection section: Int) -> Int {
         rows.count
@@ -99,7 +96,6 @@ class AccViewController: UITableViewController {
         return cell
     }
 
-    // MARK: - Handle Taps
     override func tableView(_ tableView: UITableView,
                             didSelectRowAt indexPath: IndexPath) {
         
@@ -156,7 +152,6 @@ class AccViewController: UITableViewController {
         navigationController?.pushViewController(vc, animated: true)
     }
 
-    // MARK: - Logout
     func logoutUser() {
         let alert = UIAlertController(
             title: "Logout",

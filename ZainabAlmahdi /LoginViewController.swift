@@ -17,7 +17,6 @@ class LoginViewController: UIViewController {
         navigationItem.title = ""
     }
 
-    // MARK: - Forgot Password
     @IBAction func forgotPasswordTapped(_ sender: UIButton) {
         guard let email = emailTextField.text?.trimmingCharacters(in: .whitespacesAndNewlines),
               !email.isEmpty else {
@@ -34,7 +33,6 @@ class LoginViewController: UIViewController {
         }
     }
 
-    // MARK: - Login
     @IBAction func loginButtonTapped(_ sender: UIButton) {
 
         guard let email = emailTextField.text?.trimmingCharacters(in: .whitespacesAndNewlines),
@@ -73,7 +71,6 @@ class LoginViewController: UIViewController {
         }
     }
 
-    // MARK: - Routing
     func routeToHome() {
         let storyboard = UIStoryboard(name: "Main", bundle: nil)
         let identifier: String
@@ -97,7 +94,6 @@ class LoginViewController: UIViewController {
         }
     }
 
-    // MARK: - Helpers
     func showAlert(title: String, message: String) {
         let alert = UIAlertController(title: title, message: message, preferredStyle: .alert)
         alert.addAction(UIAlertAction(title: "OK", style: .default))

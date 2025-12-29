@@ -4,7 +4,6 @@ import FirebaseFirestore
 
 class EditProfileViewController: UIViewController {
 
-    // MARK: - Outlets
     @IBOutlet weak var nameField: UITextField!
     @IBOutlet weak var phoneField: UITextField!
     @IBOutlet weak var addressField: UITextField!
@@ -14,7 +13,6 @@ class EditProfileViewController: UIViewController {
 
     private let db = Firestore.firestore()
 
-    // MARK: - Lifecycle
     override func viewDidLoad() {
         super.viewDidLoad()
         title = "Edit Profile"
@@ -27,7 +25,6 @@ class EditProfileViewController: UIViewController {
         configureFieldsForRole()
     }
 
-    // MARK: - Role-based UI
     func configureFieldsForRole() {
 
         // Hide everything optional by default
@@ -51,7 +48,6 @@ class EditProfileViewController: UIViewController {
         }
     }
 
-    // MARK: - Fetch Profile
     func fetchProfile() {
         guard let uid = Auth.auth().currentUser?.uid else { return }
 
@@ -72,7 +68,6 @@ class EditProfileViewController: UIViewController {
         }
     }
 
-    // MARK: - Save Profile
     @IBAction func saveTapped(_ sender: UIButton) {
         guard let uid = Auth.auth().currentUser?.uid else { return }
 
@@ -106,7 +101,6 @@ class EditProfileViewController: UIViewController {
         }
     }
 
-    // MARK: - Helpers
     func showAlert(_ title: String, _ message: String) {
         let alert = UIAlertController(
             title: title,

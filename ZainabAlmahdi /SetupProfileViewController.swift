@@ -14,7 +14,6 @@ class SetupProfileViewController: UIViewController,
                                   UINavigationControllerDelegate,
                                   UITextViewDelegate {
 
-    // MARK: - Outlets
     @IBOutlet weak var continueButton: UIButton!
     @IBOutlet weak var uploadButton: UIButton!
     @IBOutlet weak var profileImageView: UIImageView!
@@ -23,7 +22,6 @@ class SetupProfileViewController: UIViewController,
     @IBOutlet weak var notificationsSwitch: UISwitch!
     @IBOutlet weak var bioCounterLabel: UILabel!
 
-    // MARK: - Lifecycle
     override func viewDidLoad() {
         super.viewDidLoad()
 
@@ -36,7 +34,6 @@ class SetupProfileViewController: UIViewController,
         navigationItem.hidesBackButton = true
     }
 
-    // MARK: - Notification Toggle
     @IBAction func notificationSwitchChanged(_ sender: UISwitch) {
         if sender.isOn == false {
             let alert = UIAlertController(
@@ -55,7 +52,6 @@ class SetupProfileViewController: UIViewController,
         }
     }
 
-    // MARK: - Image Picker
     @IBAction func addPhotoTapped(_ sender: UIButton) {
         let picker = UIImagePickerController()
         picker.delegate = self
@@ -80,7 +76,6 @@ class SetupProfileViewController: UIViewController,
         dismiss(animated: true)
     }
 
-    // MARK: - Continue
     @IBAction func continueTapped(_ sender: UIButton) {
 
         guard let fullName = fullNameTextField.text, !fullName.isEmpty else {
@@ -120,7 +115,6 @@ class SetupProfileViewController: UIViewController,
         }
     }
 
-    // MARK: - Firestore
     func saveProfile(fullName: String, bio: String, profileImageUrl: String) {
 
         guard let uid = Auth.auth().currentUser?.uid else { return }
@@ -152,7 +146,6 @@ class SetupProfileViewController: UIViewController,
             }
     }
 
-    // MARK: - Routing
     func routeToDashboard() {
 
         let storyboard = UIStoryboard(name: "Main", bundle: nil)
@@ -176,7 +169,6 @@ class SetupProfileViewController: UIViewController,
         }
     }
 
-    // MARK: - Bio Counter
     func textViewDidChange(_ textView: UITextView) {
         let max = 240
         if textView.text.count > max {
@@ -194,7 +186,6 @@ class SetupProfileViewController: UIViewController,
         return updated.count <= 240
     }
 
-    // MARK: - Helpers
     func showAlert(title: String, message: String) {
         let alert = UIAlertController(title: title,
                                       message: message,

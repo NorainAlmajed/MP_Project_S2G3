@@ -14,11 +14,9 @@ final class SessionManager {
         case unknown = 0
     }
 
-    // MARK: - Stored properties
     private(set) var role: UserRole = .unknown
     private(set) var fullName: String?
 
-    // MARK: - Helpers
     var isAdmin: Bool { role == .admin }
     var isDonor: Bool { role == .donor }
     var isNGO: Bool { role == .ngo }
@@ -32,7 +30,6 @@ final class SessionManager {
         }
     }
 
-    // MARK: - Fetch session (call after login)
     func fetchUserRole(completion: @escaping (Bool) -> Void) {
 
         guard let uid = Auth.auth().currentUser?.uid else {
@@ -43,32 +40,30 @@ final class SessionManager {
         Firestore.firestore()
             .collection("users")
             .document(uid)
-            .getDocument { snapshot, _ in
+            .getDocument { snapshot, error in
 
                 guard let data = snapshot?.data() else {
                     completion(false)
                     return
                 }
 
-                self.fullName = data["full_name"] as? String
+                self.fullName =
+                    data["full_name"] as? String ??
+                    data["organization_name"] as? String
 
-                if let roleString = data["role"] as? String {
-                    switch roleString {
-                    case "1": self.role = .admin
-                    case "2": self.role = .donor
-                    case "3": self.role = .ngo
-                    default: self.role = .unknown
-                    }
+                if let roleInt = data["role"] as? Int,
+                   let role = UserRole(rawValue: roleInt) {
+                    self.role = role
+                } else {
+                    self.role = .unknown
                 }
 
                 completion(true)
             }
     }
 
-    // MARK: - Clear on logout
     func clear() {
         role = .unknown
         fullName = nil
     }
 }
-

@@ -15,7 +15,6 @@ class AccountViewController: UIViewController, UITableViewDataSource, UITableVie
         super.viewDidLoad()
         tableView.dataSource = self
         tableView.delegate = self
-        // Do any additional setup after loading the view.
     }
     
     func tableView(_ tableView: UITableView,
@@ -34,18 +33,5 @@ class AccountViewController: UIViewController, UITableViewDataSource, UITableVie
         cell.textLabel?.text = "Row \(indexPath.row)"
         return cell
     }
-    
-    
-    
-
-    /*
-    // MARK: - Navigation
-
-    // In a storyboard-based application, you will often want to do a little preparation before navigation
-    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-        // Get the new view controller using segue.destination.
-        // Pass the selected object to the new view controller.
-    }
-    */
 
 }

@@ -8,7 +8,6 @@ class NGOSignupViewController: UIViewController,
                               UIImagePickerControllerDelegate,
                               UINavigationControllerDelegate {
 
-    // MARK: - Pickers
     let causePicker = UIPickerView()
     let governoratePicker = UIPickerView()
 
@@ -28,7 +27,6 @@ class NGOSignupViewController: UIViewController,
         "Northern Governorate"
     ]
 
-    // MARK: - Outlets
     @IBOutlet weak var uploadButton: UIButton!
     @IBOutlet weak var signupButton: UIButton!
     @IBOutlet weak var usernameTextField: UITextField!
@@ -42,7 +40,6 @@ class NGOSignupViewController: UIViewController,
     @IBOutlet weak var governorateTextField: UITextField!
     @IBOutlet weak var licenseImageView: UIImageView!
 
-    // MARK: - Lifecycle
     override func viewDidLoad() {
         super.viewDidLoad()
 
@@ -68,12 +65,10 @@ class NGOSignupViewController: UIViewController,
         addToolbar(to: governorateTextField)
     }
 
-    // MARK: - Navigation
     @IBAction func goToLoginTapped(_ sender: UIButton) {
         navigationController?.popToRootViewController(animated: true)
     }
 
-    // MARK: - Image Picker
     @IBAction func uploadLicenseTapped(_ sender: UIButton) {
         let picker = UIImagePickerController()
         picker.delegate = self
@@ -98,7 +93,6 @@ class NGOSignupViewController: UIViewController,
         dismiss(animated: true)
     }
 
-    // MARK: - Picker View
     func numberOfComponents(in pickerView: UIPickerView) -> Int { 1 }
 
     func pickerView(_ pickerView: UIPickerView,
@@ -141,7 +135,6 @@ class NGOSignupViewController: UIViewController,
         view.endEditing(true)
     }
 
-    // MARK: - Register
     @IBAction func registerButtonTapped(_ sender: UIButton) {
         guard validateInputs() else { return }
 
@@ -163,7 +156,6 @@ class NGOSignupViewController: UIViewController,
         }
     }
 
-    // MARK: - Validation
     func validateInputs() -> Bool {
         let email = emailTextField.text ?? ""
         let password = passwordTextField.text ?? ""
@@ -181,7 +173,6 @@ class NGOSignupViewController: UIViewController,
         return true
     }
 
-    // MARK: - Firebase Auth
     func createNGOAccount(licenseUrl: String) {
         let email = emailTextField.text!
         let password = passwordTextField.text!
@@ -200,13 +191,12 @@ class NGOSignupViewController: UIViewController,
         }
     }
 
-    // MARK: - Firestore
     func saveNGO(uid: String, licenseUrl: String) {
         Firestore.firestore()
             .collection("users")
             .document(uid)
             .setData([
-                "role": "3",
+                "role": 3,
                 "email": emailTextField.text ?? "",
                 "username": usernameTextField.text ?? "",
                 "organization_name": nameTextField.text ?? "",
@@ -230,7 +220,6 @@ class NGOSignupViewController: UIViewController,
             }
     }
 
-    // MARK: - Session + Routing
     func loadSessionAndRoute() {
 
         SessionManager.shared.fetchUserRole { success in
@@ -264,7 +253,6 @@ class NGOSignupViewController: UIViewController,
         }
     }
 
-    // MARK: - UI Helpers
     func showAlert(title: String, message: String) {
         let alert = UIAlertController(
             title: title,

@@ -21,7 +21,8 @@ class SetupProfileViewController: UIViewController,
     @IBOutlet weak var bioTextView: UITextView!
     @IBOutlet weak var notificationsSwitch: UISwitch!
     @IBOutlet weak var bioCounterLabel: UILabel!
-
+    @IBOutlet weak var uploadbuttonwidth: NSLayoutConstraint!
+    
     override func viewDidLoad() {
         super.viewDidLoad()
 

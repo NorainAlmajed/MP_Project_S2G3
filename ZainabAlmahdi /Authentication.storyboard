@@ -695,6 +695,8 @@
                                                 <rect key="frame" x="0.0" y="132" width="178" height="34.333333333333343"/>
                                                 <constraints>
                                                     <constraint firstAttribute="height" constant="34.333333333333371" id="Bwc-Iw-hfl"/>
+                                                    <constraint firstAttribute="width" constant="178" id="CSV-fU-xg3"/>
+                                                    <constraint firstAttribute="height" relation="greaterThanOrEqual" constant="34.329999999999998" id="fCI-wP-ciR"/>
                                                 </constraints>
                                                 <state key="normal" title="Button"/>
                                                 <buttonConfiguration key="configuration" style="filled" title="Add Photo">
@@ -829,6 +831,7 @@
                         <outlet property="notificationsSwitch" destination="ajE-45-yaa" id="yXk-iV-56x"/>
                         <outlet property="profileImageView" destination="gfU-fg-LgC" id="p3L-xb-Nys"/>
                         <outlet property="uploadButton" destination="XwW-uv-Fkj" id="XC1-lD-AnD"/>
+                        <outlet property="uploadbuttonwidth" destination="CSV-fU-xg3" id="iPn-dE-a63"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="pU9-sW-yKe" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
@@ -840,7 +843,7 @@
             <objects>
                 <viewController storyboardIdentifier="HomeViewController" useStoryboardIdentifierAsRestorationIdentifier="YES" id="u4r-Hv-ASR" customClass="HomeViewController" customModule="ProjectSimulator" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="FCo-MS-bdm">
-                        <rect key="frame" x="0.0" y="0.0" width="393" height="852"/>
+                        <rect key="frame" x="0.0" y="0.0" width="393" height="783"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="GLC-kj-dOD">
@@ -883,7 +886,7 @@
         </scene>
     </scenes>
     <inferredMetricsTieBreakers>
-        <segue reference="lzc-NA-AGZ"/>
+        <segue reference="z8O-0s-SCj"/>
     </inferredMetricsTieBreakers>
     <resources>
         <image name="person.crop.circle" catalog="system" width="128" height="123"/>

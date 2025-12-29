@@ -17,7 +17,6 @@ class AccViewController: UITableViewController {
         case createDonor
         case createNGO
         case contactSupport
-        case terms
         case logout
     }
 
@@ -50,8 +49,6 @@ class AccViewController: UITableViewController {
         if SessionManager.shared.isDonor || SessionManager.shared.isNGO {
             rows.append(.contactSupport)
         }
-
-        rows.append(.terms)
         rows.append(.logout)
     }
 
@@ -84,8 +81,6 @@ class AccViewController: UITableViewController {
         case .contactSupport:
             cell.textLabel?.text = "Contact Support"
 
-        case .terms:
-            cell.textLabel?.text = "Terms and Conditions"
 
         case .logout:
             cell.textLabel?.text = "Logout"
@@ -114,9 +109,6 @@ class AccViewController: UITableViewController {
         case .contactSupport:
             goToContactSupport()
             
-        case .terms:
-            goToTerms()
-            
         case .logout:
             logoutUser()
         }
@@ -143,12 +135,6 @@ class AccViewController: UITableViewController {
     func goToContactSupport() {
         let vc = UIStoryboard(name: "Main", bundle: nil)
             .instantiateViewController(withIdentifier: "ContactSupportViewController")
-        navigationController?.pushViewController(vc, animated: true)
-    }
-
-    func goToTerms() {
-        let vc = UIStoryboard(name: "Authentication", bundle: nil)
-            .instantiateViewController(withIdentifier: "TermsViewController")
         navigationController?.pushViewController(vc, animated: true)
     }
 

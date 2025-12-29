@@ -64,7 +64,24 @@ class RaghadDonatoinFormViewController: UIViewController,
     
     
     
-    private var isAdminUser: Bool { user.isAdmin }
+    //private var isAdminUser: Bool { user.isAdmin }
+    
+    
+    private var isAdminUser: Bool {
+        SessionManager.shared.isAdmin
+    }
+    
+    
+    private var currentUserDisplayName: String {
+        // fullName is loaded from Firestore in SessionManager
+        if let name = SessionManager.shared.fullName, !name.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty {
+            return name
+        }
+        // fallback so app never crashes if name not ready yet
+        return "Unknown User"
+    }
+    
+    
     
     // Dropdown (Food Category)
     private var selectedFoodCategory: String? = nil
@@ -114,28 +131,12 @@ class RaghadDonatoinFormViewController: UIViewController,
         donationFormTableview.estimatedRowHeight = 200
         donationFormTableview.rowHeight = UITableView.automaticDimension
         
-        print("🔐 Current user:", user.username, " | 👤 Is Admin?", user.isAdmin)
+        //print("🔐 Current user:", user.username, " | 👤 Is Admin?", user.isAdmin)
+        
+   
         
         
         
-        
-        //for the last elemnt button 👤  👤  👤  👤  👤  👤  👤  👤  👤  👤
-        //        let extra: CGFloat = view.safeAreaInsets.bottom + 40   // ✅ enough space for button
-        //        donationFormTableview.contentInset.bottom = extra
-        //        donationFormTableview.verticalScrollIndicatorInsets.bottom = extra
-        //
-        //        // ✅ also add a footer so you can always scroll past last cell
-        //        if donationFormTableview.tableFooterView == nil || donationFormTableview.tableFooterView?.frame.height != extra {
-        //            donationFormTableview.tableFooterView = UIView(frame: CGRect(x: 0, y: 0, width: 1, height: extra))
-        //        }
-        
-        
-        // ✅ NO permanent extra space (keyboard code will handle it)
-        //        donationFormTableview.contentInset.bottom = 0
-        ////        donationFormTableview.scrollIndicatorInsets.bottom = 0
-        //        donationFormTableview.verticalScrollIndicatorInsets.bottom = 0
-        //
-        //        donationFormTableview.tableFooterView = UIView(frame: .zero)
         
         
         
@@ -144,6 +145,29 @@ class RaghadDonatoinFormViewController: UIViewController,
         
         
         
+//        print(" Role:", SessionManager.shared.roleDisplayName,
+//              "|  Is Admin?", SessionManager.shared.isAdmin,
+//              "| Name:", SessionManager.shared.fullName ?? "nil")
+//
+//        
+//        SessionManager.shared.fetchUserRole { [weak self] _ in
+//            DispatchQueue.main.async {
+//                self?.donationFormTableview.reloadData()
+//            }
+//        }
+        
+        SessionManager.shared.fetchUserRole { [weak self] _ in
+            DispatchQueue.main.async {
+
+                print("🔐 Role:",
+                      SessionManager.shared.roleDisplayName,
+                      "| isAdmin:",
+                      SessionManager.shared.isAdmin)
+
+                self?.donationFormTableview.reloadData()
+            }
+        }
+
         
         
     }
@@ -325,7 +349,7 @@ class RaghadDonatoinFormViewController: UIViewController,
         }
         
         
-     
+        
         
         if adjustedSection == 6 {
             let cell = tableView.dequeueReusableCell(withIdentifier: "Section7Cell", for: indexPath) as! RaghadSection7TableViewCell
@@ -559,7 +583,7 @@ class RaghadDonatoinFormViewController: UIViewController,
     
     
     
-  
+    
     
     
     private func getShortDescription() -> String? {
@@ -567,7 +591,7 @@ class RaghadDonatoinFormViewController: UIViewController,
         return t.isEmpty ? nil : t
     }
     
- 
+    
     
     
     // MARK: - Validation / Navigation
@@ -668,9 +692,9 @@ class RaghadDonatoinFormViewController: UIViewController,
         let payload = DonationPayload(
             ngoId: ngo.id,
             ngoName: ngo.name,
-           // donorName: isAdminUser ? selectedDonorName : user.username,
-            donorName: isAdminUser ? (selectedDonorName ?? user.username) : user.username,
-
+            // donorName: isAdminUser ? selectedDonorName : user.username,
+            donorName: isAdminUser ? (selectedDonorName ?? currentUserDisplayName) : currentUserDisplayName,
+            
             foodCategory: selectedFoodCategory ?? "",
             quantity: getQuantityValue() ?? 0,
             weight: weightValue,
@@ -678,42 +702,76 @@ class RaghadDonatoinFormViewController: UIViewController,
             shortDescription: getShortDescription(),
             imageUrl: uploadedDonationImageUrl ?? ""
         )
-
+        
+        //        saveDonationDraftToFirebase(payload: payload) { [weak self] draftId in
+        //            guard let self = self else { return }
+        //
+        //            if draftId == nil {
+        //                self.showSimpleAlert(
+        //                    title: "Error",
+        //                    message: "Could not save donation draft."
+        //                )
+        //                return
+        //            }
+        
+        //            // now i can see it now in Firebase
+        //            self.showSimpleAlert(
+        //                title: "Saved",
+        //                message: "Donation draft saved successfully."
+        //            )
+        
+        
+        //            saveDonationDraftToFirebase(payload: payload) { [weak self] draftId in
+        //                guard let self = self else { return }
+        //
+        //                if draftId == nil {
+        //                    self.showSimpleAlert(
+        //                        title: "Error",
+        //                        message: "Could not save donation draft."
+        //                    )
+        //                    return
+        //                }
+        //
+        //                // ✅ SUCCESS: do nothing (no popup)
+        //                print("✅ Donation draft saved successfully")
+        //            }
+        //
+        //        }
+        
+        
+        
+        //        saveDonationDraftToFirebase(payload: payload) { [weak self] draftId in
+        //            guard let self = self else { return }
+        //
+        //            if draftId == nil {
+        //                self.showSimpleAlert(
+        //                    title: "Error",
+        //                    message: "Could not save donation draft."
+        //                )
+        //                return
+        //            }
+        //
+        //            // ✅ SUCCESS: no popup
+        //            print("✅ Donation draft saved successfully")
+        //        }
+        
+        
+        
         saveDonationDraftToFirebase(payload: payload) { [weak self] draftId in
             guard let self = self else { return }
-
+            
             if draftId == nil {
-                self.showSimpleAlert(
-                    title: "Error",
-                    message: "Could not save donation draft."
-                )
+                self.showSimpleAlert(title: "Error", message: "Could not save donation draft.")
                 return
             }
-
-//            // now i can see it now in Firebase
-//            self.showSimpleAlert(
-//                title: "Saved",
-//                message: "Donation draft saved successfully."
-//            )
             
+            print("✅ Donation draft saved successfully")
             
-            saveDonationDraftToFirebase(payload: payload) { [weak self] draftId in
-                guard let self = self else { return }
-
-                if draftId == nil {
-                    self.showSimpleAlert(
-                        title: "Error",
-                        message: "Could not save donation draft."
-                    )
-                    return
-                }
-
-                // ✅ SUCCESS: do nothing (no popup)
-                print("✅ Donation draft saved successfully")
-            }
-
+            let sb = UIStoryboard(name: "norain-schedule-pickup", bundle: nil)
+            let vc = sb.instantiateViewController(withIdentifier: "SchedulePickupViewController")
+            self.navigationController?.pushViewController(vc, animated: true)
         }
-
+        
         
         
         
@@ -743,34 +801,37 @@ class RaghadDonatoinFormViewController: UIViewController,
         
         //❗❗❗❗❗❗❗❗❗❗❗NORAIN❗❗❗❗❗❗❗❗❗❗
         
-//        let payload = DonationPayload(
-//            ngoId: ngo.id,
-//            ngoName: ngo.name,                 // ✅ ADD THIS
-//
-//            donorName: isAdminUser ? selectedDonorName : nil,
-//            foodCategory: selectedFoodCategory ?? "",
-//            quantity: getQuantityValue() ?? 0,
-//            weight: weightValue,
-//            expiryDate: selectedExpiryDate ?? Date(),
-//            shortDescription: getShortDescription(),
-//            imageUrl: uploadedDonationImageUrl ?? ""
-//        )
-//
+        //        let payload = DonationPayload(
+        //            ngoId: ngo.id,
+        //            ngoName: ngo.name,                 // ✅ ADD THIS
+        //
+        //            donorName: isAdminUser ? selectedDonorName : nil,
+        //            foodCategory: selectedFoodCategory ?? "",
+        //            quantity: getQuantityValue() ?? 0,
+        //            weight: weightValue,
+        //            expiryDate: selectedExpiryDate ?? Date(),
+        //            shortDescription: getShortDescription(),
+        //            imageUrl: uploadedDonationImageUrl ?? ""
+        //        )
+        //
         
         
         
-//
+        //
         
         
         
         // ✅ TEMP: navigate only (no Firebase write)
-//        let sb = UIStoryboard(name: "Raghad1", bundle: nil)
-//        let vc = sb.instantiateViewController(withIdentifier: "SchedulePickupVC")
+        //        let sb = UIStoryboard(name: "Raghad1", bundle: nil)
+        //        let vc = sb.instantiateViewController(withIdentifier: "SchedulePickupVC")
         
-        let sb = UIStoryboard(name: "norain-schedule-pickup", bundle: nil)
-              let vc = sb.instantiateViewController(withIdentifier: "SchedulePickupViewController")
+        //        let sb = UIStoryboard(name: "norain-schedule-pickup", bundle: nil)
+        //              let vc = sb.instantiateViewController(withIdentifier: "SchedulePickupViewController")
+        //
         
-
+        
+        
+        
         
         // TODO //(Norain):❗❗❗❗❗❗❗❗❗❗❗❗❗❗❗❗❗❗❗❗❗❗❗❗❗❗❗❗❗❗❗❗❗❗❗❗
         // After creating SchedulePickupViewController.swift
@@ -778,16 +839,16 @@ class RaghadDonatoinFormViewController: UIViewController,
         // uncomment the next line to receive the donation data.
         
         //❗❗❗❗❗❗❗❗❗❗❗
-       // (vc as? SchedulePickupViewController)?.payload = payload   // ✅ PASS OBJECT uncomment this
+        // (vc as? SchedulePickupViewController)?.payload = payload   // ✅ PASS OBJECT uncomment this
         //to pass the object to noorain's page
-
+        
         //❗❗❗❗❗❗❗❗❗❗❗ She adds ONLY this line to her VC:
         //var payload: DonationPayload?❗❗❗❗❗❗❗❗❗❗❗
-
         
         
-        self.navigationController?.pushViewController(vc, animated: true)
-  
+        
+        // self.navigationController?.pushViewController(vc, animated: true)
+        
         
     }
     
@@ -822,17 +883,17 @@ class RaghadDonatoinFormViewController: UIViewController,
         let db = Firestore.firestore()
         let ref = db.collection("DonationDraftsRaghad").document()
         let draftId = ref.documentID
-
+        
         let data: [String: Any] = [
             "draftId": draftId,
-
+            
             // NGO
             "ngoId": payload.ngoId,
             "ngoName": payload.ngoName,
-
+            
             // Donor
-            "donorName": payload.donorName ?? user.username,
-
+            "donorName": payload.donorName ?? currentUserDisplayName,//user.username
+            
             // Donation form data
             "foodCategory": payload.foodCategory,
             "quantity": payload.quantity,
@@ -840,12 +901,12 @@ class RaghadDonatoinFormViewController: UIViewController,
             "expiryDate": Timestamp(date: payload.expiryDate),
             "shortDescription": payload.shortDescription as Any,
             "imageUrl": payload.imageUrl,
-
+            
             // Meta (for tutor clarity)
             "savedBy": "RaghadDonationForm",
             "createdAt": FieldValue.serverTimestamp()
         ]
-
+        
         ref.setData(data) { error in
             if let error = error {
                 print("❌ Failed to save draft:", error.localizedDescription)
@@ -856,7 +917,7 @@ class RaghadDonatoinFormViewController: UIViewController,
             }
         }
     }
-
+    
     
     
     
@@ -919,7 +980,7 @@ class RaghadDonatoinFormViewController: UIViewController,
             applyBaseBottomInset()
         }
     }
- // 🟡 KEYBOARD END
+    // 🟡 KEYBOARD END
     
     
     
@@ -931,7 +992,8 @@ class RaghadDonatoinFormViewController: UIViewController,
     
     
     
-
+    
+    
     
     //🟡🟡🟡🟡🟡🟡🟡🟡🟡🟡🟡🟡🟡🟡🟡🟡🟡🟡🟡🟡🟡🟡🟡🟡🟡🟡🟡🟡🟡🟡🟡🟡🟡🟡🟡🟡🟡🟡
     private func createDraftDonation(
@@ -940,47 +1002,47 @@ class RaghadDonatoinFormViewController: UIViewController,
         completion: @escaping (String?) -> Void
     ) {
         let db = Firestore.firestore()
-
+        
         // ✅ References (matches your Firestore schema)
         let donorRef = db.document("users/\(donorUserDocId)")
         let ngoRef = db.document("users/\(ngoUserDocId)")
-
+        
         // ✅ Use existing collection name exactly (Donation)
         let docRef = db.collection("Donation").document()
         let newId = docRef.documentID
-
+        
         
         
         // ✅ donationID (number) — only if your team needs it
         // This makes a simple unique number based on time (safe)
         let donationID = Int(Date().timeIntervalSince1970) % 1000000
-
+        
         let data: [String: Any] = [
             "firestoreID": newId,
             "donationID": donationID,
-
+            
             "donor": donorRef,
             "ngo": ngoRef,
-          
-
-
+            
+            
+            
             "Category": selectedFoodCategory ?? "",
             "quantity": getQuantityValue() ?? 0,
             "weight": weightValue as Any,                 // nil allowed
             "description": getShortDescription() as Any,   // nil allowed
-
+            
             "foodImageUrl": uploadedDonationImageUrl ?? "",
-
+            
             "expiryDate": Timestamp(date: selectedExpiryDate ?? Date()),
             "creationDate": FieldValue.serverTimestamp(),
-
+            
             // ✅ safest: draft
             "status": 0,
-
+            
             // ✅ safe defaults if your team uses these
             "recurrence": 0
         ]
-
+        
         docRef.setData(data) { error in
             if let error = error {
                 print("❌ createDraftDonation error:", error.localizedDescription)
@@ -994,29 +1056,29 @@ class RaghadDonatoinFormViewController: UIViewController,
     
     //to save a draft of the form when useful for back navigation
     
-//    private func saveDraft() {
-//        guard let ngo = selectedNgo else { return }
-//
-//        let draft = DonationDraft(
-//            ngoId: ngo.id,
-//            donorName: selectedDonorName,
-//            foodCategory: selectedFoodCategory,
-//            quantity: selectedQuantity,
-//            weight: weightValue,
-//            expiryDate: selectedExpiryDate,
-//            //shortDescription: getShortDescription(),
-//            shortDescription: selectedShortDescription,
-//
-//
-//            imageUrl: uploadedDonationImageUrl,
-//            imageData: selectedDonationImage?.jpegData(compressionQuality: 0.9) // ✅ NEW
-//        )
-//
-//        DonationDraftStore.shared.save(draft)
-//    }
+    //    private func saveDraft() {
+    //        guard let ngo = selectedNgo else { return }
+    //
+    //        let draft = DonationDraft(
+    //            ngoId: ngo.id,
+    //            donorName: selectedDonorName,
+    //            foodCategory: selectedFoodCategory,
+    //            quantity: selectedQuantity,
+    //            weight: weightValue,
+    //            expiryDate: selectedExpiryDate,
+    //            //shortDescription: getShortDescription(),
+    //            shortDescription: selectedShortDescription,
+    //
+    //
+    //            imageUrl: uploadedDonationImageUrl,
+    //            imageData: selectedDonationImage?.jpegData(compressionQuality: 0.9) // ✅ NEW
+    //        )
+    //
+    //        DonationDraftStore.shared.save(draft)
+    //    }
     private func saveDraft() {
         guard let ngo = selectedNgo else { return }
-
+        
         let draft = DonationDraft(
             ngoId: ngo.id,
             ngoName: ngo.name,               // ✅ ADD THIS
@@ -1029,53 +1091,53 @@ class RaghadDonatoinFormViewController: UIViewController,
             imageUrl: uploadedDonationImageUrl,
             imageData: selectedDonationImage?.jpegData(compressionQuality: 0.9)
         )
-
+        
         DonationDraftStore.shared.save(draft)
     }
-
-
+    
+    
     override func viewWillDisappear(_ animated: Bool) {
         super.viewWillDisappear(animated)
-
+        
         // Save only when user is going BACK from this screen
         if isMovingFromParent {
             saveDraft()
         }
     }
     
-
+    
     
     private func restoreDraftIfExists() {
         guard let ngo = selectedNgo else { return }
         guard let draft = DonationDraftStore.shared.load(ngoId: ngo.id) else { return }
-
+        
         // ✅ only restore if current value is empty (don’t overwrite user selections)
         if (selectedDonorName ?? "").isEmpty { selectedDonorName = draft.donorName }
         if selectedFoodCategory == nil { selectedFoodCategory = draft.foodCategory }
         if weightValue == nil { weightValue = draft.weight }
         if selectedExpiryDate == nil { selectedExpiryDate = draft.expiryDate }
         if uploadedDonationImageUrl == nil { uploadedDonationImageUrl = draft.imageUrl }
-
+        
         if selectedDonationImage == nil, let data = draft.imageData {
             selectedDonationImage = UIImage(data: data)
         }
-
+        
         if selectedQuantity <= 1, let q = draft.quantity {   // keep user value if already changed
             selectedQuantity = max(q, 1)
         }
-
+        
         if (selectedShortDescription ?? "").isEmpty {
             selectedShortDescription = draft.shortDescription
         }
-
+        
         donationFormTableview.reloadData()
     }
-
-
+    
+    
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         restoreDraftIfExists()
     }
-
-
+    
+    
 }

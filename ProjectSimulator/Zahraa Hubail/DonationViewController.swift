@@ -349,6 +349,37 @@ class DonationViewController: UIViewController {
                 else {
                     continue
                 }
+//                print("📄 Donation doc ID:", doc.documentID)
+//                print("📄 Raw data:", data)
+//
+//                if data["ngo"] == nil { print("❌ missing ngo") }
+//                if data["donor"] == nil { print("❌ missing donor") }
+//                if data["address"] == nil { print("❌ missing address") }
+//                if data["creationDate"] == nil { print("❌ missing creationDate") }
+//                if data["pickupDate"] == nil { print("❌ missing pickupDate") }
+//                if data["pickupTime"] == nil { print("❌ missing pickupTime") }
+//                if data["foodImageUrl"] == nil { print("❌ missing foodImageUrl") }
+//                if data["status"] == nil { print("❌ missing status") }
+//                if data["Category"] == nil { print("❌ missing Category") }
+//                if data["quantity"] == nil { print("❌ missing quantity") }
+//                if data["expiryDate"] == nil { print("❌ missing expiryDate") }
+//
+//                guard
+//                    let ngoRef = data["ngo"] as? DocumentReference,
+//                    let donorRef = data["donor"] as? DocumentReference,
+//                    let addressRef = data["address"] as? DocumentReference,
+//                    let creationDate = data["creationDate"] as? Timestamp,
+//                    let pickupDate = data["pickupDate"] as? Timestamp,
+//                    let pickupTime = data["pickupTime"] as? String,
+//                    let foodImageUrl = data["foodImageUrl"] as? String,
+//                    let category = data["Category"] as? String,
+//                    let expiryDate = data["expiryDate"] as? Timestamp
+//                else {
+//                    print("❌ FAILED BASIC FIELDS — SKIPPING")
+//                    continue
+//                }
+
+                
 
                 guard
                     let ngo = self.getUser(by: ngoRef.documentID),

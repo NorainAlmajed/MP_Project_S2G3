@@ -52,6 +52,8 @@
 		7A8446E92F02A51400DCB566 /* Exceptions for "ProjectSimulator" folder in "ProjectSimulatorTests" target */ = {
 			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
 			membershipExceptions = (
+				Fatima/ManageUsersPreviewTableViewCell.swift,
+				Fatima/UserPreviewCardCell.swift,
 				Raghad/Raghad1.storyboard,
 				"Zahraa Hubail/DonationCollectionViewCell.swift",
 				"Zahraa Hubail/Donations.storyboard",
@@ -87,6 +89,8 @@
 		7A8446EA2F02A51400DCB566 /* Exceptions for "ProjectSimulator" folder in "ProjectSimulatorUITests" target */ = {
 			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
 			membershipExceptions = (
+				Fatima/ManageUsersPreviewTableViewCell.swift,
+				Fatima/UserPreviewCardCell.swift,
 				Raghad/Raghad1.storyboard,
 				"Zahraa Hubail/DonationCollectionViewCell.swift",
 				"Zahraa Hubail/Donations.storyboard",
@@ -464,6 +468,7 @@
 				DEVELOPMENT_TEAM = 7FMYPPL38A;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = ProjectSimulator/Info.plist;
+				INFOPLIST_KEY_CFBundleDisplayName = "Nourish Bahrain";
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchStoryboardName = "";
 				INFOPLIST_KEY_UIMainStoryboardFile = Main;
@@ -492,6 +497,7 @@
 				DEVELOPMENT_TEAM = 7FMYPPL38A;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = ProjectSimulator/Info.plist;
+				INFOPLIST_KEY_CFBundleDisplayName = "Nourish Bahrain";
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchStoryboardName = "";
 				INFOPLIST_KEY_UIMainStoryboardFile = Main;

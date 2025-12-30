@@ -18,6 +18,7 @@ class DonorDashboardViewController: UIViewController {
     @objc private func dismissManageUsers() {
         dismiss(animated: true)
     }
+    
     @objc private func manageUsersTapped() {
         let storyboard = UIStoryboard(name: "norain-admin-controls1", bundle: nil)
 
@@ -126,7 +127,11 @@ class DonorDashboardViewController: UIViewController {
         mainTableView.delegate = self
         mainTableView.dataSource = self
         mainTableView.separatorStyle = .none
+        // 🔙 Back chevron only (no "Home" text)
+            navigationItem.backButtonTitle = ""
 
+            // 🎨 Black chevron color
+            navigationController?.navigationBar.tintColor = .black
         setupEllipsisMenu()
         loadCurrentUser()
         startListeningForNGOs()
@@ -160,8 +165,9 @@ class DonorDashboardViewController: UIViewController {
                 .quickActions,
                 .impactTracker,
                 .allDonations,
+                .browseNGOs,
                 .manageUsers,
-                .browseNGOs
+                
             ]
         }
     }
@@ -319,9 +325,7 @@ class DonorDashboardViewController: UIViewController {
             return
         }
 
-        // ⚠️ This is where models must align
-        // You may need a mapper Donation1 → ZahraaDonation
-        // depending on how ZahraaDonation is created
+       
 
         navigationController?.pushViewController(detailsVC, animated: true)
     }
@@ -331,12 +335,16 @@ class DonorDashboardViewController: UIViewController {
         navigationItem.rightBarButtonItem = UIBarButtonItem(
             image: UIImage(systemName: "ellipsis"),
             menu: UIMenu(children: [
+
+                // 🔔 Notifications
                 UIAction(
                     title: "Notifications",
                     image: UIImage(systemName: "bell")
-                ) { _ in
-                    // keep empty for now
+                ) { [weak self] _ in
+                    self?.openNotifications()
                 },
+
+                // 💬 Chat
                 UIAction(
                     title: "Chat",
                     image: UIImage(systemName: "message")
@@ -346,6 +354,20 @@ class DonorDashboardViewController: UIViewController {
             ])
         )
     }
+    // MARK: - Notifications Navigation
+    private func openNotifications() {
+        let storyboard = UIStoryboard(name: "Donations", bundle: nil)
+
+        guard let notificationsVC = storyboard.instantiateViewController(
+            withIdentifier: "NotificationsViewController"
+        ) as? NotificationsViewController else {
+            print("❌ NotificationsViewController not found in Donations storyboard")
+            return
+        }
+
+        navigationController?.pushViewController(notificationsVC, animated: true)
+    }
+
 
 }
 
@@ -376,7 +398,7 @@ extension DonorDashboardViewController: UITableViewDataSource, UITableViewDelega
                 .allDonations,
                 .pendingDonations,
                 .manageUsers:
-            return isPad ? 400 : 300
+            return isPad ? 700 : 500
         }
     }
     
@@ -421,67 +443,77 @@ extension DonorDashboardViewController: UITableViewDataSource, UITableViewDelega
             ])
             
             return cell
-            // MARK: quick actions
-        case .quickActions:
-            let cell = tableView.dequeueReusableCell(
-                withIdentifier: "QuickActionsCell",
-                for: indexPath
-            )
-            cell.selectionStyle = .none
-
-            let firstButton = cell.contentView.viewWithTag(1) as? UIButton
-            let secondButton = cell.contentView.viewWithTag(2) as? UIButton
-
-            // Clear old actions
-            firstButton?.removeTarget(nil, action: nil, for: .allEvents)
-            secondButton?.removeTarget(nil, action: nil, for: .allEvents)
-
-            switch currentRole {
-
-            case .donor:
-                firstButton?.setTitle("View Donations", for: .normal)
-                secondButton?.setTitle("Browse NGOs", for: .normal)
-
-                firstButton?.addTarget(
-                    self,
-                    action: #selector(manageDonationsTapped),
-                    for: .touchUpInside
+            // MARK: - Quick Actions
+            case .quickActions:
+                let cell = tableView.dequeueReusableCell(
+                    withIdentifier: "QuickActionsCell",
+                    for: indexPath
                 )
+                cell.selectionStyle = .none
 
-                secondButton?.addTarget(
-                    self,
-                    action: #selector(browseNgoTapped),
-                    for: .touchUpInside
-                )
+                guard
+                    let firstButton = cell.contentView.viewWithTag(1) as? UIButton,
+                    let secondButton = cell.contentView.viewWithTag(2) as? UIButton
+                else {
+                    return cell
+                }
 
-            case .ngo:
-                firstButton?.setTitle("Manage Donations", for: .normal)
-                secondButton?.setTitle("Manage Profile", for: .normal)
+                // 🔁 Clear old actions
+                firstButton.removeTarget(nil, action: nil, for: .allEvents)
+                secondButton.removeTarget(nil, action: nil, for: .allEvents)
 
-                firstButton?.addTarget(
-                    self,
-                    action: #selector(manageDonationsTapped),
-                    for: .touchUpInside
-                )
+                // 🎨 STYLE (shared for all roles)
+                styleQuickActionButton(firstButton)
+                styleQuickActionButton(secondButton)
 
-            case .admin:
-                firstButton?.setTitle("Manage Users", for: .normal)
-                secondButton?.setTitle("Manage Donations", for: .normal)
+                // 🧠 ROLE-BASED LOGIC (UNCHANGED)
+                switch currentRole {
 
-                firstButton?.addTarget(
-                    self,
-                    action: #selector(manageUsersTapped),
-                    for: .touchUpInside
-                )
+                case .donor:
+                    firstButton.setTitle("View Donations", for: .normal)
+                    secondButton.setTitle("Browse NGOs", for: .normal)
 
-                secondButton?.addTarget(
-                    self,
-                    action: #selector(manageDonationsTapped),
-                    for: .touchUpInside
-                )
-            }
+                    firstButton.addTarget(
+                        self,
+                        action: #selector(manageDonationsTapped),
+                        for: .touchUpInside
+                    )
 
-            return cell
+                    secondButton.addTarget(
+                        self,
+                        action: #selector(browseNgoTapped),
+                        for: .touchUpInside
+                    )
+
+                case .ngo:
+                    firstButton.setTitle("Manage Donations", for: .normal)
+                    secondButton.setTitle("Manage Profile", for: .normal)
+
+                    firstButton.addTarget(
+                        self,
+                        action: #selector(manageDonationsTapped),
+                        for: .touchUpInside
+                    )
+
+                case .admin:
+                    firstButton.setTitle("Manage Users", for: .normal)
+                    secondButton.setTitle("Manage Donations", for: .normal)
+
+                    firstButton.addTarget(
+                        self,
+                        action: #selector(manageUsersTapped),
+                        for: .touchUpInside
+                    )
+
+                    secondButton.addTarget(
+                        self,
+                        action: #selector(manageDonationsTapped),
+                        for: .touchUpInside
+                    )
+                }
+
+                return cell
+
 
 
             
@@ -588,11 +620,12 @@ extension DonorDashboardViewController: UITableViewDataSource, UITableViewDelega
 
 
         case .manageUsers:
-            let cell = UITableViewCell()
-            cell.selectionStyle = .none
-            cell.textLabel?.textAlignment = .center
-            cell.textLabel?.text = "👥 Manage Users (Admin) - Placeholder"
+            let cell = tableView.dequeueReusableCell(
+                withIdentifier: "ManageUsersCell",
+                for: indexPath
+            ) as! ManageUsersPreviewTableViewCell
             return cell
+
         }
     }
     // MARK: - Navigation to Raghad1 storyboard
@@ -634,4 +667,39 @@ extension DonorDashboardViewController: UITableViewDataSource, UITableViewDelega
         navigationController?.pushViewController(detailsVC, animated: true)
     }
 
+}
+// MARK: - Quick Action Button Styling (iOS 15+ safe)
+private func styleQuickActionButton(_ button: UIButton) {
+
+    var config = UIButton.Configuration.filled()
+
+    // 🎨 Background
+    config.background.backgroundColor =  UIColor(named: "greenCol")
+    config.background.cornerRadius = 24   // pill shape
+
+    // 🧱 Padding (REPLACES contentEdgeInsets)
+    config.contentInsets = NSDirectionalEdgeInsets(
+        top: 12,
+        leading: 20,
+        bottom: 12,
+        trailing: 20
+    )
+
+    // 🖋 Title
+    config.titleTextAttributesTransformer =
+        UIConfigurationTextAttributesTransformer { incoming in
+            var outgoing = incoming
+            outgoing.font = .systemFont(ofSize: 16, weight: .semibold)
+            outgoing.foregroundColor = .white
+            return outgoing
+        }
+
+    button.configuration = config
+
+    // 🌫 Shadow (still on layer)
+    button.layer.shadowColor = UIColor.black.cgColor
+    button.layer.shadowOpacity = 0.08
+    button.layer.shadowRadius = 6
+    button.layer.shadowOffset = CGSize(width: 0, height: 3)
+    button.layer.masksToBounds = false
 }

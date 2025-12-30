@@ -40,6 +40,8 @@ class RecentDonationCardCell: UICollectionViewCell {
         //textStack.addArrangedSubview(donationTimeLabel)
 
         //donationCardView.addSubview(textStack)
+        categoryLabel.numberOfLines = 2
+        categoryLabel.lineBreakMode = .byTruncatingTail
 
         // Pin card view
         NSLayoutConstraint.activate([
@@ -64,7 +66,7 @@ class RecentDonationCardCell: UICollectionViewCell {
 
         donationTimeLabel.font = .systemFont(ofSize: 14, weight: .medium)
         // greyCol
-        donationTimeLabel.textColor = UIColor(named: "greyCol")
+        donationTimeLabel.textColor = .black
 
         // Styling
         donationCardView.layer.cornerRadius = 20
@@ -86,10 +88,11 @@ class RecentDonationCardCell: UICollectionViewCell {
             basketImage.widthAnchor.constraint(equalToConstant: 75),
             basketImage.heightAnchor.constraint(equalToConstant: 75)
         ])
-        basketImage.layer.cornerRadius = 7
+        basketImage.layer.cornerRadius = 37.5 // half of 75
+        basketImage.clipsToBounds = true
         basketImage.image = UIImage(named: "basket")
-        //basketImage.contentMode = .scaleAspectFit
-        basketImage.contentMode = .scaleToFill
+        basketImage.contentMode = .scaleAspectFill
+
     }
 
     override func layoutSubviews() {

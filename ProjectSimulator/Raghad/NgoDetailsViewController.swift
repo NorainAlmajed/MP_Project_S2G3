@@ -179,6 +179,7 @@ class NgoDetailsViewController: UIViewController, UITableViewDataSource, UITable
                         }
 
             cell.selectionStyle = .none
+            
             return cell
         }
     }

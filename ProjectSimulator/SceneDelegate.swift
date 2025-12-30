@@ -12,6 +12,12 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         guard let windowScene = (scene as? UIWindowScene) else { return }
 
         window = UIWindow(windowScene: windowScene)
+        let tabBarAppearance = UITabBar.appearance()
+
+        tabBarAppearance.tintColor = UIColor(named: "tabBarColor")
+        tabBarAppearance.unselectedItemTintColor =
+            UIColor(named: "tabBarColor")?.withAlphaComponent(0.4)
+
 
         let authStoryboard = UIStoryboard(name: "Authentication", bundle: nil)
         let loginVC = authStoryboard.instantiateViewController(

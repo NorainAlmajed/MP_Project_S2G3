@@ -11,17 +11,30 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
     ) {
         guard let windowScene = (scene as? UIWindowScene) else { return }
 
-        window = UIWindow(windowScene: windowScene)
+        guard let windowScene = (scene as? UIWindowScene) else { return }
 
+        // Create window
+        let window = UIWindow(windowScene: windowScene)
+
+        // Load Authentication storyboard
         let authStoryboard = UIStoryboard(name: "Authentication", bundle: nil)
+
+        // Initial screen: Login
         let loginVC = authStoryboard.instantiateViewController(
-            withIdentifier: "LoginViewController"
+        withIdentifier: "LoginViewController"
+        
         )
 
-        window?.rootViewController = loginVC
-        window?.makeKeyAndVisible()
+        // Embed UINvigationController
+        let navController = UINavigationController(rootViewController: loginVC)
+
+        // Set as root
+        window.rootViewController = navController
+        self.window = window
+        window.makeKeyAndVisible()
+        
+        }
     }
-    
     
 //    Norain schedule pickup tests
 //    func scene(_ scene: UIScene, willConnectTo session: UISceneSession, options connectionOptions: UIScene.ConnectionOptions) {
@@ -38,4 +51,4 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
 //        self.window = window
 //        window.makeKeyAndVisible()
 //    }
-}
+

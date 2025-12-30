@@ -58,7 +58,7 @@ class ChatListViewController: UIViewController,  UISearchBarDelegate, UITableVie
     @IBOutlet weak var donorButton: UIButton!
     @IBOutlet weak var allButton: UIButton!
     @IBOutlet weak var ChatTable: UITableView!
-    
+  
 
     @IBAction func allButton(_ sender: UIButton) {
         currentFilter = "all"
@@ -151,7 +151,7 @@ class ChatListViewController: UIViewController,  UISearchBarDelegate, UITableVie
 
         navigationItem.backButtonDisplayMode = .minimal
         navigationController?.navigationBar.tintColor = .black
-
+      
         setupFilterButtonsInitialState()
 
 
@@ -218,6 +218,7 @@ class ChatListViewController: UIViewController,  UISearchBarDelegate, UITableVie
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         
+          navigationItem.largeTitleDisplayMode = .never
         setupFilterButtonsInitialState()
         switch currentFilter {
         case "donor":
@@ -229,6 +230,16 @@ class ChatListViewController: UIViewController,  UISearchBarDelegate, UITableVie
         }
         
         applyFilter(type: currentFilter)
+        
+        let appearance = UINavigationBarAppearance()
+            appearance.configureWithOpaqueBackground()
+            appearance.backgroundColor = .white
+            appearance.titleTextAttributes = [
+                .foregroundColor: UIColor.black
+            ]
+
+            navigationItem.standardAppearance = appearance
+            navigationItem.scrollEdgeAppearance = appearance
     }
     
     var allChats: [SupportChat] = []
@@ -255,8 +266,6 @@ class ChatListViewController: UIViewController,  UISearchBarDelegate, UITableVie
         } else {
             cell.timeStamp.text = ""
         }
-        cell.EndedLabel.isHidden = !chat.isEnded
-        cell.contentView.alpha = chat.isEnded ? 0.6 : 1.0
         
 
         if chat.chatType == .support {
@@ -338,11 +347,7 @@ class ChatListViewController: UIViewController,  UISearchBarDelegate, UITableVie
         guard let indexPath = ChatTable.indexPathForSelectedRow else { return }
 
         let selectedChat = visibleChats[indexPath.row]
-        if selectedChat.isEnded {
-            ChatTable.deselectRow(at: indexPath, animated: true)
-            return
-        }
-
+     
         chatVC.userName = selectedChat.senderName
         chatVC.chatID = selectedChat.chatID
         if currentUserRole == .admin {
@@ -409,7 +414,9 @@ class ChatListViewController: UIViewController,  UISearchBarDelegate, UITableVie
                     let chatType: ChatType = (typeString == "support") ? .support : .normal
 
                     let isEnded = data["isEnded"] as? Bool ?? false
-                    let lastMessageTime = data["createdAt"] as? Timestamp
+                    if isEnded { continue }
+                    let lastMessageTime = data["lastMessageAt"] as? Timestamp
+
 
                     let otherUserId: String
                     let senderType: String

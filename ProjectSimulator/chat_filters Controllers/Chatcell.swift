@@ -11,7 +11,6 @@ import UIKit
 class Chatcell: UITableViewCell {
 
     @IBOutlet weak var timeStamp: UILabel!
-    @IBOutlet weak var EndedLabel: UILabel!
     @IBOutlet weak var nameLabel: UILabel!
     @IBOutlet weak var ProfilePhoto: UIImageView!
     override func awakeFromNib() {
@@ -36,6 +35,5 @@ class Chatcell: UITableViewCell {
 
         ProfilePhoto.image = UIImage(named: "placeholder_pp")
     }
-
 
 }

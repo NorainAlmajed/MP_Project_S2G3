@@ -265,31 +265,21 @@
                                                     <nil key="textColor"/>
                                                     <nil key="highlightedColor"/>
                                                 </label>
-                                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Ended" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="VYg-0P-ebt">
-                                                    <rect key="frame" x="317.33333333333331" y="52" width="36" height="14.333333333333329"/>
-                                                    <fontDescription key="fontDescription" type="system" pointSize="12"/>
-                                                    <color key="textColor" red="0.69803921570000005" green="0.14117647059999999" blue="0.094117647060000004" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
-                                                    <nil key="highlightedColor"/>
-                                                </label>
                                             </subviews>
                                             <constraints>
                                                 <constraint firstAttribute="bottom" secondItem="xxs-B2-fb6" secondAttribute="bottom" constant="6" id="10B-Ge-WTW"/>
                                                 <constraint firstItem="RqX-a4-EJz" firstAttribute="top" secondItem="yQJ-CC-MRu" secondAttribute="top" constant="16" id="Im4-U3-lLd"/>
                                                 <constraint firstItem="CQp-vo-vF9" firstAttribute="top" secondItem="yQJ-CC-MRu" secondAttribute="top" constant="24" id="WfK-YN-tGR"/>
-                                                <constraint firstAttribute="bottom" secondItem="VYg-0P-ebt" secondAttribute="bottom" constant="6" id="ZR3-xm-2nm"/>
                                                 <constraint firstAttribute="trailing" secondItem="xxs-B2-fb6" secondAttribute="trailing" constant="10" id="cC5-Tm-Uph"/>
                                                 <constraint firstAttribute="bottom" secondItem="RqX-a4-EJz" secondAttribute="bottom" constant="16" id="dCE-TB-KUw"/>
-                                                <constraint firstItem="xxs-B2-fb6" firstAttribute="leading" secondItem="VYg-0P-ebt" secondAttribute="trailing" constant="5" id="hqO-SU-dwv"/>
                                                 <constraint firstAttribute="bottom" secondItem="CQp-vo-vF9" secondAttribute="bottom" constant="16" id="nYf-xd-aBL"/>
                                                 <constraint firstItem="RqX-a4-EJz" firstAttribute="leading" secondItem="yQJ-CC-MRu" secondAttribute="leading" constant="16" id="oYt-ik-gq5"/>
                                                 <constraint firstItem="CQp-vo-vF9" firstAttribute="leading" secondItem="RqX-a4-EJz" secondAttribute="trailing" constant="16" id="siD-HL-wTS"/>
-                                                <constraint firstItem="VYg-0P-ebt" firstAttribute="leading" relation="greaterThanOrEqual" secondItem="CQp-vo-vF9" secondAttribute="trailing" constant="8" symbolic="YES" id="uUr-of-1Bv"/>
                                             </constraints>
                                         </tableViewCellContentView>
                                         <connections>
-                                            <outlet property="EndedLabel" destination="VYg-0P-ebt" id="byZ-g6-kRe"/>
                                             <outlet property="ProfilePhoto" destination="RqX-a4-EJz" id="OVE-tL-Roa"/>
-                                            <outlet property="nameLabel" destination="CQp-vo-vF9" id="4oc-1O-rFl"/>
+                                            <outlet property="nameLabel" destination="CQp-vo-vF9" id="TtE-fw-3kn"/>
                                             <outlet property="timeStamp" destination="xxs-B2-fb6" id="BZT-SR-hDh"/>
                                             <segue destination="g1V-Os-5IM" kind="show" id="RsA-3G-Buw"/>
                                         </connections>
@@ -336,7 +326,7 @@
         <!--Navigation Controller-->
         <scene sceneID="yBX-Pg-k3D">
             <objects>
-                <navigationController automaticallyAdjustsScrollViewInsets="NO" id="xVe-eY-V1y" sceneMemberID="viewController">
+                <navigationController storyboardIdentifier="ChatsNavigation" automaticallyAdjustsScrollViewInsets="NO" id="xVe-eY-V1y" sceneMemberID="viewController">
                     <toolbarItems/>
                     <navigationBar key="navigationBar" contentMode="scaleToFill" id="zxI-Ve-Okp">
                         <rect key="frame" x="0.0" y="118" width="393" height="44"/>

@@ -159,24 +159,26 @@ UICollectionViewDataSource,
         
         present(alert, animated: true)
     }
+    
     func showChatEndedLabel() {
+        if view.viewWithTag(999) != nil { return }
+
         let label = UILabel()
+        label.tag = 999
         label.text = "This chat has ended!"
-        label.textColor = UIColor.darkGray
+        label.textColor = .darkGray
         label.font = UIFont.systemFont(ofSize: 18, weight: .semibold)
         label.textAlignment = .center
         label.translatesAutoresizingMaskIntoConstraints = false
-        
+
         view.addSubview(label)
-        
+
         NSLayoutConstraint.activate([
             label.centerXAnchor.constraint(equalTo: view.centerXAnchor),
-            label.bottomAnchor.constraint(
-                equalTo: view.safeAreaLayoutGuide.bottomAnchor,
-                constant: -24
-            )
+            label.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor, constant: -24)
         ])
     }
+
     
     
     
@@ -184,8 +186,6 @@ UICollectionViewDataSource,
         inputBarView.isHidden = true
         endButton.isEnabled = false
         showChatEndedLabel()
-        
-        UserDefaults.standard.removeObject(forKey: "chatMessages_\(chatID)")
         
         let chatRef = Firestore.firestore()
             .collection("chats")
@@ -229,6 +229,12 @@ UICollectionViewDataSource,
             .collection("messages")
             .document(localId)
             .setData(messageData)
+
+        chatRef.updateData([
+            "lastMessageAt": now,
+            "lastMessageText": text
+        ])
+
     }
     
     func sendMessage() {
@@ -258,36 +264,39 @@ UICollectionViewDataSource,
     
     
     func createChatIfNeeded() {
-        let db = Firestore.firestore()
-        let chatRef = db.collection("chats").document(chatID)
-        
+        guard !chatID.isEmpty else { return }
+
+        let chatRef = Firestore.firestore()
+            .collection("chats")
+            .document(chatID)
+
         chatRef.getDocument { snapshot, _ in
             if snapshot?.exists == true { return }
-            
+
             var data: [String: Any] = [
                 "type": self.chatType.rawValue,
                 "createdAt": Timestamp(),
                 "isEnded": false
             ]
-            
+
             if let donorId = self.donorId { data["donorId"] = donorId }
             if let ngoId = self.ngoId { data["ngoId"] = ngoId }
             if let adminId = self.adminId { data["adminId"] = adminId }
-            
+
             chatRef.setData(data)
         }
     }
-    
+
     func ensureChatID() {
         if chatID.isEmpty {
             chatID = Firestore.firestore()
                 .collection("chats")
                 .document()
                 .documentID
-            
-            listenForMessages()
         }
     }
+
+
     
     
     
@@ -336,11 +345,16 @@ UICollectionViewDataSource,
         super.viewDidLoad()
         navigationItem.title = userName
         setupProfilePicture()
-        if !chatID.isEmpty {
-            listenForMessages()
-        }
         myUserId = Auth.auth().currentUser?.uid ?? ""
-      
+
+        if chatID.isEmpty {
+            ensureChatID()
+            createChatIfNeeded()
+        }
+        listenForMessages()
+        listenForChatEndedState()
+
+       
         navigationController?.navigationBar.tintColor = .black
         
         collectionView.dataSource = self
@@ -429,23 +443,6 @@ UICollectionViewDataSource,
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
-        
-        let isEnded = UserDefaults.standard.bool(
-            forKey: "chatEnded_\(chatID)"
-        )
-        func removeEndedLabelIfNeeded() {
-            view.viewWithTag(999)?.removeFromSuperview()
-        }
-        
-        if isEnded {
-            inputBarView.isHidden = true
-            endButton.isEnabled = false
-            showChatEndedLabel()
-        } else {
-            inputBarView.isHidden = false
-            endButton.isEnabled = true
-            removeEndedLabelIfNeeded()
-        }
     }
     
     override func viewDidAppear(_ animated: Bool) {
@@ -500,4 +497,29 @@ UICollectionViewDataSource,
                 }
             }
     }
+    
+    func listenForChatEndedState() {
+        Firestore.firestore()
+            .collection("chats")
+            .document(chatID)
+            .addSnapshotListener { [weak self] snapshot, _ in
+                guard let self = self else { return }
+
+                let isEnded = snapshot?.data()?["isEnded"] as? Bool ?? false
+
+                if isEnded {
+                    self.inputBarView.isHidden = true
+                    self.endButton.isEnabled = false
+                    self.showChatEndedLabel()
+                } else {
+                    self.inputBarView.isHidden = false
+                    self.endButton.isEnabled = true
+                    self.view.viewWithTag(999)?.removeFromSuperview()
+                }
+            }
+    }
+    
+
+
 }
+

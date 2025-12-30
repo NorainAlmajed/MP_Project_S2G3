@@ -151,7 +151,16 @@ class AccViewController: UITableViewController {
             do {
                 try Auth.auth().signOut()
                 SessionManager.shared.clear()
-                self.navigationController?.popToRootViewController(animated: true)
+
+                let storyboard = UIStoryboard(name: "Authentication", bundle: nil)
+                let loginVC = storyboard.instantiateInitialViewController()
+
+                if let sceneDelegate = UIApplication.shared.connectedScenes
+                    .first?.delegate as? SceneDelegate {
+                    sceneDelegate.window?.rootViewController = loginVC
+                    sceneDelegate.window?.makeKeyAndVisible()
+                }
+
             } catch {
                 self.showLogoutError()
             }
@@ -160,6 +169,7 @@ class AccViewController: UITableViewController {
         present(alert, animated: true)
     }
 
+    
     func showLogoutError() {
         let alert = UIAlertController(
             title: "Error",

@@ -125,7 +125,7 @@ class SetupProfileViewController: UIViewController,
             .document(uid)
             .updateData([
                 "full_name": fullName,
-                "bio": bio,
+                "mission": bio,
                 "notifications_enabled": notificationsSwitch.isOn,
                 "profile_image_url": profileImageUrl,
                 "profile_completed": true

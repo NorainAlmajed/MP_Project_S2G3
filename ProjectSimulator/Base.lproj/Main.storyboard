@@ -10,7 +10,7 @@
         <scene sceneID="WtT-ct-pcu">
             <objects>
                 <viewControllerPlaceholder storyboardIdentifier="DonorDashboardVC" storyboardName="Dashboard_Fatima" id="gkg-MX-T4F" sceneMemberID="viewController">
-                    <tabBarItem key="tabBarItem" title="Home" image="house.fill" catalog="system" id="oUI-t8-gcV"/>
+                    <tabBarItem key="tabBarItem" title="" image="house.fill" catalog="system" id="oUI-t8-gcV"/>
                 </viewControllerPlaceholder>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="g8L-dq-Guo" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
             </objects>
@@ -40,7 +40,7 @@
         <scene sceneID="KNj-o8-44w">
             <objects>
                 <viewControllerPlaceholder storyboardIdentifier="Donations" storyboardName="Donations" id="BFH-rx-TJy" sceneMemberID="viewController">
-                    <tabBarItem key="tabBarItem" title="Donations" id="Y48-ag-wQa"/>
+                    <tabBarItem key="tabBarItem" title="" id="Y48-ag-wQa"/>
                 </viewControllerPlaceholder>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="kTA-xw-hYC" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
             </objects>
@@ -50,7 +50,7 @@
         <scene sceneID="xoW-GC-Zba">
             <objects>
                 <viewControllerPlaceholder storyboardName="Settings" id="3Q7-JY-YzS" sceneMemberID="viewController">
-                    <tabBarItem key="tabBarItem" title="Account" image="person.crop.circle.fill" catalog="system" landscapeImage="person.crop.circle.fill" selectedImage="person.crop.circle.fill" id="LTr-E8-Ulm"/>
+                    <tabBarItem key="tabBarItem" title="" image="person.crop.circle.fill" catalog="system" landscapeImage="person.crop.circle.fill" selectedImage="person.crop.circle.fill" id="LTr-E8-Ulm"/>
                 </viewControllerPlaceholder>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="BQ9-x8-EB5" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
             </objects>

@@ -503,10 +503,10 @@
             case 2: return UITableView.automaticDimension
             case 3: return 109
             case 4: return 102
-            case 5: return 102
+            case 5: return 110
             case 6: return 161
             case 7: return 114 // Address
-            case 8: return 102 //Pickup Date
+            case 8: return 112 //Pickup Date
             case 9: return 268 //Pickup Time
             case 10: return 152
             case 11: return UITableView.automaticDimension

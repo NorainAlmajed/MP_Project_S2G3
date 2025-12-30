@@ -6,6 +6,8 @@ class RecentDonationTableViewCell: UITableViewCell,
 
     // MARK: - Outlet
     @IBOutlet weak var recentDonationsCollectionView: UICollectionView!
+    var onDonationSelected: ((Donation1) -> Void)?
+    var onHeaderTapped: (() -> Void)?
 
     @IBOutlet weak var recentDonationContent: UIView!
     // MARK: - Data
@@ -31,9 +33,18 @@ class RecentDonationTableViewCell: UITableViewCell,
         setupCollectionView()
         setupLayoutConstraints()
         setupEmptyState()
-        print("🧪 recentDonationContent is nil:", recentDonationContent == nil)
 
+        // ✅ ADDED: enable header tap
+        headerView.isUserInteractionEnabled = true
+        let tap = UITapGestureRecognizer(target: self, action: #selector(headerTapped))
+        headerView.addGestureRecognizer(tap)
+
+        print("🧪 recentDonationContent is nil:", recentDonationContent == nil)
     }
+    @objc private func headerTapped() {
+        onHeaderTapped?()
+    }
+
 
     // MARK: - Setup
     private func setupCollectionView() {
@@ -114,6 +125,10 @@ class RecentDonationTableViewCell: UITableViewCell,
     func collectionView(_ collectionView: UICollectionView,
                         numberOfItemsInSection section: Int) -> Int {
         return donations.count
+    }
+    func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
+        let donation = donations[indexPath.item]
+        onDonationSelected?(donation)
     }
 
     func collectionView(_ collectionView: UICollectionView,

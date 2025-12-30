@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="23727" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="Y6W-OH-hqX">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="23727" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
     <device id="retina6_12" orientation="portrait" appearance="light"/>
     <dependencies>
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="23721"/>
@@ -59,7 +59,7 @@
                                                             <color key="baseForegroundColor" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                                         </buttonConfiguration>
                                                         <connections>
-                                                            <action selector="addNewAddressTapped:" destination="Y6W-OH-hqX" eventType="touchUpInside" id="P00-n9-Afx"/>
+                                                            <action selector="addNewAddressTapped:" destination="Y6W-OH-hqX" eventType="touchUpInside" id="yXC-VS-ZXp"/>
                                                         </connections>
                                                     </button>
                                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="**Please Select a Pickup Address" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="ci9-Xu-1fS">
@@ -217,7 +217,7 @@
                                                 <rect key="frame" x="13" y="658" width="365" height="38.333333333333371"/>
                                                 <state key="normal" title="Button"/>
                                                 <buttonConfiguration key="configuration" style="filled" title="Confirm Pickup Schedule" cornerStyle="fixed">
-                                                    <backgroundConfiguration key="background" cornerRadius="8">
+                                                    <backgroundConfiguration key="background" cornerRadius="19">
                                                         <color key="backgroundColor" name="greenCol"/>
                                                     </backgroundConfiguration>
                                                     <color key="baseBackgroundColor" name="greenCol"/>
@@ -318,12 +318,11 @@
                         <outlet property="timeErrorLbl" destination="AZH-Ht-BKt" id="BFx-ek-ugf"/>
                         <outlet property="timeframeHeightConstraint" destination="nfV-vU-9ci" id="fFd-6B-mXb"/>
                         <outlet property="timeframeTableView" destination="ZjW-am-x0D" id="ppb-Zv-6g0"/>
-                        <segue destination="MH0-2O-wVd" kind="show" identifier="showAddAddress" id="M1d-zz-bca"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="Ief-a0-LHa" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="1619.0839694656488" y="56.690140845070424"/>
+            <point key="canvasLocation" x="6286.259541984733" y="68.661971830985919"/>
         </scene>
         <!--AddAddressViewController-->
         <scene sceneID="Yye-jL-SKr">
@@ -445,7 +444,7 @@
                                 <rect key="frame" x="45" y="729" width="313" height="39"/>
                                 <state key="normal" title="Button"/>
                                 <buttonConfiguration key="configuration" style="filled" title="Save Address">
-                                    <backgroundConfiguration key="background" cornerRadius="8"/>
+                                    <backgroundConfiguration key="background" cornerRadius="19"/>
                                     <color key="baseBackgroundColor" name="greenCol"/>
                                 </buttonConfiguration>
                                 <connections>
@@ -514,26 +513,25 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="5jL-k9-1yu" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="2460.3053435114502" y="55.633802816901408"/>
+            <point key="canvasLocation" x="7092.3664122137397" y="55.633802816901408"/>
         </scene>
         <!--Navigation Controller-->
-        <scene sceneID="dqK-pq-eI1">
+        <scene sceneID="8mb-j7-Hiv">
             <objects>
-                <navigationController automaticallyAdjustsScrollViewInsets="NO" id="VUW-3p-qfs" sceneMemberID="viewController">
+                <navigationController automaticallyAdjustsScrollViewInsets="NO" id="r76-Wu-JBV" sceneMemberID="viewController">
                     <toolbarItems/>
-                    <navigationItem key="navigationItem" id="ken-kZ-eus"/>
-                    <navigationBar key="navigationBar" contentMode="scaleToFill" id="nop-ou-Bn8">
+                    <navigationBar key="navigationBar" contentMode="scaleToFill" id="LR1-Dl-s2m">
                         <rect key="frame" x="0.0" y="118" width="393" height="44"/>
                         <autoresizingMask key="autoresizingMask"/>
                     </navigationBar>
                     <nil name="viewControllers"/>
                     <connections>
-                        <segue destination="Y6W-OH-hqX" kind="relationship" relationship="rootViewController" id="Wo7-Vh-2We"/>
+                        <segue destination="Y6W-OH-hqX" kind="relationship" relationship="rootViewController" id="7vC-1W-kMX"/>
                     </connections>
                 </navigationController>
-                <placeholder placeholderIdentifier="IBFirstResponder" id="9dY-V1-y27" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="WAe-76-SKs" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="692.36641221374043" y="56.338028169014088"/>
+            <point key="canvasLocation" x="5359.5419847328239" y="68.309859154929583"/>
         </scene>
     </scenes>
     <resources>

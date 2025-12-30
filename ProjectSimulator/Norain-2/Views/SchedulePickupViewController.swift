@@ -60,43 +60,43 @@ class SchedulePickupViewController: UIViewController {
         setupUI()
         setupDatePicker()
         setupTableView()
-        signInAnonymously()
+//        signInAnonymously()
         fetchExistingAddresses()
-        setupTestDonation() // 🧪 Remove for production
+//        setupTestDonation() 
     }
     
     // MARK: - Setup Methods
-    private func setupTestDonation() {
-        // Create a complete test donation payload
-        let testPayload = DonationPayload(
-            ngoId: "test_ngo_123",
-            ngoName: "Test NGO",
-            donorName: "Test Donor",
-            foodCategory: "Vegetables",
-            quantity: 10,
-            weight: 5.5,
-            expiryDate: Date().addingTimeInterval(7 * 24 * 60 * 60), // 7 days from now
-            shortDescription: "Fresh vegetables and fruits for donation",
-            imageUrl: "https://via.placeholder.com/300"
-        )
-        
-        self.payload = testPayload
-        print("✅ Test donation data loaded!")
-        print("   - NGO: \(testPayload.ngoName)")
-        print("   - Category: \(testPayload.foodCategory)")
-        print("   - Quantity: \(testPayload.quantity)")
-        print("   - Weight: \(testPayload.weight ?? 0)")
-    }
-
-    private func signInAnonymously() {
-        Auth.auth().signInAnonymously { [weak self] authResult, error in
-            if let error = error {
-                print("❌ Sign in error: \(error.localizedDescription)")
-            } else {
-                print("✅ Signed in as: \(authResult?.user.uid ?? "")")
-            }
-        }
-    }
+//    private func setupTestDonation() {
+//        // Create a complete test donation payload
+//        let testPayload = DonationPayload(
+//            ngoId: "test_ngo_123",
+//            ngoName: "Test NGO",
+//            donorName: "Test Donor",
+//            foodCategory: "Vegetables",
+//            quantity: 10,
+//            weight: 5.5,
+//            expiryDate: Date().addingTimeInterval(7 * 24 * 60 * 60), // 7 days from now
+//            shortDescription: "Fresh vegetables and fruits for donation",
+//            imageUrl: "https://via.placeholder.com/300"
+//        )
+//        
+//        self.payload = testPayload
+//        print("✅ Test donation data loaded!")
+//        print("   - NGO: \(testPayload.ngoName)")
+//        print("   - Category: \(testPayload.foodCategory)")
+//        print("   - Quantity: \(testPayload.quantity)")
+//        print("   - Weight: \(testPayload.weight ?? 0)")
+//    }
+//
+//    private func signInAnonymously() {
+//        Auth.auth().signInAnonymously { [weak self] authResult, error in
+//            if let error = error {
+//                print("❌ Sign in error: \(error.localizedDescription)")
+//            } else {
+//                print("✅ Signed in as: \(authResult?.user.uid ?? "")")
+//            }
+//        }
+//    }
     
     private func setupUI() {
         reccuringSwitch.addTarget(self, action: #selector(recurringSwitchChanged), for: .valueChanged)
@@ -413,6 +413,8 @@ class SchedulePickupViewController: UIViewController {
                     print("✅ Donation saved successfully")
                     print("   - Donation ID: \(donationID)")
                     print("   - Recurrence: \(recurrenceValue)")
+                    
+                    DonationDraftStore.shared.clear(ngoId: payload.ngoId)
                     self?.showSuccessAlert()
                 }
             }

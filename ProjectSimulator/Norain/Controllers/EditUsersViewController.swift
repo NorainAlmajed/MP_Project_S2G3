@@ -8,6 +8,7 @@
 import UIKit
 import FirebaseFirestore
 import FirebaseStorage
+import Cloudinary
 
 protocol EditUserDelegate: AnyObject {
     func didUpdateUser()
@@ -17,6 +18,9 @@ class EditUsersViewController: UIViewController, UIImagePickerControllerDelegate
     
     var userToEdit: NorainAppUser!
     weak var delegate: EditUserDelegate?
+    private let cloudinaryService = CloudinaryService()
+    private var isUploadingImage = false
+    private var uploadedImageUrl: String?
     private let db = Firestore.firestore()
     
     @IBOutlet weak var causeStack: UIStackView!
@@ -149,9 +153,15 @@ class EditUsersViewController: UIViewController, UIImagePickerControllerDelegate
     }
     
     @objc func saveTapped() {
-        guard let user = userToEdit else {
-            showAlert(title: "Error", message: "No user to save")
-            return
+        if isUploadingImage {
+                showAlert(title: "Please Wait", message: "Image is still uploading. Please wait a moment.")
+                return
+            }
+            
+            guard let user = userToEdit else {
+                showAlert(title: "Error", message: "No user to save")
+                return
+            
         }
         
 
@@ -359,49 +369,48 @@ class EditUsersViewController: UIViewController, UIImagePickerControllerDelegate
         ImagePickerEditView.image = image
         
         // 2. Start the upload process
-        uploadImageToFirebaseStorage(image)
+        uploadImageToCloudinary(image)
     }
     
     func imagePickerControllerDidCancel(_ picker: UIImagePickerController) {
         dismiss(animated: true, completion: nil)
     }
     
-    // MARK: - Optional: Upload Image to Firebase Storage
-    private func uploadImageToFirebaseStorage(_ image: UIImage) {
+    // MARK: - Upload Image to Cloudinary
+    private func uploadImageToCloudinary(_ image: UIImage) {
         guard let user = userToEdit else { return }
-        guard let imageData = image.jpegData(compressionQuality: 0.7) else { return } // 0.7 is better for mobile data
         
-        // Show a small indicator or disable the save button so they don't leave early
+        // Show uploading state
         self.saveBtn.isEnabled = false
         self.saveBtn.setTitle("Uploading Image...", for: .normal)
+        self.isUploadingImage = true
         
-        // Path: use documentID to ensure uniqueness
-        let storageRef = Storage.storage().reference().child("userImages/\(user.documentID).jpg")
-        
-        storageRef.putData(imageData, metadata: nil) { [weak self] metadata, error in
+        cloudinaryService.uploadImage(image) { [weak self] url in
             guard let self = self else { return }
             
-            if let error = error {
-                print("❌ Storage Error: \(error.localizedDescription)")
-                self.saveBtn.isEnabled = true
+            self.isUploadingImage = false
+            self.saveBtn.isEnabled = true
+            self.saveBtn.setTitle("Save Changes", for: .normal)
+            
+            guard let imageUrl = url else {
+                print("❌ Cloudinary upload failed")
+                self.showAlert(title: "Upload Failed", message: "Could not upload image. Please try again.")
                 return
             }
             
-            storageRef.downloadURL { url, error in
-                if let downloadURL = url {
-                    // ✅ MATCH YOUR FIELDS: Use "profile_image_url" to match your fetch logic
-                    self.db.collection("users").document(user.documentID).updateData([
-                        "profile_image_url": downloadURL.absoluteString
-                    ]) { error in
-                        self.saveBtn.isEnabled = true
-                        self.saveBtn.setTitle("Save Changes", for: .normal)
-                        
-                        if error == nil {
-                            print("✅ Image URL synced to Firestore")
-                            // Update local object so it's ready if they hit 'Save' for other fields
-                            self.userToEdit.userImg = downloadURL.absoluteString
-                        }
-                    }
+            print("✅ Cloudinary Image URL:", imageUrl)
+            self.uploadedImageUrl = imageUrl
+            
+            // Update Firestore with the new Cloudinary URL
+            self.db.collection("users").document(user.documentID).updateData([
+                "profile_image_url": imageUrl
+            ]) { error in
+                if let error = error {
+                    print("❌ Failed to update image URL in Firestore:", error.localizedDescription)
+                    self.showAlert(title: "Error", message: "Image uploaded but failed to save URL")
+                } else {
+                    print("✅ Image URL saved to Firestore")
+                    self.userToEdit.userImg = imageUrl
                 }
             }
         }

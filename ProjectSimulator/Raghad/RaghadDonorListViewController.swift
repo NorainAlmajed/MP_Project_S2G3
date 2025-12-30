@@ -15,8 +15,9 @@ import FirebaseFirestore
 import UIKit
 
 protocol DonorSelectionDelegate: AnyObject {
-    func didSelectDonor(name: String)
+    func didSelectDonor(donorRefPath: String, donorName: String)
 }
+
 
 class RaghadDonorListViewController: UIViewController,
                                      UITableViewDelegate,
@@ -30,6 +31,9 @@ class RaghadDonorListViewController: UIViewController,
     
     private var donors: [User] = []
     private var donorListener: ListenerRegistration?
+    
+    private var donorRefByUsername: [String: String] = [:]   // ✅ username -> "users/<docId>"
+
 
     
     weak var delegate: DonorSelectionDelegate?
@@ -120,6 +124,8 @@ class RaghadDonorListViewController: UIViewController,
         let donor = filteredDonors[indexPath.row]
         cell.textLabel?.text = donor.username
         
+        //  FONT SIZE LINE HERE
+        cell.textLabel?.font = UIFont.systemFont(ofSize: 20)
         // ✅ checkmark on selected row
         cell.accessoryType = (indexPath == selectedIndex) ? .checkmark : .none
         
@@ -137,14 +143,31 @@ class RaghadDonorListViewController: UIViewController,
         navigationController?.popViewController(animated: true)
     }
     
+//    @objc private func doneTapped() {
+//        guard let indexPath = selectedIndex else { return }
+//        
+//        let chosenDonor = filteredDonors[indexPath.row]
+//        delegate?.didSelectDonor(name: chosenDonor.username)
+//        
+//        navigationController?.popViewController(animated: true)
+//    }
+    
+    
+    
     @objc private func doneTapped() {
         guard let indexPath = selectedIndex else { return }
-        
+
         let chosenDonor = filteredDonors[indexPath.row]
-        delegate?.didSelectDonor(name: chosenDonor.username)
-        
+
+        guard let donorRefPath = donorRefByUsername[chosenDonor.username] else {
+            print("❌ Missing donor ref for username: \(chosenDonor.username)")
+            return
+        }
+
+        delegate?.didSelectDonor(donorRefPath: donorRefPath, donorName: chosenDonor.username)
         navigationController?.popViewController(animated: true)
     }
+
     
     // MARK: - SearchBar
     
@@ -199,6 +222,14 @@ class RaghadDonorListViewController: UIViewController,
                     self.tableView.reloadData()
                     return
                 }
+                // ✅ Build username -> referencePath map
+                self.donorRefByUsername = Dictionary(uniqueKeysWithValues:
+                    documents.compactMap { doc in
+                        let data = doc.data()
+                        guard let username = data["username"] as? String else { return nil }
+                        return (username, "users/\(doc.documentID)")
+                    }
+                )
 
                 // ✅ Map Firestore -> User struct safely
                 let fetched: [User] = documents.compactMap { doc in

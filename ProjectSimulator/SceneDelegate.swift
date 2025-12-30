@@ -1,12 +1,4 @@
-//
-//  SceneDelegate.swift
-//  ProjectSimulator
-//
-//  Created by Fatema Mohamed Amin Jaafar Hasan Hubail on 28/11/2025.
-//
-
 import UIKit
-import FirebaseAuth
 
 class SceneDelegate: UIResponder, UIWindowSceneDelegate {
 
@@ -20,68 +12,30 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         guard let windowScene = (scene as? UIWindowScene) else { return }
 
         window = UIWindow(windowScene: windowScene)
-        setRootViewController()
+
+        let authStoryboard = UIStoryboard(name: "Authentication", bundle: nil)
+        let loginVC = authStoryboard.instantiateViewController(
+            withIdentifier: "LoginViewController"
+        )
+
+        window?.rootViewController = loginVC
         window?.makeKeyAndVisible()
     }
-
     
     
-//    func setRootViewController() {
-//
-//        if Auth.auth().currentUser != nil {
-//            // Logged in → Main app
-//            let storyboard = UIStoryboard(name: "Main", bundle: nil)
-//            let rootVC = storyboard.instantiateInitialViewController()
-//            window?.rootViewController = rootVC
-//
-//        } else {
-//           
-//            let storyboard = UIStoryboard(name: "Settings", bundle: nil)
-//
-//            let rootVC = storyboard.instantiateInitialViewController()
-//            window?.rootViewController = rootVC
-//        }
+//    Norain schedule pickup tests
+//    func scene(_ scene: UIScene, willConnectTo session: UISceneSession, options connectionOptions: UIScene.ConnectionOptions) {
+//        guard let windowScene = (scene as? UIWindowScene) else { return }
+//        
+//        let storyboard = UIStoryboard(name: "norain-schedule-pickup", bundle: nil)
+//        let rootVC = storyboard.instantiateViewController(withIdentifier: "SchedulePickupViewController")
+//        
+//        // MUST wrap the root in a Navigation Controller
+//        let navVC = UINavigationController(rootViewController: rootVC)
+//        
+//        let window = UIWindow(windowScene: windowScene)
+//        window.rootViewController = navVC
+//        self.window = window
+//        window.makeKeyAndVisible()
 //    }
-
-    
-    
-    func setRootViewController() {
-        let storyboard = UIStoryboard(name: "Settings", bundle: nil)
-        let rootVC = storyboard.instantiateInitialViewController()
-        window?.rootViewController = rootVC
-    }
-
-
-
-        // Other SceneDelegate methods...
-    }
-
-    func sceneDidDisconnect(_ scene: UIScene) {
-        // Called as the scene is being released by the system.
-        // This occurs shortly after the scene enters the background, or when its session is discarded.
-        // Release any resources associated with this scene that can be re-created the next time the scene connects.
-        // The scene may re-connect later, as its session was not necessarily discarded (see `application:didDiscardSceneSessions` instead).
-    }
-
-    func sceneDidBecomeActive(_ scene: UIScene) {
-        // Called when the scene has moved from an inactive state to an active state.
-        // Use this method to restart any tasks that were paused (or not yet started) when the scene was inactive.
-    }
-
-    func sceneWillResignActive(_ scene: UIScene) {
-        // Called when the scene will move from an active state to an inactive state.
-        // This may occur due to temporary interruptions (ex. an incoming phone call).
-    }
-
-    func sceneWillEnterForeground(_ scene: UIScene) {
-        // Called as the scene transitions from the background to the foreground.
-        // Use this method to undo the changes made on entering the background.
-    }
-
-    func sceneDidEnterBackground(_ scene: UIScene) {
-        // Called as the scene transitions from the foreground to the background.
-        // Use this method to save data, release shared resources, and store enough scene-specific state information
-        // to restore the scene back to its current state.
-    }
-
-
+}

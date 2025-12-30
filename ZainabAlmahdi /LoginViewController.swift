@@ -14,9 +14,9 @@ class LoginViewController: UIViewController {
     override func viewDidLayoutSubviews() {
         super.viewDidLayoutSubviews()
         styleActionButton(loginButton)
-        navigationItem.title = ""
     }
 
+    // MARK: - Forgot Password
     @IBAction func forgotPasswordTapped(_ sender: UIButton) {
         guard let email = emailTextField.text?.trimmingCharacters(in: .whitespacesAndNewlines),
               !email.isEmpty else {
@@ -33,6 +33,7 @@ class LoginViewController: UIViewController {
         }
     }
 
+    // MARK: - Login
     @IBAction func loginButtonTapped(_ sender: UIButton) {
 
         guard let email = emailTextField.text?.trimmingCharacters(in: .whitespacesAndNewlines),
@@ -57,7 +58,7 @@ class LoginViewController: UIViewController {
                 return
             }
 
-            SessionManager.shared.fetchUserRole { success in
+            /*SessionManager.shared.fetchUserRole { success in
                 DispatchQueue.main.async {
                     self.loginButton.isEnabled = true
 
@@ -67,12 +68,35 @@ class LoginViewController: UIViewController {
                         self.showAlert(title: "Error", message: "Failed to load user role.")
                     }
                 }
+            }*/
+            DispatchQueue.main.async {
+                self.loginButton.isEnabled = true
+                self.routeToHome()
             }
+
         }
     }
 
+    // MARK: - Routing
     func routeToHome() {
-        let storyboard = UIStoryboard(name: "Main", bundle: nil)
+        let tabStoryboard = UIStoryboard(name: "Main", bundle: nil)
+
+        guard let tabBarVC = tabStoryboard.instantiateInitialViewController() else {
+            showAlert(title: "Error", message: "Tab Bar not found")
+            return
+        }
+
+        guard let sceneDelegate = UIApplication.shared.connectedScenes
+            .first?.delegate as? SceneDelegate else { return }
+
+        sceneDelegate.window?.rootViewController = tabBarVC
+        sceneDelegate.window?.makeKeyAndVisible()
+    }
+
+
+
+
+        /*let storyboard = UIStoryboard(name: "Main", bundle: nil)
         let identifier: String
 
         if SessionManager.shared.isAdmin {
@@ -90,10 +114,9 @@ class LoginViewController: UIViewController {
 
         if let sceneDelegate = UIApplication.shared.connectedScenes.first?.delegate as? SceneDelegate {
             sceneDelegate.window?.rootViewController = homeVC
-            sceneDelegate.window?.makeKeyAndVisible()
-        }
-    }
-
+            sceneDelegate.window?.makeKeyAndVisible()*/
+    
+    // MARK: - Helpers
     func showAlert(title: String, message: String) {
         let alert = UIAlertController(title: title, message: message, preferredStyle: .alert)
         alert.addAction(UIAlertAction(title: "OK", style: .default))

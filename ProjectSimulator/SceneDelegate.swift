@@ -13,22 +13,22 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
 
         window = UIWindow(windowScene: windowScene)
 
-//        let authStoryboard = UIStoryboard(name: "Authentication", bundle: nil)
-//        let loginVC = authStoryboard.instantiateViewController(
-//            withIdentifier: "LoginViewController"
-//        )
+        let authStoryboard = UIStoryboard(name: "Authentication", bundle: nil)
+        let loginVC = authStoryboard.instantiateViewController(
+            withIdentifier: "LoginViewController"
+        )
 
-        let storyboard = UIStoryboard(name: "Raghad1", bundle: nil)
-
-        guard let rootVC = storyboard.instantiateInitialViewController() else {
-            fatalError("❌ Raghad1 storyboard has NO Initial View Controller")
-        }
-
-        window?.rootViewController = rootVC
-        window?.makeKeyAndVisible()
+//        let storyboard = UIStoryboard(name: "Raghad1", bundle: nil)
+//
+//        guard let rootVC = storyboard.instantiateInitialViewController() else {
+//            fatalError("❌ Raghad1 storyboard has NO Initial View Controller")
+//        }
+//
+//        window?.rootViewController = rootVC
+//        window?.makeKeyAndVisible()
 
         
-        //window?.rootViewController = loginVC
+        window?.rootViewController = loginVC
         window?.makeKeyAndVisible()
     }
     

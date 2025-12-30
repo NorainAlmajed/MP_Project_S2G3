@@ -414,6 +414,10 @@ class SchedulePickupViewController: UIViewController {
                     print("   - Donation ID: \(donationID)")
                     print("   - Recurrence: \(recurrenceValue)")
                     
+                    //Zahraa Hubail
+                    self?.sendNotificationForDonation(donorRef: donorRef, ngoRef: ngoRef)
+
+                    
                     DonationDraftStore.shared.clear(ngoId: payload.ngoId)
                     self?.showSuccessAlert()
                 }
@@ -464,6 +468,91 @@ class SchedulePickupViewController: UIViewController {
         
         return isValid
     }
+    
+    
+    //Zahraa Hubail
+    private func sendNotificationForDonation(donorRef: DocumentReference, ngoRef: DocumentReference) {
+        
+        guard let currentUser = Auth.auth().currentUser else { return }
+        let adminUserID = "TwWqBSGX4ec4gxCWCZcbo7WocAI2"
+        
+        SessionManager.shared.fetchUserRole { success in
+            guard success else { return }
+            let role = SessionManager.shared.role
+            
+            let group = DispatchGroup()
+            var donorUsername: String?
+            var ngoOrgName: String?
+            var ngoNotificationsEnabled = false
+            var adminNotificationsEnabled = false
+            
+            // Fetch donor info
+            group.enter()
+            donorRef.getDocument { snapshot, _ in
+                donorUsername = snapshot?.data()?["username"] as? String
+                group.leave()
+            }
+            
+            // Fetch NGO info
+            group.enter()
+            ngoRef.getDocument { snapshot, _ in
+                let data = snapshot?.data()
+                ngoOrgName = data?["organization_name"] as? String
+                ngoNotificationsEnabled = data?["notifications_enabled"] as? Bool ?? false
+                group.leave()
+            }
+            
+            // Fetch Admin info
+            group.enter()
+            Firestore.firestore().collection("users").document(adminUserID).getDocument { snapshot, _ in
+                adminNotificationsEnabled = snapshot?.data()?["notifications_enabled"] as? Bool ?? false
+                group.leave()
+            }
+            
+            group.notify(queue: .main) {
+                guard let donorUsername = donorUsername else { return }
+                
+                func createNotification(title: String, description: String, userID: String) {
+                    let data: [String: Any] = [
+                        "date": Timestamp(date: Date()),
+                        "title": title,
+                        "description": description,
+                        "userID": userID
+                    ]
+                    Firestore.firestore().collection("Notification").addDocument(data: data) { error in
+                        if let error = error {
+                            print("❌ Failed to create notification: \(error.localizedDescription)")
+                        } else {
+                            print("✅ Notification sent to userID: \(userID)")
+                        }
+                    }
+                }
+                
+                if role == .admin, ngoNotificationsEnabled {
+                    let ngoID = ngoRef.documentID
+                    createNotification(title: "New Donation Received",
+                                       description: "Donor \(donorUsername) has made a new donation.",
+                                       userID: ngoID)
+                } else if role == .donor {
+                    if ngoNotificationsEnabled {
+                        let ngoID = ngoRef.documentID
+                        createNotification(title: "New Donation Received",
+                                           description: "Donor \(donorUsername) has made a new donation.",
+                                           userID: ngoID)
+                    }
+                    if adminNotificationsEnabled {
+                        let ngoName = ngoOrgName ?? "the NGO"
+                        createNotification(title: "New Donation Received",
+                                           description: "Donor \(donorUsername) has made a new donation to \(ngoName).",
+                                           userID: adminUserID)
+                    }
+                }
+            }
+        }
+    }
+
+    
+    
 }
 
 // MARK: - TableView & Delegate Extensions
@@ -496,4 +585,6 @@ extension SchedulePickupViewController: UITableViewDelegate, UITableViewDataSour
         checkmarkImageView.isHidden = false
         validateForm()
     }
+    
+
 }

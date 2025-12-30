@@ -133,7 +133,7 @@ class ImpactTrackerTableViewCell: UITableViewCell {
         // Style for the top title text
         let titleAttributes: [NSAttributedString.Key: Any] = [
             .font: UIFont.systemFont(ofSize: 13),
-            .foregroundColor: UIColor.darkGray
+            .foregroundColor: UIColor.black
         ]
 
         // Style for the main number (emphasis)

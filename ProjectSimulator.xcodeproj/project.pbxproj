@@ -52,6 +52,8 @@
 		7A8446E92F02A51400DCB566 /* Exceptions for "ProjectSimulator" folder in "ProjectSimulatorTests" target */ = {
 			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
 			membershipExceptions = (
+				Fatima/ManageUsersPreviewTableViewCell.swift,
+				Fatima/UserPreviewCardCell.swift,
 				Raghad/Raghad1.storyboard,
 				"Zahraa Hubail/DonationCollectionViewCell.swift",
 				"Zahraa Hubail/Donations.storyboard",
@@ -87,6 +89,8 @@
 		7A8446EA2F02A51400DCB566 /* Exceptions for "ProjectSimulator" folder in "ProjectSimulatorUITests" target */ = {
 			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
 			membershipExceptions = (
+				Fatima/ManageUsersPreviewTableViewCell.swift,
+				Fatima/UserPreviewCardCell.swift,
 				Raghad/Raghad1.storyboard,
 				"Zahraa Hubail/DonationCollectionViewCell.swift",
 				"Zahraa Hubail/Donations.storyboard",

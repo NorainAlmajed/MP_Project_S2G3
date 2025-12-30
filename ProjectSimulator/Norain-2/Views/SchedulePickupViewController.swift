@@ -30,7 +30,7 @@ class SchedulePickupViewController: UIViewController {
     @IBOutlet weak var dateErrorLbl: UILabel!
     @IBOutlet weak var timeErrorLbl: UILabel!
     // MARK: - Properties
-    var incompleteDonation: IncompleteDonation?
+    var payload: DonationPayload?
     
     // Fixed: Declared missing properties
     private var selectedAddressRef: DocumentReference?
@@ -62,19 +62,9 @@ class SchedulePickupViewController: UIViewController {
         setupTableView()
         signInAnonymously()
         fetchExistingAddresses()
-        setupTestDonation() // 🧪 Remove for production
     }
     
-    // MARK: - Setup Methods
-    private func setupTestDonation() {
-        var testDonation = IncompleteDonation()
-        testDonation.category = "Food"
-        testDonation.description = "Fresh vegetables and fruits"
-        testDonation.quantity = 10
-        testDonation.weight = 5.5
-        self.incompleteDonation = testDonation
-        print("✅ Test donation data loaded!")
-    }
+
 
     private func signInAnonymously() {
         Auth.auth().signInAnonymously { [weak self] authResult, error in
@@ -254,28 +244,66 @@ class SchedulePickupViewController: UIViewController {
             self?.existingAddresses = snapshot?.documents.compactMap { (ref: $0.reference, data: $0.data()) } ?? []
         }
     }
+    private func getNextDonationID(completion: @escaping (Int) -> Void) {
+           db.collection("Donation").getDocuments { snapshot, error in
+               if let error = error {
+                   print("❌ Error getting donation count: \(error.localizedDescription)")
+                   completion(1)
+                   return
+               }
+               
+               let count = snapshot?.documents.count ?? 0
+               let nextID = count + 1
+               print("✅ Next donation ID: \(nextID)")
+               completion(nextID)
+           }
+       }
 
     private func completeDonation() {
-        guard let userId = Auth.auth().currentUser?.uid,
-              let address = selectedAddress,
-              let date = selectedDate,
-              let timeframe = selectedTimeframe else { return }
+            guard let userId = Auth.auth().currentUser?.uid,
+                  let address = selectedAddress,
+                  let date = selectedDate,
+                  let timeframe = selectedTimeframe,
+                  let payload = payload else { return }
 
-        confirmBtn.isEnabled = false
-        confirmBtn.setTitle("Saving...", for: .normal)
+            confirmBtn.isEnabled = false
+            confirmBtn.setTitle("Saving...", for: .normal)
 
-        if let existingRef = selectedAddressRef {
-            saveDonationToFirebase(addressRef: existingRef, date: date, timeframe: timeframe, userId: userId)
-        } else {
-            saveAddressToFirebase(address: address) { [weak self] ref in
-                if let ref = ref {
-                    self?.saveDonationToFirebase(addressRef: ref, date: date, timeframe: timeframe, userId: userId)
+            // Get the next donation ID first
+            getNextDonationID { [weak self] donationID in
+                guard let self = self else { return }
+                
+                if let existingRef = self.selectedAddressRef {
+                    // Use existing address
+                    self.saveDonationToFirebase(
+                        addressRef: existingRef,
+                        date: date,
+                        timeframe: timeframe,
+                        userId: userId,
+                        donationID: donationID,
+                        payload: payload
+                    )
                 } else {
-                    self?.confirmBtn.isEnabled = true
+                    // Create new address first, then save donation
+                    self.saveAddressToFirebase(address: address) { addressRef in
+                        if let addressRef = addressRef {
+                            self.saveDonationToFirebase(
+                                addressRef: addressRef,
+                                date: date,
+                                timeframe: timeframe,
+                                userId: userId,
+                                donationID: donationID,
+                                payload: payload
+                            )
+                        } else {
+                            self.confirmBtn.isEnabled = true
+                            self.confirmBtn.setTitle("Confirm Pickup Schedule", for: .normal)
+                            self.showAlert(title: "Error", message: "Failed to save address.")
+                        }
+                    }
                 }
             }
         }
-    }
 
     private func saveAddressToFirebase(address: Address, completion: @escaping (DocumentReference?) -> Void) {
         let data: [String: Any] = [
@@ -289,63 +317,74 @@ class SchedulePickupViewController: UIViewController {
         }
     }
 
-    private func saveDonationToFirebase(addressRef: DocumentReference, date: Date, timeframe: String, userId: String) {
-        let donorRef = db.collection("users").document(userId)
-        
-        // 1. Calculate the recurrence value
-        var recurrenceValue = 0
-        if isRecurring {
-            switch selectedFrequency {
-            case "Daily": recurrenceValue = 1
-            case "Weekly": recurrenceValue = 2
-            case "Monthly": recurrenceValue = 3
-            case "Yearly": recurrenceValue = 4
-            default: recurrenceValue = 0
-            }
-        }
-        
-        // 2. Build the donation data dictionary
-        var donationData: [String: Any] = [
-            "address": addressRef,
-            "pickupDate": Timestamp(date: date),
-            "pickupTime": timeframe,
-            "status": 1, // 1 = pending
-            "creationDate": Timestamp(date: Date()),
-            "donor": donorRef,
-            "recurrence": recurrenceValue,
-            "rejectionReason": ""
-        ]
-        
-        // 3. Add incomplete donation data if it exists
-        if let donation = incompleteDonation {
-            if let category = donation.category { donationData["category"] = category }
-            if let desc = donation.description { donationData["description"] = desc }
-            if let qty = donation.quantity { donationData["quantity"] = qty }
-            if let weight = donation.weight { donationData["weight"] = weight }
-            if let imageUrl = donation.foodImageUrl { donationData["foodImageUrl"] = imageUrl }
-            if let id = donation.donationID { donationData["donationID"] = id }
-            if let ngoRef = donation.ngo { donationData["ngo"] = ngoRef }
+    private func saveDonationToFirebase(
+            addressRef: DocumentReference,
+            date: Date,
+            timeframe: String,
+            userId: String,
+            donationID: Int,
+            payload: DonationPayload
+        ) {
+            let donorRef = db.collection("users").document(userId)
+            let ngoRef = db.collection("users").document(payload.ngoId)
             
-            // Handle expiry date specifically as a Timestamp
-            if let expiry = donation.expiryDate {
-                donationData["expiryDate"] = Timestamp(date: expiry)
+            // Calculate recurrence value
+            var recurrenceValue = 0
+            if isRecurring {
+                switch selectedFrequency {
+                case "Daily": recurrenceValue = 1
+                case "Weekly": recurrenceValue = 2
+                case "Monthly": recurrenceValue = 3
+                case "Yearly": recurrenceValue = 4
+                default: recurrenceValue = 0
+                }
             }
-        }
-        
-        // 4. Save to Firestore
-        db.collection("Donation").addDocument(data: donationData) { [weak self] error in
-            self?.confirmBtn.isEnabled = true
-            self?.confirmBtn.setTitle("Confirm Pickup Schedule", for: .normal)
             
-            if let error = error {
-                print("❌ Error saving donation: \(error.localizedDescription)")
-                self?.showAlert(title: "Error", message: "Failed to save donation.")
-            } else {
-                print("✅ Donation saved successfully with recurrence: \(recurrenceValue)")
-                self?.showSuccessAlert()
+            // Build donation data matching NorainDonation structure
+            var donationData: [String: Any] = [
+                "donationID": donationID,
+                "ngo": ngoRef,
+                "creationDate": Timestamp(date: Date()),
+                "donor": donorRef,
+                "address": addressRef,
+                "pickupDate": Timestamp(date: date),
+                "pickupTime": timeframe,
+                "foodImageUrl": payload.imageUrl,
+                "status": 1, // 1 = pending
+                "category": payload.foodCategory,
+                "quantity": payload.quantity,
+                "expiryDate": Timestamp(date: payload.expiryDate),
+                "recurrence": recurrenceValue,
+                "rejectionReason": ""
+            ]
+            
+            // Add optional fields
+            if let weight = payload.weight {
+                donationData["weight"] = weight
+            }
+            
+            if let description = payload.shortDescription {
+                donationData["description"] = description
+            }
+            
+            // Save to Firestore
+            db.collection("Donation").addDocument(data: donationData) { [weak self] error in
+                self?.confirmBtn.isEnabled = true
+                self?.confirmBtn.setTitle("Confirm Pickup Schedule", for: .normal)
+                
+                if let error = error {
+                    print("❌ Error saving donation: \(error.localizedDescription)")
+                    self?.showAlert(title: "Error", message: "Failed to save donation.")
+                } else {
+                    print("✅ Donation saved successfully")
+                    print("   - Donation ID: \(donationID)")
+                    print("   - Recurrence: \(recurrenceValue)")
+                    
+                    DonationDraftStore.shared.clear(ngoId: payload.ngoId)
+                    self?.showSuccessAlert()
+                }
             }
         }
-    }
     
     private func showAlert(title: String, message: String) {
         let alert = UIAlertController(title: title, message: message, preferredStyle: .alert)
@@ -385,7 +424,10 @@ class SchedulePickupViewController: UIViewController {
         } else {
             timeErrorLbl.isHidden = true
         }
-        
+        if payload == nil {
+                    isValid = false
+                    print("❌ No donation payload provided")
+                }
         return isValid
     }
 }

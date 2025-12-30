@@ -1,35 +1,26 @@
-//
-//  LoginViewController.swift
-//  ProjectSimulator
-//
-//  Created by BP-36-201-02 on 20/12/2025.
-//
-
 import UIKit
 import FirebaseAuth
-import FirebaseFirestore
 
 class LoginViewController: UIViewController {
 
     @IBOutlet weak var emailTextField: UITextField!
     @IBOutlet weak var passwordTextField: UITextField!
+    @IBOutlet weak var loginButton: UIButton!
 
     override func viewDidLoad() {
         super.viewDidLoad()
     }
-    
 
-    @IBAction func signupButtonTapped(_ sender: UIButton) {
-        performSegue(withIdentifier: "goToRoleSelection", sender: self)
+    override func viewDidLayoutSubviews() {
+        super.viewDidLayoutSubviews()
+        styleActionButton(loginButton)
     }
 
+    // MARK: - Forgot Password
     @IBAction func forgotPasswordTapped(_ sender: UIButton) {
-
-        guard let email = emailTextField.text, !email.isEmpty else {
-            showAlert(
-                title: "Email Required",
-                message: "Please enter your email to reset your password."
-            )
+        guard let email = emailTextField.text?.trimmingCharacters(in: .whitespacesAndNewlines),
+              !email.isEmpty else {
+            showAlert(title: "Email Required", message: "Please enter your email.")
             return
         }
 
@@ -38,82 +29,102 @@ class LoginViewController: UIViewController {
                 self?.showAlert(title: "Error", message: error.localizedDescription)
                 return
             }
-
-            self?.showAlert(
-                title: "Email Sent",
-                message: "A password reset link has been sent to your email."
-            )
+            self?.showAlert(title: "Email Sent", message: "Check your inbox.")
         }
     }
 
+    // MARK: - Login
     @IBAction func loginButtonTapped(_ sender: UIButton) {
 
-        guard let email = emailTextField.text, !email.isEmpty else {
-            showAlert(title: "Missing Email", message: "Please enter your email.")
+        guard let email = emailTextField.text?.trimmingCharacters(in: .whitespacesAndNewlines),
+              !email.isEmpty else {
+            showAlert(title: "Missing Email", message: "Enter your email.")
             return
         }
 
         guard let password = passwordTextField.text, !password.isEmpty else {
-            showAlert(title: "Missing Password", message: "Please enter your password.")
+            showAlert(title: "Missing Password", message: "Enter your password.")
             return
         }
 
-        Auth.auth().signIn(withEmail: email, password: password) { [weak self] result, error in
+        loginButton.isEnabled = false
+
+        Auth.auth().signIn(withEmail: email, password: password) { [weak self] _, error in
             guard let self = self else { return }
 
             if let error = error {
+                self.loginButton.isEnabled = true
                 self.showAlert(title: "Login Failed", message: error.localizedDescription)
                 return
             }
 
-            let uid = result!.user.uid
-            self.routeUserByRole(uid: uid)
+            /*SessionManager.shared.fetchUserRole { success in
+                DispatchQueue.main.async {
+                    self.loginButton.isEnabled = true
+
+                    if success {
+                        self.routeToHome()
+                    } else {
+                        self.showAlert(title: "Error", message: "Failed to load user role.")
+                    }
+                }
+            }*/
+            DispatchQueue.main.async {
+                self.loginButton.isEnabled = true
+                self.routeToHome()
+            }
+
         }
     }
 
-    func routeUserByRole(uid: String) {
+    // MARK: - Routing
+    func routeToHome() {
+        let tabStoryboard = UIStoryboard(name: "Main", bundle: nil)
 
-        let db = Firestore.firestore()
-
-        db.collection("users").document(uid).getDocument { [weak self] snapshot, error in
-            guard let self = self else { return }
-
-            if let error = error {
-                self.showAlert(title: "Error", message: error.localizedDescription)
-                return
-            }
-
-            let role = snapshot?.data()?["role"] as? String ?? "donor"
-
-            if role == "ngo" {
-                self.goToNGOHome()
-            } else {
-                self.goToDonorHome()
-            }
+        guard let tabBarVC = tabStoryboard.instantiateInitialViewController() else {
+            showAlert(title: "Error", message: "Tab Bar not found")
+            return
         }
+
+        guard let sceneDelegate = UIApplication.shared.connectedScenes
+            .first?.delegate as? SceneDelegate else { return }
+
+        sceneDelegate.window?.rootViewController = tabBarVC
+        sceneDelegate.window?.makeKeyAndVisible()
     }
 
-    func goToNGOHome() {
-        let vc = UIStoryboard(name: "Main", bundle: nil)
-            .instantiateViewController(withIdentifier: "NGOHomeViewController")
-        vc.modalPresentationStyle = .fullScreen
-        present(vc, animated: true)
-    }
 
-    func goToDonorHome() {
-        let vc = UIStoryboard(name: "Main", bundle: nil)
-            .instantiateViewController(withIdentifier: "DonorHomeViewController")
-        vc.modalPresentationStyle = .fullScreen
-        present(vc, animated: true)
-    }
 
+
+        /*let storyboard = UIStoryboard(name: "Main", bundle: nil)
+        let identifier: String
+
+        if SessionManager.shared.isAdmin {
+            identifier = "AdminHomeViewController"
+        } else if SessionManager.shared.isNGO {
+            identifier = "NGOHomeViewController"
+        } else if SessionManager.shared.isDonor {
+            identifier = "DonorHomeViewController"
+        } else {
+            showAlert(title: "Error", message: "Unknown role.")
+            return
+        }
+
+        let homeVC = storyboard.instantiateViewController(withIdentifier: identifier)
+
+        if let sceneDelegate = UIApplication.shared.connectedScenes.first?.delegate as? SceneDelegate {
+            sceneDelegate.window?.rootViewController = homeVC
+            sceneDelegate.window?.makeKeyAndVisible()*/
+    
+    // MARK: - Helpers
     func showAlert(title: String, message: String) {
-        let alert = UIAlertController(
-            title: title,
-            message: message,
-            preferredStyle: .alert
-        )
+        let alert = UIAlertController(title: title, message: message, preferredStyle: .alert)
         alert.addAction(UIAlertAction(title: "OK", style: .default))
         present(alert, animated: true)
+    }
+
+    private func styleActionButton(_ button: UIButton) {
+        button.layer.cornerRadius = button.frame.height / 2
+        button.clipsToBounds = true
     }
 }

@@ -385,7 +385,7 @@ class SchedulePickupViewController: UIViewController {
                 "pickupTime": timeframe,
                 "foodImageUrl": payload.imageUrl,
                 "status": 1, // 1 = pending
-                "category": payload.foodCategory,
+                "Category": payload.foodCategory,
                 "quantity": payload.quantity,
                 "expiryDate": Timestamp(date: payload.expiryDate),
                 "recurrence": recurrenceValue,

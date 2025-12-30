@@ -765,11 +765,28 @@ class RaghadDonatoinFormViewController: UIViewController,
                 return
             }
             
-            print("✅ Donation draft saved successfully")
+//            print("✅ Donation draft saved successfully")
+//            
+//            let sb = UIStoryboard(name: "norain-schedule-pickup", bundle: nil)
+//            let vc = sb.instantiateViewController(withIdentifier: "SchedulePickupViewController")
+//            self.navigationController?.pushViewController(vc, animated: true)
+            
+            
             
             let sb = UIStoryboard(name: "norain-schedule-pickup", bundle: nil)
-            let vc = sb.instantiateViewController(withIdentifier: "SchedulePickupViewController")
+
+            guard let vc = sb.instantiateViewController(
+                withIdentifier: "SchedulePickupViewController"
+            ) as? SchedulePickupViewController else {
+                print("❌ SchedulePickupViewController storyboard ID/class mismatch")
+                return
+            }
+
+            // ✅ PASS THE OBJECT TO NORAIN
+            vc.payload = payload
+
             self.navigationController?.pushViewController(vc, animated: true)
+
         }
         
         

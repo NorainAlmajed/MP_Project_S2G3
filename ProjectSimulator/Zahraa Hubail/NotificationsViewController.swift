@@ -5,6 +5,7 @@
 //  Created by Zahraa Hubail on 29/11/2025.
 //
 
+import FirebaseAuth
 import UIKit
 import FirebaseFirestore
 
@@ -176,9 +177,15 @@ class NotificationsViewController: UIViewController {
         
         // MARK: - Firebase
         func fetchCurrentUser(completion: @escaping (Bool) -> Void) {
-            let tempUserID = "donor4" // Replace with a valid user ID
+            // 1️⃣ Get logged-in Firebase user
+            guard let firebaseUser = Auth.auth().currentUser else {
+                print("❌ No logged-in user")
+                completion(false)
+                return
+            }
 
-            db.collection("users").document(tempUserID).getDocument { [weak self] snapshot, error in
+            let userID = firebaseUser.uid   // ✅ REAL logged-in user ID
+            db.collection("users").document(userID).getDocument { [weak self] snapshot, error in
                 if let error = error {
                     print("❌ Error fetching user:", error)
                     completion(false)
@@ -194,7 +201,7 @@ class NotificationsViewController: UIViewController {
                 }
 
                 self?.currentUser = ZahraaUser(
-                    userID: tempUserID,
+                    userID: userID,
                     fullName: data["fullName"] as? String,
                     username: username,
                     role: role,

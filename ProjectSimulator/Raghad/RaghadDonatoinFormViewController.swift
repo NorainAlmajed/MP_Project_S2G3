@@ -58,7 +58,7 @@ class RaghadDonatoinFormViewController: UIViewController,
     private var activeIndexPath: IndexPath?
     private var keyboardObservers: [NSObjectProtocol] = []
     // 🟢 BASE WHITE SPACE under button (always)
-    private let baseBottomSpace: CGFloat = 20  // 👈 change 24~40 as you like (small)
+    private let baseBottomSpace: CGFloat = 8  // 👈 change 24~40 as you like (small) 20
     private var isKeyboardShowing = false
     
     

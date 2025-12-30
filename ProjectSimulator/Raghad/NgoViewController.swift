@@ -112,6 +112,20 @@ class NgoViewController: UIViewController,
 
         
         
+        let appearance = UINavigationBarAppearance()
+        appearance.configureWithOpaqueBackground()
+        appearance.backgroundColor = .systemBackground
+        appearance.titleTextAttributes = [
+            .foregroundColor: UIColor.label,
+            .font: UIFont.systemFont(ofSize: 17, weight: .semibold)
+        ]
+
+        // ✅ SAME appearance for both states
+        navigationController?.navigationBar.standardAppearance = appearance
+        navigationController?.navigationBar.scrollEdgeAppearance = appearance
+
+        
+        
         
         
     }
@@ -124,8 +138,21 @@ class NgoViewController: UIViewController,
 
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
+        
+        
+        title = "Browse NGOs"
+
+          // ✅ FORCE small title (no large title ever)
+          navigationItem.largeTitleDisplayMode = .never
+
+          // ✅ Safety: override nav controller preference
+          navigationController?.navigationBar.prefersLargeTitles = false
+        
+        
         applySearchAndFilter()
         fetchNgosFromFirebase()
+        
+        
     }
 
     // MARK: - Header (Search + Filter) like Donor List

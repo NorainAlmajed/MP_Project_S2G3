@@ -78,7 +78,11 @@ class AddAddressViewController: UIViewController {
         )
                 
         delegate?.didAddAddress(address)
-        navigationController?.popViewController(animated: true)
+        if let nav = self.navigationController {
+                nav.popViewController(animated: true) // Go back in stack
+            } else {
+                self.dismiss(animated: true) // Close modal
+            }
     }
     
     private func showAlert(title: String, message: String) {

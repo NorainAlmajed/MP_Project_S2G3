@@ -144,7 +144,7 @@
         <!--Chats-->
         <scene sceneID="bb9-1u-qYy">
             <objects>
-                <viewController id="3cB-bc-Wen" customClass="ChatListViewController" customModule="ProjectSimulator" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController storyboardIdentifier="ChatListViewController" id="3cB-bc-Wen" customClass="ChatListViewController" customModule="ProjectSimulator" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="SZb-Mm-l5W">
                         <rect key="frame" x="0.0" y="0.0" width="393" height="852"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>

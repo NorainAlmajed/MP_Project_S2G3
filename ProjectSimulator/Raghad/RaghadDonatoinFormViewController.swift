@@ -5,7 +5,7 @@
 //
 //  Created by Raghad Aleskafi on 13/12/2025.
 //
-
+import FirebaseAuth
 import FirebaseFirestore
 import Cloudinary   // add this at the top of the file
 import UIKit
@@ -92,7 +92,8 @@ class RaghadDonatoinFormViewController: UIViewController,
     @IBOutlet weak var donationFormTableview: UITableView!
     private var selectedDonationImage: UIImage?
     private var selectedDonorName: String?
-    
+    private var selectedDonorRefPath: String? = nil   // ✅ "users/<docId>"
+
     
     private let cloudinaryService = CloudinaryService()
     
@@ -483,15 +484,28 @@ class RaghadDonatoinFormViewController: UIViewController,
     }
     
     // MARK: - DonorSelectionDelegate
-    func didSelectDonor(name: String) {
-        selectedDonorName = name
+//    func didSelectDonor(name: String) {
+//        selectedDonorName = name
+//        shouldShowDonorError = false
+//        if isAdminUser {
+//            donationFormTableview.reloadSections(IndexSet(integer: 1), with: .none)
+//        } else {
+//            donationFormTableview.reloadData()
+//        }
+//    }
+    
+    
+    func didSelectDonor(donorRefPath: String, donorName: String) {
+        selectedDonorRefPath = donorRefPath
+        selectedDonorName = donorName
+
         shouldShowDonorError = false
-        if isAdminUser {
-            donationFormTableview.reloadSections(IndexSet(integer: 1), with: .none)
-        } else {
-            donationFormTableview.reloadData()
-        }
+
+        // reload UI (same style you already use)
+        donationFormTableview.reloadData()
     }
+
+    
     
     // MARK: - Image Picking (UIImagePickerController)
     private func openCamera() {
@@ -591,8 +605,13 @@ class RaghadDonatoinFormViewController: UIViewController,
         return t.isEmpty ? nil : t
     }
     
+    //helper
     
-    
+    private var currentUserRefPath: String? {
+        guard let uid = Auth.auth().currentUser?.uid else { return nil }
+        return "users/\(uid)"
+    }
+
     
     // MARK: - Validation / Navigation
     private func validateAndProceed()
@@ -603,8 +622,9 @@ class RaghadDonatoinFormViewController: UIViewController,
         let missingImage = (selectedDonationImage == nil)
         let missingUploadedUrl = (uploadedDonationImageUrl == nil)
         
+        //let missingDonor = isAdminUser ? (selectedDonorName == nil) : false
+        let missingDonor = isAdminUser ? (selectedDonorRefPath == nil) : false
         
-        let missingDonor = isAdminUser ? (selectedDonorName == nil) : false
         let missingFoodCategory = (selectedFoodCategory == nil)
         
         // Quantity
@@ -638,7 +658,6 @@ class RaghadDonatoinFormViewController: UIViewController,
             donationFormTableview.reloadSections(IndexSet(sectionsToReload), with: .none)
         }
         
-        
         // ⛔ Still uploading to Cloudinary
         if isUploadingImage {
             showSimpleAlert(
@@ -649,8 +668,6 @@ class RaghadDonatoinFormViewController: UIViewController,
         }
         
         // ⛔ Image selected but not uploaded yet
-        
-        
         if missingImage ||
             missingUploadedUrl ||
             missingFoodCategory ||
@@ -669,10 +686,7 @@ class RaghadDonatoinFormViewController: UIViewController,
             return
         }
         
-        
-        
         //comment this 24 dec 2025 11:39
-        
         
         // 5) All good → go next
         //        performSegue(withIdentifier: "showSchedulePickup", sender: self)
@@ -681,7 +695,6 @@ class RaghadDonatoinFormViewController: UIViewController,
         //        let vc = sb.instantiateViewController(withIdentifier: "SchedulePickupVC")
         //        navigationController?.pushViewController(vc, animated: true)
         
-        
         // 5) All good → create draft donation, then go next
         
         guard let ngo = selectedNgo else {
@@ -689,11 +702,28 @@ class RaghadDonatoinFormViewController: UIViewController,
             return
         }
         
+        // ✅ ONLY NEW PART (NO LOGIC CHANGE)
+        let donorRefPathToUse: String?
+        if SessionManager.shared.isAdmin {
+            donorRefPathToUse = selectedDonorRefPath          // admin chooses donor
+        } else {
+            donorRefPathToUse = currentUserRefPath            // donor = himself
+        }
+        
+        guard let donorRefFinal = donorRefPathToUse else {
+            showSimpleAlert(title: "Error", message: "Could not determine donor reference.")
+            return
+        }
+        
         let payload = DonationPayload(
             ngoId: ngo.id,
             ngoName: ngo.name,
-            // donorName: isAdminUser ? selectedDonorName : user.username,
-            donorName: isAdminUser ? (selectedDonorName ?? currentUserDisplayName) : currentUserDisplayName,
+            
+            // ❌ OLD
+            // donorRefPath: isAdminUser ? (selectedDonorName ?? currentUserDisplayName) : currentUserDisplayName,
+            
+            // ✅ NEW (ONLY CHANGE)
+            donorRefPath: donorRefFinal,
             
             foodCategory: selectedFoodCategory ?? "",
             quantity: getQuantityValue() ?? 0,
@@ -703,60 +733,6 @@ class RaghadDonatoinFormViewController: UIViewController,
             imageUrl: uploadedDonationImageUrl ?? ""
         )
         
-        //        saveDonationDraftToFirebase(payload: payload) { [weak self] draftId in
-        //            guard let self = self else { return }
-        //
-        //            if draftId == nil {
-        //                self.showSimpleAlert(
-        //                    title: "Error",
-        //                    message: "Could not save donation draft."
-        //                )
-        //                return
-        //            }
-        
-        //            // now i can see it now in Firebase
-        //            self.showSimpleAlert(
-        //                title: "Saved",
-        //                message: "Donation draft saved successfully."
-        //            )
-        
-        
-        //            saveDonationDraftToFirebase(payload: payload) { [weak self] draftId in
-        //                guard let self = self else { return }
-        //
-        //                if draftId == nil {
-        //                    self.showSimpleAlert(
-        //                        title: "Error",
-        //                        message: "Could not save donation draft."
-        //                    )
-        //                    return
-        //                }
-        //
-        //                // ✅ SUCCESS: do nothing (no popup)
-        //                print("✅ Donation draft saved successfully")
-        //            }
-        //
-        //        }
-        
-        
-        
-        //        saveDonationDraftToFirebase(payload: payload) { [weak self] draftId in
-        //            guard let self = self else { return }
-        //
-        //            if draftId == nil {
-        //                self.showSimpleAlert(
-        //                    title: "Error",
-        //                    message: "Could not save donation draft."
-        //                )
-        //                return
-        //            }
-        //
-        //            // ✅ SUCCESS: no popup
-        //            print("✅ Donation draft saved successfully")
-        //        }
-        
-        
-        
         saveDonationDraftToFirebase(payload: payload) { [weak self] draftId in
             guard let self = self else { return }
             
@@ -765,109 +741,22 @@ class RaghadDonatoinFormViewController: UIViewController,
                 return
             }
             
-//            print("✅ Donation draft saved successfully")
-//            
-//            let sb = UIStoryboard(name: "norain-schedule-pickup", bundle: nil)
-//            let vc = sb.instantiateViewController(withIdentifier: "SchedulePickupViewController")
-//            self.navigationController?.pushViewController(vc, animated: true)
-            
-            
-            
             let sb = UIStoryboard(name: "norain-schedule-pickup", bundle: nil)
-
+            
             guard let vc = sb.instantiateViewController(
                 withIdentifier: "SchedulePickupViewController"
             ) as? SchedulePickupViewController else {
                 print("❌ SchedulePickupViewController storyboard ID/class mismatch")
                 return
             }
-
+            
             // ✅ PASS THE OBJECT TO NORAIN
             vc.payload = payload
-
+            
             self.navigationController?.pushViewController(vc, animated: true)
-
         }
-        
-        
-        
-        
-        
-        // ⚠️ IMPORTANT:
-        // You MUST have Firestore document IDs here.
-        // For now, we assume:
-        // - ngo.id = Firestore doc ID (users collection)
-        // - donor doc ID will be resolved below
-        
-        
-        //waiting for norains page
-        
-        //       // let donorDocId: String
-        //        if isAdminUser {
-        //            // ❗ TEMP SAFE SOLUTION (BEGINNER FRIENDLY):
-        //            // Ask your teammate for donor docId OR use username = docId if same
-        //            donorDocId = selectedDonorName ?? ""
-        //        } else {
-        //            donorDocId = user.username
-        //        }
-        //
-        //        //let ngoDocId = ngo.id   // must be Firestore doc id (users collection)
-        
-        //
-        //
-        
-        //❗❗❗❗❗❗❗❗❗❗❗NORAIN❗❗❗❗❗❗❗❗❗❗
-        
-        //        let payload = DonationPayload(
-        //            ngoId: ngo.id,
-        //            ngoName: ngo.name,                 // ✅ ADD THIS
-        //
-        //            donorName: isAdminUser ? selectedDonorName : nil,
-        //            foodCategory: selectedFoodCategory ?? "",
-        //            quantity: getQuantityValue() ?? 0,
-        //            weight: weightValue,
-        //            expiryDate: selectedExpiryDate ?? Date(),
-        //            shortDescription: getShortDescription(),
-        //            imageUrl: uploadedDonationImageUrl ?? ""
-        //        )
-        //
-        
-        
-        
-        //
-        
-        
-        
-        // ✅ TEMP: navigate only (no Firebase write)
-        //        let sb = UIStoryboard(name: "Raghad1", bundle: nil)
-        //        let vc = sb.instantiateViewController(withIdentifier: "SchedulePickupVC")
-        
-        //        let sb = UIStoryboard(name: "norain-schedule-pickup", bundle: nil)
-        //              let vc = sb.instantiateViewController(withIdentifier: "SchedulePickupViewController")
-        //
-        
-        
-        
-        
-        
-        // TODO //(Norain):❗❗❗❗❗❗❗❗❗❗❗❗❗❗❗❗❗❗❗❗❗❗❗❗❗❗❗❗❗❗❗❗❗❗❗❗
-        // After creating SchedulePickupViewController.swift
-        // and setting the storyboard custom class,
-        // uncomment the next line to receive the donation data.
-        
-        //❗❗❗❗❗❗❗❗❗❗❗
-        // (vc as? SchedulePickupViewController)?.payload = payload   // ✅ PASS OBJECT uncomment this
-        //to pass the object to noorain's page
-        
-        //❗❗❗❗❗❗❗❗❗❗❗ She adds ONLY this line to her VC:
-        //var payload: DonationPayload?❗❗❗❗❗❗❗❗❗❗❗
-        
-        
-        
-        // self.navigationController?.pushViewController(vc, animated: true)
-        
-        
     }
+
     
     
     
@@ -909,7 +798,10 @@ class RaghadDonatoinFormViewController: UIViewController,
             "ngoName": payload.ngoName,
             
             // Donor
-            "donorName": payload.donorName ?? currentUserDisplayName,//user.username
+           // "donorName": payload.donorRefPath ?? currentUserDisplayName,//user.username
+            
+            "donor": payload.donorRefPath ?? "",//user.username
+
             
             // Donation form data
             "foodCategory": payload.foodCategory,

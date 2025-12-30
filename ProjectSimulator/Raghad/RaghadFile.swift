@@ -164,7 +164,7 @@ final class DonationDraftStore {
 struct DonationPayload {
     let ngoId: String
     let ngoName: String
-    let donorName: String?
+    let donorRefPath: String?
     let foodCategory: String
     let quantity: Int
     let weight: Double?

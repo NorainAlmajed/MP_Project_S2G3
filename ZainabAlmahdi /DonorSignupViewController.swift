@@ -112,7 +112,7 @@ class DonorSignupViewController: UIViewController {
                 "role": 2,
                 "username": usernameTextField.text ?? "",
                 "full_name": nameTextField.text ?? "",
-                "phone_number": phoneNumberTextField.text ?? "",
+                "number": phoneNumberTextField.text ?? "",
                 "email": email,
                 "profile_completed": false,
                 "created_at": Timestamp()

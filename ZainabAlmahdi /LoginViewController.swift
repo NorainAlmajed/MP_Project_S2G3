@@ -25,11 +25,13 @@ class LoginViewController: UIViewController {
         }
 
         Auth.auth().sendPasswordReset(withEmail: email) { [weak self] error in
-            if let error = error {
-                self?.showAlert(title: "Error", message: error.localizedDescription)
-                return
+            DispatchQueue.main.async {
+                if let error = error {
+                    self?.showAlert(title: "Error", message: error.localizedDescription)
+                    return
+                }
+                self?.showAlert(title: "Email Sent", message: "Check your inbox.")
             }
-            self?.showAlert(title: "Email Sent", message: "Check your inbox.")
         }
     }
 
@@ -52,28 +54,53 @@ class LoginViewController: UIViewController {
         Auth.auth().signIn(withEmail: email, password: password) { [weak self] _, error in
             guard let self = self else { return }
 
-            if let error = error {
-                self.loginButton.isEnabled = true
-                self.showAlert(title: "Login Failed", message: error.localizedDescription)
-                return
-            }
-
-            /*SessionManager.shared.fetchUserRole { success in
+            if let error = error as NSError? {
                 DispatchQueue.main.async {
                     self.loginButton.isEnabled = true
 
-                    if success {
-                        self.routeToHome()
-                    } else {
-                        self.showAlert(title: "Error", message: "Failed to load user role.")
+                    if let authError = AuthErrorCode(rawValue: error.code) {
+                        switch authError {
+
+                        case .wrongPassword:
+                            self.passwordTextField.text = ""
+                            self.showAlert(
+                                title: "Incorrect Password",
+                                message: "The password you entered is incorrect. Please try again."
+                            )
+
+                        case .userNotFound:
+                            self.showAlert(
+                                title: "Account Not Found",
+                                message: "No account is associated with this email."
+                            )
+
+                        case .invalidEmail:
+                            self.showAlert(
+                                title: "Invalid Email",
+                                message: "Please enter a valid email address."
+                            )
+
+                        case .networkError:
+                            self.showAlert(
+                                title: "Network Error",
+                                message: "Please check your internet connection."
+                            )
+
+                        default:
+                            self.showAlert(
+                                title: "Login Failed",
+                                message: error.localizedDescription
+                            )
+                        }
                     }
                 }
-            }*/
+                return
+            }
+
             DispatchQueue.main.async {
                 self.loginButton.isEnabled = true
                 self.routeToHome()
             }
-
         }
     }
 
@@ -93,29 +120,6 @@ class LoginViewController: UIViewController {
         sceneDelegate.window?.makeKeyAndVisible()
     }
 
-
-
-
-        /*let storyboard = UIStoryboard(name: "Main", bundle: nil)
-        let identifier: String
-
-        if SessionManager.shared.isAdmin {
-            identifier = "AdminHomeViewController"
-        } else if SessionManager.shared.isNGO {
-            identifier = "NGOHomeViewController"
-        } else if SessionManager.shared.isDonor {
-            identifier = "DonorHomeViewController"
-        } else {
-            showAlert(title: "Error", message: "Unknown role.")
-            return
-        }
-
-        let homeVC = storyboard.instantiateViewController(withIdentifier: identifier)
-
-        if let sceneDelegate = UIApplication.shared.connectedScenes.first?.delegate as? SceneDelegate {
-            sceneDelegate.window?.rootViewController = homeVC
-            sceneDelegate.window?.makeKeyAndVisible()*/
-    
     // MARK: - Helpers
     func showAlert(title: String, message: String) {
         let alert = UIAlertController(title: title, message: message, preferredStyle: .alert)

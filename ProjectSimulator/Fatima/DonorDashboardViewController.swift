@@ -15,6 +15,54 @@ class DonorDashboardViewController: UIViewController {
     @objc private func browseNgoTapped() {
         goToBrowseNGOs()
     }
+    @objc private func dismissManageUsers() {
+        dismiss(animated: true)
+    }
+    @objc private func manageUsersTapped() {
+        let storyboard = UIStoryboard(name: "norain-admin-controls1", bundle: nil)
+
+        guard let usersVC = storyboard.instantiateViewController(
+            withIdentifier: "NourishUsersViewController"
+        ) as? NourishUsersViewController else {
+            print("❌ NourishUsersViewController not found")
+            return
+        }
+
+        usersVC.modalPresentationStyle = .fullScreen
+
+        // ✅ Create chevron button
+        let backButton = UIButton(type: .system)
+        backButton.setImage(UIImage(systemName: "chevron.left"), for: .normal)
+        backButton.tintColor = .black
+        backButton.addTarget(self, action: #selector(dismissManageUsers), for: .touchUpInside)
+
+        // ✅ Wrap in UIBarButtonItem
+        let barButton = UIBarButtonItem(customView: backButton)
+
+        // ✅ IMPORTANT: set it on HER nav bar outlet
+        usersVC.loadViewIfNeeded() // ensures outlets are connected
+        usersVC.NavBar.leftBarButtonItem = barButton
+
+        present(usersVC, animated: true)
+    }
+
+
+
+
+
+    @objc private func openChatsTapped() {
+        let storyboard = UIStoryboard(name: "Chat", bundle: nil)
+
+        guard let chatListVC = storyboard.instantiateViewController(
+            withIdentifier: "ChatListViewController"
+        ) as? ChatListViewController else {
+            print("❌ ChatListViewController not found in Chats storyboard")
+            return
+        }
+
+        navigationController?.pushViewController(chatListVC, animated: true)
+    }
+
     @objc private func manageDonationsTapped() {
         let storyboard = UIStoryboard(name: "Donations", bundle: nil)
 
@@ -283,11 +331,22 @@ class DonorDashboardViewController: UIViewController {
         navigationItem.rightBarButtonItem = UIBarButtonItem(
             image: UIImage(systemName: "ellipsis"),
             menu: UIMenu(children: [
-                UIAction(title: "Notifications", image: UIImage(systemName: "bell")) { _ in },
-                UIAction(title: "Chat", image: UIImage(systemName: "message")) { _ in }
+                UIAction(
+                    title: "Notifications",
+                    image: UIImage(systemName: "bell")
+                ) { _ in
+                    // keep empty for now
+                },
+                UIAction(
+                    title: "Chat",
+                    image: UIImage(systemName: "message")
+                ) { [weak self] _ in
+                    self?.openChatsTapped()
+                }
             ])
         )
     }
+
 }
 
 // MARK: - TableView
@@ -370,9 +429,12 @@ extension DonorDashboardViewController: UITableViewDataSource, UITableViewDelega
             )
             cell.selectionStyle = .none
 
-            // Find buttons by tag
             let firstButton = cell.contentView.viewWithTag(1) as? UIButton
             let secondButton = cell.contentView.viewWithTag(2) as? UIButton
+
+            // Clear old actions
+            firstButton?.removeTarget(nil, action: nil, for: .allEvents)
+            secondButton?.removeTarget(nil, action: nil, for: .allEvents)
 
             switch currentRole {
 
@@ -380,34 +442,49 @@ extension DonorDashboardViewController: UITableViewDataSource, UITableViewDelega
                 firstButton?.setTitle("View Donations", for: .normal)
                 secondButton?.setTitle("Browse NGOs", for: .normal)
 
-                secondButton?.removeTarget(nil, action: nil, for: .allEvents)
+                firstButton?.addTarget(
+                    self,
+                    action: #selector(manageDonationsTapped),
+                    for: .touchUpInside
+                )
+
                 secondButton?.addTarget(
                     self,
                     action: #selector(browseNgoTapped),
                     for: .touchUpInside
                 )
 
-                // MARK: - Quick Action Button Handler
-               
-
-
             case .ngo:
                 firstButton?.setTitle("Manage Donations", for: .normal)
                 secondButton?.setTitle("Manage Profile", for: .normal)
-                
+
+                firstButton?.addTarget(
+                    self,
+                    action: #selector(manageDonationsTapped),
+                    for: .touchUpInside
+                )
 
             case .admin:
                 firstButton?.setTitle("Manage Users", for: .normal)
                 secondButton?.setTitle("Manage Donations", for: .normal)
+
+                firstButton?.addTarget(
+                    self,
+                    action: #selector(manageUsersTapped),
+                    for: .touchUpInside
+                )
+
+                secondButton?.addTarget(
+                    self,
+                    action: #selector(manageDonationsTapped),
+                    for: .touchUpInside
+                )
             }
-            firstButton?.removeTarget(nil, action: nil, for: .allEvents)
-            firstButton?.addTarget(
-                self,
-                action: #selector(manageDonationsTapped),
-                for: .touchUpInside
-            )
 
             return cell
+
+
+            
 // MARK: impact tracker
         case .impactTracker:
             let cell = tableView.dequeueReusableCell(withIdentifier: "ImpactTrackerCell", for: indexPath) as! ImpactTrackerTableViewCell

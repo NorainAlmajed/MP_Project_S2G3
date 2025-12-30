@@ -126,7 +126,11 @@ class DonorDashboardViewController: UIViewController {
         mainTableView.delegate = self
         mainTableView.dataSource = self
         mainTableView.separatorStyle = .none
+        // 🔙 Back chevron only (no "Home" text)
+            navigationItem.backButtonTitle = ""
 
+            // 🎨 Black chevron color
+            navigationController?.navigationBar.tintColor = .black
         setupEllipsisMenu()
         loadCurrentUser()
         startListeningForNGOs()
@@ -331,12 +335,16 @@ class DonorDashboardViewController: UIViewController {
         navigationItem.rightBarButtonItem = UIBarButtonItem(
             image: UIImage(systemName: "ellipsis"),
             menu: UIMenu(children: [
+
+                // 🔔 Notifications
                 UIAction(
                     title: "Notifications",
                     image: UIImage(systemName: "bell")
-                ) { _ in
-                    // keep empty for now
+                ) { [weak self] _ in
+                    self?.openNotifications()
                 },
+
+                // 💬 Chat
                 UIAction(
                     title: "Chat",
                     image: UIImage(systemName: "message")
@@ -346,6 +354,20 @@ class DonorDashboardViewController: UIViewController {
             ])
         )
     }
+    // MARK: - Notifications Navigation
+    private func openNotifications() {
+        let storyboard = UIStoryboard(name: "Donations", bundle: nil)
+
+        guard let notificationsVC = storyboard.instantiateViewController(
+            withIdentifier: "NotificationsViewController"
+        ) as? NotificationsViewController else {
+            print("❌ NotificationsViewController not found in Donations storyboard")
+            return
+        }
+
+        navigationController?.pushViewController(notificationsVC, animated: true)
+    }
+
 
 }
 

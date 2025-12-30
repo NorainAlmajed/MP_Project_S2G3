@@ -120,6 +120,8 @@ class RaghadDonorListViewController: UIViewController,
         let donor = filteredDonors[indexPath.row]
         cell.textLabel?.text = donor.username
         
+        //  FONT SIZE LINE HERE
+        cell.textLabel?.font = UIFont.systemFont(ofSize: 20)
         // ✅ checkmark on selected row
         cell.accessoryType = (indexPath == selectedIndex) ? .checkmark : .none
         

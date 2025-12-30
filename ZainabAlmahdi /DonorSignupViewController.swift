@@ -100,6 +100,8 @@ class DonorSignupViewController: UIViewController {
             }
 
             self.saveDonorToFirestore(uid: uid, email: email)
+            
+
         }
     }
 
@@ -125,7 +127,14 @@ class DonorSignupViewController: UIViewController {
                     return
                 }
 
+                
+                //Zahraa Hubail
+                self.sendAdminNotification(for: self.usernameTextField.text ?? "")
+                
                 self.loadSessionAndRoute()
+                
+           
+                
             }
     }
 
@@ -176,4 +185,27 @@ class DonorSignupViewController: UIViewController {
         button.layer.cornerRadius = button.frame.height / 2
         button.clipsToBounds = true
     }
+    
+    func sendAdminNotification(for username: String) {
+        let adminID = "TwWqBSGX4ec4gxCWCZcbo7WocAI2"
+        
+        let notificationData: [String: Any] = [
+            "date": Timestamp(date: Date()),
+            "title": "New Donor Registration",
+            "description": "\(username) has just signed up to the system.",
+            "userID": adminID
+        ]
+        
+        Firestore.firestore()
+            .collection("Notification")
+            .addDocument(data: notificationData) { error in
+                if let error = error {
+                    print("Failed to send notification: \(error.localizedDescription)")
+                } else {
+                    print("Admin notification sent successfully.")
+                }
+            }
+    }
+
+    
 }

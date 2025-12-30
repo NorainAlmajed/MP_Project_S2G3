@@ -192,6 +192,9 @@ class NGOSignupViewController: UIViewController,
     }
 
     func saveNGO(uid: String, licenseUrl: String) {
+        
+        let username = usernameTextField.text ?? "A new NGO"  // <-- capture it here
+
         Firestore.firestore()
             .collection("users")
             .document(uid)
@@ -215,6 +218,9 @@ class NGOSignupViewController: UIViewController,
                     self.showAlert(title: "Error", message: error.localizedDescription)
                     return
                 }
+                
+                // Zahraa Hubail
+                self.sendAdminNotificationForNGO(for: username)
 
                 self.loadSessionAndRoute()
             }
@@ -267,4 +273,28 @@ class NGOSignupViewController: UIViewController,
         button.layer.cornerRadius = button.frame.height / 2
         button.clipsToBounds = true
     }
+    
+    
+    func sendAdminNotificationForNGO(for username: String) {
+        let adminID = "TwWqBSGX4ec4gxCWCZcbo7WocAI2"
+        
+        let notificationData: [String: Any] = [
+            "date": Timestamp(date: Date()),
+            "title": "NGO Awaiting Approval",
+            "description": "\(username) has just signed up and is awaiting your verification.",
+            "userID": adminID
+        ]
+        
+        Firestore.firestore()
+            .collection("Notification")
+            .addDocument(data: notificationData) { error in
+                if let error = error {
+                    print("Failed to send NGO notification: \(error.localizedDescription)")
+                } else {
+                    print("Admin NGO notification sent successfully.")
+                }
+            }
+    }
+
+    
 }

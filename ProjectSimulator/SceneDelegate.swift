@@ -25,6 +25,7 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         
         )
 
+<<<<<<< HEAD
         // Embed UINvigationController
         let navController = UINavigationController(rootViewController: loginVC)
 
@@ -34,6 +35,20 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         window.makeKeyAndVisible()
         
         }
+=======
+//        let storyboard = UIStoryboard(name: "Raghad1", bundle: nil)
+//
+//        guard let rootVC = storyboard.instantiateInitialViewController() else {
+//            fatalError("❌ Raghad1 storyboard has NO Initial View Controller")
+//        }
+//
+//        window?.rootViewController = rootVC
+//        window?.makeKeyAndVisible()
+
+        
+        window?.rootViewController = loginVC
+        window?.makeKeyAndVisible()
+>>>>>>> main
     }
     
 //    Norain schedule pickup tests

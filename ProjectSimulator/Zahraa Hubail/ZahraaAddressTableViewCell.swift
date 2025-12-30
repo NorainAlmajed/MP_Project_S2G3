@@ -24,6 +24,7 @@ class ZahraaAddressTableViewCell: UITableViewCell {
         // Initialization code
         addressBtn.setContentHuggingPriority(.defaultHigh, for: .horizontal)
             addressBtn.setContentCompressionResistancePriority(.required, for: .horizontal)
+
     }
 
     override func setSelected(_ selected: Bool, animated: Bool) {

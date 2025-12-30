@@ -430,7 +430,6 @@
             
             
             //PickUp time cell
-            //PickUp time cell
             if adjustedSection == 9 {
                 let cell = tableView.dequeueReusableCell(withIdentifier: "PickUpTimeCell", for: indexPath) as! ZahraaPickUpTimeTableViewCell
 
@@ -438,10 +437,13 @@
                 let currentTime = selectedPickupTime ?? donation?.pickupTime
                 cell.configure(selected: currentTime)
 
-                // IMPORTANT: set the callback
+                // keep inner table functional
                 cell.onTimeframeSelected = { [weak self] selected in
                     self?.selectedPickupTime = selected
                 }
+
+                // Make outer cell non-clickable visually
+                cell.selectionStyle = .none
 
                 return cell
             }
@@ -639,7 +641,7 @@
         private func validateAndProceed() {
             view.endEditing(true)
             
-            // 1️⃣ Check quantity and weight only
+            // 1️⃣ Validation
             let invalidQuantity = selectedQuantity <= 0
             let invalidWeight = weightInvalidFormat
 
@@ -660,12 +662,12 @@
             // ✅ Show "Uploading..." pop-up
             showUploadingAlert()
 
-            // 2️⃣ If image is new, upload to Cloudinary
+            // 2️⃣ Function to update Firestore
             func proceedWithUpdate(imageUrl: String?) {
                 guard let donation = donation, let donationId = donation.firestoreID else { return }
                 let db = Firestore.firestore()
                 let donationRef = db.collection("Donation").document(donationId)
-                
+
                 // Prepare updated data
                 var updatedData: [String: Any] = [
                     "Category": selectedFoodCategory ?? donation.category,
@@ -676,15 +678,28 @@
                     "expiryDate": Timestamp(date: selectedExpiryDate ?? donation.expiryDate.dateValue())
                 ]
 
-                if let weight = weightValue { updatedData["weight"] = weight }
-                if let desc = selectedShortDescription { updatedData["description"] = desc }
-                if let imgUrl = imageUrl { updatedData["foodImageUrl"] = imgUrl }
+                // Weight: save null if empty
+                if let weight = weightValue {
+                    updatedData["weight"] = weight
+                } else {
+                    updatedData["weight"] = NSNull() // explicitly null in Firebase
+                }
 
-                // Update donation document in Firebase
+                // Description (optional)
+                if let desc = selectedShortDescription {
+                    updatedData["description"] = desc
+                }
+
+                // Image URL (optional)
+                if let imgUrl = imageUrl {
+                    updatedData["foodImageUrl"] = imgUrl
+                }
+
+                // Update Firestore
                 donationRef.updateData(updatedData) { [weak self] error in
                     guard let self = self else { return }
 
-                    // ✅ Dismiss the "Uploading..." pop-up first
+                    // Dismiss "Uploading..."
                     self.uploadingAlert?.dismiss(animated: true) {
                         self.uploadingAlert = nil
 
@@ -692,7 +707,7 @@
                             self.showSimpleAlert(title: "Update Failed", message: error.localizedDescription)
                             return
                         }
-                        
+
                         // Update local donation object
                         self.donation?.category = updatedData["Category"] as? String ?? donation.category
                         self.donation?.quantity = updatedData["quantity"] as? Int ?? donation.quantity
@@ -703,7 +718,7 @@
                         self.donation?.weight = updatedData["weight"] as? Double
                         self.donation?.description = updatedData["description"] as? String
                         self.donation?.foodImageUrl = updatedData["foodImageUrl"] as? String ?? donation.foodImageUrl
-                        
+
                         // Update address if edited
                         if let draftAddress = self.draftAddress, let addressRef = donation.address as? DocumentReference {
                             let addressData: [String: Any] = [
@@ -718,15 +733,19 @@
                                 if let err = err { print("❌ Address update failed:", err.localizedDescription) }
                             }
                         }
-                        
+
                         // Notify donor & NGO
                         self.sendUpdateNotifications(for: self.donation!)
-                        
+
                         // Callback
                         self.onDonationUpdated?(self.donation!)
-                        
-                        // ✅ Show the success message AFTER dismissing uploading
-                        let alert = UIAlertController(title: "Success", message: "Donation details updated.", preferredStyle: .alert)
+
+                        // ✅ Show success pop-up
+                        let alert = UIAlertController(
+                            title: "Success",
+                            message: "Donation Details have been successfully edited.",
+                            preferredStyle: .alert
+                        )
                         alert.addAction(UIAlertAction(title: "Dismiss", style: .default) { _ in
                             self.navigationController?.popViewController(animated: true)
                         })
@@ -735,7 +754,7 @@
                 }
             }
 
-            // If user selected a new image, upload it first
+            // If user selected a new image, upload first
             if let image = selectedDonationImage {
                 isUploadingImage = true
                 cloudinaryService.uploadImage(image) { [weak self] url in
@@ -745,11 +764,10 @@
                     }
                 }
             } else {
-                // No new image, use existing URL
+                // No new image
                 proceedWithUpdate(imageUrl: uploadedDonationImageUrl)
             }
         }
-
 
 
 
@@ -1022,6 +1040,17 @@
         }
 
 
+        func tableView(_ tableView: UITableView, willSelectRowAt indexPath: IndexPath) -> IndexPath? {
+            let section = indexPath.section
+            let adjustedSection = (!isAdminUser && section >= 1) ? section + 1 : section
+
+            // Disable selection for PickUpTimeCell
+            if adjustedSection == 9 {
+                return nil
+            }
+
+            return indexPath
+        }
 
 
 

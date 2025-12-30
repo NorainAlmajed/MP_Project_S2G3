@@ -113,7 +113,10 @@ class ZahraaAddressPageViewController: UIViewController {
                     
                     present(alert, animated: true)
         }
-        
+    
+    
+    
+    
     @IBAction func saveButtonTapped(_ sender: Any) {
 
         guard
@@ -128,7 +131,7 @@ class ZahraaAddressPageViewController: UIViewController {
             return
         }
 
-        // ✅ UPDATE EXISTING ADDRESS (NO CREATION LOGIC)
+        // ✅ Update existing address
         donation.address.building = building
         donation.address.road = road
         donation.address.block = block
@@ -141,8 +144,20 @@ class ZahraaAddressPageViewController: UIViewController {
         // ✅ Send updated address back
         delegate?.didAddAddress(donation.address)
 
-        navigationController?.popViewController(animated: true)
+        // ✅ SUCCESS POP-UP
+        let successAlert = UIAlertController(
+            title: "Address Saved Successfully",
+            message: "Your address information is saved, and ready to use.",
+            preferredStyle: .alert
+        )
+
+        successAlert.addAction(UIAlertAction(title: "OK", style: .default) { [weak self] _ in
+            self?.navigationController?.popViewController(animated: true)
+        })
+
+        present(successAlert, animated: true)
     }
+
 
         private func showAlert(title: String, message: String) {
                 let alert = UIAlertController(title: title, message: message, preferredStyle: .alert)

@@ -13,9 +13,9 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
 
         window = UIWindow(windowScene: windowScene)
 
-        let authStoryboard = UIStoryboard(name: "Authentication", bundle: nil)
+        let authStoryboard = UIStoryboard(name: "norain-schedule-pickup", bundle: nil)
         let loginVC = authStoryboard.instantiateViewController(
-            withIdentifier: "LoginViewController"
+            withIdentifier: "SchedulePickupViewController"
         )
 
         window?.rootViewController = loginVC

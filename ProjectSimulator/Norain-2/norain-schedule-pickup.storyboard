@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="23727" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="Y6W-OH-hqX">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="23727" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
     <device id="retina6_12" orientation="portrait" appearance="light"/>
     <dependencies>
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="23721"/>
@@ -18,10 +18,10 @@
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <scrollView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="cMD-GK-igI">
-                                <rect key="frame" x="0.0" y="160" width="393" height="793"/>
+                                <rect key="frame" x="0.0" y="116" width="393" height="837"/>
                                 <subviews>
                                     <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="aPt-Ll-PCy" userLabel="ContentView">
-                                        <rect key="frame" x="0.0" y="-2" width="393" height="793"/>
+                                        <rect key="frame" x="0.0" y="0.0" width="393" height="837"/>
                                         <subviews>
                                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="UJM-s5-bfj">
                                                 <rect key="frame" x="20" y="20" width="353" height="103"/>
@@ -59,7 +59,7 @@
                                                             <color key="baseForegroundColor" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                                         </buttonConfiguration>
                                                         <connections>
-                                                            <action selector="addNewAddressTapped:" destination="Y6W-OH-hqX" eventType="touchUpInside" id="P00-n9-Afx"/>
+                                                            <action selector="addNewAddressTapped:" destination="Y6W-OH-hqX" eventType="touchUpInside" id="yXC-VS-ZXp"/>
                                                         </connections>
                                                     </button>
                                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="**Please Select a Pickup Address" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="ci9-Xu-1fS">
@@ -156,7 +156,7 @@
                                                 </subviews>
                                             </stackView>
                                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="qQO-Hz-LFG">
-                                                <rect key="frame" x="20" y="593" width="363" height="43.666666666666629"/>
+                                                <rect key="frame" x="20" y="593" width="363" height="87.666666666666629"/>
                                                 <subviews>
                                                     <button opaque="NO" contentMode="scaleToFill" semanticContentAttribute="forceLeftToRight" fixedFrame="YES" contentHorizontalAlignment="leading" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="B8C-D8-QkK">
                                                         <rect key="frame" x="16" y="3" width="330" height="38.333333333333371"/>
@@ -214,10 +214,10 @@
                                                 </prototypes>
                                             </tableView>
                                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="O86-bh-XHy">
-                                                <rect key="frame" x="13" y="658" width="365" height="38.333333333333371"/>
+                                                <rect key="frame" x="13" y="702" width="365" height="38.333333333333371"/>
                                                 <state key="normal" title="Button"/>
                                                 <buttonConfiguration key="configuration" style="filled" title="Confirm Pickup Schedule" cornerStyle="fixed">
-                                                    <backgroundConfiguration key="background" cornerRadius="8">
+                                                    <backgroundConfiguration key="background" cornerRadius="19">
                                                         <color key="backgroundColor" name="greenCol"/>
                                                     </backgroundConfiguration>
                                                     <color key="baseBackgroundColor" name="greenCol"/>
@@ -318,12 +318,12 @@
                         <outlet property="timeErrorLbl" destination="AZH-Ht-BKt" id="BFx-ek-ugf"/>
                         <outlet property="timeframeHeightConstraint" destination="nfV-vU-9ci" id="fFd-6B-mXb"/>
                         <outlet property="timeframeTableView" destination="ZjW-am-x0D" id="ppb-Zv-6g0"/>
-                        <segue destination="MH0-2O-wVd" kind="show" identifier="showAddAddress" id="M1d-zz-bca"/>
+                        <outlet property="view" destination="5EZ-qb-Rvc" id="FCZ-zB-eBU"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="Ief-a0-LHa" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="1619.0839694656488" y="56.690140845070424"/>
+            <point key="canvasLocation" x="5361" y="69"/>
         </scene>
         <!--AddAddressViewController-->
         <scene sceneID="Yye-jL-SKr">
@@ -445,7 +445,7 @@
                                 <rect key="frame" x="45" y="729" width="313" height="39"/>
                                 <state key="normal" title="Button"/>
                                 <buttonConfiguration key="configuration" style="filled" title="Save Address">
-                                    <backgroundConfiguration key="background" cornerRadius="8"/>
+                                    <backgroundConfiguration key="background" cornerRadius="19"/>
                                     <color key="baseBackgroundColor" name="greenCol"/>
                                 </buttonConfiguration>
                                 <connections>
@@ -514,26 +514,7 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="5jL-k9-1yu" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="2460.3053435114502" y="55.633802816901408"/>
-        </scene>
-        <!--Navigation Controller-->
-        <scene sceneID="dqK-pq-eI1">
-            <objects>
-                <navigationController automaticallyAdjustsScrollViewInsets="NO" id="VUW-3p-qfs" sceneMemberID="viewController">
-                    <toolbarItems/>
-                    <navigationItem key="navigationItem" id="ken-kZ-eus"/>
-                    <navigationBar key="navigationBar" contentMode="scaleToFill" id="nop-ou-Bn8">
-                        <rect key="frame" x="0.0" y="118" width="393" height="44"/>
-                        <autoresizingMask key="autoresizingMask"/>
-                    </navigationBar>
-                    <nil name="viewControllers"/>
-                    <connections>
-                        <segue destination="Y6W-OH-hqX" kind="relationship" relationship="rootViewController" id="Wo7-Vh-2We"/>
-                    </connections>
-                </navigationController>
-                <placeholder placeholderIdentifier="IBFirstResponder" id="9dY-V1-y27" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
-            </objects>
-            <point key="canvasLocation" x="692.36641221374043" y="56.338028169014088"/>
+            <point key="canvasLocation" x="6167.1755725190833" y="55.633802816901408"/>
         </scene>
     </scenes>
     <resources>

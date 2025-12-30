@@ -168,10 +168,15 @@ class SchedulePickupViewController: UIViewController {
         let storyboard = UIStoryboard(name: "norain-schedule-pickup", bundle: nil)
         if let vc = storyboard.instantiateViewController(withIdentifier: "AddAddressViewController") as? AddAddressViewController {
             vc.delegate = self
-            navigationController?.pushViewController(vc, animated: true)
+            
+            if let nav = navigationController {
+                nav.pushViewController(vc, animated: true)
+            } else {
+                // Fallback: Present it modally if no navigation controller exists
+                present(vc, animated: true)
+            }
         }
     }
-
     private func showExistingAddressesList() {
         let alert = UIAlertController(title: "Saved Addresses", message: nil, preferredStyle: .actionSheet)
         for (ref, data) in existingAddresses {

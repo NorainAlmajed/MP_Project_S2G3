@@ -54,6 +54,7 @@ class DonationViewController: UIViewController {
                 self.fetchAllUsers {
                     self.fetchDonations()
                 }
+                
             }
 
             title = "Donations"
@@ -68,6 +69,8 @@ class DonationViewController: UIViewController {
             setupNoDonationsLabel()
             setupSearchHeaderUnderNavBar()
             setupDonationsCollectionLayout()
+            listenForPendingRedirect()
+
         }
 
         override func viewWillAppear(_ animated: Bool) {
@@ -546,3 +549,24 @@ class DonationViewController: UIViewController {
             updateNoDonationsLabelDuringSearch()
         }
     }
+extension DonationViewController {
+
+    func listenForPendingRedirect() {
+        NotificationCenter.default.addObserver(
+            self,
+            selector: #selector(openPendingFromDashboard),
+            name: .openPendingDonations,
+            object: nil
+        )
+    }
+
+    @objc private func openPendingFromDashboard() {
+        // Pending = index 1
+        selectedIndex = 1
+
+        DispatchQueue.main.asyncAfter(deadline: .now() + 0.2) {
+            self.filterDonations()
+            self.statusCollectionView.reloadData()
+        }
+    }
+}

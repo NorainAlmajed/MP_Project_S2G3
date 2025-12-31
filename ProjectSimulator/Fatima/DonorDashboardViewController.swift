@@ -203,6 +203,7 @@ class DonorDashboardViewController: UIViewController {
         startListeningForNGOs()
         mainTableView.allowsSelection = false
         mainTableView.allowsMultipleSelection = false
+        
 
     }
 
@@ -689,7 +690,7 @@ extension DonorDashboardViewController: UITableViewDataSource, UITableViewDelega
             return cell
 
 
-// for the ngo
+// MARK: PENDING donations for the ngo dashboard
         case .pendingDonations:
             let cell = tableView.dequeueReusableCell(
                 withIdentifier: "RecentDonationsCell",
@@ -700,13 +701,21 @@ extension DonorDashboardViewController: UITableViewDataSource, UITableViewDelega
             cell.configure(with: roleBasedDonations)
 
             // ✅ Donation card → Donations page
-            cell.onDonationSelected = { [weak self] _ in
-                self?.manageDonationsTapped()
-            }
-
-            // ✅ Header → Donations page
             cell.onHeaderTapped = { [weak self] in
                 self?.manageDonationsTapped()
+
+                DispatchQueue.main.asyncAfter(deadline: .now() + 0.4) {
+                    NotificationCenter.default.post(name: .openPendingDonations, object: nil)
+                }
+
+            }
+
+            cell.onDonationSelected = { [weak self] _ in
+                self?.manageDonationsTapped()
+
+                DispatchQueue.main.asyncAfter(deadline: .now() + 0.4) {
+                       NotificationCenter.default.post(name: .openPendingDonations, object: nil)
+                   }
             }
 
             return cell
@@ -851,4 +860,7 @@ private func styleQuickActionButton(_ button: UIButton) {
     button.layer.shadowRadius = 6
     button.layer.shadowOffset = CGSize(width: 0, height: 3)
     button.layer.masksToBounds = false
+}
+extension Notification.Name {
+    static let openPendingDonations = Notification.Name("openPendingDonations")
 }

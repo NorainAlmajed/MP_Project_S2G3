@@ -11,7 +11,7 @@ class NorainDonor: NorainAppUser{
     
     init(documentID: String,dictionary: [String: Any]) {
             let username = dictionary["username"] as? String ?? ""
-            let name = dictionary["name"] as? String ?? ""
+            let name = dictionary["full_name"] as? String ?? ""
             let email = dictionary["email"] as? String ?? ""
             let userImg = dictionary["profile_image_url"] as? String ?? ""
             let phoneNumber = dictionary["number"] as? Int ?? 12345678

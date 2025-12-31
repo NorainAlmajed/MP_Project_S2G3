@@ -56,7 +56,17 @@ class EditUsersViewController: UIViewController, UIImagePickerControllerDelegate
         self.navigationItem.leftBarButtonItem = backButton
         backButton.tintColor = .black
 
-        
+        DispatchQueue.main.asyncAfter(deadline: .now() + 1.0){
+        print("debug info")
+        print("uploadPicBtn frame:", self.uploadPicBtn.frame)
+        print("uploadPicBtn hidden:", self.uploadPicBtn.isHidden)
+        print("uploadPicBtn user interaction enabled:", self.uploadPicBtn.isUserInteractionEnabled)
+        print("uploadPicBtn alpha:", self.uploadPicBtn.alpha)
+        print("image picker view frame:", self.ImagePickerEditView.frame)
+        print("image picker view user interaction enabled:", self.ImagePickerEditView.isUserInteractionEnabled)
+        print("image picker view image:", self.ImagePickerEditView.image != nil)
+            
+        }
         self.setupView()
         fetchUserFromFirestore()
         setupMenus()
@@ -116,7 +126,6 @@ class EditUsersViewController: UIViewController, UIImagePickerControllerDelegate
         } else {
             // ✅ No image URL, set placeholder immediately
             self.ImagePickerEditView.image = UIImage(systemName: "person.circle.fill")
-            self.ImagePickerEditView.isUserInteractionEnabled = true
             self.uploadPicBtn.isUserInteractionEnabled = true
         }
         
@@ -153,7 +162,6 @@ class EditUsersViewController: UIViewController, UIImagePickerControllerDelegate
             }
         } else {
             self.ImagePickerEditView.image = UIImage(systemName: "person.circle.fill")
-            self.ImagePickerEditView.isUserInteractionEnabled = true
             self.uploadPicBtn.isUserInteractionEnabled = true
         }
         
@@ -335,14 +343,22 @@ class EditUsersViewController: UIViewController, UIImagePickerControllerDelegate
     }
     
     func setupView() {
-        ImagePickerEditView.layer.cornerRadius = 8
-        ImagePickerEditView.clipsToBounds = true
-        ImagePickerEditView.contentMode = .scaleAspectFill
-        
         ImagePickerEditView.isUserInteractionEnabled = false
-        
-        uploadPicBtn.isUserInteractionEnabled = true
+        ImagePickerEditView.gestureRecognizers?.forEach { gesture in
+            ImagePickerEditView.removeGestureRecognizer(gesture)
+        }
+
+        uploadPicBtn.isHidden = false
         uploadPicBtn.isEnabled = true
+        uploadPicBtn.isUserInteractionEnabled = true
+        uploadPicBtn.alpha = 1.0
+        
+        view.bringSubviewToFront(uploadPicBtn)
+        if ImagePickerEditView.image == nil {
+            ImagePickerEditView.image = UIImage(systemName: "person.circle.fill")
+        }
+        
+        
         
         let isNGO = userToEdit is NorainNGO
         causeStack.isHidden = !isNGO

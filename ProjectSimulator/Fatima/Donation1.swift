@@ -9,6 +9,7 @@ struct Donation1 {
     let status: Int
     let quantity: Int
     let creationDate: Date
+    let weight: Int
 
     // MARK: - Derived / UI-safe values
 
@@ -34,6 +35,8 @@ struct Donation1 {
             let category = data["Category"] as? String,
             let status = data["status"] as? Int,
             let quantity = data["quantity"] as? Int,
+            let weight = data["weight"] as? Int,        // ✅ ADD
+
             let timestamp = data["creationDate"] as? Timestamp
         else {
             print("❌ Failed to parse Donation1:", document.documentID)
@@ -46,5 +49,7 @@ struct Donation1 {
         self.status = status
         self.quantity = quantity
         self.creationDate = timestamp.dateValue()
+        self.weight = weight
+
     }
 }

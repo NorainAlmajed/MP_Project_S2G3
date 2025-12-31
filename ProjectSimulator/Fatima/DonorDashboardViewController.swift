@@ -12,6 +12,10 @@ struct ImpactData {
 
 
 class DonorDashboardViewController: UIViewController {
+    // Valid donation = accepted or collected
+    // status: 2 = accepted, 3 = collected
+    //let valid = donations.filter { $0.status == 2 || $0.status == 3 }
+
     @objc private func browseNgoTapped() {
         goToBrowseNGOs()
     }
@@ -48,8 +52,69 @@ class DonorDashboardViewController: UIViewController {
     }
 
 
+// MARK: Donor impact math
+    private func donorImpactStats() -> [ImpactStat] {
+        let valid = recentDonations.filter { $0.status == 2 || $0.status == 3 }
+        let meals = valid.reduce(0) { $0 + $1.quantity }
+
+        return [
+            ImpactStat(title: "Total Donations", value: valid.count),
+            ImpactStat(title: "Meals Served", value: meals),
+            ImpactStat(title: "Lives Served", value: meals / 3)
+        ]
+    }
+// MARK: NGO impact math
+    private func ngoImpactStats() -> [ImpactStat] {
+
+        let valid = roleBasedDonations.filter {
+            $0.status == 2 || $0.status == 3
+        }
 
 
+        let calendar = Calendar.current
+        let today = Date()
+
+        let todayCount = valid.filter {
+            calendar.isDate($0.creationDate, inSameDayAs: today)
+        }.count
+
+        let monthlyCount = valid.filter {
+            calendar.isDate($0.creationDate, equalTo: today, toGranularity: .month)
+        }.count
+
+        let mealsProvided = valid.reduce(0) { $0 + $1.quantity }
+
+        // ⚠️ TEMP: using quantity as waste until weight is added to model
+        let wastePrevented = mealsProvided
+
+        let beneficiaries = mealsProvided / 3
+
+        return [
+            ImpactStat(title: "Donations Received", value: valid.count),
+            ImpactStat(title: "Waste Prevented (KG)", value: wastePrevented),
+            ImpactStat(title: "Total Beneficiaries", value: beneficiaries),
+            ImpactStat(title: "Meals Provided", value: mealsProvided),
+            ImpactStat(title: "Today’s Stats", value: todayCount),
+            ImpactStat(title: "Monthly Stats", value: monthlyCount)
+        ]
+    }
+
+
+    private func adminImpactStats() -> [ImpactStat] {
+
+        let valid = roleBasedDonations.filter { $0.status == 2 || $0.status == 3 }
+
+        let meals = valid.reduce(0) { $0 + $1.quantity }
+
+        return [
+            ImpactStat(title: "Total Donations", value: valid.count),
+            ImpactStat(title: "Total Donors", value: Set(valid.map { $0.firestoreID }).count),
+            ImpactStat(title: "Total NGOs", value: ngosFromFirestore.count),
+            ImpactStat(title: "Meals Provided", value: meals),
+            ImpactStat(title: "Beneficiaries Served", value: meals / 3),
+            ImpactStat(title: "Waste Prevented", value: meals)
+        ]
+    }
 
     @objc private func openChatsTapped() {
         let storyboard = UIStoryboard(name: "Chat", bundle: nil)
@@ -135,6 +200,9 @@ class DonorDashboardViewController: UIViewController {
         setupEllipsisMenu()
         loadCurrentUser()
         startListeningForNGOs()
+        mainTableView.allowsSelection = false
+        mainTableView.allowsMultipleSelection = false
+
     }
 
     // MARK: - Configure sections by role
@@ -235,6 +303,13 @@ class DonorDashboardViewController: UIViewController {
                 self.mainTableView.reloadData()
             }
     }
+    private func clearCellSelection(_ cell: UITableViewCell) {
+        cell.selectionStyle = .none
+        cell.backgroundColor = .clear
+        cell.contentView.backgroundColor = .clear
+        cell.selectedBackgroundView = UIView() // 🔥 kills gray overlay
+    }
+
     private func startListeningForPendingDonations() {
         guard let uid = currentUserID else { return }
 
@@ -387,11 +462,17 @@ extension DonorDashboardViewController: UITableViewDataSource, UITableViewDelega
         
         let isPad = traitCollection.userInterfaceIdiom == .pad
         let section = sections[indexPath.section]
-        
+        // MARK: Height Section
         switch section {
         case .welcome: return isPad ? 120 : 80
         case .quickActions: return isPad ? 110 : 80
-        case .impactTracker: return isPad ? 180 : 140
+        case .impactTracker:
+            switch currentRole {
+            case .donor: return isPad ? 140 : 120
+            case .ngo:   return isPad ? 320 : 280
+            case .admin: return isPad ? 320 : 280
+            }
+
         case .graph: return isPad ? 260 : 200
         case .browseNGOs: return isPad ? 280 : 220
         case .recentDonations,
@@ -519,15 +600,26 @@ extension DonorDashboardViewController: UITableViewDataSource, UITableViewDelega
             
 // MARK: impact tracker
         case .impactTracker:
-            let cell = tableView.dequeueReusableCell(withIdentifier: "ImpactTrackerCell", for: indexPath) as! ImpactTrackerTableViewCell
-            cell.configure(
-                totalDonations: impactData.totalDonations,
-                mealsProvided: impactData.mealsProvided,
-                livesImpacted: impactData.livesImpacted
-            )
-            
+            let cell = tableView.dequeueReusableCell(
+                withIdentifier: "ImpactTrackerCell",
+                for: indexPath
+            ) as! ImpactTrackerTableViewCell
+
+            let stats: [ImpactStat]
+
+            switch currentRole {
+            case .donor:
+                stats = donorImpactStats()
+            case .ngo:
+                stats = ngoImpactStats()
+            case .admin:
+                stats = adminImpactStats()
+            }
+
+            cell.configure(role: currentRole, stats: stats)
             cell.selectionStyle = .none
             return cell
+
             // MARK: GRAPH
         case .graph:
             // Placeholder (keep section, don’t remove)

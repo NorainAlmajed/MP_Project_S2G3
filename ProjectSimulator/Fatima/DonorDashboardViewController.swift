@@ -624,10 +624,66 @@ extension DonorDashboardViewController: UITableViewDataSource, UITableViewDelega
                 withIdentifier: "ManageUsersCell",
                 for: indexPath
             ) as! ManageUsersPreviewTableViewCell
+
+            // ✅ Header "Manage Users >" tapped
+            cell.onHeaderTapped = { [weak self] in
+                self?.manageUsersTapped()
+            }
+
+            // ✅ User card tapped
+            cell.onUserSelected = { [weak self] selectedUser in
+                self?.openEditUser(userID: selectedUser.id)
+            }
+
             return cell
+
+
 
         }
     }
+    private func openEditUser(userID: String) {
+        let storyboard = UIStoryboard(name: "norain-admin-controls1", bundle: nil)
+
+        guard let editVC = storyboard.instantiateViewController(
+            withIdentifier: "EditUsersViewController"
+        ) as? EditUsersViewController else {
+            print("❌ EditUsersViewController not found")
+            return
+        }
+
+        // Fetch user document, then map into NorainDonor / NorainNGO (no model edits)
+        db.collection("users").document(userID).getDocument { [weak self] doc, error in
+            guard let self = self else { return }
+
+            if let error = error {
+                print("❌ Failed to fetch user for edit:", error.localizedDescription)
+                return
+            }
+
+            guard let doc = doc, doc.exists, let data = doc.data() else {
+                print("⚠️ User doc missing")
+                return
+            }
+
+            let role = data["role"] as? Int ?? 0
+
+            // ✅ Use Norain’s existing initializers (already in her code)
+            let userToEdit: NorainAppUser
+            if role == 3 {
+                userToEdit = NorainNGO(documentID: doc.documentID, dictionary: data)
+            } else {
+                userToEdit = NorainDonor(documentID: doc.documentID, dictionary: data)
+            }
+
+            editVC.userToEdit = userToEdit
+
+            // Keep the same presentation style Norain uses (no nav bar edits)
+            let nav = UINavigationController(rootViewController: editVC)
+            nav.modalPresentationStyle = .fullScreen
+            self.present(nav, animated: true)
+        }
+    }
+
     // MARK: - Navigation to Raghad1 storyboard
 
     private func goToBrowseNGOs() {

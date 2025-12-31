@@ -60,7 +60,7 @@ class DonorDashboardViewController: UIViewController {
         return [
             ImpactStat(title: "Total Donations", value: valid.count),
             ImpactStat(title: "Meals Served", value: meals),
-            ImpactStat(title: "Lives Served", value: meals / 3)
+            ImpactStat(title: "Lives Saved", value: meals / 3)
         ]
     }
 // MARK: NGO impact math
@@ -496,7 +496,7 @@ extension DonorDashboardViewController: UITableViewDataSource, UITableViewDelega
             cell.selectionStyle = .none
             
             let label = UILabel()
-            label.font = .boldSystemFont(ofSize: 20)
+            label.font = .boldSystemFont(ofSize: 19)
             label.numberOfLines = 0
             label.translatesAutoresizingMaskIntoConstraints = false
             // diso

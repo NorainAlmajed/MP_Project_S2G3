@@ -40,6 +40,11 @@ class RecentDonationTableViewCell: UITableViewCell,
         headerView.addGestureRecognizer(tap)
 
         print("🧪 recentDonationContent is nil:", recentDonationContent == nil)
+        headerView.numberOfLines = 1
+        headerView.adjustsFontSizeToFitWidth = true
+        headerView.minimumScaleFactor = 0.85
+        headerView.lineBreakMode = .byTruncatingTail
+
     }
     @objc private func headerTapped() {
         onHeaderTapped?()

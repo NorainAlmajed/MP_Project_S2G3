@@ -196,7 +196,7 @@ class ImpactTrackerTableViewCell: UITableViewCell {
     private func makeStatText(title: String, value: Int) -> NSAttributedString {
 
         let titleAttrs: [NSAttributedString.Key: Any] = [
-            .font: UIFont.systemFont(ofSize: 14),
+            .font: UIFont.systemFont(ofSize: 12),
             .foregroundColor: UIColor.black
         ]
 

@@ -13,7 +13,8 @@ UICollectionViewDataSource,
     var ngoId: String?
     var adminId: String?
     private var myUserId = ""
-    
+    private let navProfileImageView = UIImageView()
+
     
     var chatID: String = ""
     var userName: String = ""
@@ -82,23 +83,69 @@ UICollectionViewDataSource,
     
     
     //profile photo function
-    func setupProfilePicture() {
-        let imageView = UIImageView()
-        imageView.image = UIImage(named: "placeholder_pp")
-        imageView.contentMode = .scaleAspectFill
-        imageView.layer.cornerRadius = 16
-        imageView.clipsToBounds = true
-        imageView.frame = CGRect(x: 0, y: 0, width: 32, height: 32)
-        
-        let container = UIView(frame: imageView.frame)
-        container.addSubview(imageView)
-        
-        let profileItem = UIBarButtonItem(customView: container)
-        
-        navigationItem.leftItemsSupplementBackButton = true
-        navigationItem.leftBarButtonItem = profileItem
+    func receiverUserId() -> String? {
+        let myId = Auth.auth().currentUser?.uid
+
+        if donorId != nil && donorId != myId {
+            return donorId
+        }
+
+        if ngoId != nil && ngoId != myId {
+            return ngoId
+        }
+
+        if adminId != nil && adminId != myId {
+            return adminId
+        }
+
+        return nil
     }
-    
+
+    func setupProfilePicture() {
+        navProfileImageView.frame = CGRect(x: 0, y: 0, width: 32, height: 32)
+        navProfileImageView.contentMode = .scaleAspectFill
+        navProfileImageView.layer.cornerRadius = 16
+        navProfileImageView.clipsToBounds = true
+        navProfileImageView.image = UIImage(named: "placeholder_pp")
+
+        let container = UIView(frame: navProfileImageView.frame)
+        container.addSubview(navProfileImageView)
+
+        navigationItem.leftItemsSupplementBackButton = true
+        navigationItem.leftBarButtonItem = UIBarButtonItem(customView: container)
+    }
+    func loadReceiverProfilePhoto() {
+        guard let receiverId = receiverUserId() else { return }
+
+        Firestore.firestore()
+            .collection("users")
+            .document(receiverId)
+            .getDocument { [weak self] snapshot, _ in
+                guard
+                    let self = self,
+                    let data = snapshot?.data(),
+                    let rawURL = data["profile_image_url"] as? String,
+                    !rawURL.isEmpty
+                else { return }
+
+                let trimmed = rawURL.trimmingCharacters(in: .whitespacesAndNewlines)
+                guard
+                    let encoded = trimmed.addingPercentEncoding(withAllowedCharacters: .urlFragmentAllowed),
+                    let url = URL(string: encoded)
+                else { return }
+
+                URLSession.shared.dataTask(with: url) { data, _, _ in
+                    guard let data, let image = UIImage(data: data) else { return }
+
+                    DispatchQueue.main.async {
+                        self.navProfileImageView.image = image
+                    }
+                }.resume()
+            }
+    }
+
+
+
     
     func applyChatLayout() {
         let itemSize = NSCollectionLayoutSize(
@@ -345,6 +392,7 @@ UICollectionViewDataSource,
         super.viewDidLoad()
         navigationItem.title = userName
         setupProfilePicture()
+        loadReceiverProfilePhoto()
         myUserId = Auth.auth().currentUser?.uid ?? ""
 
         if chatID.isEmpty {
@@ -443,7 +491,20 @@ UICollectionViewDataSource,
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
+
+        let appearance = UINavigationBarAppearance()
+        appearance.configureWithOpaqueBackground()
+        appearance.backgroundColor = .white
+        appearance.shadowColor = .clear
+
+        let navBar = navigationController?.navigationBar
+        navBar?.standardAppearance = appearance
+        navBar?.scrollEdgeAppearance = appearance
+        navBar?.compactAppearance = appearance
+
+        navBar?.clipsToBounds = true
     }
+
     
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)

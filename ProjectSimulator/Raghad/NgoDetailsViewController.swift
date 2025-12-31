@@ -140,7 +140,7 @@ class NgoDetailsViewController: UIViewController, UITableViewDataSource, UITable
                                         let chatVC = storyboard.instantiateViewController(
                                             withIdentifier: "ChatViewController"
                                         ) as! ChatViewController
-
+                                        chatVC.hidesBottomBarWhenPushed = true
                                         chatVC.chatID = doc.documentID
                                         chatVC.donorId = donorId
                                         chatVC.ngoId = ngoId
@@ -166,7 +166,7 @@ class NgoDetailsViewController: UIViewController, UITableViewDataSource, UITable
                                         let chatVC = storyboard.instantiateViewController(
                                             withIdentifier: "ChatViewController"
                                         ) as! ChatViewController
-
+                                        chatVC.hidesBottomBarWhenPushed = true
                                         chatVC.chatID = chatRef.documentID
                                         chatVC.donorId = donorId
                                         chatVC.ngoId = ngoId
@@ -174,8 +174,11 @@ class NgoDetailsViewController: UIViewController, UITableViewDataSource, UITable
                                         chatVC.userName = self.selectedNgo?.name ?? "Chat"
 
                                         self.navigationController?.pushViewController(chatVC, animated: true)
+                                       
+
                                     }
                                 }
+                
                         }
 
             cell.selectionStyle = .none

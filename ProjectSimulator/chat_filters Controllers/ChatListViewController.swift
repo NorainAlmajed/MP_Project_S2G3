@@ -15,6 +15,31 @@ struct SupportChat {
     let isEnded: Bool
 }
 
+struct DateFormatterHelper {
+    static func chatListTime(_ date: Date) -> String {
+        let calendar = Calendar.current
+
+        if calendar.isDateInToday(date) {
+            let f = DateFormatter()
+            f.dateFormat = "h:mm a"
+            return f.string(from: date)
+        }
+
+        if calendar.isDateInYesterday(date) {
+            return "Yesterday"
+        }
+
+        if calendar.isDate(date, equalTo: Date(), toGranularity: .weekOfYear) {
+            let f = DateFormatter()
+            f.dateFormat = "EEEE"
+            return f.string(from: date)
+        }
+
+        let f = DateFormatter()
+        f.dateFormat = "dd/MM/yyyy"
+        return f.string(from: date)
+    }
+}
 
 enum ChatType: String {
     case normal
@@ -138,6 +163,7 @@ class ChatListViewController: UIViewController,  UISearchBarDelegate, UITableVie
         super.viewDidLoad()
 
         ChatSearch.delegate = self
+        ChatSearch.backgroundImage = UIImage()
 
         let tapGesture = UITapGestureRecognizer(
             target: self,
@@ -277,6 +303,7 @@ class ChatListViewController: UIViewController,  UISearchBarDelegate, UITableVie
         } else {
             cell.nameLabel.text = chat.senderName
         }
+        cell.configure(with: chat)
 
         return cell
     }
@@ -489,18 +516,12 @@ class ChatListViewController: UIViewController,  UISearchBarDelegate, UITableVie
 
 
     func resolveChatNames() {
+        for chat in allChats {
+            fetchUserNameAndPhoto(userId: chat.otherUserId) { [weak self] name, url in
+                guard let self = self else { return }
 
-        for (index, chat) in allChats.enumerated() {
-
-            // Skip if name already resolved
-            if chat.senderName != "Loading..." { continue }
-
-            fetchUserName(userId: chat.otherUserId) { name in
-                DispatchQueue.main.async {
-
-                    guard index < self.allChats.count else { return }
-                    
-                    self.allChats[index] = SupportChat(
+                if let idx = self.allChats.firstIndex(where: { $0.chatID == chat.chatID }) {
+                    self.allChats[idx] = SupportChat(
                         chatID: chat.chatID,
                         otherUserId: chat.otherUserId,
                         senderName: name,
@@ -508,50 +529,45 @@ class ChatListViewController: UIViewController,  UISearchBarDelegate, UITableVie
                         chatType: chat.chatType,
                         time: chat.time,
                         lastMessageTime: chat.lastMessageTime,
-                        senderProfileURL: chat.senderProfileURL,
+                        senderProfileURL: url,
                         isEnded: chat.isEnded
                     )
 
-
-                    self.applyFilter(type: self.currentFilter)
+                    DispatchQueue.main.async {
+                        self.applyFilter(type: self.currentFilter)
+                    }
                 }
             }
         }
     }
 
-    
-        func fetchUserName(userId: String, completion: @escaping (String) -> Void) {
-            
-            guard !userId.isEmpty else {
-                print("fetchUserName called with EMPTY userId")
-                completion("Unknown")
+
+    func fetchUserNameAndPhoto(
+        userId: String,
+        completion: @escaping (String, String) -> Void
+    ) {
+        db.collection("users").document(userId).getDocument { snapshot, _ in
+            guard let data = snapshot?.data() else {
+                completion("Unknown", "")
                 return
             }
 
-            if let cachedName = userNameCache[userId] {
-                completion(cachedName)
-                return
+            let role = data["role"] as? Int ?? 0
+
+            let name: String
+            if role == 3 {
+                name = data["organization_name"] as? String ?? "NGO"
+            } else {
+                name = data["username"] as? String ?? "User"
             }
 
-            db.collection("users").document(userId).getDocument { snapshot, error in
-                guard let data = snapshot?.data() else {
-                    completion("Unknown")
-                    return
-                }
+            let url = data["profile_image_url"] as? String ?? ""
 
-                let role = data["role"] as? Int ?? 0
-                let name: String
-
-                if role == 3 {
-                    name = data["organization_name"] as? String ?? "NGO"
-                } else {
-                    name = data["username"] as? String ?? "User"
-                }
-
-                self.userNameCache[userId] = name
-                completion(name)
-            }
+            completion(name, url)
         }
+    }
+
+
 
     func fetchLastMessageTime(
         chatID: String,

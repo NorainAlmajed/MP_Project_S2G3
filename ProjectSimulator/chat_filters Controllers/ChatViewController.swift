@@ -13,7 +13,8 @@ UICollectionViewDataSource,
     var ngoId: String?
     var adminId: String?
     private var myUserId = ""
-    
+    private let navProfileImageView = UIImageView()
+
     
     var chatID: String = ""
     var userName: String = ""
@@ -82,23 +83,69 @@ UICollectionViewDataSource,
     
     
     //profile photo function
-    func setupProfilePicture() {
-        let imageView = UIImageView()
-        imageView.image = UIImage(named: "placeholder_pp")
-        imageView.contentMode = .scaleAspectFill
-        imageView.layer.cornerRadius = 16
-        imageView.clipsToBounds = true
-        imageView.frame = CGRect(x: 0, y: 0, width: 32, height: 32)
-        
-        let container = UIView(frame: imageView.frame)
-        container.addSubview(imageView)
-        
-        let profileItem = UIBarButtonItem(customView: container)
-        
-        navigationItem.leftItemsSupplementBackButton = true
-        navigationItem.leftBarButtonItem = profileItem
+    func receiverUserId() -> String? {
+        let myId = Auth.auth().currentUser?.uid
+
+        if donorId != nil && donorId != myId {
+            return donorId
+        }
+
+        if ngoId != nil && ngoId != myId {
+            return ngoId
+        }
+
+        if adminId != nil && adminId != myId {
+            return adminId
+        }
+
+        return nil
     }
-    
+
+    func setupProfilePicture() {
+        navProfileImageView.frame = CGRect(x: 0, y: 0, width: 32, height: 32)
+        navProfileImageView.contentMode = .scaleAspectFill
+        navProfileImageView.layer.cornerRadius = 16
+        navProfileImageView.clipsToBounds = true
+        navProfileImageView.image = UIImage(named: "placeholder_pp")
+
+        let container = UIView(frame: navProfileImageView.frame)
+        container.addSubview(navProfileImageView)
+
+        navigationItem.leftItemsSupplementBackButton = true
+        navigationItem.leftBarButtonItem = UIBarButtonItem(customView: container)
+    }
+    func loadReceiverProfilePhoto() {
+        guard let receiverId = receiverUserId() else { return }
+
+        Firestore.firestore()
+            .collection("users")
+            .document(receiverId)
+            .getDocument { [weak self] snapshot, _ in
+                guard
+                    let self = self,
+                    let data = snapshot?.data(),
+                    let rawURL = data["profile_image_url"] as? String,
+                    !rawURL.isEmpty
+                else { return }
+
+                let trimmed = rawURL.trimmingCharacters(in: .whitespacesAndNewlines)
+                guard
+                    let encoded = trimmed.addingPercentEncoding(withAllowedCharacters: .urlFragmentAllowed),
+                    let url = URL(string: encoded)
+                else { return }
+
+                URLSession.shared.dataTask(with: url) { data, _, _ in
+                    guard let data, let image = UIImage(data: data) else { return }
+
+                    DispatchQueue.main.async {
+                        self.navProfileImageView.image = image
+                    }
+                }.resume()
+            }
+    }
+
+
+
     
     func applyChatLayout() {
         let itemSize = NSCollectionLayoutSize(
@@ -159,24 +206,26 @@ UICollectionViewDataSource,
         
         present(alert, animated: true)
     }
+    
     func showChatEndedLabel() {
+        if view.viewWithTag(999) != nil { return }
+
         let label = UILabel()
+        label.tag = 999
         label.text = "This chat has ended!"
-        label.textColor = UIColor.darkGray
+        label.textColor = .darkGray
         label.font = UIFont.systemFont(ofSize: 18, weight: .semibold)
         label.textAlignment = .center
         label.translatesAutoresizingMaskIntoConstraints = false
-        
+
         view.addSubview(label)
-        
+
         NSLayoutConstraint.activate([
             label.centerXAnchor.constraint(equalTo: view.centerXAnchor),
-            label.bottomAnchor.constraint(
-                equalTo: view.safeAreaLayoutGuide.bottomAnchor,
-                constant: -24
-            )
+            label.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor, constant: -24)
         ])
     }
+
     
     
     
@@ -184,8 +233,6 @@ UICollectionViewDataSource,
         inputBarView.isHidden = true
         endButton.isEnabled = false
         showChatEndedLabel()
-        
-        UserDefaults.standard.removeObject(forKey: "chatMessages_\(chatID)")
         
         let chatRef = Firestore.firestore()
             .collection("chats")
@@ -229,6 +276,12 @@ UICollectionViewDataSource,
             .collection("messages")
             .document(localId)
             .setData(messageData)
+
+        chatRef.updateData([
+            "lastMessageAt": now,
+            "lastMessageText": text
+        ])
+
     }
     
     func sendMessage() {
@@ -258,36 +311,39 @@ UICollectionViewDataSource,
     
     
     func createChatIfNeeded() {
-        let db = Firestore.firestore()
-        let chatRef = db.collection("chats").document(chatID)
-        
+        guard !chatID.isEmpty else { return }
+
+        let chatRef = Firestore.firestore()
+            .collection("chats")
+            .document(chatID)
+
         chatRef.getDocument { snapshot, _ in
             if snapshot?.exists == true { return }
-            
+
             var data: [String: Any] = [
                 "type": self.chatType.rawValue,
                 "createdAt": Timestamp(),
                 "isEnded": false
             ]
-            
+
             if let donorId = self.donorId { data["donorId"] = donorId }
             if let ngoId = self.ngoId { data["ngoId"] = ngoId }
             if let adminId = self.adminId { data["adminId"] = adminId }
-            
+
             chatRef.setData(data)
         }
     }
-    
+
     func ensureChatID() {
         if chatID.isEmpty {
             chatID = Firestore.firestore()
                 .collection("chats")
                 .document()
                 .documentID
-            
-            listenForMessages()
         }
     }
+
+
     
     
     
@@ -336,11 +392,17 @@ UICollectionViewDataSource,
         super.viewDidLoad()
         navigationItem.title = userName
         setupProfilePicture()
-        if !chatID.isEmpty {
-            listenForMessages()
-        }
+        loadReceiverProfilePhoto()
         myUserId = Auth.auth().currentUser?.uid ?? ""
-      
+
+        if chatID.isEmpty {
+            ensureChatID()
+            createChatIfNeeded()
+        }
+        listenForMessages()
+        listenForChatEndedState()
+
+       
         navigationController?.navigationBar.tintColor = .black
         
         collectionView.dataSource = self
@@ -429,24 +491,20 @@ UICollectionViewDataSource,
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
-        
-        let isEnded = UserDefaults.standard.bool(
-            forKey: "chatEnded_\(chatID)"
-        )
-        func removeEndedLabelIfNeeded() {
-            view.viewWithTag(999)?.removeFromSuperview()
-        }
-        
-        if isEnded {
-            inputBarView.isHidden = true
-            endButton.isEnabled = false
-            showChatEndedLabel()
-        } else {
-            inputBarView.isHidden = false
-            endButton.isEnabled = true
-            removeEndedLabelIfNeeded()
-        }
+
+        let appearance = UINavigationBarAppearance()
+        appearance.configureWithOpaqueBackground()
+        appearance.backgroundColor = .white
+        appearance.shadowColor = .clear
+
+        let navBar = navigationController?.navigationBar
+        navBar?.standardAppearance = appearance
+        navBar?.scrollEdgeAppearance = appearance
+        navBar?.compactAppearance = appearance
+
+        navBar?.clipsToBounds = true
     }
+
     
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
@@ -500,4 +558,29 @@ UICollectionViewDataSource,
                 }
             }
     }
+    
+    func listenForChatEndedState() {
+        Firestore.firestore()
+            .collection("chats")
+            .document(chatID)
+            .addSnapshotListener { [weak self] snapshot, _ in
+                guard let self = self else { return }
+
+                let isEnded = snapshot?.data()?["isEnded"] as? Bool ?? false
+
+                if isEnded {
+                    self.inputBarView.isHidden = true
+                    self.endButton.isEnabled = false
+                    self.showChatEndedLabel()
+                } else {
+                    self.inputBarView.isHidden = false
+                    self.endButton.isEnabled = true
+                    self.view.viewWithTag(999)?.removeFromSuperview()
+                }
+            }
+    }
+    
+
+
 }
+

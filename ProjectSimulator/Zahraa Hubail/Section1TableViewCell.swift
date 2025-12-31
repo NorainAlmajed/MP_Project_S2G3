@@ -28,7 +28,7 @@ class Section1TableViewCell: UITableViewCell {
         self.selectionStyle = .none
         NgoLogoImageView.layer.cornerRadius = 7.24
         NgoLogoImageView.clipsToBounds = true
-        NgoLogoImageView.contentMode = .scaleAspectFill
+        NgoLogoImageView.contentMode = .scaleAspectFit
 
         // Only adjust layout for iPad
         if UIDevice.current.userInterfaceIdiom == .pad {
@@ -74,29 +74,31 @@ class Section1TableViewCell: UITableViewCell {
 
         // MARK: - Configure Cell
         
-        func setup(with donation: ZahraaDonation) {
+    func setup(with donation: ZahraaDonation) {
+        // NGO name
+        ngoNameLbl.text = donation.ngo.organization_name ?? donation.ngo.username
 
-            // NGO name
-            ngoNameLbl.text = donation.ngo.organization_name ?? donation.ngo.username
+        // Donation ID
+        donationIDLbl.text = "Donation #\(donation.donationID)"
 
-            // Donation ID (YOUR numeric ID – untouched)
-            donationIDLbl.text = "Donation #\(donation.donationID)"
+        // Creation date
+        let formatter = DateFormatter()
+        formatter.dateFormat = "dd/MM/yyyy, h:mm a"
+        creationDateLbl.text = formatter.string(from: donation.creationDate.dateValue())
 
-            // Format and display creation date
-            let formatter = DateFormatter()
-            formatter.dateFormat = "dd/MM/yyyy, h:mm a"
-            creationDateLbl.text = formatter.string(
-                from: donation.creationDate.dateValue()
-            )
+        // Placeholder image
+        let placeholder = UIImage(systemName: "photo")?.withRenderingMode(.alwaysTemplate)
+        NgoLogoImageView.tintColor = .systemGray3
 
-            // Load NGO logo from URL
-            if let logoURL = donation.ngo.profile_image_url, !logoURL.isEmpty {
-                NgoLogoImageView.loadImage(
-                    from: logoURL,
-                    placeholder: UIImage(named: "defaultLogo")
-                )
-            } else {
-                NgoLogoImageView.image = UIImage(named: "defaultLogo")
-            }
+        // Show placeholder immediately
+        NgoLogoImageView.image = placeholder
+
+        // Load logo asynchronously
+        if let logoURL = donation.ngo.profile_image_url, !logoURL.isEmpty {
+            NgoLogoImageView.loadImage(from: logoURL, placeholder: placeholder)
         }
+    }
+
+    
+    
     }

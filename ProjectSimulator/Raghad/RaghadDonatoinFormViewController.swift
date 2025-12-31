@@ -130,11 +130,20 @@ class RaghadDonatoinFormViewController: UIViewController,
         title = "Donation Form"
         navigationController?.navigationBar.prefersLargeTitles = false
         
-        let tap = UITapGestureRecognizer(target: self, action: #selector(dismissKeyboard))
+//        let tap = UITapGestureRecognizer(target: self, action: #selector(dismissKeyboard))
+//        tap.cancelsTouchesInView = false
+//        view.addGestureRecognizer(tap)
+        
+        let tap = UITapGestureRecognizer(target: self, action: #selector(dismissKeyboard(_:)))
         tap.cancelsTouchesInView = false
         view.addGestureRecognizer(tap)
+
         
-        donationFormTableview.keyboardDismissMode = .onDrag
+       // donationFormTableview.keyboardDismissMode = .onDrag
+        donationFormTableview.keyboardDismissMode = .none
+
+       // donationFormTableview.keyboardDismissMode = .none
+
         addDoneButtonOnKeyboard()
         
         // Self-sizing cells (use the IBOutlet table, not `tableView`)
@@ -226,7 +235,15 @@ class RaghadDonatoinFormViewController: UIViewController,
             if let tf = v as? UITextField { tf.inputAccessoryView = toolbar }
         }
     }
-    @objc func dismissKeyboard() { view.endEditing(true) }
+    //@objc func dismissKeyboard() { view.endEditing(true) }
+    @objc func dismissKeyboard(_ sender: UITapGestureRecognizer) {
+        // ✅ If expiry date picker is open, don't dismiss it
+        if let tf = view.findFirstResponder() as? UITextField,
+           tf.inputView is UIDatePicker {
+            return
+        }
+        view.endEditing(true)
+    }
     @objc func doneButtonTapped() { view.endEditing(true) }
     
     // MARK: - Table DataSource
@@ -348,14 +365,21 @@ class RaghadDonatoinFormViewController: UIViewController,
             let cell = tableView.dequeueReusableCell(withIdentifier: "Section6Cell", for: indexPath) as! RaghadSection6TableViewCell
             cell.selectionStyle = .none
             cell.configure(date: selectedExpiryDate)
+//            cell.onDateSelected = { [weak self] date in
+//                guard let self = self else { return }
+//                self.selectedExpiryDate = date
+//                self.didUserConfirmExpiryDate = true
             cell.onDateSelected = { [weak self] date in
                 guard let self = self else { return }
                 self.selectedExpiryDate = date
                 self.didUserConfirmExpiryDate = true
-
-                UIView.performWithoutAnimation {
-                    self.donationFormTableview.reloadSections(IndexSet(integer: indexPath.section), with: .none)
-                }
+                // ✅ IMPORTANT: do NOT reload sections here, it will close the picker
+            
+//                UIView.performWithoutAnimation {
+//                    self.donationFormTableview.reloadSections(IndexSet(integer: indexPath.section), with: .none)
+//                }
+                
+                
             }
             return cell
         }
@@ -1066,4 +1090,20 @@ class RaghadDonatoinFormViewController: UIViewController,
     }
     
     
+}
+
+
+// MARK: - First Responder Finder
+extension UIView {
+    func findFirstResponder() -> UIView? {
+        if self.isFirstResponder {
+            return self
+        }
+        for subview in subviews {
+            if let responder = subview.findFirstResponder() {
+                return responder
+            }
+        }
+        return nil
+    }
 }

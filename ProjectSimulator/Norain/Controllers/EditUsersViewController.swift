@@ -55,10 +55,7 @@ class EditUsersViewController: UIViewController, UIImagePickerControllerDelegate
         let backButton = UIBarButtonItem(image: UIImage(systemName: "chevron.left"), style: .plain, target: self, action: #selector(backTapped))
         self.navigationItem.leftBarButtonItem = backButton
         backButton.tintColor = .black
-        
-        uploadPicBtn.addTarget(self, action: #selector(uploadPhotoTapped), for: .touchUpInside)
-        let tapGesture = UITapGestureRecognizer(target: self, action: #selector(uploadPhotoTapped))
-        ImagePickerEditView.addGestureRecognizer(tapGesture)
+
         
         self.setupView()
         fetchUserFromFirestore()
@@ -89,12 +86,13 @@ class EditUsersViewController: UIViewController, UIImagePickerControllerDelegate
                 return
             }
             
-            // Update the UI with Firebase data
-            self.populateDataFromFirestore(data: data)
-            print("✅ User data fetched from Firestore")
+            // ✅ ALWAYS update UI on main thread
+            DispatchQueue.main.async {
+                self.populateDataFromFirestore(data: data)
+                print("✅ User data fetched from Firestore")
+            }
         }
     }
-    
     private func populateDataFromFirestore(data: [String: Any]) {
         usernameField?.text = data["username"] as? String
         nameField?.text = data["full_name"] as? String
@@ -102,16 +100,26 @@ class EditUsersViewController: UIViewController, UIImagePickerControllerDelegate
         emailField?.text = data["email"] as? String
         
         if let imageUrlString = data["profile_image_url"] as? String, !imageUrlString.isEmpty {
-                FetchImage.fetchImage(from: imageUrlString) { [weak self] image in
+            FetchImage.fetchImage(from: imageUrlString) { [weak self] image in
+                // ✅ CRITICAL FIX: Update UI on main thread
+                DispatchQueue.main.async {
                     if let downloadedImage = image {
                         self?.ImagePickerEditView.image = downloadedImage
                     } else {
                         self?.ImagePickerEditView.image = UIImage(systemName: "person.circle.fill")
                     }
+                    // ✅ Ensure interaction is enabled AFTER image is set
+                    self?.ImagePickerEditView.isUserInteractionEnabled = true
+                    self?.uploadPicBtn.isUserInteractionEnabled = true
                 }
-            } else {
-                self.ImagePickerEditView.image = UIImage(systemName: "person.circle.fill")
             }
+        } else {
+            // ✅ No image URL, set placeholder immediately
+            self.ImagePickerEditView.image = UIImage(systemName: "person.circle.fill")
+            self.ImagePickerEditView.isUserInteractionEnabled = true
+            self.uploadPicBtn.isUserInteractionEnabled = true
+        }
+        
         let role = data["role"] as? Int ?? 0
         
         if role == 3 { // NGO
@@ -126,22 +134,28 @@ class EditUsersViewController: UIViewController, UIImagePickerControllerDelegate
             }
         }
     }
-    
     private func populateDataFromLocal() {
-        // Fallback to local object if Firebase fails
         guard let user = userToEdit else { return }
         
         usernameField?.text = user.username
         nameField?.text = user.name
         phoneField?.text = "\(user.phoneNumber)"
         emailField?.text = user.email
+        
         if !user.userImg.isEmpty {
-                FetchImage.fetchImage(from: user.userImg) { [weak self] image in
+            FetchImage.fetchImage(from: user.userImg) { [weak self] image in
+                // ✅ CRITICAL FIX: Update UI on main thread
+                DispatchQueue.main.async {
                     self?.ImagePickerEditView.image = image ?? UIImage(systemName: "person.circle.fill")
+                    self?.ImagePickerEditView.isUserInteractionEnabled = true
+                    self?.uploadPicBtn.isUserInteractionEnabled = true
                 }
-            } else {
-                self.ImagePickerEditView.image = UIImage(systemName: "person.circle.fill")
             }
+        } else {
+            self.ImagePickerEditView.image = UIImage(systemName: "person.circle.fill")
+            self.ImagePickerEditView.isUserInteractionEnabled = true
+            self.uploadPicBtn.isUserInteractionEnabled = true
+        }
         
         if let ngo = user as? NorainNGO {
             addressField?.text = ngo.address
@@ -345,7 +359,7 @@ class EditUsersViewController: UIViewController, UIImagePickerControllerDelegate
     }
     
     // MARK: - Photo Upload
-    @objc func uploadPhotoTapped(_ sender: UIButton) {
+    @IBAction func uploadPhotoTapped(_ sender: UIButton) {
         showPhotoAlert()
     }
     

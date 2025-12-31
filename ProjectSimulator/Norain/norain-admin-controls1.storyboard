@@ -414,16 +414,6 @@
                                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="ylS-ws-EZl" userLabel="PhotoView">
                                                 <rect key="frame" x="105" y="0.0" width="192" height="241"/>
                                                 <subviews>
-                                                    <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="photo" catalog="system" translatesAutoresizingMaskIntoConstraints="NO" id="Ndh-C1-dQF">
-                                                        <rect key="frame" x="8" y="21.666666666666657" width="176" height="137"/>
-                                                        <constraints>
-                                                            <constraint firstAttribute="height" relation="lessThanOrEqual" constant="140" id="4Rf-uW-pxr"/>
-                                                            <constraint firstAttribute="height" relation="greaterThanOrEqual" constant="120" id="5rp-9M-zn3"/>
-                                                            <constraint firstAttribute="width" relation="greaterThanOrEqual" constant="140" id="CtF-B0-Ycs"/>
-                                                            <constraint firstAttribute="width" constant="176" id="Yvz-r8-Jhc"/>
-                                                            <constraint firstAttribute="height" constant="140" id="l7Y-8S-o1L"/>
-                                                        </constraints>
-                                                    </imageView>
                                                     <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="kDE-b6-zcq">
                                                         <rect key="frame" x="20" y="172" width="152" height="38.333333333333343"/>
                                                         <state key="normal" title="Button"/>
@@ -438,6 +428,16 @@
                                                             <action selector="uploadPhotoTapped:" destination="mxA-aF-9jl" eventType="touchUpInside" id="Knz-6U-oBC"/>
                                                         </connections>
                                                     </button>
+                                                    <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="photo" catalog="system" translatesAutoresizingMaskIntoConstraints="NO" id="Ndh-C1-dQF">
+                                                        <rect key="frame" x="8" y="21.666666666666657" width="176" height="137"/>
+                                                        <constraints>
+                                                            <constraint firstAttribute="height" relation="lessThanOrEqual" constant="140" id="4Rf-uW-pxr"/>
+                                                            <constraint firstAttribute="height" relation="greaterThanOrEqual" constant="120" id="5rp-9M-zn3"/>
+                                                            <constraint firstAttribute="width" relation="greaterThanOrEqual" constant="140" id="CtF-B0-Ycs"/>
+                                                            <constraint firstAttribute="width" constant="176" id="Yvz-r8-Jhc"/>
+                                                            <constraint firstAttribute="height" constant="140" id="l7Y-8S-o1L"/>
+                                                        </constraints>
+                                                    </imageView>
                                                 </subviews>
                                                 <color key="backgroundColor" systemColor="systemBackgroundColor"/>
                                                 <color key="tintColor" white="0.66666666669999997" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>

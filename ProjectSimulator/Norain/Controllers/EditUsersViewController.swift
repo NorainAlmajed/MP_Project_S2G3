@@ -66,6 +66,16 @@ class EditUsersViewController: UIViewController, UIImagePickerControllerDelegate
         print("image picker view user interaction enabled:", self.ImagePickerEditView.isUserInteractionEnabled)
         print("image picker view image:", self.ImagePickerEditView.image != nil)
             
+        print("uploadPicBtn superview:", self.uploadPicBtn.superview?.classForCoder ?? "nil")
+        print("uploadPicBtn superview frame :", self.uploadPicBtn.superview?.frame ?? .zero)
+        print("uploadPicBtn superview user interaction:", self.uploadPicBtn.superview?.isUserInteractionEnabled ?? false)
+            
+        print("uploadPicBtn can recieve touches:", self.uploadPicBtn.point(inside: CGPoint(x: 76, y: 19), with: nil))
+
+
+
+            
+            
         }
         self.setupView()
         fetchUserFromFirestore()
@@ -177,6 +187,7 @@ class EditUsersViewController: UIViewController, UIImagePickerControllerDelegate
     @IBAction func saveChangesTapped(_ sender: Any) {
         saveTapped()
     }
+    
     
     @objc func saveTapped() {
         if isUploadingImage {

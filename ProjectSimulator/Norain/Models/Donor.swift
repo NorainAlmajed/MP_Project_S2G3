@@ -20,7 +20,6 @@ class NorainDonor: NorainAppUser{
             let profile_completed = dictionary["profile_completed"] as? Bool ?? true
         
             self.bio = dictionary["bio"] as? String ?? ""
-        
         super.init(documentID: documentID,username: username, name: name, phoneNumber: phoneNumber, email: email, userImg: userImg, role: 3,notifications_enabled: notifications_enabled)
         }
     

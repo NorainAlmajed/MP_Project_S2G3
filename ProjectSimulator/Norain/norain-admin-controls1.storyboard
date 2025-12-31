@@ -333,7 +333,7 @@
                             <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" alignment="top" spacing="8" translatesAutoresizingMaskIntoConstraints="NO" id="Ooc-NS-jiZ">
                                 <rect key="frame" x="151" y="162" width="121.66666666666669" height="80.666666666666686"/>
                                 <subviews>
-                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Name" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" preferredMaxLayoutWidth="55" translatesAutoresizingMaskIntoConstraints="NO" id="zHc-VW-AnJ">
+                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Name" textAlignment="natural" lineBreakMode="wordWrap" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" preferredMaxLayoutWidth="55" translatesAutoresizingMaskIntoConstraints="NO" id="zHc-VW-AnJ">
                                         <rect key="frame" x="0.0" y="0.0" width="64" height="24"/>
                                         <fontDescription key="fontDescription" type="system" weight="semibold" pointSize="20"/>
                                         <nil key="textColor"/>
@@ -412,10 +412,10 @@
                                         <rect key="frame" x="0.0" y="0.0" width="402" height="971"/>
                                         <subviews>
                                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="ylS-ws-EZl" userLabel="PhotoView">
-                                                <rect key="frame" x="105" y="0.0" width="192" height="241"/>
+                                                <rect key="frame" x="105" y="140" width="192" height="101"/>
                                                 <subviews>
                                                     <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="kDE-b6-zcq">
-                                                        <rect key="frame" x="20" y="172" width="152" height="38.333333333333343"/>
+                                                        <rect key="frame" x="20" y="32" width="152" height="38.333333333333343"/>
                                                         <state key="normal" title="Button"/>
                                                         <buttonConfiguration key="configuration" style="tinted" image="square.and.arrow.up" catalog="system" title="Upload Photo">
                                                             <backgroundConfiguration key="background" cornerRadius="10">
@@ -429,7 +429,7 @@
                                                         </connections>
                                                     </button>
                                                     <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="photo" catalog="system" translatesAutoresizingMaskIntoConstraints="NO" id="Ndh-C1-dQF">
-                                                        <rect key="frame" x="8" y="21.666666666666657" width="176" height="137"/>
+                                                        <rect key="frame" x="8" y="-118.33333333333334" width="176" height="137"/>
                                                         <constraints>
                                                             <constraint firstAttribute="height" relation="lessThanOrEqual" constant="140" id="4Rf-uW-pxr"/>
                                                             <constraint firstAttribute="height" relation="greaterThanOrEqual" constant="120" id="5rp-9M-zn3"/>
@@ -442,15 +442,9 @@
                                                 <color key="backgroundColor" systemColor="systemBackgroundColor"/>
                                                 <color key="tintColor" white="0.66666666669999997" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                                 <constraints>
-                                                    <constraint firstItem="kDE-b6-zcq" firstAttribute="centerX" secondItem="ylS-ws-EZl" secondAttribute="centerX" id="5MC-tE-LXW"/>
-                                                    <constraint firstItem="Ndh-C1-dQF" firstAttribute="top" secondItem="ylS-ws-EZl" secondAttribute="top" constant="20" id="Ccn-Ym-ETp"/>
-                                                    <constraint firstItem="Ndh-C1-dQF" firstAttribute="centerX" secondItem="ylS-ws-EZl" secondAttribute="centerX" id="EvX-89-Pzc"/>
-                                                    <constraint firstItem="Ndh-C1-dQF" firstAttribute="centerX" secondItem="ylS-ws-EZl" secondAttribute="centerX" id="IMK-cB-fby"/>
-                                                    <constraint firstItem="kDE-b6-zcq" firstAttribute="centerX" secondItem="ylS-ws-EZl" secondAttribute="centerX" id="MOk-AX-TKO"/>
+                                                    <constraint firstItem="Ndh-C1-dQF" firstAttribute="bottom" secondItem="ylS-ws-EZl" secondAttribute="top" constant="20" id="Ccn-Ym-ETp"/>
                                                     <constraint firstItem="kDE-b6-zcq" firstAttribute="top" secondItem="Ndh-C1-dQF" secondAttribute="bottom" constant="12" id="NPt-Wh-ICi"/>
-                                                    <constraint firstItem="Ndh-C1-dQF" firstAttribute="centerX" secondItem="ylS-ws-EZl" secondAttribute="centerX" id="PzS-uA-vIH"/>
                                                     <constraint firstItem="Ndh-C1-dQF" firstAttribute="centerX" secondItem="ylS-ws-EZl" secondAttribute="centerX" id="grm-1J-pM6"/>
-                                                    <constraint firstItem="kDE-b6-zcq" firstAttribute="centerX" secondItem="ylS-ws-EZl" secondAttribute="centerX" id="hsD-ve-LkB"/>
                                                     <constraint firstItem="kDE-b6-zcq" firstAttribute="centerX" secondItem="ylS-ws-EZl" secondAttribute="centerX" id="uHf-sn-9ag"/>
                                                 </constraints>
                                             </view>

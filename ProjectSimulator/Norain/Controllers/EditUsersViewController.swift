@@ -354,6 +354,25 @@ class EditUsersViewController: UIViewController, UIImagePickerControllerDelegate
     }
     
     func setupView() {
+        
+        if let parentView = uploadPicBtn.superview{
+            parentView.translatesAutoresizingMaskIntoConstraints = false
+            
+            parentView.constraints.forEach { constraint in
+                
+                    if constraint.firstAttribute == .height{
+                           constraint.isActive = false
+                       }
+                   }
+            
+            NSLayoutConstraint.activate([
+                parentView.heightAnchor.constraint(greaterThanOrEqualToConstant: 50)
+            ])
+            
+            parentView.layoutIfNeeded()
+        }
+        
+       
         ImagePickerEditView.isUserInteractionEnabled = false
         ImagePickerEditView.gestureRecognizers?.forEach { gesture in
             ImagePickerEditView.removeGestureRecognizer(gesture)
@@ -365,6 +384,7 @@ class EditUsersViewController: UIViewController, UIImagePickerControllerDelegate
         uploadPicBtn.alpha = 1.0
         
         view.bringSubviewToFront(uploadPicBtn)
+        
         if ImagePickerEditView.image == nil {
             ImagePickerEditView.image = UIImage(systemName: "person.circle.fill")
         }

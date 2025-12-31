@@ -478,10 +478,33 @@ extension DonorDashboardViewController: UITableViewDataSource, UITableViewDelega
         case .graph: return isPad ? 260 : 200
         case .browseNGOs: return isPad ? 280 : 220
         case .recentDonations,
-                .allDonations,
-                .pendingDonations,
-                .manageUsers:
+             .allDonations,
+             .pendingDonations:
+
+            let count: Int
+            switch section {
+            case .recentDonations:
+                count = recentDonations.prefix(3).count
+            case .allDonations, .pendingDonations:
+                count = roleBasedDonations.prefix(3).count
+            default:
+                count = 0
+            }
+
+            let cardHeight: CGFloat = 120
+            let spacing: CGFloat = 12
+            let header: CGFloat = 50
+            let topSpacing: CGFloat = 8
+            let padding: CGFloat = 24
+
+            return header
+                 + topSpacing
+                 + CGFloat(count) * cardHeight
+                 + CGFloat(max(0, count - 1)) * spacing
+                 + padding
+        case .manageUsers:
             return isPad ? 700 : 500
+
         }
     }
     

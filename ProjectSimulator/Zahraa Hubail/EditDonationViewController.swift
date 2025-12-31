@@ -25,6 +25,7 @@
         private var saveRequestedWhileUploading = false
         // Add this with other private VC state variables
         private var selectedRecurrence: Int = 0
+        private var didUserConfirmExpiryDate = false
 
 
         
@@ -218,7 +219,14 @@
                 if let tf = v as? UITextField { tf.inputAccessoryView = toolbar }
             }
         }
-        @objc func dismissKeyboard() { view.endEditing(true) }
+        @objc func dismissKeyboard(_ sender: UITapGestureRecognizer) {
+            // If a date picker is open, do NOT dismiss it
+            if let tf = view.findFirstResponderView() as? UITextField,
+               tf.inputView is UIDatePicker {
+                return
+            }
+            view.endEditing(true)
+        }
         @objc func doneButtonTapped() { view.endEditing(true) }
         
         // MARK: - Table DataSource
@@ -334,19 +342,21 @@
             }
             
             // Section 6 (Expiry)
-            if adjustedSection == 5 {
+            if adjustedSection == 5 { // Section 6 = Expiry Date
                 let cell = tableView.dequeueReusableCell(withIdentifier: "Section6Cell", for: indexPath) as! ZahraaSection6TableViewCell
                 cell.selectionStyle = .none
                 cell.configure(date: selectedExpiryDate)
+
                 cell.onDateSelected = { [weak self] date in
                     guard let self = self else { return }
                     self.selectedExpiryDate = date
-                    UIView.performWithoutAnimation {
-                        self.donationFormTableview.reloadSections(IndexSet(integer: indexPath.section), with: .none)
-                    }
+                    self.didUserConfirmExpiryDate = true
+                    // ✅ Do NOT reload section here — picker will disappear if you do
                 }
+
                 return cell
             }
+
             
             
 
@@ -1143,4 +1153,15 @@ extension EditDonationViewController: ZahraaAddressTableViewCellDelegate {
         navigationController?.pushViewController(addressVC, animated: true)
     }
 
+}
+
+
+extension UIView {
+    func findFirstResponderView() -> UIView? {
+        if self.isFirstResponder { return self }
+        for subview in subviews {
+            if let responder = subview.findFirstResponderView() { return responder }
+        }
+        return nil
+    }
 }

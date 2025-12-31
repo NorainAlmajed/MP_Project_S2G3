@@ -125,6 +125,7 @@ class DonorDashboardViewController: UIViewController {
             print("❌ ChatListViewController not found in Chats storyboard")
             return
         }
+        chatListVC.hidesBottomBarWhenPushed = true
 
         navigationController?.pushViewController(chatListVC, animated: true)
     }

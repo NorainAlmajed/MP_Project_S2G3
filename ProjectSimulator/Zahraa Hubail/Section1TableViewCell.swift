@@ -28,7 +28,6 @@ class Section1TableViewCell: UITableViewCell {
         self.selectionStyle = .none
         NgoLogoImageView.layer.cornerRadius = 7.24
         NgoLogoImageView.clipsToBounds = true
-        NgoLogoImageView.contentMode = .scaleAspectFit
 
         // Only adjust layout for iPad
         if UIDevice.current.userInterfaceIdiom == .pad {

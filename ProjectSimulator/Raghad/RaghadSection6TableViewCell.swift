@@ -32,44 +32,7 @@ class RaghadSection6TableViewCell: UITableViewCell {
     
     
     
-//    override func awakeFromNib() {
-//        super.awakeFromNib()
-//        
-//        //        formatter.dateFormat = "dd/MM/yyyy"
-//        //        setupDatePicker()
-//        //        setupToolbar()
-//        //
-//        //        txtExpiryDate.addTarget(self, action: #selector(expiryEditingBegan), for: .editingDidBegin)
-//        //        // ✅🟢 ADD
-//        
-//        
-////        print("✅ Section6 awakeFromNib, txtExpiryDate nil? \(txtExpiryDate == nil)")
-////        
-////        guard txtExpiryDate != nil else { return }  // prevents crash
-////        
-////        formatter.dateFormat = "dd/MM/yyyy"
-////        setupDatePicker()
-////        setupToolbar()
-////        txtExpiryDate.addTarget(self, action: #selector(expiryEditingBegan), for: .editingDidBegin)
-//        
-//        print("✅ Section6 awakeFromNib, txtExpiryDate nil? \(txtExpiryDate == nil)")
-//          guard txtExpiryDate != nil, lblExpiryTitle != nil else { return }
-//
-//          setupLayoutIfNeeded()   // ✅ now safe
-//
-//          formatter.dateFormat = "dd/MM/yyyy"
-//          setupDatePicker()
-//          setupToolbar()
-//          txtExpiryDate.addTarget(self, action: #selector(expiryEditingBegan), for: .editingDidBegin)
-//        
-//        txtExpiryDate.layer.borderWidth = 1
-//        txtExpiryDate.layer.borderColor = UIColor.systemGray4.cgColor
-//        txtExpiryDate.layer.cornerRadius = 8
-//        txtExpiryDate.clipsToBounds = true
-//        txtExpiryDate.backgroundColor = .white
-//
-//   }
-        
+ 
    
     
     override func awakeFromNib() {

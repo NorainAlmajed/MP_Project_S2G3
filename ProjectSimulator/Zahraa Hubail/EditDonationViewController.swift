@@ -506,7 +506,7 @@
             }
 
             switch adjustedSection {
-            case 0: return 237
+            case 0: return 250
             case 2: return UITableView.automaticDimension
             case 3: return 109
             case 4: return 102

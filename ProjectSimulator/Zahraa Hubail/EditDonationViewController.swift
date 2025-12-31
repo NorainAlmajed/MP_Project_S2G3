@@ -25,6 +25,7 @@
         private var saveRequestedWhileUploading = false
         // Add this with other private VC state variables
         private var selectedRecurrence: Int = 0
+        private var didUserConfirmExpiryDate = false
 
 
         
@@ -218,7 +219,14 @@
                 if let tf = v as? UITextField { tf.inputAccessoryView = toolbar }
             }
         }
-        @objc func dismissKeyboard() { view.endEditing(true) }
+        @objc func dismissKeyboard(_ sender: UITapGestureRecognizer) {
+            // If a date picker is open, do NOT dismiss it
+            if let tf = view.findFirstResponderView() as? UITextField,
+               tf.inputView is UIDatePicker {
+                return
+            }
+            view.endEditing(true)
+        }
         @objc func doneButtonTapped() { view.endEditing(true) }
         
         // MARK: - Table DataSource
@@ -334,19 +342,21 @@
             }
             
             // Section 6 (Expiry)
-            if adjustedSection == 5 {
+            if adjustedSection == 5 { // Section 6 = Expiry Date
                 let cell = tableView.dequeueReusableCell(withIdentifier: "Section6Cell", for: indexPath) as! ZahraaSection6TableViewCell
                 cell.selectionStyle = .none
                 cell.configure(date: selectedExpiryDate)
+
                 cell.onDateSelected = { [weak self] date in
                     guard let self = self else { return }
                     self.selectedExpiryDate = date
-                    UIView.performWithoutAnimation {
-                        self.donationFormTableview.reloadSections(IndexSet(integer: indexPath.section), with: .none)
-                    }
+                    self.didUserConfirmExpiryDate = true
+                    // ✅ Do NOT reload section here — picker will disappear if you do
                 }
+
                 return cell
             }
+
             
             
 
@@ -391,24 +401,19 @@
 
                 cell.selectionStyle = .none
 
-                if let donation = self.donation {
-                    // ✅ Create a temporary copy for display
-                    var donationForDisplay = donation
-
-                    // ✅ If user edited address but didn’t save donation yet
-                    if let draftAddress = draftAddress {
-                        donationForDisplay.address = draftAddress
-                    }
-
-                    cell.configure(with: donationForDisplay)
-                    cell.layoutIfNeeded()
+                // ✅ Use a temporary donation object for display
+                if let addressToShow = draftAddress ?? donation?.address {
+                    cell.configure(with: addressToShow)  // ✅ correct: pass a ZahraaAddress
                 }
 
-                // ✅ Set the delegate
+
+                // Set the delegate so tapping button goes to address page
                 cell.delegate = self
 
                 return cell
             }
+
+
 
 
                 //PickUp date cell
@@ -639,36 +644,50 @@
         
         // MARK: - Validation / Navigation
         private func validateAndProceed() {
+
             view.endEditing(true)
-            
-            // 1️⃣ Validation
+
+            // -----------------------------
+            // 1️⃣ VALIDATION
+            // -----------------------------
             let invalidQuantity = selectedQuantity <= 0
             let invalidWeight = weightInvalidFormat
 
             shouldShowQuantityError = invalidQuantity
             shouldShowWeightError = invalidWeight
 
-            // Reload only sections with errors
-            let sectionsToReload = [3, 4] // quantity and weight sections
             UIView.performWithoutAnimation {
-                donationFormTableview.reloadSections(IndexSet(sectionsToReload), with: .none)
+                donationFormTableview.reloadSections(IndexSet([3, 4]), with: .none)
             }
 
-            // Stop if validation fails
             if invalidQuantity || invalidWeight {
                 return
             }
 
-            // ✅ Show "Uploading..." pop-up
+            // -----------------------------
+            // 2️⃣ SHOW UPLOADING ALERT
+            // -----------------------------
             showUploadingAlert()
 
-            // 2️⃣ Function to update Firestore
+            // -----------------------------
+            // 3️⃣ FINAL FIRESTORE UPDATE
+            // -----------------------------
             func proceedWithUpdate(imageUrl: String?) {
-                guard let donation = donation, let donationId = donation.firestoreID else { return }
+
+                guard
+                    let donation = donation,
+                    let donationId = donation.firestoreID
+                else {
+                    uploadingAlert?.dismiss(animated: true)
+                    return
+                }
+
                 let db = Firestore.firestore()
                 let donationRef = db.collection("Donation").document(donationId)
 
-                // Prepare updated data
+                // -----------------------------
+                // 3A️⃣ UPDATE DONATION FIELDS
+                // -----------------------------
                 var updatedData: [String: Any] = [
                     "Category": selectedFoodCategory ?? donation.category,
                     "quantity": selectedQuantity,
@@ -678,96 +697,155 @@
                     "expiryDate": Timestamp(date: selectedExpiryDate ?? donation.expiryDate.dateValue())
                 ]
 
-                // Weight: save null if empty
                 if let weight = weightValue {
                     updatedData["weight"] = weight
                 } else {
-                    updatedData["weight"] = NSNull() // explicitly null in Firebase
+                    updatedData["weight"] = NSNull()
                 }
 
-                // Description (optional)
                 if let desc = selectedShortDescription {
                     updatedData["description"] = desc
                 }
 
-                // Image URL (optional)
                 if let imgUrl = imageUrl {
                     updatedData["foodImageUrl"] = imgUrl
                 }
 
-                // Update Firestore
                 donationRef.updateData(updatedData) { [weak self] error in
                     guard let self = self else { return }
 
-                    // Dismiss "Uploading..."
-                    self.uploadingAlert?.dismiss(animated: true) {
-                        self.uploadingAlert = nil
+                    if let error = error {
+                        self.uploadingAlert?.dismiss(animated: true)
+                        self.showSimpleAlert(title: "Update Failed", message: error.localizedDescription)
+                        return
+                    }
 
-                        if let error = error {
-                            self.showSimpleAlert(title: "Update Failed", message: error.localizedDescription)
-                            return
-                        }
+                    // -----------------------------
+                    // 3B️⃣ UPDATE ADDRESS (IF EDITED)
+                    // -----------------------------
+                    if let draftAddress = self.draftAddress {
 
-                        // Update local donation object
-                        self.donation?.category = updatedData["Category"] as? String ?? donation.category
-                        self.donation?.quantity = updatedData["quantity"] as? Int ?? donation.quantity
-                        self.donation?.recurrence = updatedData["recurrence"] as? Int ?? donation.recurrence
-                        self.donation?.pickupTime = updatedData["pickupTime"] as? String ?? donation.pickupTime
-                        self.donation?.pickupDate = updatedData["pickupDate"] as? Timestamp ?? donation.pickupDate
-                        self.donation?.expiryDate = updatedData["expiryDate"] as? Timestamp ?? donation.expiryDate
-                        self.donation?.weight = updatedData["weight"] as? Double
-                        self.donation?.description = updatedData["description"] as? String
-                        self.donation?.foodImageUrl = updatedData["foodImageUrl"] as? String ?? donation.foodImageUrl
+                        donationRef.getDocument { snapshot, error in
+                            if let error = error {
+                                print("❌ Failed to fetch donation:", error.localizedDescription)
+                                return
+                            }
 
-                        // Update address if edited
-                        if let draftAddress = self.draftAddress, let addressRef = donation.address as? DocumentReference {
+                            guard
+                                let data = snapshot?.data(),
+                                let addressRef = data["address"] as? DocumentReference
+                            else {
+                                print("❌ Address reference not found")
+                                return
+                            }
+
                             let addressData: [String: Any] = [
-                                "building": draftAddress.building ?? "",
-                                "road": draftAddress.road ?? "",
-                                "block": draftAddress.block ?? "",
-                                "area": draftAddress.area ?? "",
-                                "governorate": draftAddress.governorate ?? "",
+                                "building": draftAddress.building,
+                                "road": draftAddress.road,
+                                "block": draftAddress.block,
+                                "area": draftAddress.area,
+                                "governorate": draftAddress.governorate,
                                 "flat": draftAddress.flat as Any
                             ]
-                            addressRef.updateData(addressData) { err in
-                                if let err = err { print("❌ Address update failed:", err.localizedDescription) }
+
+                            addressRef.updateData(addressData) { error in
+                                if let error = error {
+                                    print("❌ Address update failed:", error.localizedDescription)
+                                } else {
+                                    print("✅ Address updated successfully")
+                                }
                             }
                         }
-
-                        // Notify donor & NGO
-                        self.sendUpdateNotifications(for: self.donation!)
-
-                        // Callback
-                        self.onDonationUpdated?(self.donation!)
-
-                        // ✅ Show success pop-up
-                        let alert = UIAlertController(
-                            title: "Success",
-                            message: "Donation Details have been successfully edited.",
-                            preferredStyle: .alert
-                        )
-                        alert.addAction(UIAlertAction(title: "Dismiss", style: .default) { _ in
-                            self.navigationController?.popViewController(animated: true)
-                        })
-                        self.present(alert, animated: true)
                     }
+
+                    // -----------------------------
+                    // 4️⃣ UPDATE LOCAL MODEL (FINAL)
+                    // -----------------------------
+                    self.donation?.category = updatedData["Category"] as? String ?? donation.category
+                    self.donation?.quantity = updatedData["quantity"] as? Int ?? donation.quantity
+                    self.donation?.recurrence = updatedData["recurrence"] as? Int ?? donation.recurrence
+                    self.donation?.pickupTime = updatedData["pickupTime"] as? String ?? donation.pickupTime
+                    self.donation?.pickupDate = updatedData["pickupDate"] as? Timestamp ?? donation.pickupDate
+                    self.donation?.expiryDate = updatedData["expiryDate"] as? Timestamp ?? donation.expiryDate
+                    self.donation?.weight = updatedData["weight"] as? Double
+                    self.donation?.description = updatedData["description"] as? String
+                    self.donation?.foodImageUrl = updatedData["foodImageUrl"] as? String ?? donation.foodImageUrl
+
+                    if let finalAddress = self.draftAddress {
+                        self.donation?.address = finalAddress   // ✅ now safe
+                        self.draftAddress = nil                 // ✅ clear draft
+
+                    }
+
+                    // -----------------------------
+                    // 5️⃣ NOTIFICATIONS
+                    // -----------------------------
+                    self.sendUpdateNotifications(for: self.donation!)
+
+                    self.onDonationUpdated?(self.donation!)
+
+                    // -----------------------------
+                    // 6️⃣ SUCCESS
+                    // -----------------------------
+                    DispatchQueue.main.async {
+
+                        // 1️⃣ Dismiss uploading alert FIRST
+                        self.uploadingAlert?.dismiss(animated: true) {
+
+                            self.uploadingAlert = nil
+
+                            // 2️⃣ Present success alert AFTER dismissal
+                            let alert = UIAlertController(
+                                title: "Success",
+                                message: "Donation details have been successfully edited.",
+                                preferredStyle: .alert
+                            )
+
+                            alert.addAction(UIAlertAction(title: "Dismiss", style: .default) { _ in
+                                self.navigationController?.popViewController(animated: true)
+                            })
+
+                            self.present(alert, animated: true)
+                        }
+                    }
+
+
                 }
             }
 
-            // If user selected a new image, upload first
-            if let image = selectedDonationImage {
-                isUploadingImage = true
+            // -----------------------------
+            // 7️⃣ IMAGE UPLOAD (IF NEEDED)
+            // -----------------------------
+//            if let image = selectedDonationImage {
+//                cloudinaryService.uploadImage(image) { [weak self] url in
+//                    DispatchQueue.main.async {
+//                        proceedWithUpdate(imageUrl: url ?? self?.uploadedDonationImageUrl)
+//                    }
+//                }
+//            } else {
+//                proceedWithUpdate(imageUrl: uploadedDonationImageUrl)
+//            }
+            
+            // -----------------------------
+            // 7️⃣ IMAGE HANDLING (NO DOUBLE UPLOAD)
+            // -----------------------------
+            if let url = uploadedDonationImageUrl {
+                // ✅ Image already uploaded earlier
+                proceedWithUpdate(imageUrl: url)
+            } else if let image = selectedDonationImage {
+                // ⏳ Upload ONLY if not uploaded yet
                 cloudinaryService.uploadImage(image) { [weak self] url in
-                    guard let self = self else { return }
                     DispatchQueue.main.async {
-                        proceedWithUpdate(imageUrl: url ?? self.uploadedDonationImageUrl)
+                        proceedWithUpdate(imageUrl: url)
                     }
                 }
             } else {
-                // No new image
-                proceedWithUpdate(imageUrl: uploadedDonationImageUrl)
+                proceedWithUpdate(imageUrl: nil)
             }
+
+            
         }
+
 
 
 
@@ -781,10 +859,7 @@
             present(alert, animated: true)
         }
 
-        private func hideUploadingAlert() {
-            uploadingAlert?.dismiss(animated: true)
-            uploadingAlert = nil
-        }
+
 
         private func showSimpleAlert(title: String, message: String) {
             let a = UIAlertController(title: title, message: message, preferredStyle: .alert)
@@ -1078,4 +1153,15 @@ extension EditDonationViewController: ZahraaAddressTableViewCellDelegate {
         navigationController?.pushViewController(addressVC, animated: true)
     }
 
+}
+
+
+extension UIView {
+    func findFirstResponderView() -> UIView? {
+        if self.isFirstResponder { return self }
+        for subview in subviews {
+            if let responder = subview.findFirstResponderView() { return responder }
+        }
+        return nil
+    }
 }

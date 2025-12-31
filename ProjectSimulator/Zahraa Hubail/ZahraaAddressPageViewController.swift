@@ -124,38 +124,28 @@ class ZahraaAddressPageViewController: UIViewController {
             let road = roadTextField.text, !road.isEmpty,
             let block = blockTextField.text, !block.isEmpty,
             let area = areaTextField.text, !area.isEmpty,
-            !selectedGovernorate.isEmpty,
-            let donation = donation
+            !selectedGovernorate.isEmpty
         else {
             showAlert(title: "Error", message: "Please fill in all required fields")
             return
         }
 
-        // ✅ Update existing address
-        donation.address.building = building
-        donation.address.road = road
-        donation.address.block = block
-        donation.address.area = area
-        donation.address.governorate = selectedGovernorate
-
         let flatText = flatTextField.text?.trimmingCharacters(in: .whitespacesAndNewlines)
-        donation.address.flat = flatText?.isEmpty == true ? nil : flatText
 
-        // ✅ Send updated address back
-        delegate?.didAddAddress(donation.address)
-
-        // ✅ SUCCESS POP-UP
-        let successAlert = UIAlertController(
-            title: "Address Saved Successfully",
-            message: "Your address information is saved, and ready to use.",
-            preferredStyle: .alert
+        // ✅ CREATE A *NEW* ADDRESS OBJECT (DRAFT ONLY)
+        let editedAddress = ZahraaAddress(
+            building: building,
+            road: road,
+            block: block,
+            flat: flatText?.isEmpty == true ? nil : flatText,
+            area: area,
+            governorate: selectedGovernorate
         )
 
-        successAlert.addAction(UIAlertAction(title: "OK", style: .default) { [weak self] _ in
-            self?.navigationController?.popViewController(animated: true)
-        })
+        // ✅ SEND BACK (NO DONATION MUTATION)
+        delegate?.didAddAddress(editedAddress)
 
-        present(successAlert, animated: true)
+        navigationController?.popViewController(animated: true)
     }
 
 

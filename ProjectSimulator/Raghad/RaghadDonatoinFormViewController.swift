@@ -51,7 +51,8 @@ class RaghadDonatoinFormViewController: UIViewController,
     private var weightInvalidFormat = false
     private var shouldShowWeightError = false
     private var selectedExpiryDate: Date?
-    
+    private var didUserConfirmExpiryDate = false
+
     
     
     //for the keyboard
@@ -114,6 +115,14 @@ class RaghadDonatoinFormViewController: UIViewController,
     override func viewDidLoad() {
         super.viewDidLoad()
         
+        
+        if selectedExpiryDate == nil {
+              selectedExpiryDate = Calendar.current.date(byAdding: .day, value: 1, to: Date())
+            didUserConfirmExpiryDate = false
+
+          }
+        
+        
         donationFormTableview.separatorStyle = .none
         donationFormTableview.delegate = self
         donationFormTableview.dataSource = self
@@ -121,11 +130,20 @@ class RaghadDonatoinFormViewController: UIViewController,
         title = "Donation Form"
         navigationController?.navigationBar.prefersLargeTitles = false
         
-        let tap = UITapGestureRecognizer(target: self, action: #selector(dismissKeyboard))
+//        let tap = UITapGestureRecognizer(target: self, action: #selector(dismissKeyboard))
+//        tap.cancelsTouchesInView = false
+//        view.addGestureRecognizer(tap)
+        
+        let tap = UITapGestureRecognizer(target: self, action: #selector(dismissKeyboard(_:)))
         tap.cancelsTouchesInView = false
         view.addGestureRecognizer(tap)
+
         
-        donationFormTableview.keyboardDismissMode = .onDrag
+       // donationFormTableview.keyboardDismissMode = .onDrag
+        donationFormTableview.keyboardDismissMode = .none
+
+       // donationFormTableview.keyboardDismissMode = .none
+
         addDoneButtonOnKeyboard()
         
         // Self-sizing cells (use the IBOutlet table, not `tableView`)
@@ -217,7 +235,15 @@ class RaghadDonatoinFormViewController: UIViewController,
             if let tf = v as? UITextField { tf.inputAccessoryView = toolbar }
         }
     }
-    @objc func dismissKeyboard() { view.endEditing(true) }
+    //@objc func dismissKeyboard() { view.endEditing(true) }
+    @objc func dismissKeyboard(_ sender: UITapGestureRecognizer) {
+        // ✅ If expiry date picker is open, don't dismiss it
+        if let tf = view.findFirstResponder() as? UITextField,
+           tf.inputView is UIDatePicker {
+            return
+        }
+        view.endEditing(true)
+    }
     @objc func doneButtonTapped() { view.endEditing(true) }
     
     // MARK: - Table DataSource
@@ -339,12 +365,21 @@ class RaghadDonatoinFormViewController: UIViewController,
             let cell = tableView.dequeueReusableCell(withIdentifier: "Section6Cell", for: indexPath) as! RaghadSection6TableViewCell
             cell.selectionStyle = .none
             cell.configure(date: selectedExpiryDate)
+//            cell.onDateSelected = { [weak self] date in
+//                guard let self = self else { return }
+//                self.selectedExpiryDate = date
+//                self.didUserConfirmExpiryDate = true
             cell.onDateSelected = { [weak self] date in
                 guard let self = self else { return }
                 self.selectedExpiryDate = date
-                UIView.performWithoutAnimation {
-                    self.donationFormTableview.reloadSections(IndexSet(integer: indexPath.section), with: .none)
-                }
+                self.didUserConfirmExpiryDate = true
+                // ✅ IMPORTANT: do NOT reload sections here, it will close the picker
+            
+//                UIView.performWithoutAnimation {
+//                    self.donationFormTableview.reloadSections(IndexSet(integer: indexPath.section), with: .none)
+//                }
+                
+                
             }
             return cell
         }
@@ -658,6 +693,9 @@ class RaghadDonatoinFormViewController: UIViewController,
             donationFormTableview.reloadSections(IndexSet(sectionsToReload), with: .none)
         }
         
+       
+        
+        
         // ⛔ Still uploading to Cloudinary
         if isUploadingImage {
             showSimpleAlert(
@@ -666,6 +704,15 @@ class RaghadDonatoinFormViewController: UIViewController,
             )
             return
         }
+        
+        
+        // ✅ Force user to confirm expiry date (PUT IT HERE)
+        if didUserConfirmExpiryDate == false {
+            showSimpleAlert(title: "Expiry Date", message: "Please confirm the expiry date.")
+            return
+        }
+       
+
         
         // ⛔ Image selected but not uploaded yet
         if missingImage ||
@@ -686,16 +733,7 @@ class RaghadDonatoinFormViewController: UIViewController,
             return
         }
         
-        //comment this 24 dec 2025 11:39
-        
-        // 5) All good → go next
-        //        performSegue(withIdentifier: "showSchedulePickup", sender: self)
-        
-        //        let sb = UIStoryboard(name: "Raghad1", bundle: nil)
-        //        let vc = sb.instantiateViewController(withIdentifier: "SchedulePickupVC")
-        //        navigationController?.pushViewController(vc, animated: true)
-        
-        // 5) All good → create draft donation, then go next
+      
         
         guard let ngo = selectedNgo else {
             showSimpleAlert(title: "Error", message: "NGO not found.")
@@ -1025,6 +1063,9 @@ class RaghadDonatoinFormViewController: UIViewController,
         if selectedFoodCategory == nil { selectedFoodCategory = draft.foodCategory }
         if weightValue == nil { weightValue = draft.weight }
         if selectedExpiryDate == nil { selectedExpiryDate = draft.expiryDate }
+        if selectedExpiryDate != nil {
+            didUserConfirmExpiryDate = true
+        }
         if uploadedDonationImageUrl == nil { uploadedDonationImageUrl = draft.imageUrl }
         
         if selectedDonationImage == nil, let data = draft.imageData {
@@ -1049,4 +1090,20 @@ class RaghadDonatoinFormViewController: UIViewController,
     }
     
     
+}
+
+
+// MARK: - First Responder Finder
+extension UIView {
+    func findFirstResponder() -> UIView? {
+        if self.isFirstResponder {
+            return self
+        }
+        for subview in subviews {
+            if let responder = subview.findFirstResponder() {
+                return responder
+            }
+        }
+        return nil
+    }
 }

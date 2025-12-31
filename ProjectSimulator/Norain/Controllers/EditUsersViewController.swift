@@ -56,6 +56,10 @@ class EditUsersViewController: UIViewController, UIImagePickerControllerDelegate
         self.navigationItem.leftBarButtonItem = backButton
         backButton.tintColor = .black
         
+        uploadPicBtn.addTarget(self, action: #selector(uploadPhotoTapped), for: .touchUpInside)
+        let tapGesture = UITapGestureRecognizer(target: self, action: #selector(uploadPhotoTapped))
+        ImagePickerEditView.addGestureRecognizer(tapGesture)
+        
         self.setupView()
         fetchUserFromFirestore()
         setupMenus()
@@ -317,8 +321,15 @@ class EditUsersViewController: UIViewController, UIImagePickerControllerDelegate
     }
     
     func setupView() {
-        ImagePickerEditView.isUserInteractionEnabled = true
+        ImagePickerEditView.layer.cornerRadius = 8
+        ImagePickerEditView.clipsToBounds = true
+        ImagePickerEditView.contentMode = .scaleAspectFill
+        
+        ImagePickerEditView.isUserInteractionEnabled = false
+        
         uploadPicBtn.isUserInteractionEnabled = true
+        uploadPicBtn.isEnabled = true
+        
         let isNGO = userToEdit is NorainNGO
         causeStack.isHidden = !isNGO
         addressStack.isHidden = !isNGO
@@ -334,7 +345,7 @@ class EditUsersViewController: UIViewController, UIImagePickerControllerDelegate
     }
     
     // MARK: - Photo Upload
-    @IBAction func uploadPhotoTapped(_ sender: UIButton) {
+    @objc func uploadPhotoTapped(_ sender: UIButton) {
         showPhotoAlert()
     }
     
@@ -411,6 +422,8 @@ class EditUsersViewController: UIViewController, UIImagePickerControllerDelegate
                 } else {
                     print("✅ Image URL saved to Firestore")
                     self.userToEdit.userImg = imageUrl
+                    self.delegate?.didUpdateUser()
+
                 }
             }
         }

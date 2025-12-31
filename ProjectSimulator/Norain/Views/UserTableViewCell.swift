@@ -17,24 +17,29 @@ class UserTableViewCell: UITableViewCell {
     
     @IBOutlet weak var statusLbl: UILabel!
     
-    
+    private var currentImageURL: String?
+
     
     func configure(appUser:NorainAppUser){
         nameLbl.text = appUser.name
         emailLbl.text = ("Email: " + appUser.email)
-        imgUserPhoto.image = UIImage(systemName: "person.circle.fill")
-
-            // 2. Fetch the actual image
-            if !appUser.userImg.isEmpty {
-                FetchImage.fetchImage(from: appUser.userImg) { [weak self] image in
-                    // Check if this cell is still displaying the same user (prevents flickering)
-                    if let downloadedImage = image {
-                        self?.imgUserPhoto.image = downloadedImage
-                    }
-                }
-    }
         
-
+        currentImageURL = appUser.userImg
+        if !appUser.userImg.isEmpty {
+            imgUserPhoto?.image = UIImage(systemName: "person.circle.fill") // placeholder
+            
+            FetchImage.fetchImage(from: appUser.userImg) { [weak self] image in
+                // ✅ Only set the image if this cell is still showing the same user
+                guard let self = self,
+                      self.currentImageURL == appUser.userImg else {
+                    return
+                }
+                
+                self.imgUserPhoto?.image = image ?? UIImage(systemName: "person.circle.fill")
+            }
+        } else {
+            imgUserPhoto?.image = UIImage(systemName: "person.circle.fill")
+        }
         
         if let donor = appUser as? NorainDonor{
 
@@ -66,7 +71,8 @@ class UserTableViewCell: UITableViewCell {
     override func prepareForReuse() {
         super.prepareForReuse()
 
-        imgUserPhoto.image = UIImage(systemName: "person.circle.fill")
+        imgUserPhoto?.image = UIImage(systemName: "person.circle.fill")
+        currentImageURL = nil
     }
     
 }

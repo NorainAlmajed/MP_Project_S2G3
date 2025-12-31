@@ -7,9 +7,9 @@
 //
 import FirebaseAuth
 import FirebaseFirestore
-import Cloudinary   // add this at the top of the file
+import Cloudinary
 import UIKit
-import PhotosUI   // optional if you switch to PHPicker later
+import PhotosUI
 
 class RaghadDonatoinFormViewController: UIViewController,
                                         UITableViewDelegate,
@@ -151,29 +151,10 @@ class RaghadDonatoinFormViewController: UIViewController,
         donationFormTableview.rowHeight = UITableView.automaticDimension
         
         //print("🔐 Current user:", user.username, " | 👤 Is Admin?", user.isAdmin)
-        
-   
-        
-        
-        
-        
-        
-        
+
         setupKeyboardAvoidance()
         
-        
-        
-        
-//        print(" Role:", SessionManager.shared.roleDisplayName,
-//              "|  Is Admin?", SessionManager.shared.isAdmin,
-//              "| Name:", SessionManager.shared.fullName ?? "nil")
-//
-//        
-//        SessionManager.shared.fetchUserRole { [weak self] _ in
-//            DispatchQueue.main.async {
-//                self?.donationFormTableview.reloadData()
-//            }
-//        }
+
         
         SessionManager.shared.fetchUserRole { [weak self] _ in
             DispatchQueue.main.async {
@@ -373,12 +354,6 @@ class RaghadDonatoinFormViewController: UIViewController,
                 guard let self = self else { return }
                 self.selectedExpiryDate = date
                 self.didUserConfirmExpiryDate = true
-                // ✅ IMPORTANT: do NOT reload sections here, it will close the picker
-            
-//                UIView.performWithoutAnimation {
-//                    self.donationFormTableview.reloadSections(IndexSet(integer: indexPath.section), with: .none)
-//                }
-                
                 
             }
             return cell
@@ -496,15 +471,7 @@ class RaghadDonatoinFormViewController: UIViewController,
         }
     }
     
-    
-    
-    
-    
-    
-    
-    
-    
-    
+
     
     
     // MARK: - Donor List
@@ -518,18 +485,7 @@ class RaghadDonatoinFormViewController: UIViewController,
         navigationController?.pushViewController(vc, animated: true)
     }
     
-    // MARK: - DonorSelectionDelegate
-//    func didSelectDonor(name: String) {
-//        selectedDonorName = name
-//        shouldShowDonorError = false
-//        if isAdminUser {
-//            donationFormTableview.reloadSections(IndexSet(integer: 1), with: .none)
-//        } else {
-//            donationFormTableview.reloadData()
-//        }
-//    }
-    
-    
+ 
     func didSelectDonor(donorRefPath: String, donorName: String) {
         selectedDonorRefPath = donorRefPath
         selectedDonorName = donorName
@@ -610,19 +566,7 @@ class RaghadDonatoinFormViewController: UIViewController,
     
     
     
-    
-    // MARK: - Helpers
-    /// Reads the Quantity from Section 4 cell (index 3). Falls back to cached `quantityValue`.
-    //    private func getQuantityValue() -> Int? {
-    //        // adjustedSection 3 = Quantity
-    //        let tableSection = isAdminUser ? 3 : 2   // ✅ IMPORTANT (admin shifts sections)
-    //        let indexPath = IndexPath(row: 0, section: tableSection)
-    //
-    //        if let cell = donationFormTableview.cellForRow(at: indexPath) as? RaghadSection4TableViewCell {
-    //            return cell.getQuantityValue()
-    //        }
-    //        return quantityValue
-    //    }
+
     
     private func getQuantityValue() -> Int? {
         return selectedQuantity
@@ -1002,27 +946,6 @@ class RaghadDonatoinFormViewController: UIViewController,
     }
     
     //to save a draft of the form when useful for back navigation
-    
-    //    private func saveDraft() {
-    //        guard let ngo = selectedNgo else { return }
-    //
-    //        let draft = DonationDraft(
-    //            ngoId: ngo.id,
-    //            donorName: selectedDonorName,
-    //            foodCategory: selectedFoodCategory,
-    //            quantity: selectedQuantity,
-    //            weight: weightValue,
-    //            expiryDate: selectedExpiryDate,
-    //            //shortDescription: getShortDescription(),
-    //            shortDescription: selectedShortDescription,
-    //
-    //
-    //            imageUrl: uploadedDonationImageUrl,
-    //            imageData: selectedDonationImage?.jpegData(compressionQuality: 0.9) // ✅ NEW
-    //        )
-    //
-    //        DonationDraftStore.shared.save(draft)
-    //    }
     private func saveDraft() {
         guard let ngo = selectedNgo else { return }
         

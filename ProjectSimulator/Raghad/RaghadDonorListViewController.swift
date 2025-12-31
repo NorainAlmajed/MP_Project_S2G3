@@ -17,12 +17,18 @@ import UIKit
 protocol DonorSelectionDelegate: AnyObject {
     func didSelectDonor(donorRefPath: String, donorName: String)
 }
+//filter protocol
+protocol DonorFilterDelegate: AnyObject {
+    func didApplyDonorSort(_ sort: String?)
+    func currentDonorSort() -> String?
+    func numberOfFilteredDonors(for sort: String?) -> Int
+}
 
 
 class RaghadDonorListViewController: UIViewController,
                                      UITableViewDelegate,
                                      UITableViewDataSource,
-                                     UISearchBarDelegate {
+                                     UISearchBarDelegate,DonorFilterDelegate {
     
     @IBOutlet weak var tableView: UITableView!
     
@@ -32,6 +38,9 @@ class RaghadDonorListViewController: UIViewController,
     private var donors: [User] = []
     private var donorListener: ListenerRegistration?
     
+    //for filter
+    var currentSort: String?
+
     private var donorRefByUsername: [String: String] = [:]   // ✅ username -> "users/<docId>"
 
 
@@ -191,11 +200,69 @@ class RaghadDonorListViewController: UIViewController,
     }
     
     // MARK: - Filter Button
-    
+    //edited by zainab Mahdi
     @objc private func filterTapped() {
+        let storyboard = UIStoryboard(name: "Filters", bundle: nil)
+
+            guard let filterVC = storyboard.instantiateViewController(
+                withIdentifier: "DonorFilterViewController"
+            ) as? DonorFilterViewController else { return }
+
+            filterVC.delegate = self
+            navigationController?.pushViewController(filterVC, animated: true)
     }
     
+    func didApplyDonorSort(_ sort: String?) {
+        currentSort = sort
+
+        filteredDonors = donors
+
+        applySortIfNeeded()
+
+        selectedIndex = nil
+        tableView.reloadData()
+    }
+    func currentDonorSort() -> String? {
+        return currentSort
+    }
     
+    func numberOfFilteredDonors(for sort: String?) -> Int {
+        var temp = donors
+
+        if let sort = sort {
+            if sort == "Donor Name (A–Z)" {
+                temp.sort {
+                    $0.username.localizedCaseInsensitiveCompare($1.username) == .orderedAscending
+                }
+            }
+
+            if sort == "Donor Name (Z–A)" {
+                temp.sort {
+                    $0.username.localizedCaseInsensitiveCompare($1.username) == .orderedDescending
+                }
+            }
+        }
+
+        return temp.count
+    }
+
+    //Sort function
+    func applySortIfNeeded() {
+        guard let sort = currentSort else { return }
+
+        if sort == "Donor Name (A–Z)" {
+            filteredDonors.sort {
+                $0.username.localizedCaseInsensitiveCompare($1.username) == .orderedAscending
+            }
+        }
+
+        if sort == "Donor Name (Z–A)" {
+            filteredDonors.sort {
+                $0.username.localizedCaseInsensitiveCompare($1.username) == .orderedDescending
+            }
+        }
+    }
+
     
     
     

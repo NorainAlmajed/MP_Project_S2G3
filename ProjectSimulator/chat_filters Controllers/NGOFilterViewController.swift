@@ -15,6 +15,7 @@ class NGOFilterViewController: UIViewController, UITableViewDelegate, UITableVie
         case location
         case type
     }
+    weak var delegate: NGOFilterDelegate?
 
     @IBOutlet weak var clearButton: UIButton!
     @IBOutlet weak var showButton: UIButton!
@@ -36,13 +37,16 @@ class NGOFilterViewController: UIViewController, UITableViewDelegate, UITableVie
     ]
 
     let typeOptions = [
-        "Orphanes",
-        "Chronically ill",
+        "Orphans",
+        "Chronically Ill",
         "Disabled People",
         "Children",
         "Women",
-        "Others"
+        "Elderly",
+        "Other"
     ]
+
+
 
     //section functions
     var expandedSection: FilterSection? = nil
@@ -70,6 +74,16 @@ class NGOFilterViewController: UIViewController, UITableViewDelegate, UITableVie
         expandedSection = nil
 
         tableView.reloadData()
+        updateShowButtonTitle()
+    }
+    @IBAction func showFiltersTapped(_ sender: UIButton) {
+        delegate?.didApplyNgoFilters(
+            sort: selectedSort,
+            locations: selectedLocations,
+            types: selectedTypes
+        )
+
+        navigationController?.popViewController(animated: true)
     }
 
    //checkbox method
@@ -229,6 +243,7 @@ class NGOFilterViewController: UIViewController, UITableViewDelegate, UITableVie
             IndexSet(integer: indexPath.section),
             with: .none
         )
+        updateShowButtonTitle()
     }
 
     override func viewDidLoad() {
@@ -255,5 +270,34 @@ class NGOFilterViewController: UIViewController, UITableViewDelegate, UITableVie
         styleActionButton(clearButton)
         styleActionButton(showButton)
     }
+    
+    private func updateShowButtonTitle() {
+        guard let delegate = delegate else { return }
+
+        let count = delegate.previewNgoFilters(
+            sort: selectedSort,
+            locations: selectedLocations,
+            types: selectedTypes
+        )
+
+        showButton.setTitle("Show \(count) results", for: .normal)
+
+
+    }
+
+
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+
+        let state = delegate?.currentNgoFilters()
+        selectedSort = state?.sort
+        selectedLocations = state?.locations ?? []
+        selectedTypes = state?.types ?? []
+
+        expandedSection = .sort
+        updateShowButtonTitle()
+        tableView.reloadData()
+    }
+
 }
 

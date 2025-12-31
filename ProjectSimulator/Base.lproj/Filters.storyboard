@@ -117,20 +117,20 @@
                                         </connections>
                                     </tableViewCell>
                                     <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" insetsLayoutMarginsFromSafeArea="NO" selectionStyle="default" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" reuseIdentifier="FilterOptionCell" id="Bo9-of-x2x" customClass="FilterOptionCell" customModule="ProjectSimulator" customModuleProvider="target">
-                                        <rect key="frame" x="0.0" y="97.666667938232422" width="393" height="48"/>
+                                        <rect key="frame" x="0.0" y="97.666667938232422" width="393" height="48.333332061767578"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="Bo9-of-x2x" id="UEn-Vi-lwT">
-                                            <rect key="frame" x="0.0" y="0.0" width="393" height="48"/>
+                                            <rect key="frame" x="0.0" y="0.0" width="393" height="48.333332061767578"/>
                                             <autoresizingMask key="autoresizingMask"/>
                                             <subviews>
                                                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="optionLabel" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Sgw-VI-5H5" userLabel="optionLabel">
-                                                    <rect key="frame" x="60" y="14.666666666666666" width="86" height="18.666666666666671"/>
+                                                    <rect key="frame" x="60" y="14.999999999999998" width="86" height="18.333333333333329"/>
                                                     <fontDescription key="fontDescription" type="system" pointSize="16"/>
                                                     <nil key="textColor"/>
                                                     <nil key="highlightedColor"/>
                                                 </label>
                                                 <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="gqc-3t-Pku" userLabel="checkBoxButton">
-                                                    <rect key="frame" x="325" y="6" width="49" height="36"/>
+                                                    <rect key="frame" x="325" y="6" width="49" height="36.333333333333336"/>
                                                     <color key="tintColor" white="0.66666666666666663" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                                     <state key="normal" title="Button"/>
                                                     <buttonConfiguration key="configuration" style="plain" image="square" catalog="system"/>
@@ -197,10 +197,10 @@
             </objects>
             <point key="canvasLocation" x="5569" y="746"/>
         </scene>
-        <!--NGO Sort and Filters-->
+        <!--Donor Sort and Filters-->
         <scene sceneID="Ei3-Xv-7dK">
             <objects>
-                <viewController title="NGO Sort and Filters" id="aT8-cU-haA" customClass="NGOFilterViewController" customModule="ProjectSimulator" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController storyboardIdentifier="DonorFilterViewController" title="Donor Sort and Filters" id="aT8-cU-haA" customClass="DonorFilterViewController" customModule="ProjectSimulator" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="45R-Ux-qOr">
                         <rect key="frame" x="0.0" y="0.0" width="393" height="852"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
@@ -218,6 +218,9 @@
                                         <buttonConfiguration key="configuration" style="plain" title="Show x results">
                                             <color key="baseForegroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                         </buttonConfiguration>
+                                        <connections>
+                                            <action selector="showFiltersTapped:" destination="aT8-cU-haA" eventType="touchUpInside" id="goc-5Y-mLe"/>
+                                        </connections>
                                     </button>
                                     <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="wSY-tj-eiR">
                                         <rect key="frame" x="24" y="64" width="345" height="44"/>
@@ -305,20 +308,20 @@
                                         </connections>
                                     </tableViewCell>
                                     <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" insetsLayoutMarginsFromSafeArea="NO" selectionStyle="default" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" reuseIdentifier="FilterOptionCell" id="KSK-Ev-qZO" customClass="FilterOptionCell" customModule="ProjectSimulator" customModuleProvider="target">
-                                        <rect key="frame" x="0.0" y="97.666667938232422" width="393" height="48"/>
+                                        <rect key="frame" x="0.0" y="97.666667938232422" width="393" height="48.333332061767578"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="KSK-Ev-qZO" id="ecm-rM-zAn">
-                                            <rect key="frame" x="0.0" y="0.0" width="393" height="48"/>
+                                            <rect key="frame" x="0.0" y="0.0" width="393" height="48.333332061767578"/>
                                             <autoresizingMask key="autoresizingMask"/>
                                             <subviews>
                                                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="optionLabel" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Ftx-E1-XB4" userLabel="optionLabel">
-                                                    <rect key="frame" x="60" y="14.666666666666666" width="86" height="18.666666666666671"/>
+                                                    <rect key="frame" x="60" y="14.999999999999998" width="86" height="18.333333333333329"/>
                                                     <fontDescription key="fontDescription" type="system" pointSize="16"/>
                                                     <nil key="textColor"/>
                                                     <nil key="highlightedColor"/>
                                                 </label>
                                                 <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="MSr-n5-rzv" userLabel="checkBoxButton">
-                                                    <rect key="frame" x="325" y="6" width="49" height="36"/>
+                                                    <rect key="frame" x="325" y="6" width="49" height="36.333333333333336"/>
                                                     <color key="tintColor" white="0.66666666669999997" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                                     <state key="normal" title="Button"/>
                                                     <buttonConfiguration key="configuration" style="plain" image="square" catalog="system"/>
@@ -385,7 +388,7 @@
         <!--NGO Sort and Filters-->
         <scene sceneID="qOt-Yg-dxy">
             <objects>
-                <viewController title="NGO Sort and Filters" id="gLf-gD-Wc6" customClass="DonationFilterController" customModule="ProjectSimulator" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController storyboardIdentifier="NGOFilterViewController" title="NGO Sort and Filters" id="gLf-gD-Wc6" customClass="NGOFilterViewController" customModule="ProjectSimulator" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="JZQ-T9-WwU">
                         <rect key="frame" x="0.0" y="0.0" width="393" height="852"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
@@ -403,6 +406,9 @@
                                         <buttonConfiguration key="configuration" style="plain" title="Show x results">
                                             <color key="baseForegroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                         </buttonConfiguration>
+                                        <connections>
+                                            <action selector="showFiltersTapped:" destination="gLf-gD-Wc6" eventType="touchUpInside" id="4Gj-a9-Mu4"/>
+                                        </connections>
                                     </button>
                                     <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="7Er-7N-GPd">
                                         <rect key="frame" x="24" y="64" width="345" height="44"/>
@@ -490,20 +496,20 @@
                                         </connections>
                                     </tableViewCell>
                                     <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" insetsLayoutMarginsFromSafeArea="NO" selectionStyle="default" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" reuseIdentifier="FilterOptionCell" id="Zmv-2W-UHX" customClass="FilterOptionCell" customModule="ProjectSimulator" customModuleProvider="target">
-                                        <rect key="frame" x="0.0" y="97.666667938232422" width="393" height="48.333332061767578"/>
+                                        <rect key="frame" x="0.0" y="97.666667938232422" width="393" height="47.666667938232422"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="Zmv-2W-UHX" id="sYq-Aw-5pr">
-                                            <rect key="frame" x="0.0" y="0.0" width="393" height="48.333332061767578"/>
+                                            <rect key="frame" x="0.0" y="0.0" width="393" height="47.666667938232422"/>
                                             <autoresizingMask key="autoresizingMask"/>
                                             <subviews>
                                                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="optionLabel" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="5zv-w2-JWG" userLabel="optionLabel">
-                                                    <rect key="frame" x="60" y="14.999999999999998" width="86" height="18.333333333333329"/>
+                                                    <rect key="frame" x="60" y="14.333333333333336" width="86" height="19"/>
                                                     <fontDescription key="fontDescription" type="system" pointSize="16"/>
                                                     <nil key="textColor"/>
                                                     <nil key="highlightedColor"/>
                                                 </label>
                                                 <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="l9s-Hi-vYL" userLabel="checkBoxButton">
-                                                    <rect key="frame" x="325" y="6" width="49" height="36.333333333333336"/>
+                                                    <rect key="frame" x="325" y="6" width="49" height="35.666666666666664"/>
                                                     <color key="tintColor" white="0.66666666669999997" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                                     <state key="normal" title="Button"/>
                                                     <buttonConfiguration key="configuration" style="plain" image="square" catalog="system"/>

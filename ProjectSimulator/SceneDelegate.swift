@@ -33,6 +33,6 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         UINavigationBar.appearance().compactAppearance = navAppearance
 
         
-        
+        UINavigationBar.appearance().tintColor = .black
     }
 }

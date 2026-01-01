@@ -4,17 +4,17 @@ import FirebaseFirestore
 
 class SetupProfileViewController: UIViewController,
                                   UIImagePickerControllerDelegate,
-                                  UINavigationControllerDelegate,
-                                  UITextViewDelegate {
+                                  UINavigationControllerDelegate {
+
 
     @IBOutlet weak var continueButton: UIButton!
     @IBOutlet weak var uploadButton: UIButton!
     @IBOutlet weak var profileImageView: UIImageView!
     @IBOutlet weak var fullNameTextField: UITextField!
-    @IBOutlet weak var bioTextView: UITextView!
-    @IBOutlet weak var notificationsSwitch: UISwitch!
+    @IBOutlet weak var bioTextField: UITextField!
+    @IBOutlet weak var bioTitleLabel: UILabel!
     @IBOutlet weak var bioCounterLabel: UILabel!
-    @IBOutlet weak var uploadbuttonwidth: NSLayoutConstraint!
+    @IBOutlet weak var notificationsSwitch: UISwitch!
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -22,41 +22,45 @@ class SetupProfileViewController: UIViewController,
         styleActionButton(continueButton)
         styleActionButton(uploadButton)
         title = "Setup Profile"
-
-        bioTextView.delegate = self
-        bioCounterLabel.text = "0 / 240"
-
         navigationItem.hidesBackButton = true
 
         preloadUserData()
-    }
+        configureBioTitle()
 
-    // MARK: - Preload
+        bioCounterLabel.text = "0 / 240"
+
+        bioTextField.addTarget(
+            self,
+            action: #selector(bioTextChanged),
+            for: .editingChanged
+        )
+    }
 
     func preloadUserData() {
         fullNameTextField.text = SessionManager.shared.fullName
     }
 
-    // MARK: - Notifications
-
-    @IBAction func notificationSwitchChanged(_ sender: UISwitch) {
-        if sender.isOn == false {
-            let alert = UIAlertController(
-                title: "Disable Notifications?",
-                message: "Are you sure you want to disable notifications?",
-                preferredStyle: .alert
-            )
-
-            alert.addAction(UIAlertAction(title: "Cancel", style: .cancel) { _ in
-                sender.setOn(true, animated: true)
-            })
-
-            alert.addAction(UIAlertAction(title: "Disable", style: .destructive))
-            present(alert, animated: true)
+    func configureBioTitle() {
+        if SessionManager.shared.isNGO {
+            bioTitleLabel.text = "Mission"
+            bioTextField.placeholder = "Describe your NGO mission"
+        } else {
+            bioTitleLabel.text = "Bio"
+            bioTextField.placeholder = "Tell us about yourself"
         }
     }
 
-    // MARK: - Image Picker
+    @objc func bioTextChanged() {
+        let maxLength = 240
+        let text = bioTextField.text ?? ""
+
+        if text.count > maxLength {
+            bioTextField.text = String(text.prefix(maxLength))
+        }
+
+        bioCounterLabel.text = "\(bioTextField.text?.count ?? 0) / 240"
+    }
+
 
     @IBAction func addPhotoTapped(_ sender: UIButton) {
         let picker = UIImagePickerController()
@@ -81,8 +85,6 @@ class SetupProfileViewController: UIViewController,
         dismiss(animated: true)
     }
 
-    // MARK: - Continue
-
     @IBAction func continueTapped(_ sender: UIButton) {
 
         guard let fullName = fullNameTextField.text, !fullName.isEmpty else {
@@ -90,8 +92,11 @@ class SetupProfileViewController: UIViewController,
             return
         }
 
-        guard let bio = bioTextView.text, !bio.isEmpty else {
-            showAlert(title: "Missing Bio", message: "Please add a short bio.")
+        guard let bio = bioTextField.text, !bio.isEmpty else {
+            showAlert(
+                title: "Missing \(SessionManager.shared.isNGO ? "Mission" : "Bio")",
+                message: "Please fill in this field."
+            )
             return
         }
 
@@ -123,8 +128,6 @@ class SetupProfileViewController: UIViewController,
         }
     }
 
-    // MARK: - Firestore Save
-
     func saveProfile(fullName: String, bio: String, profileImageUrl: String) {
 
         guard let uid = Auth.auth().currentUser?.uid else { return }
@@ -148,7 +151,6 @@ class SetupProfileViewController: UIViewController,
                     return
                 }
 
-                // ✅ Refresh session properly
                 SessionManager.shared.loadUserSession { _ in
                     DispatchQueue.main.async {
                         self.routeToDashboard()
@@ -157,49 +159,21 @@ class SetupProfileViewController: UIViewController,
             }
     }
 
-    // MARK: - Routing
-
     func routeToDashboard() {
-
         let storyboard = UIStoryboard(name: "Main", bundle: nil)
-        let identifier: String
 
-        if SessionManager.shared.isAdmin {
-            identifier = "AdminHomeViewController"
-        } else if SessionManager.shared.isNGO {
-            identifier = "NGOHomeViewController"
-        } else {
-            identifier = "DonorHomeViewController"
+        guard let tabBarVC = storyboard.instantiateInitialViewController() else {
+            print("Tab bar not found in Main storyboard")
+            return
         }
 
-        let homeVC = storyboard.instantiateViewController(withIdentifier: identifier)
+        guard let sceneDelegate = UIApplication.shared.connectedScenes
+            .first?.delegate as? SceneDelegate else { return }
 
-        if let sceneDelegate = UIApplication.shared.connectedScenes.first?.delegate as? SceneDelegate {
-            sceneDelegate.window?.rootViewController = homeVC
-            sceneDelegate.window?.makeKeyAndVisible()
-        }
+        sceneDelegate.window?.rootViewController = tabBarVC
+        sceneDelegate.window?.makeKeyAndVisible()
     }
 
-    // MARK: - Bio Counter
-
-    func textViewDidChange(_ textView: UITextView) {
-        let max = 240
-        if textView.text.count > max {
-            textView.text = String(textView.text.prefix(max))
-        }
-        bioCounterLabel.text = "\(textView.text.count) / 240"
-    }
-
-    func textView(_ textView: UITextView,
-                  shouldChangeTextIn range: NSRange,
-                  replacementText text: String) -> Bool {
-        let current = textView.text ?? ""
-        guard let stringRange = Range(range, in: current) else { return false }
-        let updated = current.replacingCharacters(in: stringRange, with: text)
-        return updated.count <= 240
-    }
-
-    // MARK: - Helpers
 
     func showAlert(title: String, message: String) {
         let alert = UIAlertController(title: title,

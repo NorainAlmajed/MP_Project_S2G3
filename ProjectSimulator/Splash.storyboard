@@ -18,10 +18,6 @@
                         <subviews>
                             <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="Splash" translatesAutoresizingMaskIntoConstraints="NO" id="lGY-qW-kuv">
                                 <rect key="frame" x="71.666666666666686" y="281" width="250" height="250"/>
-                                <constraints>
-                                    <constraint firstAttribute="height" constant="250" id="b4P-Hc-p7w"/>
-                                    <constraint firstAttribute="width" constant="250" id="brQ-Rw-4tz"/>
-                                </constraints>
                             </imageView>
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Nourish Bahrain" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="22y-u2-ldi">
                                 <rect key="frame" x="88.666666666666686" y="506" width="216" height="35"/>
@@ -34,7 +30,9 @@
                         <color key="backgroundColor" name="BeigeCol"/>
                         <constraints>
                             <constraint firstItem="22y-u2-ldi" firstAttribute="top" secondItem="lGY-qW-kuv" secondAttribute="bottom" constant="-25" id="1zw-0P-Abq"/>
+                            <constraint firstItem="lGY-qW-kuv" firstAttribute="height" secondItem="NHS-be-bW6" secondAttribute="height" multiplier="0.293427" id="L6h-xC-BEa"/>
                             <constraint firstItem="lGY-qW-kuv" firstAttribute="centerX" secondItem="NHS-be-bW6" secondAttribute="centerX" id="OAr-Jd-fCf"/>
+                            <constraint firstItem="lGY-qW-kuv" firstAttribute="width" secondItem="NHS-be-bW6" secondAttribute="width" multiplier="0.636132" id="pnu-eE-1Dn"/>
                             <constraint firstItem="lGY-qW-kuv" firstAttribute="centerY" secondItem="NHS-be-bW6" secondAttribute="centerY" constant="-20" id="uku-fi-5f9"/>
                             <constraint firstItem="22y-u2-ldi" firstAttribute="centerX" secondItem="NHS-be-bW6" secondAttribute="centerX" id="zVT-zj-Sr9"/>
                         </constraints>

@@ -26,8 +26,57 @@ class DonorSignupViewController: UIViewController {
 
     @IBAction func registerButtonTapped(_ sender: UIButton) {
         guard validateInputs() else { return }
-        createDonorAccount()
+
+        let username = usernameTextField.text?
+            .trimmingCharacters(in: .whitespacesAndNewlines) ?? ""
+
+        guard !username.isEmpty else {
+            showAlert(title: "Missing Username", message: "Please enter a username.")
+            return
+        }
+
+        signupButton.isEnabled = false
+
+        checkUsernameAvailability(username) { [weak self] available in
+            DispatchQueue.main.async {
+                guard let self = self else { return }
+
+                if !available {
+                    self.signupButton.isEnabled = true
+                    self.showAlert(
+                        title: "Username Taken",
+                        message: "This username is already in use. Please choose another one."
+                    )
+                    return
+                }
+
+                // ✅ Username is unique → proceed
+                self.createDonorAccount()
+            }
+        }
     }
+
+    
+    func checkUsernameAvailability(
+        _ username: String,
+        completion: @escaping (Bool) -> Void
+    ) {
+        Firestore.firestore()
+            .collection("users")
+            .whereField("username", isEqualTo: username)
+            .getDocuments { snapshot, error in
+
+                if let error = error {
+                    print("❌ Username check error:", error.localizedDescription)
+                    completion(false)
+                    return
+                }
+
+                // Username is available if no documents exist
+                completion(snapshot?.documents.isEmpty == true)
+            }
+    }
+
 
     // MARK: - Validation
 

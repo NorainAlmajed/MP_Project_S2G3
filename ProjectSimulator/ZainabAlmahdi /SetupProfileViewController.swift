@@ -4,64 +4,98 @@ import FirebaseFirestore
 
 class SetupProfileViewController: UIViewController,
                                   UIImagePickerControllerDelegate,
-                                  UINavigationControllerDelegate {
-
+                                  UINavigationControllerDelegate,
+                                  UITextViewDelegate {
 
     @IBOutlet weak var continueButton: UIButton!
     @IBOutlet weak var uploadButton: UIButton!
     @IBOutlet weak var profileImageView: UIImageView!
     @IBOutlet weak var fullNameTextField: UITextField!
-    @IBOutlet weak var bioTextField: UITextField!
+    @IBOutlet weak var bioTextView: UITextView!
     @IBOutlet weak var bioTitleLabel: UILabel!
     @IBOutlet weak var bioCounterLabel: UILabel!
     @IBOutlet weak var notificationsSwitch: UISwitch!
 
+    private let maxBioLength = 240
+    private var bioPlaceholderText = ""
+
     override func viewDidLoad() {
         super.viewDidLoad()
 
-        styleActionButton(continueButton)
-        styleActionButton(uploadButton)
         title = "Setup Profile"
         navigationItem.hidesBackButton = true
 
+        styleActionButton(continueButton)
+        styleActionButton(uploadButton)
+
         preloadUserData()
         configureBioTitle()
+        configureBioTextView()
 
-        bioCounterLabel.text = "0 / 240"
-
-        bioTextField.addTarget(
-            self,
-            action: #selector(bioTextChanged),
-            for: .editingChanged
-        )
+        bioCounterLabel.text = "0 / \(maxBioLength)"
     }
 
+    // MARK: - Preload
     func preloadUserData() {
         fullNameTextField.text = SessionManager.shared.fullName
     }
 
+    // MARK: - Bio Configuration
     func configureBioTitle() {
         if SessionManager.shared.isNGO {
             bioTitleLabel.text = "Mission"
-            bioTextField.placeholder = "Describe your NGO mission"
+            bioPlaceholderText = "Describe your NGO mission"
         } else {
             bioTitleLabel.text = "Bio"
-            bioTextField.placeholder = "Tell us about yourself"
+            bioPlaceholderText = "Tell us about yourself"
         }
     }
 
-    @objc func bioTextChanged() {
-        let maxLength = 240
-        let text = bioTextField.text ?? ""
+    func configureBioTextView() {
+        bioTextView.delegate = self
 
-        if text.count > maxLength {
-            bioTextField.text = String(text.prefix(maxLength))
-        }
+        // TextField-like styling
+        bioTextView.layer.cornerRadius = 8
+        bioTextView.layer.borderWidth = 1
+        bioTextView.layer.borderColor = UIColor.systemGray4.cgColor
+        bioTextView.backgroundColor = .systemBackground
 
-        bioCounterLabel.text = "\(bioTextField.text?.count ?? 0) / 240"
+        bioTextView.font = UIFont.systemFont(ofSize: 16)
+        bioTextView.textContainerInset = UIEdgeInsets(
+            top: 12, left: 10, bottom: 12, right: 10
+        )
+
+        // Placeholder
+        bioTextView.text = bioPlaceholderText
+        bioTextView.textColor = .placeholderText
     }
 
+    // MARK: - UITextView Delegate
+    func textViewDidBeginEditing(_ textView: UITextView) {
+        if textView.textColor == .placeholderText {
+            textView.text = ""
+            textView.textColor = .label
+        }
+        textView.layer.borderColor = UIColor.systemBlue.cgColor
+    }
 
+    func textViewDidEndEditing(_ textView: UITextView) {
+        if textView.text.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty {
+            textView.text = bioPlaceholderText
+            textView.textColor = .placeholderText
+            bioCounterLabel.text = "0 / \(maxBioLength)"
+        }
+        textView.layer.borderColor = UIColor.systemGray4.cgColor
+    }
+
+    func textViewDidChange(_ textView: UITextView) {
+        if textView.text.count > maxBioLength {
+            textView.text = String(textView.text.prefix(maxBioLength))
+        }
+        bioCounterLabel.text = "\(textView.text.count) / \(maxBioLength)"
+    }
+
+    // MARK: - Image Picker
     @IBAction func addPhotoTapped(_ sender: UIButton) {
         let picker = UIImagePickerController()
         picker.delegate = self
@@ -85,6 +119,7 @@ class SetupProfileViewController: UIViewController,
         dismiss(animated: true)
     }
 
+    // MARK: - Continue
     @IBAction func continueTapped(_ sender: UIButton) {
 
         guard let fullName = fullNameTextField.text, !fullName.isEmpty else {
@@ -92,7 +127,8 @@ class SetupProfileViewController: UIViewController,
             return
         }
 
-        guard let bio = bioTextField.text, !bio.isEmpty else {
+        let bio = bioTextView.text.trimmingCharacters(in: .whitespacesAndNewlines)
+        if bio.isEmpty || bioTextView.textColor == .placeholderText {
             showAlert(
                 title: "Missing \(SessionManager.shared.isNGO ? "Mission" : "Bio")",
                 message: "Please fill in this field."
@@ -128,6 +164,7 @@ class SetupProfileViewController: UIViewController,
         }
     }
 
+    // MARK: - Save Profile
     func saveProfile(fullName: String, bio: String, profileImageUrl: String) {
 
         guard let uid = Auth.auth().currentUser?.uid else { return }
@@ -159,13 +196,10 @@ class SetupProfileViewController: UIViewController,
             }
     }
 
+    // MARK: - Routing
     func routeToDashboard() {
         let storyboard = UIStoryboard(name: "Main", bundle: nil)
-
-        guard let tabBarVC = storyboard.instantiateInitialViewController() else {
-            print("Tab bar not found in Main storyboard")
-            return
-        }
+        guard let tabBarVC = storyboard.instantiateInitialViewController() else { return }
 
         guard let sceneDelegate = UIApplication.shared.connectedScenes
             .first?.delegate as? SceneDelegate else { return }
@@ -174,7 +208,7 @@ class SetupProfileViewController: UIViewController,
         sceneDelegate.window?.makeKeyAndVisible()
     }
 
-
+    // MARK: - Helpers
     func showAlert(title: String, message: String) {
         let alert = UIAlertController(title: title,
                                       message: message,

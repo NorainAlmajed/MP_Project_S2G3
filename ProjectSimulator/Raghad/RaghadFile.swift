@@ -98,7 +98,7 @@ var users: [User] = [
 var user = users [0]
 
 extension User {
-    var isAdmin: Bool { userType == 1 }   // ✅ Admin = 1 donor= 2
+    var isAdmin: Bool { userType == 1 }   //  Admin = 1 donor= 2
 }
 
 
@@ -110,7 +110,7 @@ extension User {
 
 struct DonationDraft {
     var ngoId: String
-    var ngoName: String          // ✅ ADD THIS
+    var ngoName: String
 
     var donorName: String?
     var foodCategory: String?
@@ -157,7 +157,7 @@ final class DonationDraftStore {
 //    let expiryDate: Date
 //    let shortDescription: String?
 //    let imageUrl: String
-//    let ngoName: String          // ✅ NEW
+//    let ngoName: String        
 //
 //}
 

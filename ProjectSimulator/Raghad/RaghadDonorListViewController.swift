@@ -26,13 +26,13 @@ class RaghadDonorListViewController: UIViewController,
     
     @IBOutlet weak var tableView: UITableView!
     
-    // ✅ Your donors list
+    //  Your donors list
 //    private let donors: [User] = users
     
     private var donors: [User] = []
     private var donorListener: ListenerRegistration?
     
-    private var donorRefByUsername: [String: String] = [:]   // ✅ username -> "users/<docId>"
+    private var donorRefByUsername: [String: String] = [:]   //  username -> "users/<docId>"
 
 
     
@@ -40,7 +40,7 @@ class RaghadDonorListViewController: UIViewController,
     
     private var selectedIndex: IndexPath?
     
-    // ✅ Search/Filter
+    //  Search/Filter
     private var filteredDonors: [User] = []
     private var searchBar: UISearchBar!
     private var filterButton: UIButton!
@@ -53,10 +53,10 @@ class RaghadDonorListViewController: UIViewController,
         tableView.delegate = self
         tableView.dataSource = self
         
-        // ✅ start with all donors
+        //  start with all donors
         filteredDonors = donors
         
-        // ✅ Cancel = red
+        //  Cancel = red
         let cancel = UIBarButtonItem(
             title: "Cancel",
             style: .plain,
@@ -66,7 +66,7 @@ class RaghadDonorListViewController: UIViewController,
         cancel.tintColor = .systemRed
         navigationItem.leftBarButtonItem = cancel
         
-        // ✅ Done = blue
+        //  Done = blue
         let done = UIBarButtonItem(
             title: "Done",
             style: .done,
@@ -76,7 +76,7 @@ class RaghadDonorListViewController: UIViewController,
         done.tintColor = .systemBlue
         navigationItem.rightBarButtonItem = done
         
-        // ✅ add search + filter under nav bar
+        //  add search + filter under nav bar
         setupHeaderSearchAndFilter()
         fetchDonorsFromFirestore()
 
@@ -126,7 +126,7 @@ class RaghadDonorListViewController: UIViewController,
         
         //  FONT SIZE LINE HERE
         cell.textLabel?.font = UIFont.systemFont(ofSize: 20)
-        // ✅ checkmark on selected row
+        //  checkmark on selected row
         cell.accessoryType = (indexPath == selectedIndex) ? .checkmark : .none
         
         return cell
@@ -142,25 +142,14 @@ class RaghadDonorListViewController: UIViewController,
     @objc private func cancelTapped() {
         navigationController?.popViewController(animated: true)
     }
-    
-//    @objc private func doneTapped() {
-//        guard let indexPath = selectedIndex else { return }
-//        
-//        let chosenDonor = filteredDonors[indexPath.row]
-//        delegate?.didSelectDonor(name: chosenDonor.username)
-//        
-//        navigationController?.popViewController(animated: true)
-//    }
-    
-    
-    
+        
     @objc private func doneTapped() {
         guard let indexPath = selectedIndex else { return }
 
         let chosenDonor = filteredDonors[indexPath.row]
 
         guard let donorRefPath = donorRefByUsername[chosenDonor.username] else {
-            print("❌ Missing donor ref for username: \(chosenDonor.username)")
+            print(" Missing donor ref for username: \(chosenDonor.username)")
             return
         }
 
@@ -180,7 +169,7 @@ class RaghadDonorListViewController: UIViewController,
             filteredDonors = donors.filter { $0.username.lowercased().contains(text) }
         }
         
-        // ✅ reset selection when results change (avoids wrong checkmark)
+        //  reset selection when results change (avoids wrong checkmark)
         selectedIndex = nil
         
         tableView.reloadData()
@@ -203,26 +192,26 @@ class RaghadDonorListViewController: UIViewController,
     private func fetchDonorsFromFirestore() {
         let db = Firestore.firestore()
 
-        // ✅ Real-time listener (auto updates if new donors added)
+        // Real-time listener (auto updates if new donors added)
         donorListener = db.collection("users")
-            .whereField("role", isEqualTo: 2) // ✅ donor role
+            .whereField("role", isEqualTo: 2) //  donor role
             .addSnapshotListener { [weak self] snapshot, error in
                 guard let self = self else { return }
 
                 if let error = error {
-                    print("❌ Firestore donor fetch error: \(error.localizedDescription)")
-                    // ✅ Safe fallback: keep existing data (no crash)
+                    print(" Firestore donor fetch error: \(error.localizedDescription)")
+                    //  Safe fallback: keep existing data (no crash)
                     return
                 }
 
                 guard let documents = snapshot?.documents else {
-                    print("⚠️ No donor documents found")
+                    print(" No donor documents found")
                     self.donors = []
                     self.filteredDonors = []
                     self.tableView.reloadData()
                     return
                 }
-                // ✅ Build username -> referencePath map
+                // Build username -> referencePath map
                 self.donorRefByUsername = Dictionary(uniqueKeysWithValues:
                     documents.compactMap { doc in
                         let data = doc.data()
@@ -231,7 +220,7 @@ class RaghadDonorListViewController: UIViewController,
                     }
                 )
 
-                // ✅ Map Firestore -> User struct safely
+                //  Map Firestore -> User struct safely
                 let fetched: [User] = documents.compactMap { doc in
                     let data = doc.data()
 
@@ -250,11 +239,11 @@ class RaghadDonorListViewController: UIViewController,
 
                     return User(username: username, userType: roleInt)
                 }
-                .sorted { $0.username.lowercased() < $1.username.lowercased() } // ✅ nice ordering
+                .sorted { $0.username.lowercased() < $1.username.lowercased() } //  nice ordering
 
                 self.donors = fetched
 
-                // ✅ Keep your search logic working:
+                //  Keep your search logic working:
                 // If search bar is empty -> show all donors
                 let currentSearch = self.searchBar?.text?
                     .trimmingCharacters(in: .whitespacesAndNewlines)
@@ -268,22 +257,19 @@ class RaghadDonorListViewController: UIViewController,
                     }
                 }
 
-                // ✅ reset selection when list updates (prevents wrong checkmark)
+                //  reset selection when list updates (prevents wrong checkmark)
                 self.selectedIndex = nil
 
                 DispatchQueue.main.async {
                     self.tableView.reloadData()
                 }
 
-                print("✅ Donors loaded from Firestore: \(self.donors.count)")
+                print(" Donors loaded from Firestore: \(self.donors.count)")
             }
     }
 
     deinit {
         donorListener?.remove()
     }
-    
-    
-    
-    
+ 
 }

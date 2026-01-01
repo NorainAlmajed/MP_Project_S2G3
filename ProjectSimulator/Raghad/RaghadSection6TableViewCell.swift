@@ -17,28 +17,23 @@ class RaghadSection6TableViewCell: UITableViewCell {
     
     private let datePicker = UIDatePicker()
     private let formatter = DateFormatter()
-    private var userStartedChanging = false   // ✅🟡 prevents reset to tomorrow
+    private var userStartedChanging = false   //  prevents reset to tomorrow
 
-    // ✅🟢 VC will set this (keeps it stable even after reload)
+    //  VC will set this (keeps it stable even after reload)
     private var selectedDate: Date?
     
-    // ✅🟢 callback -> send chosen date to VC
+    //  callback -> send chosen date to VC
     var onDateSelected: ((Date) -> Void)?
     
     
-    /////🚘🚘🚘🚘🚘🚘🚘🚘🚘🚘🚘🚘
-    private var didSetupLayout = false
-    
-    
-    
-    
- 
    
+    private var didSetupLayout = false
+
     
     override func awakeFromNib() {
         super.awakeFromNib()
 
-        print("✅ Section6 awakeFromNib, txtExpiryDate nil? \(txtExpiryDate == nil)")
+        print(" Section6 awakeFromNib, txtExpiryDate nil? \(txtExpiryDate == nil)")
         guard txtExpiryDate != nil, lblExpiryTitle != nil else { return }
 
         setupLayoutIfNeeded()
@@ -48,18 +43,18 @@ class RaghadSection6TableViewCell: UITableViewCell {
         setupToolbar()
         txtExpiryDate.addTarget(self, action: #selector(expiryEditingBegan), for: .editingDidBegin)
 
-        // ✅ Border (same in light & dark)
+        //  Border (same in light & dark)
         txtExpiryDate.layer.borderWidth = 1
         txtExpiryDate.layer.borderColor = UIColor.systemGray4.cgColor
         txtExpiryDate.layer.cornerRadius = 8
         txtExpiryDate.clipsToBounds = true
 
-        // ✅ Background: Light = white | Dark = black
+        // Background: Light = white | Dark = black
         txtExpiryDate.backgroundColor = UIColor { trait in
             trait.userInterfaceStyle == .dark ? .black : .white
         }
 
-        // ✅ Text color auto adapts (black in light, white in dark)
+        //  Text color auto adapts (black in light, white in dark)
         txtExpiryDate.textColor = .label
     }
         
@@ -71,12 +66,12 @@ class RaghadSection6TableViewCell: UITableViewCell {
     
     
     
-    // ✅🟢 VC calls this to show the correct date every reload
+    //  VC calls this to show the correct date every reload
     func configure(date: Date?) {
         if let d = date {
             selectedDate = d
         } else {
-            // ✅🟢 default = tomorrow ONLY if user did not start changing
+            //  default = tomorrow ONLY if user did not start changing
             if selectedDate == nil && !userStartedChanging {
                 selectedDate = Calendar.current.date(byAdding: .day, value: 1, to: Date())!
             }
@@ -93,13 +88,13 @@ class RaghadSection6TableViewCell: UITableViewCell {
         
         datePicker.datePickerMode = .date
         
-        // ✅🟢 start from tomorrow (no today/past)
+        //  start from tomorrow (no today/past)
         datePicker.minimumDate = Calendar.current.date(byAdding: .day, value: 1, to: Date())
         
-        // ✅ show picker instead of keyboard
+        //  show picker instead of keyboard
         txtExpiryDate.inputView = datePicker
         
-        // ✅🟢 live update while scrolling
+        //  live update while scrolling
         datePicker.addTarget(self, action: #selector(dateChanged(_:)), for: .valueChanged)
     }
     
@@ -120,29 +115,29 @@ class RaghadSection6TableViewCell: UITableViewCell {
         txtExpiryDate.text = formatter.string(from: d)
     }
     
-    // ✅🟢 update text while user scrolls + SAVE to VC immediately
+    // update text while user scrolls + SAVE to VC immediately
     @objc private func dateChanged(_ sender: UIDatePicker) {
         userStartedChanging = true
         selectedDate = sender.date
         let formatted = formatter.string(from: sender.date)
         txtExpiryDate.text = formatted
         
-        onDateSelected?(sender.date)   // ✅🔥 keep VC updated while scrolling
+        onDateSelected?(sender.date)   //  keep VC updated while scrolling
     }
     
-    // ✅🟢 Done should NOT change it back — just close picker
+    //  Done should NOT change it back — just close picker
     @objc private func doneTapped() {
-        // ✅ just make sure text matches current picker date
+        //  just make sure text matches current picker date
         let d = datePicker.date
         selectedDate = d
         txtExpiryDate.text = formatter.string(from: d)
         
-        onDateSelected?(d)             // ✅🔥 final save (safe)
+        onDateSelected?(d)             //  final save (safe)
         txtExpiryDate.resignFirstResponder()
     }
     
     @objc private func expiryEditingBegan() {
-        // ✅ If we already have a selected date, show it
+        //  If we already have a selected date, show it
         if let d = selectedDate {
             datePicker.date = d
             txtExpiryDate.text = formatter.string(from: d)
@@ -151,53 +146,15 @@ class RaghadSection6TableViewCell: UITableViewCell {
            
         }
 
-        // ✅ Otherwise default to tomorrow (and keep picker synced)
+        // Otherwise default to tomorrow (and keep picker synced)
         let tomorrow = Calendar.current.date(byAdding: .day, value: 1, to: Date())!
         selectedDate = tomorrow
         datePicker.date = tomorrow
         txtExpiryDate.text = formatter.string(from: tomorrow)
 
-        onDateSelected?(tomorrow) // ✅ save into VC too
+        onDateSelected?(tomorrow) //  save into VC too
     }
 
-    
-    
-    
-    //for the stack view🚘🚘🚘🚘🚘🚘🚘🚘🚘🚘
-    
-//    private func setupLayoutIfNeeded() {
-//        guard !didSetupLayout else { return }
-//        didSetupLayout = true
-//
-//        lblExpiryTitle.translatesAutoresizingMaskIntoConstraints = false
-//        txtExpiryDate.translatesAutoresizingMaskIntoConstraints = false
-//
-//        let stack = UIStackView(arrangedSubviews: [lblExpiryTitle, txtExpiryDate])
-//        stack.axis = .vertical
-//        stack.spacing = 8
-//        stack.alignment = .fill
-//        stack.distribution = .fill
-//
-//        contentView.addSubview(stack)
-//        stack.translatesAutoresizingMaskIntoConstraints = false
-//
-//        NSLayoutConstraint.activate([
-//            // Match Weight: leading = 36
-//            stack.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 36),
-//
-//            // Match Weight: width = 0.816794 * superview width
-//            stack.widthAnchor.constraint(equalTo: contentView.widthAnchor, multiplier: 0.816794),
-//
-//            // ✅ slightly higher (keep it nice)
-//            stack.topAnchor.constraint(equalTo: contentView.topAnchor, constant: 8),
-//
-//            // ✅ MORE bottom space so it doesn't stick to the next cell
-//            stack.bottomAnchor.constraint(equalTo: contentView.bottomAnchor, constant: -22),
-//
-//            // Match Weight-ish text field height
-//            txtExpiryDate.heightAnchor.constraint(equalToConstant: 34)
-//        ])
-//    }
     
     private func setupLayoutIfNeeded() {
         guard !didSetupLayout else { return }
@@ -240,11 +197,6 @@ class RaghadSection6TableViewCell: UITableViewCell {
             txtExpiryDate.heightAnchor.constraint(equalToConstant: 34)
         ])
     }
-
-
-
-
-    
     
     
 }

@@ -198,18 +198,6 @@ class NgoDetailsViewController: UIViewController, UITableViewDataSource, UITable
         default: return UITableView.automaticDimension
         }
     }
-
-    // MARK: - Navigation
-
-//    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-//        if segue.identifier == "toDonationForm" {
-//            // If you want to pass NGO to donation form, uncomment and change VC name if needed:
-//            // let vc = segue.destination as! RaghadDonatoinFormViewController
-//            // vc.selectedNgo = selectedNgo
-//        }
-    
-    
-    
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
         if segue.identifier == "toDonationForm" {
             let vc = segue.destination as! RaghadDonatoinFormViewController

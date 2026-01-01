@@ -34,7 +34,7 @@ class RaghadSection2TableViewCell: UITableViewCell {
         setupChooseDonorButton()
                selectionStyle = .none
         
-        // ✅ NEW: hide error by default
+        //  NEW: hide error by default
                 lblError.isHidden = true
 
         // Initialization code
@@ -49,7 +49,7 @@ class RaghadSection2TableViewCell: UITableViewCell {
            if let name = donorName, !name.isEmpty {
                config.title = name
                config.baseForegroundColor = .label
-               lblError.isHidden = true   // ✅ hide error when donor exists
+               lblError.isHidden = true   //  hide error when donor exists
            } else {
                config.title = "Choose Donor"
                config.baseForegroundColor = .systemGray
@@ -60,7 +60,7 @@ class RaghadSection2TableViewCell: UITableViewCell {
            btnChooseDonor2.configuration = config
        }
   
-    // ✅ NEW: connect btnChooseDonor2 "Touch Up Inside" to this
+    //  NEW: connect btnChooseDonor2 "Touch Up Inside" to this
     @IBAction func btnChooseDonorTapped(_ sender: Any) {
         delegate?.section2DidTapChooseDonor(self)
     }
@@ -69,13 +69,13 @@ class RaghadSection2TableViewCell: UITableViewCell {
     
     private func setupChooseDonorButton() {
 
-        // 1️⃣ Border like text fields
+        //  Border like text fields
         btnChooseDonor2.layer.borderWidth = 1
         btnChooseDonor2.layer.borderColor = UIColor.systemGray4.cgColor
         btnChooseDonor2.layer.cornerRadius = 8
         btnChooseDonor2.clipsToBounds = true
 
-        // 2️⃣ Plain configuration = white background
+        //  Plain configuration = white background
         var config = UIButton.Configuration.plain()
         config.title = "Choose Donor"
         config.baseForegroundColor = .systemGray

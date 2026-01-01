@@ -1,24 +1,59 @@
 import UIKit
-import FirebaseAuth
 import FirebaseFirestore
+import FirebaseAuth
 
 class UpdateNGOLicenseViewController: UIViewController,
                                      UIImagePickerControllerDelegate,
                                      UINavigationControllerDelegate {
 
     @IBOutlet weak var licenseImageView: UIImageView!
-    @IBOutlet weak var selectButton: UIButton!
     @IBOutlet weak var uploadButton: UIButton!
+    @IBOutlet weak var saveButton: UIButton!
 
     override func viewDidLoad() {
         super.viewDidLoad()
         title = "Update NGO License"
-        uploadButton.isEnabled = false
-        styleActionButton(selectButton)
+
         styleActionButton(uploadButton)
+        styleActionButton(saveButton)
+        styleLicenseImageView()
+        loadExistingLicense()
     }
 
-    @IBAction func selectLicenseTapped(_ sender: UIButton) {
+    // MARK: - License Image Styling
+    func styleLicenseImageView() {
+        licenseImageView.layer.cornerRadius = 7
+        licenseImageView.clipsToBounds = true
+        licenseImageView.layer.borderWidth = 1
+        licenseImageView.layer.borderColor = UIColor.systemGray.cgColor
+        licenseImageView.contentMode = .scaleAspectFill
+    }
+
+    // MARK: - Load Existing License
+    func loadExistingLicense() {
+        guard let uid = Auth.auth().currentUser?.uid else { return }
+
+        Firestore.firestore()
+            .collection("users")
+            .document(uid)
+            .getDocument { [weak self] snapshot, _ in
+                guard let data = snapshot?.data(),
+                      let urlString = data["ngo_license_url"] as? String,
+                      let url = URL(string: urlString) else { return }
+
+                URLSession.shared.dataTask(with: url) { data, _, _ in
+                    guard let data = data,
+                          let image = UIImage(data: data) else { return }
+
+                    DispatchQueue.main.async {
+                        self?.licenseImageView.image = image
+                    }
+                }.resume()
+            }
+    }
+
+    // MARK: - Pick New License
+    @IBAction func uploadTapped(_ sender: UIButton) {
         let picker = UIImagePickerController()
         picker.delegate = self
         picker.allowsEditing = true
@@ -26,78 +61,69 @@ class UpdateNGOLicenseViewController: UIViewController,
         present(picker, animated: true)
     }
 
-    func imagePickerController(_ picker: UIImagePickerController,
-                               didFinishPickingMediaWithInfo info: [UIImagePickerController.InfoKey : Any]) {
-
-        if let image = info[.editedImage] as? UIImage {
-            licenseImageView.image = image
-        } else if let image = info[.originalImage] as? UIImage {
+    func imagePickerController(
+        _ picker: UIImagePickerController,
+        didFinishPickingMediaWithInfo info: [UIImagePickerController.InfoKey : Any]
+    ) {
+        if let image = info[.editedImage] as? UIImage ??
+                       info[.originalImage] as? UIImage {
             licenseImageView.image = image
         }
-
-        uploadButton.isEnabled = true
         dismiss(animated: true)
     }
 
-    @IBAction func uploadLicenseTapped(_ sender: UIButton) {
+    func imagePickerControllerDidCancel(_ picker: UIImagePickerController) {
+        dismiss(animated: true)
+    }
 
+    // MARK: - Save Updated License
+    @IBAction func saveTapped(_ sender: UIButton) {
         guard let image = licenseImageView.image else {
-            showAlert("Missing Image", "Please select a license image")
+            showAlert(title: "Missing License", message: "Please upload a license image.")
             return
         }
 
-        guard let uid = Auth.auth().currentUser?.uid else {
-            showAlert("Error", "User not logged in")
-            return
-        }
-
-        uploadButton.isEnabled = false
+        saveButton.isEnabled = false
 
         let cloudinaryService = CloudinaryService()
-        cloudinaryService.uploadImage(image) { url in
-            DispatchQueue.main.async {
-                if let url = url {
-                    self.updateLicense(uid: uid, url: url)
-                } else {
-                    self.uploadButton.isEnabled = true
-                    self.showAlert("Upload Failed", "Could not upload image.")
-                }
+        cloudinaryService.uploadImage(image) { [weak self] url in
+            guard let self = self,
+                  let licenseUrl = url,
+                  let uid = Auth.auth().currentUser?.uid else {
+                self?.saveButton.isEnabled = true
+                return
             }
+
+            Firestore.firestore()
+                .collection("users")
+                .document(uid)
+                .updateData([
+                    "ngo_license_url": licenseUrl,
+                    "status": NGOStatus.pending.rawValue
+                ]) { error in
+                    self.saveButton.isEnabled = true
+
+                    if let error = error {
+                        self.showAlert(title: "Error", message: error.localizedDescription)
+                    } else {
+                        self.showAlert(
+                            title: "Submitted",
+                            message: "Your updated license has been sent for review."
+                        )
+                    }
+                }
         }
     }
 
-    func updateLicense(uid: String, url: String) {
-        Firestore.firestore()
-            .collection("users")
-            .document(uid)
-            .updateData([
-                "ngo_license_url": url,
-                "license_status": "pending",
-                "license_updated_at": Timestamp()
-            ]) { error in
-                if let error = error {
-                    self.showAlert("Error", error.localizedDescription)
-                    self.uploadButton.isEnabled = true
-                } else {
-                    self.showAlert(
-                        "Success",
-                        "License updated successfully. Pending review."
-                    )
-                    self.uploadButton.isEnabled = true
-                }
-            }
-    }
-
-    func showAlert(_ title: String, _ message: String) {
-        let alert = UIAlertController(
-            title: title,
-            message: message,
-            preferredStyle: .alert
-        )
+    // MARK: - Helpers
+    func showAlert(title: String, message: String) {
+        let alert = UIAlertController(title: title,
+                                      message: message,
+                                      preferredStyle: .alert)
         alert.addAction(UIAlertAction(title: "OK", style: .default))
         present(alert, animated: true)
     }
-    
+
     private func styleActionButton(_ button: UIButton) {
         button.layer.cornerRadius = button.frame.height / 2
         button.clipsToBounds = true

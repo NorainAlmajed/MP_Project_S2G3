@@ -47,6 +47,12 @@ class NGOSignupViewController: UIViewController,
     // MARK: - Lifecycle
     override func viewDidLoad() {
         super.viewDidLoad()
+        
+        styleActionButton(uploadButton)
+            styleActionButton(signupButton)
+            navigationItem.title = "Sign Up"
+
+            styleLicenseImageView()
 
         styleActionButton(uploadButton)
         styleActionButton(signupButton)
@@ -83,6 +89,16 @@ class NGOSignupViewController: UIViewController,
         picker.sourceType = .photoLibrary
         present(picker, animated: true)
     }
+    
+    // MARK: - License Image Styling
+    func styleLicenseImageView() {
+        licenseImageView.layer.cornerRadius = 7
+        licenseImageView.clipsToBounds = true
+        licenseImageView.layer.borderWidth = 1
+        licenseImageView.layer.borderColor = UIColor.systemGray.cgColor
+        licenseImageView.contentMode = .scaleAspectFill
+    }
+
 
     func imagePickerController(
         _ picker: UIImagePickerController,

@@ -191,6 +191,7 @@
                     <navigationItem key="navigationItem" id="fgv-iJ-my3"/>
                     <connections>
                         <outlet property="licenseImageView" destination="uZj-Mb-9bW" id="zLN-nb-bfk"/>
+                        <outlet property="saveButton" destination="JuH-fd-FVZ" id="SWR-6A-HL8"/>
                         <outlet property="selectButton" destination="biu-wN-Ygw" id="AtZ-a3-Uhx"/>
                         <outlet property="uploadButton" destination="JuH-fd-FVZ" id="sG8-lP-Kd6"/>
                     </connections>

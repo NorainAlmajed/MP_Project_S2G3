@@ -51,6 +51,15 @@ class ZahraaRecurrenceTableViewCell: UITableViewCell {
 
         // ✅ Change existing system arrow color
         frequencyBtn.tintColor = .label  // black in light, white in dark
+        
+        //Setting Constraints
+        if UIDevice.current.userInterfaceIdiom == .pad {
+            donationFreqLeading.constant = 82
+            recurrDonLeading.constant = 94
+            layoutIfNeeded()
+        }
+
+        
     }
  
 

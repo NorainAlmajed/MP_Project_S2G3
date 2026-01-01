@@ -24,11 +24,10 @@ class RaghadSection4TableViewCell: UITableViewCell {
     @IBOutlet weak var lblQuantityError: UILabel!
     
     
-    // 🟢 NEW
     private var didSetupIPadAlignment = false
     private var iPadTrailingGuide: UIView?
     private var iPadExtraConstraints: [NSLayoutConstraint] = []
-    // 🟢 NEW (keep references so we don’t add duplicates)
+    //  (keep references so we don’t add duplicates)
     private var iPadStepperTrailing: NSLayoutConstraint?
     private var iPadTxtToStepper: NSLayoutConstraint?
     private var iPadTxtLeading: NSLayoutConstraint?
@@ -56,7 +55,7 @@ class RaghadSection4TableViewCell: UITableViewCell {
             stepperQuantity.value = 1
         
         
-        // ✅🟡 1) Hide error by default
+        //  Hide error by default
         lblQuantityError.isHidden = true
         lblQuantityError.text = "Please enter a valid quantity"
         
@@ -67,7 +66,7 @@ class RaghadSection4TableViewCell: UITableViewCell {
         lblQuantityError.minimumScaleFactor = 1.0
 
 
-        // ✅🟡 2) Stepper limits (optional but recommended)
+        //   Stepper limits (optional but recommended)
         stepperQuantity.minimumValue = 0
         stepperQuantity.maximumValue = 999
         
@@ -80,7 +79,7 @@ class RaghadSection4TableViewCell: UITableViewCell {
             txtQuantity.text = "1"
             stepperQuantity.value = 1
 
-        // ✅ MATCH other input fields (Expiration / Choose Donor)
+        // MATCH other input fields (Expiration / Choose Donor)
             txtQuantity.layer.borderWidth = 1
             txtQuantity.layer.borderColor = UIColor.systemGray4.cgColor
             txtQuantity.layer.cornerRadius = 8
@@ -97,7 +96,7 @@ class RaghadSection4TableViewCell: UITableViewCell {
         
         }
     
-    // 🟢 NEW: Apply iPad alignment AFTER layout is done
+    // Apply iPad alignment AFTER layout is done
        override func layoutSubviews() {
            super.layoutSubviews()
            setupIPadAlignmentIfNeeded()  // ✅ safe place
@@ -106,12 +105,12 @@ class RaghadSection4TableViewCell: UITableViewCell {
     
     
     
-    // ✅🟢 VC uses this to show / hide the quantity error label
+    //  VC uses this to show / hide the quantity error label
     func configure(showError: Bool) {
         lblQuantityError.isHidden = !showError
     }
 
-    // ✅🟢 VC uses this to read quantity safely
+    // VC uses this to read quantity safely
     func getQuantityValue() -> Int? {
         guard let t = txtQuantity.text?.trimmingCharacters(in: .whitespacesAndNewlines),
               !t.isEmpty,
@@ -140,7 +139,7 @@ class RaghadSection4TableViewCell: UITableViewCell {
     @IBAction func stepperChanged(_ sender: UIStepper) {
         let value = Int(sender.value)
         txtQuantity.text = "\(value)"
-        onQuantityChanged?(value)   // ✅ notify VC
+        onQuantityChanged?(value)   //  notify VC
     }
 
     @IBAction func textChanged(_ sender: UITextField) {
@@ -148,31 +147,31 @@ class RaghadSection4TableViewCell: UITableViewCell {
             
             let t = sender.text ?? ""
             
-            // 🔴 Empty → invalid
+            // Empty → invalid
             if t.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty {
                 stepperQuantity.value = 0
-                onQuantityChanged?(nil)   // ✅ notify VC: invalid
+                onQuantityChanged?(nil)   //  notify VC: invalid
                 return
             }
             
-            // 🔴 Not a number → invalid
+            //  Not a number → invalid
             guard let value = Int(t) else {
                 stepperQuantity.value = 0
-                onQuantityChanged?(nil)   // ✅ notify VC: invalid
+                onQuantityChanged?(nil)   //  notify VC: invalid
                 return
             }
             
-            // 🔴 Negative → invalid
+            //  Negative → invalid
             if value < 0 {
                 sender.text = "0"
                 stepperQuantity.value = 0
-                onQuantityChanged?(nil)   // ✅ notify VC: invalid
+                onQuantityChanged?(nil)   //  notify VC: invalid
                 return
             }
             
-            // ✅ Valid quantity
+            // Valid quantity
             stepperQuantity.value = Double(value)
-            onQuantityChanged?(value)    // ✅ notify VC: valid
+            onQuantityChanged?(value)    //  notify VC: valid
         }
     
   

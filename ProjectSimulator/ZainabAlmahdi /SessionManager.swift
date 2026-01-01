@@ -7,6 +7,7 @@ final class SessionManager {
     static let shared = SessionManager()
     private init() {}
 
+    // MARK: - User Role
     enum UserRole: Int {
         case admin = 1
         case donor = 2
@@ -17,7 +18,7 @@ final class SessionManager {
     // MARK: - Stored Session Data
     private(set) var role: UserRole = .unknown
     private(set) var fullName: String?
-    private(set) var profileImageURL: String?
+    private(set) var profileImageURL: String?   // ✅ THIS IS THE CORRECT PROPERTY
 
     // MARK: - Role Helpers
     var isAdmin: Bool { role == .admin }
@@ -37,7 +38,9 @@ final class SessionManager {
     func loadUserSession(completion: @escaping (Bool) -> Void) {
 
         guard let uid = Auth.auth().currentUser?.uid else {
-            completion(false)
+            DispatchQueue.main.async {
+                completion(false)
+            }
             return
         }
 
@@ -47,37 +50,43 @@ final class SessionManager {
             .getDocument { snapshot, error in
 
                 guard let data = snapshot?.data(), error == nil else {
-                    completion(false)
+                    DispatchQueue.main.async {
+                        completion(false)
+                    }
                     return
                 }
 
-                // Name (Donor or NGO)
-                self.fullName =
-                    data["full_name"] as? String ??
-                    data["organization_name"] as? String
+                // ✅ Always update session on MAIN thread
+                DispatchQueue.main.async {
 
-                // Role
-                if let roleInt = data["role"] as? Int,
-                   let role = UserRole(rawValue: roleInt) {
-                    self.role = role
-                } else {
-                    self.role = .unknown
+                    // Name (Donor OR NGO)
+                    self.fullName =
+                        data["full_name"] as? String ??
+                        data["organization_name"] as? String
+
+                    // Role
+                    if let roleInt = data["role"] as? Int,
+                       let role = UserRole(rawValue: roleInt) {
+                        self.role = role
+                    } else {
+                        self.role = .unknown
+                    }
+
+                    // Profile Image URL (🔥 this fixes your error)
+                    self.profileImageURL = data["profile_image_url"] as? String
+
+                    completion(true)
                 }
-
-                // Profile Image
-                self.profileImageURL = data["profile_image_url"] as? String
-
-                completion(true)
             }
     }
 
-    // MARK: - BACKWARD COMPATIBILITY (IMPORTANT)
+    // MARK: - BACKWARD COMPATIBILITY
     /// Use this for older screens that already call fetchUserRole
     func fetchUserRole(completion: @escaping (Bool) -> Void) {
         loadUserSession(completion: completion)
     }
 
-    // MARK: - Clear Session
+    // MARK: - Clear Session (Logout)
     func clear() {
         role = .unknown
         fullName = nil

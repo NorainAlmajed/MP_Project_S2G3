@@ -73,7 +73,7 @@ class Section1TableViewCell: UITableViewCell {
 
         // MARK: - Configure Cell
         
-    func setup(with donation: ZahraaDonation) {
+    func setup(with donation: Donation) {
         // NGO name
         ngoNameLbl.text = donation.ngo.organization_name ?? donation.ngo.username
 

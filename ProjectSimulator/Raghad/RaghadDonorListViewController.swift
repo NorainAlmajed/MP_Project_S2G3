@@ -29,7 +29,7 @@ class RaghadDonorListViewController: UIViewController,
     // ✅ Your donors list
 //    private let donors: [User] = users
     
-    private var donors: [User] = []
+    private var donors: [DraftUser] = []
     private var donorListener: ListenerRegistration?
     
     private var donorRefByUsername: [String: String] = [:]   // ✅ username -> "users/<docId>"
@@ -41,7 +41,7 @@ class RaghadDonorListViewController: UIViewController,
     private var selectedIndex: IndexPath?
     
     // ✅ Search/Filter
-    private var filteredDonors: [User] = []
+    private var filteredDonors: [DraftUser] = []
     private var searchBar: UISearchBar!
     private var filterButton: UIButton!
     
@@ -232,7 +232,7 @@ class RaghadDonorListViewController: UIViewController,
                 )
 
                 // ✅ Map Firestore -> User struct safely
-                let fetched: [User] = documents.compactMap { doc in
+                let fetched: [DraftUser] = documents.compactMap { doc in
                     let data = doc.data()
 
                     // username can be missing, so we guard
@@ -248,7 +248,7 @@ class RaghadDonorListViewController: UIViewController,
                         roleInt = 0
                     }
 
-                    return User(username: username, userType: roleInt)
+                    return DraftUser(username: username, userType: roleInt)
                 }
                 .sorted { $0.username.lowercased() < $1.username.lowercased() } // ✅ nice ordering
 

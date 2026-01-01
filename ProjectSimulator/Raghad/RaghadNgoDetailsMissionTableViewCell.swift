@@ -18,31 +18,31 @@ class RaghadNgoDetailsMissionTableViewCell: UITableViewCell {
     override func awakeFromNib() {
             super.awakeFromNib()
 
-            // ✅ White background
+            //  White background
             //misssionView.backgroundColor = .secondarySystemBackground
         
         
-        // ✅ Light = white | Dark = system background
+        //  Light = white | Dark = system background
         misssionView.backgroundColor = UIColor { trait in
             trait.userInterfaceStyle == .dark
                 ? UIColor.secondarySystemBackground
                 : UIColor.white
         }
 
-            // ✅ Light gray border
+            //  Light gray border
             misssionView.layer.cornerRadius = 16
             misssionView.layer.borderWidth = 1
             misssionView.layer.borderColor = UIColor.separator.cgColor
             misssionView.clipsToBounds = true
 
-        // ✅ Text: dark-mode friendly
+        //  Text: dark-mode friendly
              lblMissionText.numberOfLines = 0
              lblMissionText.textColor = .label
          
         }
     
     
-    // ✅ Important: refresh border when switching Light/Dark
+    //  Important: refresh border when switching Light/Dark
        override func traitCollectionDidChange(_ previousTraitCollection: UITraitCollection?) {
            super.traitCollectionDidChange(previousTraitCollection)
 

@@ -16,18 +16,18 @@ class NgoViewController: UIViewController,
 
     @IBOutlet weak var tableView: UITableView!
 
-    // ✅ Your data
+    //  Your data
     //private var shownNgos: [NGO] = []
-   // private var allNgos: [NGO] = []   // ✅ source of truth from Firebase
-    private var shownNgos: [NGO] = []   // ✅ what table shows
+   // private var allNgos: [NGO] = []   //  source of truth from Firebase
+    private var shownNgos: [NGO] = []   // what table shows
     private var allNgos: [NGO] = []
     private var selectedCategory: String? = nil
 
-    // ✅ Header UI (same style as Donor List)
+    //  Header UI (same style as Donor List)
     private var searchBar: UISearchBar!
     private var filterButton: UIButton!
 
-    // ✅ Empty state label
+    //  Empty state label
     private let noNgosLabel: UILabel = {
         let label = UILabel()
         label.text = "No NGOs available"
@@ -49,7 +49,7 @@ class NgoViewController: UIViewController,
         tableView.delegate = self
         tableView.dataSource = self
 
-        // ✅ Start list
+        //  Start list
        // shownNgos = arrNgo
        
 
@@ -57,10 +57,10 @@ class NgoViewController: UIViewController,
         
         
 
-        // ✅ Add header (Search + Filter) UNDER the navigation bar (like Donor List)
+        //  Add header (Search + Filter) UNDER the navigation bar (like Donor List)
         setupHeaderSearchAndFilter()
 
-        // ✅ Empty label
+        //  Empty label
         view.addSubview(noNgosLabel)
         noNgosLabel.translatesAutoresizingMaskIntoConstraints = false
         NSLayoutConstraint.activate([
@@ -86,7 +86,7 @@ class NgoViewController: UIViewController,
             bottomLine.bottomAnchor.constraint(equalTo: navigationController!.navigationBar.bottomAnchor)
         ])
 
-        // ✅ Hide back button text for next screen
+        //  Hide back button text for next screen
         if #available(iOS 14.0, *) {
             navigationItem.backButtonDisplayMode = .minimal
         } else {
@@ -120,7 +120,7 @@ class NgoViewController: UIViewController,
             .font: UIFont.systemFont(ofSize: 17, weight: .semibold)
         ]
 
-        // ✅ SAME appearance for both states
+        //  SAME appearance for both states
         navigationController?.navigationBar.standardAppearance = appearance
         navigationController?.navigationBar.scrollEdgeAppearance = appearance
 
@@ -130,7 +130,7 @@ class NgoViewController: UIViewController,
         
     }
 
-    // ✅ Helps iPad / rotation keep header width correct
+    //  Helps iPad / rotation keep header width correct
     override func viewDidLayoutSubviews() {
         super.viewDidLayoutSubviews()
         updateHeaderWidth()
@@ -142,10 +142,10 @@ class NgoViewController: UIViewController,
         
         title = "Browse NGOs"
 
-          // ✅ FORCE small title (no large title ever)
+          //  FORCE small title (no large title ever)
           navigationItem.largeTitleDisplayMode = .never
 
-          // ✅ Safety: override nav controller preference
+          //  Safety: override nav controller preference
           navigationController?.navigationBar.prefersLargeTitles = false
         
         
@@ -313,23 +313,23 @@ class NgoViewController: UIViewController,
 
     
     private func fetchNgosFromFirebase() {
-        print("🔥 Fetching NGOs from Firestore collection: users where role == 3")
+        print(" Fetching NGOs from Firestore collection: users where role == 3")
 
         Firestore.firestore()
             .collection("users")
-            .whereField("role", isEqualTo: 3)   // ✅ NGO role is number 3
+            .whereField("role", isEqualTo: 3)   //  NGO role is number 3
             .getDocuments { [weak self] snapshot, error in
                 guard let self = self else { return }
 
                 if let error = error {
-                    print("❌ Fetch NGOs failed:", error.localizedDescription)
+                    print(" Fetch NGOs failed:", error.localizedDescription)
                     self.allNgos = []
                     self.applySearchAndFilter()
                     return
                 }
 
                 let docs = snapshot?.documents ?? []
-                print("✅ Firestore returned docs count:", docs.count)
+                print("Firestore returned docs count:", docs.count)
 
                 let ngos: [NGO] = docs.compactMap { doc -> NGO? in
                     let data = doc.data()
@@ -340,6 +340,10 @@ class NgoViewController: UIViewController,
                     let email = data["email"] as? String ?? ""
                     let phone = data["number"] as? String ?? ""
                     let photoUrl = data["profile_image_url"] as? String ?? ""
+                    let status = (data["status"] as? String ?? "Approved").lowercased()
+                    print("NGO:", name, "status:", status)
+                    guard status == "approved" else { return nil }
+
 
                     guard !name.isEmpty else { return nil }
 

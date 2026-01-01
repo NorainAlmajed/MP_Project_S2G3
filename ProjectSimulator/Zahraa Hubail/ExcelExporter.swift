@@ -10,7 +10,7 @@ import UIKit
 class ExcelExporter {
 
     // Create CSV file for a donation
-    static func createDonationCSV(donation: ZahraaDonation) -> URL? {
+    static func createDonationCSV(donation: Donation) -> URL? {
         // Temporary file path
         let filePath = FileManager.default.temporaryDirectory.appendingPathComponent("DonationReport.csv")
         
@@ -57,7 +57,7 @@ class ExcelExporter {
     }
     
     // Share CSV using UIActivityViewController
-    static func shareCSV(from viewController: UIViewController, donation: ZahraaDonation) {
+    static func shareCSV(from viewController: UIViewController, donation: Donation) {
         if let fileURL = createDonationCSV(donation: donation) {
             let activityVC = UIActivityViewController(activityItems: [fileURL], applicationActivities: nil)
             if let popover = activityVC.popoverPresentationController {

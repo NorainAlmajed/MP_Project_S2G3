@@ -1,10 +1,3 @@
-//
-//  SetupProfileViewController.swift
-//  ProjectSimulator
-//
-//  Created by BP-36-201-02 on 22/12/2025.
-//
-
 import UIKit
 import FirebaseAuth
 import FirebaseFirestore
@@ -22,18 +15,29 @@ class SetupProfileViewController: UIViewController,
     @IBOutlet weak var notificationsSwitch: UISwitch!
     @IBOutlet weak var bioCounterLabel: UILabel!
     @IBOutlet weak var uploadbuttonwidth: NSLayoutConstraint!
-    
+
     override func viewDidLoad() {
         super.viewDidLoad()
 
         styleActionButton(continueButton)
         styleActionButton(uploadButton)
         title = "Setup Profile"
+
         bioTextView.delegate = self
         bioCounterLabel.text = "0 / 240"
 
         navigationItem.hidesBackButton = true
+
+        preloadUserData()
     }
+
+    // MARK: - Preload
+
+    func preloadUserData() {
+        fullNameTextField.text = SessionManager.shared.fullName
+    }
+
+    // MARK: - Notifications
 
     @IBAction func notificationSwitchChanged(_ sender: UISwitch) {
         if sender.isOn == false {
@@ -48,10 +52,11 @@ class SetupProfileViewController: UIViewController,
             })
 
             alert.addAction(UIAlertAction(title: "Disable", style: .destructive))
-
             present(alert, animated: true)
         }
     }
+
+    // MARK: - Image Picker
 
     @IBAction func addPhotoTapped(_ sender: UIButton) {
         let picker = UIImagePickerController()
@@ -65,9 +70,8 @@ class SetupProfileViewController: UIViewController,
         _ picker: UIImagePickerController,
         didFinishPickingMediaWithInfo info: [UIImagePickerController.InfoKey : Any]
     ) {
-        if let image = info[.editedImage] as? UIImage {
-            profileImageView.image = image
-        } else if let image = info[.originalImage] as? UIImage {
+        if let image = info[.editedImage] as? UIImage ??
+                       info[.originalImage] as? UIImage {
             profileImageView.image = image
         }
         dismiss(animated: true)
@@ -76,6 +80,8 @@ class SetupProfileViewController: UIViewController,
     func imagePickerControllerDidCancel(_ picker: UIImagePickerController) {
         dismiss(animated: true)
     }
+
+    // MARK: - Continue
 
     @IBAction func continueTapped(_ sender: UIButton) {
 
@@ -100,21 +106,24 @@ class SetupProfileViewController: UIViewController,
         cloudinaryService.uploadImage(image) { [weak self] imageUrl in
             guard let self = self else { return }
 
-            if let imageUrl = imageUrl {
-                self.saveProfile(
-                    fullName: fullName,
-                    bio: bio,
-                    profileImageUrl: imageUrl
-                )
-            } else {
+            guard let imageUrl = imageUrl else {
                 self.continueButton.isEnabled = true
                 self.showAlert(
                     title: "Upload Failed",
                     message: "Could not upload profile image."
                 )
+                return
             }
+
+            self.saveProfile(
+                fullName: fullName,
+                bio: bio,
+                profileImageUrl: imageUrl
+            )
         }
     }
+
+    // MARK: - Firestore Save
 
     func saveProfile(fullName: String, bio: String, profileImageUrl: String) {
 
@@ -139,13 +148,16 @@ class SetupProfileViewController: UIViewController,
                     return
                 }
 
-                SessionManager.shared.fetchUserRole { success in
+                // ✅ Refresh session properly
+                SessionManager.shared.loadUserSession { _ in
                     DispatchQueue.main.async {
                         self.routeToDashboard()
                     }
                 }
             }
     }
+
+    // MARK: - Routing
 
     func routeToDashboard() {
 
@@ -156,10 +168,8 @@ class SetupProfileViewController: UIViewController,
             identifier = "AdminHomeViewController"
         } else if SessionManager.shared.isNGO {
             identifier = "NGOHomeViewController"
-        } else if SessionManager.shared.isDonor {
-            identifier = "DonorHomeViewController"
         } else {
-            return
+            identifier = "DonorHomeViewController"
         }
 
         let homeVC = storyboard.instantiateViewController(withIdentifier: identifier)
@@ -169,6 +179,8 @@ class SetupProfileViewController: UIViewController,
             sceneDelegate.window?.makeKeyAndVisible()
         }
     }
+
+    // MARK: - Bio Counter
 
     func textViewDidChange(_ textView: UITextView) {
         let max = 240
@@ -187,6 +199,8 @@ class SetupProfileViewController: UIViewController,
         return updated.count <= 240
     }
 
+    // MARK: - Helpers
+
     func showAlert(title: String, message: String) {
         let alert = UIAlertController(title: title,
                                       message: message,
@@ -200,4 +214,3 @@ class SetupProfileViewController: UIViewController,
         button.clipsToBounds = true
     }
 }
-

@@ -13,7 +13,7 @@ protocol ZahraaAddressDelegate: AnyObject {
     func didAddAddress(_ address: ZahraaAddress)
 }
 
-class ZahraaAddress {
+struct ZahraaAddress {
     var building: String
     var road: String
     var block: String

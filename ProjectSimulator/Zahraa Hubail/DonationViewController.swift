@@ -89,6 +89,9 @@ class DonationViewController: UIViewController {
             navigationController?.navigationBar.compactAppearance = appearance
 
             donationsCollectionView.reloadData()
+            
+            fetchDonations()
+
         }
 
         // MARK: - UI Setup

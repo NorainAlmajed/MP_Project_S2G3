@@ -21,7 +21,6 @@ class FilterHeaderCell: UITableViewCell {
 
         config.imagePlacement = .all
         config.imagePadding = 0
-
         config.contentInsets = NSDirectionalEdgeInsets(
             top: 6,
             leading: 6,
@@ -31,12 +30,38 @@ class FilterHeaderCell: UITableViewCell {
 
         arrowButton.configuration = config
         arrowButton.imageView?.contentMode = .scaleAspectFit
-        titleLabel.translatesAutoresizingMaskIntoConstraints = false
 
+        if let image = arrowButton.image(for: .normal) {
+            arrowButton.setImage(
+                image.withRenderingMode(.alwaysTemplate),
+                for: .normal
+            )
+        }
+
+        applyArrowColor()
+
+        registerForTraitChanges([UITraitUserInterfaceStyle.self]) {
+            [weak self] (_: UITraitEnvironment, previous: UITraitCollection) in
+            guard let self else { return }
+
+            if previous.userInterfaceStyle != self.traitCollection.userInterfaceStyle {
+                self.applyArrowColor()
+            }
+        }
     }
+
     
-    
-    
+    func applyArrowColor() {
+        let isDarkMode = traitCollection.userInterfaceStyle == .dark
+
+        var config = arrowButton.configuration ?? UIButton.Configuration.plain()
+        config.baseForegroundColor = isDarkMode
+            ? UIColor(red: 0.07, green: 0.39, blue: 0.07, alpha: 1.0)
+            : .black
+
+        arrowButton.configuration = config
+    }
+
 
     
     //buttons and labels configure function
@@ -72,5 +97,6 @@ class FilterHeaderCell: UITableViewCell {
         super.setSelected(selected, animated: animated)
 
     }
+
 
 }

@@ -25,7 +25,7 @@ class NotificationsCollectionViewCell: UICollectionViewCell {
     
     
     // MARK: - Configure Cell With Donation Data
-    func setup(with notification: ZahraaNotification)
+    func setup(with notification: AppNotification)
     {
         // Make logo circular
         notificationLogoImageView.layer.cornerRadius = notificationLogoImageView.frame.height / 2

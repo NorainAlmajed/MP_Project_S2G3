@@ -24,14 +24,15 @@ class DonationViewController: UIViewController {
         let statuses = ["All", "Pending", "Accepted", "Collected", "Rejected", "Cancelled"]
         var selectedIndex = 0
 
-        var allDonations: [ZahraaDonation] = []
-        var displayedDonations: [ZahraaDonation] = []
+        var allDonations: [Donation] = []
+        var displayedDonations: [Donation] = []
         var allUsers: [ZahraaUser] = []
 
         private var searchBar: UISearchBar!
         private var filterButton: UIButton!
         private var searchHeaderView: UIView!
 
+        //No donations available
         private let noDonationsLabel: UILabel = {
             let label = UILabel()
             label.text = "No donations available"
@@ -46,6 +47,8 @@ class DonationViewController: UIViewController {
         override func viewDidLoad() {
             super.viewDidLoad()
 
+            //IF fetchCurrentUser fails calls updateNoDonationsLabel, if available calls fetchAllUsers runs
+             
             fetchCurrentUser { success in
                 guard success else {
                     self.updateNoDonationsLabel()
@@ -54,6 +57,7 @@ class DonationViewController: UIViewController {
                 self.fetchAllUsers {
                     self.fetchDonations()
                 }
+                
             }
 
             title = "Donations"
@@ -68,6 +72,8 @@ class DonationViewController: UIViewController {
             setupNoDonationsLabel()
             setupSearchHeaderUnderNavBar()
             setupDonationsCollectionLayout()
+            listenForPendingRedirect()
+
         }
 
         override func viewWillAppear(_ animated: Bool) {
@@ -118,6 +124,7 @@ class DonationViewController: UIViewController {
             ])
         }
 
+        //Setting the layout of the donation collection view
         private func setupDonationsCollectionLayout() {
             let layout = UICollectionViewFlowLayout()
             layout.scrollDirection = .vertical
@@ -125,26 +132,30 @@ class DonationViewController: UIViewController {
             let isIPad = UIDevice.current.userInterfaceIdiom == .pad
             layout.sectionInset = UIEdgeInsets(
                 top: 12,
-                left: isIPad ? 40 : 0,
+                left: isIPad ? 40 : 0, //Ipad 40
                 bottom: 12,
                 right: isIPad ? 40 : 0
             )
             donationsCollectionView.collectionViewLayout = layout
         }
 
-        // MARK: - Search Header
+        //Search Header
         private func setupSearchHeaderUnderNavBar() {
+            //Setting the header
             searchHeaderView = UIView()
             searchHeaderView.translatesAutoresizingMaskIntoConstraints = false
             searchHeaderView.backgroundColor = .systemBackground
 
+            //Setting the search bar
             searchBar = UISearchBar()
             searchBar.translatesAutoresizingMaskIntoConstraints = false
             searchBar.placeholder = "Search donations..."
             searchBar.searchBarStyle = .minimal
-            searchBar.autocapitalizationType = .none
-            searchBar.autocorrectionType = .no
-            searchBar.delegate = self
+            searchBar.autocapitalizationType = .none //Prevents the keyboard from automatically capitalizing letters.
+            searchBar.autocorrectionType = .no //Turns auto-correction off.
+            searchBar.delegate = self //Assigns the delegate
+            //Allows you to respond to search events
+
 
             filterButton = UIButton(type: .system)
             filterButton.translatesAutoresizingMaskIntoConstraints = false
@@ -156,6 +167,7 @@ class DonationViewController: UIViewController {
             searchHeaderView.addSubview(filterButton)
             view.addSubview(searchHeaderView)
 
+            //Setting the position of the search bar for the searchHeaderView and searchBar and filterButton
             NSLayoutConstraint.activate([
                 searchHeaderView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor),
                 searchHeaderView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
@@ -182,8 +194,13 @@ class DonationViewController: UIViewController {
             ])
         }
 
+    
+        //Helper function
+        //removes all constraints that affect a view’s top position
         private func deactivateTopConstraints(of view: UIView) {
+            //Check constraints in the superview
             if let superview = view.superview {
+                //Check constraints owned by the view itself
                 for c in superview.constraints {
                     let isTop =
                         (c.firstItem as? UIView) == view && c.firstAttribute == .top ||
@@ -196,12 +213,22 @@ class DonationViewController: UIViewController {
                 if isTop { c.isActive = false }
             }
         }
-
+    
+    
+    
+        
+    
+        //Filter button action (Zainab Mahdi)
         @objc private func filterButtonTapped() {
             // TODO: implement filter UI
         }
+    
+    
+    
+    
+    
 
-        // MARK: - Label Updates
+        // Label Updates if there are no donations
         private func updateNoDonationsLabel() {
             if displayedDonations.isEmpty {
                 noDonationsLabel.isHidden = false
@@ -212,6 +239,7 @@ class DonationViewController: UIViewController {
             }
         }
 
+        // Setting a "No results found" label for searching
         private func updateNoDonationsLabelDuringSearch() {
             let isSearching = !((searchBar.text ?? "").trimmingCharacters(in: .whitespacesAndNewlines).isEmpty)
             if displayedDonations.isEmpty {
@@ -224,19 +252,21 @@ class DonationViewController: UIViewController {
             }
         }
 
-        // MARK: - Firebase.
+    
+    // Firebase.
     func fetchCurrentUser(completion: @escaping (Bool) -> Void) {
 
-        // 1️⃣ Get logged-in Firebase user
+        // Get logged-in Firebase user
         guard let firebaseUser = Auth.auth().currentUser else {
             print("❌ No logged-in user")
             completion(false)
             return
         }
+        
+        //Saving the id od the current user
+        let userID = firebaseUser.uid
 
-        let userID = firebaseUser.uid   // ✅ REAL logged-in user ID
-
-        // 2️⃣ Fetch user document using REAL ID
+        // Fetch user document using REAL ID
         db.collection("users").document(userID).getDocument { [weak self] snapshot, error in
             if let error = error {
                 print("❌ Error fetching user:", error)
@@ -244,6 +274,7 @@ class DonationViewController: UIViewController {
                 return
             }
 
+            //Saving current user data
             guard let data = snapshot?.data(),
                   let username = data["username"] as? String,
                   let role = data["role"] as? Int
@@ -252,9 +283,9 @@ class DonationViewController: UIViewController {
                 completion(false)
                 return
             }
-
+            //Saving current user data
             self?.currentUser = ZahraaUser(
-                userID: userID,   // ✅ FIXED
+                userID: userID,
                 fullName: data["fullName"] as? String,
                 username: username,
                 role: role,
@@ -270,7 +301,7 @@ class DonationViewController: UIViewController {
     
     
     
-
+    //Fetching all users in firebase, Saves them in allUsers
     func fetchAllUsers(completion: @escaping () -> Void) {
         db.collection("users").getDocuments { [weak self] snapshot, error in
             guard let self = self else { return }
@@ -311,18 +342,20 @@ class DonationViewController: UIViewController {
 
 
     
-    
+    //Fetch the current user donations
     func fetchDonations() {
         guard let currentUser = currentUser else { return }
 
         var query: Query = db.collection("Donation")
 
         switch currentUser.role {
-        case 1: break
+        case 1: break //print all donations
         case 2:
             query = query.whereField("donor", isEqualTo: db.collection("users").document(currentUser.userID))
+            //Fetch donations for that donor
         case 3:
             query = query.whereField("ngo", isEqualTo: db.collection("users").document(currentUser.userID))
+            //Fetch donations for that ngo
         default:
             return
         }
@@ -331,12 +364,15 @@ class DonationViewController: UIViewController {
             guard let self = self else { return }
             guard let documents = snapshot?.documents else { return }
 
+            //Clear all donations and group them
             self.allDonations.removeAll()
             let group = DispatchGroup()
 
+            //Loop through each donation document
             for doc in documents {
                 let data = doc.data()
 
+                //Ensures all required fields exist
                 guard
                     let ngoRef = data["ngo"] as? DocumentReference,
                     let donorRef = data["donor"] as? DocumentReference,
@@ -352,38 +388,8 @@ class DonationViewController: UIViewController {
                 else {
                     continue
                 }
-//                print("📄 Donation doc ID:", doc.documentID)
-//                print("📄 Raw data:", data)
-//
-//                if data["ngo"] == nil { print("❌ missing ngo") }
-//                if data["donor"] == nil { print("❌ missing donor") }
-//                if data["address"] == nil { print("❌ missing address") }
-//                if data["creationDate"] == nil { print("❌ missing creationDate") }
-//                if data["pickupDate"] == nil { print("❌ missing pickupDate") }
-//                if data["pickupTime"] == nil { print("❌ missing pickupTime") }
-//                if data["foodImageUrl"] == nil { print("❌ missing foodImageUrl") }
-//                if data["status"] == nil { print("❌ missing status") }
-//                if data["Category"] == nil { print("❌ missing Category") }
-//                if data["quantity"] == nil { print("❌ missing quantity") }
-//                if data["expiryDate"] == nil { print("❌ missing expiryDate") }
-//
-//                guard
-//                    let ngoRef = data["ngo"] as? DocumentReference,
-//                    let donorRef = data["donor"] as? DocumentReference,
-//                    let addressRef = data["address"] as? DocumentReference,
-//                    let creationDate = data["creationDate"] as? Timestamp,
-//                    let pickupDate = data["pickupDate"] as? Timestamp,
-//                    let pickupTime = data["pickupTime"] as? String,
-//                    let foodImageUrl = data["foodImageUrl"] as? String,
-//                    let category = data["Category"] as? String,
-//                    let expiryDate = data["expiryDate"] as? Timestamp
-//                else {
-//                    print("❌ FAILED BASIC FIELDS — SKIPPING")
-//                    continue
-//                }
 
-                
-
+                //If user data isn’t available, skip donation
                 guard
                     let ngo = self.getUser(by: ngoRef.documentID),
                     let donor = self.getUser(by: donorRef.documentID)
@@ -391,6 +397,7 @@ class DonationViewController: UIViewController {
                     continue
                 }
 
+                //Save donation firestoreID and donationID
                 let firestoreID = doc.documentID
                 let donationID = data["donationID"] as? Int ?? 0
 
@@ -400,7 +407,8 @@ class DonationViewController: UIViewController {
                     defer { group.leave() }
 
                     guard let addressData = addressSnap?.data() else { return }
-
+                    
+                    //Saving donation address object
                     let address = ZahraaAddress(
                         building: addressData["building"] as? String ?? "",
                         road: addressData["road"] as? String ?? "",
@@ -411,8 +419,8 @@ class DonationViewController: UIViewController {
                     )
 
 
-
-                    let donation = ZahraaDonation(
+                    //Save donation data
+                    let donation = Donation(
                         firestoreID: firestoreID,
                         donationID: donationID,
                         ngo: ngo,
@@ -431,15 +439,18 @@ class DonationViewController: UIViewController {
                         rejectionReason: data["rejectionReason"] as? String,
                         recurrence: data["recurrence"] as? Int ?? 0
                     )
-
+                    
+                    //Store donation in allDonations
                     self.allDonations.append(donation)
                 }
             }
 
             group.notify(queue: .main) {
+                //Sorts donations by newest first
                 self.displayedDonations = self.allDonations.sorted {
                     $0.creationDate.dateValue() > $1.creationDate.dateValue()
                 }
+                //Reloads the collection view
                 self.donationsCollectionView.reloadData()
                 self.updateNoDonationsLabel()
             }
@@ -451,25 +462,31 @@ class DonationViewController: UIViewController {
 
 
 
-
+        // finds and returns a user from allUsers using their ID.
         func getUser(by id: String) -> ZahraaUser? {
             return allUsers.first { $0.userID == id }
         }
 
-        // MARK: - Segue
+    
+        // Segue for DonationDetailsViewController
         override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
             if segue.identifier == "showDonationDetails",
                let detailsVC = segue.destination as? DonationDetailsViewController,
+               //Gets the selected cell’s index
                let indexPath = donationsCollectionView.indexPathsForSelectedItems?.first {
+                //Gets the donation object the user tapped
                 let donation = displayedDonations[indexPath.row]
+                //Passing data to the next screen
                 detailsVC.donation = donation
                 detailsVC.currentUser = currentUser
+                //Hides the tab bar on the details screen
                 detailsVC.hidesBottomBarWhenPushed = true
             }
         }
     }
 
-    // MARK: - UISearchBarDelegate
+    // UISearchBarDelegate
+    // Respond to search bar events and filters donations as the user types.
     extension DonationViewController: UISearchBarDelegate {
         func searchBar(_ searchBar: UISearchBar, textDidChange searchText: String) {
             filterDonations()
@@ -479,24 +496,32 @@ class DonationViewController: UIViewController {
         }
     }
 
-    // MARK: - UICollectionViewDataSource
+
+    // UICollectionViewDataSource
     extension DonationViewController: UICollectionViewDataSource {
+        //Number of items
         func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
             return collectionView == statusCollectionView ? statuses.count : displayedDonations.count
         }
 
+        //Called for each visible item to display a cell
         func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
             if collectionView == statusCollectionView {
+                //Creates a status cell
                 let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "StatusCell", for: indexPath) as! StatusCollectionViewCell
+                  //title & whether it’s selected
                 cell.configure(title: statuses[indexPath.item], isSelected: indexPath.item == selectedIndex)
+                
+                //When the user taps a status
                 cell.onStatusTapped = { [weak self] in
                     guard let self = self else { return }
-                    self.selectedIndex = indexPath.item
-                    self.filterDonations()
-                    self.statusCollectionView.reloadData()
+                    self.selectedIndex = indexPath.item //Update the selected index
+                    self.filterDonations() //Filter donations based on status
+                    self.statusCollectionView.reloadData() //Reload the status collection view to show selection
                 }
                 return cell
             } else {
+                //Creates a donation cell
                 let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "DonationCollectionViewCell", for: indexPath) as! DonationCollectionViewCell
                 let donation = displayedDonations[indexPath.row]
                 if let currentUser = currentUser {
@@ -507,14 +532,19 @@ class DonationViewController: UIViewController {
         }
     }
 
-    // MARK: - UICollectionViewDelegateFlowLayout
+    // UICollectionViewDelegateFlowLayout
+    //specify cell sizes for collection views
     extension DonationViewController: UICollectionViewDelegateFlowLayout {
+        //Called for each cell
+        //Returns the width and height of that cell
         func collectionView(_ collectionView: UICollectionView,
                             layout collectionViewLayout: UICollectionViewLayout,
                             sizeForItemAt indexPath: IndexPath) -> CGSize {
+            //Status bar cells are fixed size
             if collectionView == statusCollectionView {
                 return CGSize(width: 100, height: 36)
             }
+            //Donations collection view cells
             let isIPad = UIDevice.current.userInterfaceIdiom == .pad
             let width = collectionView.bounds.width - (isIPad ? 80 : 16)
             let height: CGFloat = isIPad ? 150 : 124
@@ -522,18 +552,22 @@ class DonationViewController: UIViewController {
         }
     }
 
-    // MARK: - Filtering
+    // Filtering
+    //Called when: the status filter changes + the search bar text changes
     extension DonationViewController {
         func filterDonations() {
             var filtered = allDonations
+            //Filter by status
             if selectedIndex != 0 {
                 filtered = filtered.filter { $0.status == selectedIndex }
             }
 
+            //Filter by search text
             let searchText = (searchBar.text ?? "").trimmingCharacters(in: .whitespacesAndNewlines)
             if !searchText.isEmpty {
                 let text = searchText.lowercased()
                 filtered = filtered.filter {
+                    //Search based on ngo name, donation id and donor username + Case-insensitive
                     ($0.ngo.organization_name?.lowercased().contains(text) ?? false) ||
                     String($0.donationID).contains(text) ||
                     $0.donor.username.lowercased().contains(text) ||
@@ -542,10 +576,33 @@ class DonationViewController: UIViewController {
 
             }
 
+            //Sort by newest first
             displayedDonations = filtered.sorted {
                 $0.creationDate.dateValue() > $1.creationDate.dateValue()
             }
+            //Update UI
             donationsCollectionView.reloadData()
             updateNoDonationsLabelDuringSearch()
         }
     }
+extension DonationViewController {
+
+    func listenForPendingRedirect() {
+        NotificationCenter.default.addObserver(
+            self,
+            selector: #selector(openPendingFromDashboard),
+            name: .openPendingDonations,
+            object: nil
+        )
+    }
+
+    @objc private func openPendingFromDashboard() {
+        // Pending = index 1
+        selectedIndex = 1
+
+        DispatchQueue.main.asyncAfter(deadline: .now() + 0.2) {
+            self.filterDonations()
+            self.statusCollectionView.reloadData()
+        }
+    }
+}

@@ -21,13 +21,13 @@
                                             ZahraaAddressDelegate
                                              {
         
-        var donation: ZahraaDonation?
+        var donation: Donation?
         private var saveRequestedWhileUploading = false
         // Add this with other private VC state variables
         private var selectedRecurrence: Int = 0
         private var didUserConfirmExpiryDate = false
 
-
+        
         
         // MARK: - Pickup time
         private var selectedPickupTime: String?  // or whatever type your timeframe uses
@@ -39,7 +39,7 @@
 
         
         // In EditDonationViewController.swift
-        var onDonationUpdated: ((ZahraaDonation) -> Void)?
+        var onDonationUpdated: ((Donation) -> Void)?
 
         
         
@@ -130,6 +130,9 @@
             title = "Edit Donation Details"
             navigationController?.navigationBar.prefersLargeTitles = false
             
+            var user = DraftUser(username: "zahraa_hubail",userType: 1)
+
+
             let tap = UITapGestureRecognizer(target: self, action: #selector(dismissKeyboard))
             tap.cancelsTouchesInView = false
             view.addGestureRecognizer(tap)
@@ -141,9 +144,10 @@
             donationFormTableview.estimatedRowHeight = 200
             donationFormTableview.rowHeight = UITableView.automaticDimension
             
+            
             print("🔐 Current user:", user.username, " | 👤 Is Admin?", user.isAdmin)
             
-        
+            
 
 
             setupKeyboardAvoidance()
@@ -506,7 +510,7 @@
             }
 
             switch adjustedSection {
-            case 0: return 237
+            case 0: return 250
             case 2: return UITableView.automaticDimension
             case 3: return 109
             case 4: return 102
@@ -520,16 +524,11 @@
             default: return UITableView.automaticDimension
             }
         }
+        
+        var user = DraftUser(username: "zahraa_hubail",userType: 1)
 
-        
-        
-        
-        
 
-        
-       
-        
-        // MARK: - Image Picking (UIImagePickerController)
+        //Image Picking (UIImagePickerController)
         private func openCamera() {
             if UIImagePickerController.isSourceTypeAvailable(.camera) {
                 openImagePicker(sourceType: .camera)
@@ -1055,7 +1054,7 @@
         
         // MARK: - Send notifications to donor and NGO
         // MARK: - Send notifications to donor and NGO
-        private func sendUpdateNotifications(for donation: ZahraaDonation) {
+        private func sendUpdateNotifications(for donation: Donation) {
             let db = Firestore.firestore()
             
             // ✅ Use exact title and description format

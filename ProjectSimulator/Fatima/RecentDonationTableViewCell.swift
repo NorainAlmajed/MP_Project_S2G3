@@ -40,6 +40,11 @@ class RecentDonationTableViewCell: UITableViewCell,
         headerView.addGestureRecognizer(tap)
 
         print("🧪 recentDonationContent is nil:", recentDonationContent == nil)
+        headerView.numberOfLines = 1
+        headerView.adjustsFontSizeToFitWidth = true
+        headerView.minimumScaleFactor = 0.85
+        headerView.lineBreakMode = .byTruncatingTail
+
     }
     @objc private func headerTapped() {
         onHeaderTapped?()
@@ -92,15 +97,24 @@ class RecentDonationTableViewCell: UITableViewCell,
    
 
     private func setupEmptyState() {
-        contentView.addSubview(emptyStateLabel)
+        recentDonationContent.addSubview(emptyStateLabel)
 
         NSLayoutConstraint.activate([
-            emptyStateLabel.centerXAnchor.constraint(equalTo: contentView.centerXAnchor),
-            emptyStateLabel.centerYAnchor.constraint(equalTo: contentView.centerYAnchor),
-            emptyStateLabel.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 24),
-            emptyStateLabel.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -24)
+            emptyStateLabel.topAnchor.constraint(
+                equalTo: headerView.bottomAnchor,
+                constant: 24   // 👈 space from header
+            ),
+            emptyStateLabel.leadingAnchor.constraint(
+                equalTo: recentDonationContent.leadingAnchor,
+                constant: 24
+            ),
+            emptyStateLabel.trailingAnchor.constraint(
+                equalTo: recentDonationContent.trailingAnchor,
+                constant: -24
+            )
         ])
     }
+
 
     // MARK: - Configure
     func configure(with donations: [Donation1]) {

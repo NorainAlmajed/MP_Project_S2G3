@@ -185,7 +185,7 @@ class Section3TableViewCell: UITableViewCell {
 
 extension Section3TableViewCell {
 
-    func setup(with donation: ZahraaDonation, currentUser: ZahraaUser) {
+    func setup(with donation: Donation, currentUser: ZahraaUser) {
         
         // Reset buttons visibility first
         hideAllActionSections()

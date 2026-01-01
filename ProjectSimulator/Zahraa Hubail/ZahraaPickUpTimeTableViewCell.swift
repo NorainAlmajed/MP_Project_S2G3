@@ -51,7 +51,7 @@ class ZahraaPickUpTimeTableViewCell: UITableViewCell {
         }
 
         if UIDevice.current.userInterfaceIdiom == .pad {
-            pickupLblLeading.constant = 94
+            pickupLblLeading.constant = 82
             pickupTableLeading.constant = 0
             layoutIfNeeded()
         }

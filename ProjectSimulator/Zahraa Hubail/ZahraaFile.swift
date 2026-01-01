@@ -14,21 +14,17 @@ protocol ZahraaAddressDelegate: AnyObject {
 }
 
 struct ZahraaAddress {
+    var name: String?
     var building: String
     var road: String
     var block: String
     var flat: String?
     var area: String
     var governorate: String
-    
-    init(building: String, road: String, block: String, flat: String?, area: String, governorate: String) {
-        self.building = building
-        self.road = road
-        self.block = block
-        self.flat = flat
-        self.area = area
-        self.governorate = governorate
+    var fullAddress: String? {
+        return "\(building), \(road), \(block)\n\(area), \(governorate)"
     }
+ 
 }
 
 struct ZahraaNotification {

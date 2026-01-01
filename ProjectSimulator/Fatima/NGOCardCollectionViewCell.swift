@@ -12,7 +12,7 @@ class NGOCardCollectionViewCell: UICollectionViewCell {
         super.awakeFromNib()
 
         backgroundColor = .clear
-        contentView.backgroundColor = UIColor(named: "BeigeCol")
+        contentView.applyBeigeSurface()
         contentView.layer.cornerRadius = 12
         contentView.clipsToBounds = true
 
@@ -20,6 +20,9 @@ class NGOCardCollectionViewCell: UICollectionViewCell {
         ngoImageView.contentMode = .scaleAspectFit
         ngoImageView.backgroundColor = .white
         ngoImageView.clipsToBounds = true
+        ngoNameLabel.textColor = .black
+        ngoTypeLabel.textColor = .black
+
     }
 
     override func prepareForReuse() {

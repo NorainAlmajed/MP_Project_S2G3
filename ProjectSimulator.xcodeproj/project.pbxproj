@@ -21,6 +21,7 @@
 		D0E725422F009AB300365A28 /* SecuritySettingsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D0E725412F009AB300365A28 /* SecuritySettingsViewController.swift */; };
 		D0E725432F009AB300365A28 /* SecuritySettingsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D0E725412F009AB300365A28 /* SecuritySettingsViewController.swift */; };
 		D0E725442F009AB300365A28 /* SecuritySettingsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D0E725412F009AB300365A28 /* SecuritySettingsViewController.swift */; };
+		E26DB5352F0687B300049919 /* DGCharts in Frameworks */ = {isa = PBXBuildFile; productRef = E26DB5342F0687B300049919 /* DGCharts */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -54,9 +55,9 @@
 			membershipExceptions = (
 				Fatima/ManageUsersPreviewTableViewCell.swift,
 				Fatima/UserPreviewCardCell.swift,
-				Raghad/Raghad1.storyboard,
+				Storyboards/Donations.storyboard,
+				Storyboards/Raghad1.storyboard,
 				"Zahraa Hubail/DonationCollectionViewCell.swift",
-				"Zahraa Hubail/Donations.storyboard",
 				"Zahraa Hubail/DonationViewController.swift",
 				"Zahraa Hubail/EditDonationViewController.swift",
 				"Zahraa Hubail/ExcelExporter.swift",
@@ -91,9 +92,9 @@
 			membershipExceptions = (
 				Fatima/ManageUsersPreviewTableViewCell.swift,
 				Fatima/UserPreviewCardCell.swift,
-				Raghad/Raghad1.storyboard,
+				Storyboards/Donations.storyboard,
+				Storyboards/Raghad1.storyboard,
 				"Zahraa Hubail/DonationCollectionViewCell.swift",
-				"Zahraa Hubail/Donations.storyboard",
 				"Zahraa Hubail/DonationViewController.swift",
 				"Zahraa Hubail/EditDonationViewController.swift",
 				"Zahraa Hubail/ExcelExporter.swift",
@@ -167,6 +168,7 @@
 				D08304B02F014FCA00289EEC /* FirebaseCore in Frameworks */,
 				12A272992F021E3F00020DD6 /* FirebaseStorage in Frameworks */,
 				D08304B42F014FCA00289EEC /* FirebaseFirestore in Frameworks */,
+				E26DB5352F0687B300049919 /* DGCharts in Frameworks */,
 				D08304AE2F014FCA00289EEC /* FirebaseAuth in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -246,6 +248,7 @@
 				D08304B52F014FCA00289EEC /* FirebaseMessaging */,
 				D08304B82F01527400289EEC /* Cloudinary */,
 				12A272982F021E3F00020DD6 /* FirebaseStorage */,
+				E26DB5342F0687B300049919 /* DGCharts */,
 			);
 			productName = ProjectSimulator;
 			productReference = 5FEF8B622EDA3636007D3A97 /* ProjectSimulator.app */;
@@ -332,6 +335,7 @@
 			packageReferences = (
 				D08304AA2F014FCA00289EEC /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */,
 				D08304B72F01527400289EEC /* XCRemoteSwiftPackageReference "cloudinary_ios" */,
+				E26DB5332F0687B300049919 /* XCRemoteSwiftPackageReference "Charts" */,
 			);
 			preferredProjectObjectVersion = 77;
 			productRefGroup = 5FEF8B632EDA3636007D3A97 /* Products */;
@@ -716,6 +720,14 @@
 				minimumVersion = 5.2.4;
 			};
 		};
+		E26DB5332F0687B300049919 /* XCRemoteSwiftPackageReference "Charts" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/danielgindi/Charts";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 5.1.0;
+			};
+		};
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
@@ -758,6 +770,11 @@
 			isa = XCSwiftPackageProductDependency;
 			package = D08304B72F01527400289EEC /* XCRemoteSwiftPackageReference "cloudinary_ios" */;
 			productName = Cloudinary;
+		};
+		E26DB5342F0687B300049919 /* DGCharts */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = E26DB5332F0687B300049919 /* XCRemoteSwiftPackageReference "Charts" */;
+			productName = DGCharts;
 		};
 /* End XCSwiftPackageProductDependency section */
 	};

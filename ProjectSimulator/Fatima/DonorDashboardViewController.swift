@@ -235,6 +235,7 @@ class DonorDashboardViewController: UIViewController {
                 .welcome,
                 .quickActions,
                 .impactTracker,
+                .graph,
                 .pendingDonations
             ]
 
@@ -243,13 +244,14 @@ class DonorDashboardViewController: UIViewController {
                 .welcome,
                 .quickActions,
                 .impactTracker,
+                .graph,     
                 .allDonations,
                 .browseNGOs,
-                .manageUsers,
-                
+                .manageUsers
             ]
         }
     }
+
 
     // MARK: - User
     private func loadCurrentUser() {
@@ -606,7 +608,7 @@ extension DonorDashboardViewController: UITableViewDataSource, UITableViewDelega
             case .admin: return isPad ? 320 : 280
             }
 
-        case .graph: return isPad ? 260 : 200
+        case .graph: return isPad ? 260 : 350
         case .browseNGOs: return isPad ? 280 : 220
         case .recentDonations,
              .allDonations,
@@ -778,13 +780,25 @@ extension DonorDashboardViewController: UITableViewDataSource, UITableViewDelega
 
             // MARK: GRAPH
         case .graph:
-            // Placeholder (keep section, don’t remove)
-            let cell = UITableViewCell()
+            let cell = tableView.dequeueReusableCell(
+                withIdentifier: "ImpactGraphCell",
+                for: indexPath
+            ) as! ImpactGraphTableViewCell
+
+            switch currentRole {
+            case .donor:
+                cell.configure(with: allDonations)
+            case .ngo:
+                cell.configure(with: allNGODonations)
+            case .admin:
+                cell.configure(with: allPlatformDonations)
+            }
+
             cell.selectionStyle = .none
-            cell.contentView.backgroundColor = .systemGray6
-            cell.textLabel?.textAlignment = .center
-            cell.textLabel?.text = "📊 Graph (Placeholder)"
             return cell
+
+
+
           // MARK: browse ngo
         case .browseNGOs:
             let cell = tableView.dequeueReusableCell(withIdentifier: "RecommendedNGOsCell", for: indexPath) as! RecommendedNGOsTableViewCell

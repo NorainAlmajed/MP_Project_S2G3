@@ -34,19 +34,6 @@ class DonationCollectionViewCell: UICollectionViewCell {
     // MARK: - Configure Cell With Donation Data
     func setup(with donation: ZahraaDonation, currentUser: ZahraaUser) {
 
-        // Set the correct logo URL depending on the current user role
-        //var logoURL: String?
-
-//        if currentUser.role == 2 {
-//            // Donor view → show NGO logo
-//            logoURL = donation.ngo.profile_image_url
-//        } else {
-//            // Other roles → show donor logo
-//            logoURL = donation.donor.profile_image_url
-//        }
-
-        // Load image async
-//        donationLogoImageView.loadImage(from: logoURL ?? "", placeholder: UIImage(named: "basket"))
 
         // Set container color
             if traitCollection.userInterfaceStyle == .dark {
@@ -56,7 +43,7 @@ class DonationCollectionViewCell: UICollectionViewCell {
             }
         
 
-        // Make it circular
+        // Make the logo circular
         donationLogoImageView.layer.cornerRadius = donationLogoImageView.frame.height / 2
         donationLogoImageView.clipsToBounds = true
 
@@ -97,7 +84,7 @@ class DonationCollectionViewCell: UICollectionViewCell {
         }
         
         
-        // MARK: - Text Color for Dark Mode
+        // Text Color for Dark Mode
         donationCategoryLbl.textColor = .black
         donationIDLbl.textColor = .black
         donorNgoLbl.textColor = .black
@@ -118,7 +105,7 @@ class DonationCollectionViewCell: UICollectionViewCell {
     
     private func setupUI() {
         // Rounded card-style container
-        containerView.layer.cornerRadius = 20   // ← adjust this value
+        containerView.layer.cornerRadius = 20 
         containerView.layer.masksToBounds = true
     }
     
@@ -135,7 +122,7 @@ class DonationCollectionViewCell: UICollectionViewCell {
         donationStatusView.clipsToBounds = true
     }
     
-    // Called when cell is loaded from the nib/storyboard
+    // Called when cell is loaded from the storyboard
     override func awakeFromNib() {
         super.awakeFromNib()
         
@@ -153,21 +140,6 @@ class DonationCollectionViewCell: UICollectionViewCell {
             containerView.backgroundColor = UIColor(named: "BeigeCol")
         }
     }
-
-    
-//    //Checking the category name 
-//    private func categoryName(for category: Int) -> String {
-//        switch category {
-//        case 1: return "Bakery"
-//        case 2: return "Dairy"
-//        case 3: return "Produce"
-//        case 4: return "Poultry"
-//        case 5: return "Beverages"
-//        case 6: return "Canned Food"
-//        case 7: return "Others"
-//        default: return "Unknown"
-//        }
-//    }
 
     
 }

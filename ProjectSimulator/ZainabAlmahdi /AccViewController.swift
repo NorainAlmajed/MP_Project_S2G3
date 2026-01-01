@@ -160,9 +160,16 @@ class AccViewController: UITableViewController {
     }
 
     func goToContactSupport() {
-        let vc = UIStoryboard(name: "Main", bundle: nil)
-            .instantiateViewController(withIdentifier: "ContactSupportViewController")
-        navigationController?.pushViewController(vc, animated: true)
+        let storyboard = UIStoryboard(name: "Chat", bundle: nil)
+
+        guard let chatVC = storyboard.instantiateViewController(
+            withIdentifier: "ChatListViewController"
+        ) as? ChatListViewController else {
+            print("ChatListViewController not found")
+            return
+        }
+
+        navigationController?.pushViewController(chatVC, animated: true)
     }
 
     func logoutUser() {

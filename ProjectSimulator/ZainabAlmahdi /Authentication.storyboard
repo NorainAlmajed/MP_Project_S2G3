@@ -743,24 +743,20 @@
                                                         <nil key="textColor"/>
                                                         <nil key="highlightedColor"/>
                                                     </label>
-                                                    <textView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" text="Add a bio..." textAlignment="natural" translatesAutoresizingMaskIntoConstraints="NO" id="B22-TC-ht2">
+                                                    <textField opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="248" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="3SX-db-ESk">
                                                         <rect key="frame" x="0.0" y="28.333333333333314" width="319" height="140.66666666666666"/>
-                                                        <color key="backgroundColor" systemColor="systemBackgroundColor"/>
-                                                        <color key="textColor" systemColor="labelColor"/>
+                                                        <constraints>
+                                                            <constraint firstAttribute="width" constant="319" id="7sm-hf-wmk"/>
+                                                            <constraint firstAttribute="height" constant="140.66999999999999" id="gYn-sm-39R"/>
+                                                        </constraints>
                                                         <fontDescription key="fontDescription" type="system" pointSize="14"/>
-                                                        <textInputTraits key="textInputTraits" autocapitalizationType="sentences"/>
-                                                    </textView>
+                                                        <textInputTraits key="textInputTraits"/>
+                                                    </textField>
                                                 </subviews>
-                                                <constraints>
-                                                    <constraint firstItem="B22-TC-ht2" firstAttribute="trailing" secondItem="nho-xN-1tT" secondAttribute="trailingMargin" id="6xg-eO-a1d"/>
-                                                    <constraint firstAttribute="trailing" secondItem="B22-TC-ht2" secondAttribute="trailing" id="LdL-Ov-ksK"/>
-                                                    <constraint firstItem="B22-TC-ht2" firstAttribute="leading" secondItem="nho-xN-1tT" secondAttribute="leading" id="NiP-f0-yXY"/>
-                                                    <constraint firstAttribute="bottom" secondItem="B22-TC-ht2" secondAttribute="bottom" id="iMI-WW-hhM"/>
-                                                    <constraint firstItem="B22-TC-ht2" firstAttribute="top" secondItem="bAN-kB-Fs3" secondAttribute="bottom" constant="8" id="r5g-lo-W82"/>
-                                                </constraints>
                                             </stackView>
                                         </subviews>
                                         <constraints>
+                                            <constraint firstItem="nho-xN-1tT" firstAttribute="top" secondItem="lKT-EA-SRQ" secondAttribute="top" constant="88.333333333333371" id="DIQ-eh-fy0"/>
                                             <constraint firstItem="nho-xN-1tT" firstAttribute="trailing" secondItem="Bf2-kh-m3U" secondAttribute="trailing" id="Gc9-Pv-oH6"/>
                                         </constraints>
                                     </stackView>
@@ -784,9 +780,6 @@
                                                     </label>
                                                     <switch opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" contentHorizontalAlignment="center" contentVerticalAlignment="center" on="YES" translatesAutoresizingMaskIntoConstraints="NO" id="ajE-45-yaa">
                                                         <rect key="frame" x="270" y="0.0" width="51" height="35"/>
-                                                        <connections>
-                                                            <action selector="notificationSwitchChanged:" destination="0rw-aq-Jgh" eventType="valueChanged" id="rgi-31-v8B"/>
-                                                        </connections>
                                                     </switch>
                                                 </subviews>
                                                 <constraints>
@@ -810,6 +803,9 @@
                                         </subviews>
                                     </stackView>
                                 </subviews>
+                                <constraints>
+                                    <constraint firstItem="yQE-D5-Sc7" firstAttribute="top" secondItem="yDF-aP-24n" secondAttribute="top" constant="445.66666666666663" id="Wy4-Ap-2M7"/>
+                                </constraints>
                             </stackView>
                         </subviews>
                         <viewLayoutGuide key="safeArea" id="msi-6g-3P9"/>
@@ -822,14 +818,14 @@
                         </constraints>
                     </view>
                     <connections>
-                        <outlet property="bioCounterLabel" destination="Fo0-mE-9AB" id="gis-aF-GCD"/>
-                        <outlet property="bioTextView" destination="B22-TC-ht2" id="btk-ck-g36"/>
-                        <outlet property="continueButton" destination="v9H-oE-Pzj" id="eHu-7s-NjM"/>
-                        <outlet property="fullNameTextField" destination="ezI-Yz-XRx" id="R6X-dO-Dqy"/>
-                        <outlet property="notificationsSwitch" destination="ajE-45-yaa" id="yXk-iV-56x"/>
+                        <outlet property="bioCounterLabel" destination="Fo0-mE-9AB" id="NHF-AF-ZT0"/>
+                        <outlet property="bioTextField" destination="3SX-db-ESk" id="AhS-WL-4VT"/>
+                        <outlet property="bioTitleLabel" destination="bAN-kB-Fs3" id="wRg-Tj-Lya"/>
+                        <outlet property="continueButton" destination="v9H-oE-Pzj" id="AXW-bD-iiU"/>
+                        <outlet property="fullNameTextField" destination="ezI-Yz-XRx" id="w3S-wM-KTa"/>
+                        <outlet property="notificationsSwitch" destination="ajE-45-yaa" id="jzI-Tr-JfJ"/>
                         <outlet property="profileImageView" destination="gfU-fg-LgC" id="p3L-xb-Nys"/>
-                        <outlet property="uploadButton" destination="XwW-uv-Fkj" id="XC1-lD-AnD"/>
-                        <outlet property="uploadbuttonwidth" destination="CSV-fU-xg3" id="iPn-dE-a63"/>
+                        <outlet property="uploadButton" destination="XwW-uv-Fkj" id="Hcb-zr-04a"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="pU9-sW-yKe" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>

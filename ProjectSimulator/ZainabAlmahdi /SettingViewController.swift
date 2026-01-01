@@ -2,6 +2,8 @@ import UIKit
 
 class SettingViewController: UITableViewController {
 
+    @IBOutlet weak var profileImageView: UIImageView!
+
     @IBOutlet weak var nameLabel: UILabel!
     
     @IBOutlet weak var roleLabel: UILabel!
@@ -24,12 +26,25 @@ class SettingViewController: UITableViewController {
 
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
-        
+
         nameLabel.text = SessionManager.shared.fullName ?? "User"
         roleLabel.text = SessionManager.shared.roleDisplayName
-        
+
+        loadProfileImage()
         configureRows()
         tableView.reloadData()
+    }
+    
+    func loadProfileImage() {
+        guard let urlString = SessionManager.shared.profileImageURL,
+              let url = URL(string: urlString) else { return }
+
+        URLSession.shared.dataTask(with: url) { [weak self] data, _, _ in
+            guard let data = data else { return }
+            DispatchQueue.main.async {
+                self?.profileImageView.image = UIImage(data: data)
+            }
+        }.resume()
     }
 
     func configureRows() {

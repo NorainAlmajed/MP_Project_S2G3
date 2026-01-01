@@ -7,6 +7,8 @@ import UIKit
 import FirebaseAuth
 
 class AccViewController: UITableViewController {
+    
+    @IBOutlet weak var profileImageView: UIImageView!
 
     @IBOutlet weak var nameLabel: UILabel!
     
@@ -30,14 +32,39 @@ class AccViewController: UITableViewController {
 
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
-        
+
+        SessionManager.shared.loadUserSession { [weak self] success in
+            guard success else { return }
+
+            DispatchQueue.main.async {
+                self?.updateUI()
+            }
+        }
+    }
+    
+    func updateUI() {
         nameLabel.text = SessionManager.shared.fullName ?? "User"
         roleLabel.text = SessionManager.shared.roleDisplayName
-        
+
         configureRows()
         tableView.reloadData()
+
+        loadProfileImage()
+    }
+    
+    func loadProfileImage() {
+        guard let urlString = SessionManager.shared.profileImageURL,
+              let url = URL(string: urlString) else { return }
+
+        URLSession.shared.dataTask(with: url) { [weak self] data, _, _ in
+            guard let data = data else { return }
+            DispatchQueue.main.async {
+                self?.profileImageView.image = UIImage(data: data)
+            }
+        }.resume()
     }
 
+    
     func configureRows() {
         rows = [.settings]
 

@@ -31,7 +31,8 @@ class FilterHeaderCell: UITableViewCell {
 
         arrowButton.configuration = config
         arrowButton.imageView?.contentMode = .scaleAspectFit
-        
+        titleLabel.translatesAutoresizingMaskIntoConstraints = false
+
     }
     
     

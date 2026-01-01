@@ -383,11 +383,17 @@ UICollectionViewDataSource,
     }
     
     
-    
+  
+
     @objc func dismissKeyboard() {
         view.endEditing(true)
     }
-    
+    override func viewWillDisappear(_ animated: Bool) {
+        super.viewWillDisappear(animated)
+
+        navigationController?.navigationBar.prefersLargeTitles = false
+    }
+
     override func viewDidLoad() {
         super.viewDidLoad()
         navigationItem.title = userName
@@ -491,7 +497,11 @@ UICollectionViewDataSource,
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
+      
+        navigationController?.navigationBar.prefersLargeTitles = false
+        navigationItem.largeTitleDisplayMode = .never
 
+        edgesForExtendedLayout = []
         let appearance = UINavigationBarAppearance()
         appearance.configureWithOpaqueBackground()
         appearance.backgroundColor = .white
@@ -504,7 +514,7 @@ UICollectionViewDataSource,
 
         navBar?.clipsToBounds = true
     }
-
+   
     
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)

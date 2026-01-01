@@ -9,7 +9,24 @@ import FirebaseAuth
 import FirebaseFirestore
 import UIKit
 
-class DonationViewController: UIViewController {
+protocol DonationFilterDelegate: AnyObject {
+    func didApplyDonationFilters(
+        sort: String?,
+        categories: Set<String>,
+        locations: Set<String>,
+        date: Date?
+    )
+
+    func previewDonationFilters(
+        sort: String?,
+        categories: Set<String>,
+        locations: Set<String>,
+        date: Date?
+    ) -> Int
+}
+
+
+class DonationViewController: UIViewController, DonationFilterDelegate {
 
     // Outlet connected to the collection view in the storyboard
     @IBOutlet weak var donationsCollectionView: UICollectionView!
@@ -41,6 +58,13 @@ class DonationViewController: UIViewController {
             label.isHidden = true
             return label
         }()
+//added by zainab mahdi
+    var activeSort: String?
+    var activeCategories: Set<String> = []
+    var activeLocations: Set<String> = []
+    var activeDate: Date?
+    var isFiltering = false
+    var isDateSelected: Bool = false
 
         // MARK: - View Lifecycle
         override func viewDidLoad() {
@@ -87,8 +111,12 @@ class DonationViewController: UIViewController {
 
             donationsCollectionView.reloadData()
             
-            fetchDonations()
+            if isFiltering {
+                    donationsCollectionView.reloadData()
+                    return
+                }
 
+                fetchDonations()
         }
 
         // MARK: - UI Setup
@@ -196,10 +224,28 @@ class DonationViewController: UIViewController {
                 if isTop { c.isActive = false }
             }
         }
+    
+    @objc private func filterButtonTapped() {
+        let filtersStoryboard = UIStoryboard(name: "Filters", bundle: nil)
 
-        @objc private func filterButtonTapped() {
-            // TODO: implement filter UI
-        }
+        let vc = filtersStoryboard.instantiateViewController(
+            withIdentifier: "DonationFilterController"
+        ) as! DonationFilterController
+
+        vc.delegate = self
+
+        vc.selectedSort = activeSort
+        vc.selectedCategories = activeCategories
+        vc.selectedLocations = activeLocations
+
+        vc.selectedDate = activeDate ?? Date()
+        vc.isDateSelected = (activeDate != nil)
+
+        navigationController?.pushViewController(vc, animated: true)
+    }
+
+
+
 
         // MARK: - Label Updates
         private func updateNoDonationsLabel() {
@@ -435,14 +481,21 @@ class DonationViewController: UIViewController {
                     self.allDonations.append(donation)
                 }
             }
-
+//edited by zainab mahdi
             group.notify(queue: .main) {
+
+                if self.isFiltering {
+                    self.filterDonations()
+                    return
+                }
+
                 self.displayedDonations = self.allDonations.sorted {
                     $0.creationDate.dateValue() > $1.creationDate.dateValue()
                 }
                 self.donationsCollectionView.reloadData()
                 self.updateNoDonationsLabel()
             }
+
         }
     }
 
@@ -523,29 +576,176 @@ class DonationViewController: UIViewController {
     }
 
     // MARK: - Filtering
-    extension DonationViewController {
-        func filterDonations() {
-            var filtered = allDonations
-            if selectedIndex != 0 {
-                filtered = filtered.filter { $0.status == selectedIndex }
-            }
+extension DonationViewController {
+    //    func filterDonations() {
+    //        var filtered = allDonations
+    //        if selectedIndex != 0 {
+    //            filtered = filtered.filter { $0.status == selectedIndex }
+    //        }
+    //
+    //        let searchText = (searchBar.text ?? "").trimmingCharacters(in: .whitespacesAndNewlines)
+    //        if !searchText.isEmpty {
+    //            let text = searchText.lowercased()
+    //            filtered = filtered.filter {
+    //                ($0.ngo.organization_name?.lowercased().contains(text) ?? false) ||
+    //                String($0.donationID).contains(text) ||
+    //                $0.donor.username.lowercased().contains(text) ||
+    //                $0.category.lowercased().contains(text)
+    //            }
+    //
+    //        }
+    //
+    //        displayedDonations = filtered.sorted {
+    //            $0.creationDate.dateValue() > $1.creationDate.dateValue()
+    //        }
+    //        donationsCollectionView.reloadData()
+    //        updateNoDonationsLabelDuringSearch()
+    //    }
+    //
+    //added by zainab mahdi
+    func didApplyDonationFilters(
+        sort: String?,
+        categories: Set<String>,
+        locations: Set<String>,
+        date: Date?
+    ) {
+        let isClearing =
+            sort == nil &&
+            categories.isEmpty &&
+            locations.isEmpty &&
+            date == nil
 
-            let searchText = (searchBar.text ?? "").trimmingCharacters(in: .whitespacesAndNewlines)
-            if !searchText.isEmpty {
-                let text = searchText.lowercased()
-                filtered = filtered.filter {
-                    ($0.ngo.organization_name?.lowercased().contains(text) ?? false) ||
-                    String($0.donationID).contains(text) ||
-                    $0.donor.username.lowercased().contains(text) ||
-                    $0.category.lowercased().contains(text)
-                }
+        if isClearing {
+            activeSort = nil
+            activeCategories.removeAll()
+            activeLocations.removeAll()
+            activeDate = nil
+            isFiltering = false
 
-            }
-
-            displayedDonations = filtered.sorted {
+            displayedDonations = allDonations.sorted {
                 $0.creationDate.dateValue() > $1.creationDate.dateValue()
             }
+
             donationsCollectionView.reloadData()
             updateNoDonationsLabelDuringSearch()
+            return
         }
+
+        isFiltering = true
+        activeSort = sort
+        activeCategories = categories
+        activeLocations = locations
+        activeDate = date
+
+        filterDonations()
     }
+
+    
+    func previewDonationFilters(
+        sort: String?,
+        categories: Set<String>,
+        locations: Set<String>,
+        date: Date?
+    ) -> Int {
+        
+        var temp = allDonations
+        
+        if !categories.isEmpty {
+            temp = temp.filter { categories.contains($0.category) }
+        }
+        
+        if !locations.isEmpty {
+            temp = temp.filter {
+                locations.contains($0.address.governorate)
+            }
+        }
+        
+        if let date = date {
+            let calendar = Calendar.current
+            temp = temp.filter {
+                calendar.isDate(
+                    $0.creationDate.dateValue(),
+                    inSameDayAs: date
+                )
+            }
+        }
+        
+        return temp.count
+    }
+    
+    
+    func filterDonations() {
+        
+        let hasActiveFilters =
+        selectedIndex != 0 ||
+        !activeCategories.isEmpty ||
+        !activeLocations.isEmpty ||
+        activeDate != nil ||
+        !(searchBar.text ?? "").isEmpty ||
+        activeSort != nil
+        
+        if !hasActiveFilters {
+            return
+        }
+        
+        var filtered = allDonations
+        
+        // status
+        if selectedIndex != 0 {
+            filtered = filtered.filter { $0.status == selectedIndex }
+        }
+        
+        // category
+        if !activeCategories.isEmpty {
+            filtered = filtered.filter {
+                activeCategories.contains($0.category)
+            }
+        }
+        
+        // location
+        if !activeLocations.isEmpty {
+            filtered = filtered.filter {
+                activeLocations.contains($0.address.governorate)
+            }
+        }
+        
+        // date
+        if let date = activeDate {
+            let calendar = Calendar.current
+            filtered = filtered.filter {
+                calendar.isDate(
+                    $0.creationDate.dateValue(),
+                    inSameDayAs: date
+                )
+            }
+        }
+        
+        // search
+        let searchText = (searchBar.text ?? "").lowercased()
+        if !searchText.isEmpty {
+            filtered = filtered.filter {
+                ($0.ngo.organization_name?.lowercased().contains(searchText) ?? false) ||
+                $0.donor.username.lowercased().contains(searchText) ||
+                $0.category.lowercased().contains(searchText)
+            }
+        }
+        
+        func nameForSort(_ d: ZahraaDonation) -> String {
+            return (d.ngo.organization_name ?? d.ngo.fullName ?? d.ngo.username).lowercased()
+        }
+
+        if activeSort == "Name (A–Z)" {
+            filtered.sort {
+                $0.category.localizedCaseInsensitiveCompare($1.category) == .orderedAscending
+            }
+        } else if activeSort == "Name (Z–A)" {
+            filtered.sort {
+                $0.category.localizedCaseInsensitiveCompare($1.category) == .orderedDescending
+            }
+        }
+
+        displayedDonations = filtered
+        donationsCollectionView.reloadData()
+        updateNoDonationsLabelDuringSearch()
+    }
+}

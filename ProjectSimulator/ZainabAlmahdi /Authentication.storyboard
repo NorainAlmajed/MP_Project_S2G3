@@ -821,6 +821,7 @@
                         <outlet property="continueButton" destination="v9H-oE-Pzj" id="AXW-bD-iiU"/>
                         <outlet property="fullNameTextField" destination="ezI-Yz-XRx" id="w3S-wM-KTa"/>
                         <outlet property="notificationsSwitch" destination="ajE-45-yaa" id="jzI-Tr-JfJ"/>
+                        <outlet property="profileImageView" destination="WqV-0k-Ooa" id="bOa-Id-GWG"/>
                         <outlet property="uploadButton" destination="XwW-uv-Fkj" id="Hcb-zr-04a"/>
                     </connections>
                 </viewController>

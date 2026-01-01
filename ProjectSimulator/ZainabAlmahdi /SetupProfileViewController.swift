@@ -35,6 +35,9 @@ class SetupProfileViewController: UIViewController,
         configureBioTextView()
 
         bioCounterLabel.text = "0 / \(maxBioLength)"
+        
+        navigationItem.backButtonTitle = ""
+        navigationController?.navigationBar.tintColor = .black
     }
 
     override func viewDidLayoutSubviews() {

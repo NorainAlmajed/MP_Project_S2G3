@@ -18,7 +18,20 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         tabBarAppearance.unselectedItemTintColor =
         UIColor(named: "tabBarColor")?.withAlphaComponent(0.4)
         
-        
+        let backAppearance = UIBarButtonItemAppearance()
+        backAppearance.normal.titleTextAttributes = [.foregroundColor: UIColor.clear]
+        backAppearance.highlighted.titleTextAttributes = [.foregroundColor: UIColor.clear]
+
+        let navAppearance = UINavigationBarAppearance()
+        navAppearance.configureWithOpaqueBackground()
+        navAppearance.backgroundColor = .white
+
+        navAppearance.backButtonAppearance = backAppearance
+
+        UINavigationBar.appearance().standardAppearance = navAppearance
+        UINavigationBar.appearance().scrollEdgeAppearance = navAppearance
+        UINavigationBar.appearance().compactAppearance = navAppearance
+
         
         
     }

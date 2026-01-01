@@ -26,7 +26,7 @@ class RaghadNgoDetailsHeaderTableViewCell: UITableViewCell {
         lblNgoName.text = ngo.name
         lblNgoCategory.text = ngo.category
 
-        img_logo.contentMode = .scaleAspectFit
+        img_logo.contentMode = .scaleAspectFill
         img_logo.tintColor = .systemGray3
 
         let placeholder = UIImage(systemName: "photo")?

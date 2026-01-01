@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="23727" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="jmC-0h-2uQ">
+    <device id="retina6_12" orientation="portrait" appearance="light"/>
+    <dependencies>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="23721"/>
+        <capability name="Named colors" minToolsVersion="9.0"/>
+        <capability name="Safe area layout guides" minToolsVersion="9.0"/>
+        <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
+    </dependencies>
+    <scenes>
+        <!--Splash View Controller-->
+        <scene sceneID="416-tI-TZm">
+            <objects>
+                <viewController id="jmC-0h-2uQ" customClass="SplashViewController" customModule="ProjectSimulator" customModuleProvider="target" sceneMemberID="viewController">
+                    <view key="view" contentMode="scaleToFill" id="NHS-be-bW6">
+                        <rect key="frame" x="0.0" y="0.0" width="393" height="852"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="Splash" translatesAutoresizingMaskIntoConstraints="NO" id="lGY-qW-kuv">
+                                <rect key="frame" x="71.666666666666686" y="281" width="250" height="250"/>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="250" id="b4P-Hc-p7w"/>
+                                    <constraint firstAttribute="width" constant="250" id="brQ-Rw-4tz"/>
+                                </constraints>
+                            </imageView>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Nourish Bahrain" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="22y-u2-ldi">
+                                <rect key="frame" x="88.666666666666686" y="506" width="216" height="35"/>
+                                <fontDescription key="fontDescription" type="boldSystem" pointSize="29"/>
+                                <color key="textColor" name="greenCol"/>
+                                <nil key="highlightedColor"/>
+                            </label>
+                        </subviews>
+                        <viewLayoutGuide key="safeArea" id="q52-Mq-EFI"/>
+                        <color key="backgroundColor" name="BeigeCol"/>
+                        <constraints>
+                            <constraint firstItem="22y-u2-ldi" firstAttribute="top" secondItem="lGY-qW-kuv" secondAttribute="bottom" constant="-25" id="1zw-0P-Abq"/>
+                            <constraint firstItem="lGY-qW-kuv" firstAttribute="centerX" secondItem="NHS-be-bW6" secondAttribute="centerX" id="OAr-Jd-fCf"/>
+                            <constraint firstItem="lGY-qW-kuv" firstAttribute="centerY" secondItem="NHS-be-bW6" secondAttribute="centerY" constant="-20" id="uku-fi-5f9"/>
+                            <constraint firstItem="22y-u2-ldi" firstAttribute="centerX" secondItem="NHS-be-bW6" secondAttribute="centerX" id="zVT-zj-Sr9"/>
+                        </constraints>
+                    </view>
+                    <connections>
+                        <outlet property="titleLabel" destination="22y-u2-ldi" id="HkI-fK-jSr"/>
+                    </connections>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="Zcr-cz-CF8" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="270" y="-150"/>
+        </scene>
+    </scenes>
+    <resources>
+        <image name="Splash" width="500" height="500"/>
+        <namedColor name="BeigeCol">
+            <color red="0.97254901960784312" green="0.8901960784313725" blue="0.74901960784313726" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+        </namedColor>
+        <namedColor name="greenCol">
+            <color red="0.070588235294117646" green="0.38823529411764707" blue="0.070588235294117646" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+        </namedColor>
+    </resources>
+</document>

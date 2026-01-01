@@ -326,7 +326,6 @@ class SchedulePickupViewController: UIViewController {
             donationID: Int,
             payload: DonationPayload
         ) {
-            //let donorRef = db.collection("users").document(userId)
             let donorRef = db.document(payload.donorRefPath ?? "users/\(userId)")
 
             let ngoRef = db.collection("users").document(payload.ngoId)

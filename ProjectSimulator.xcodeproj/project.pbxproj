@@ -83,17 +83,6 @@
 				"Zahraa Hubail/ZahraaSection7TableViewCell.swift",
 				"Zahraa Hubail/ZahraaSection8TableViewCell.swift",
 				"Zahraa Hubail/ZHRejectionReasonViewController.swift",
-				"ZainabAlmahdi /AccountViewController.swift",
-				"ZainabAlmahdi /AccViewController.swift",
-				"ZainabAlmahdi /Authentication.storyboard",
-				"ZainabAlmahdi /EditProfileViewController.swift",
-				"ZainabAlmahdi /LoginViewController.swift",
-				"ZainabAlmahdi /NotificationSettingsViewController.swift",
-				"ZainabAlmahdi /SavedAddressesViewController.swift",
-				"ZainabAlmahdi /SessionManager.swift",
-				"ZainabAlmahdi /Settings.storyboard",
-				"ZainabAlmahdi /SettingViewController.swift",
-				"ZainabAlmahdi /UpdateNGOLicenseViewController.swift",
 			);
 			target = 5FEF8B772EDA363A007D3A97 /* ProjectSimulatorTests */;
 		};
@@ -131,17 +120,6 @@
 				"Zahraa Hubail/ZahraaSection7TableViewCell.swift",
 				"Zahraa Hubail/ZahraaSection8TableViewCell.swift",
 				"Zahraa Hubail/ZHRejectionReasonViewController.swift",
-				"ZainabAlmahdi /AccountViewController.swift",
-				"ZainabAlmahdi /AccViewController.swift",
-				"ZainabAlmahdi /Authentication.storyboard",
-				"ZainabAlmahdi /EditProfileViewController.swift",
-				"ZainabAlmahdi /LoginViewController.swift",
-				"ZainabAlmahdi /NotificationSettingsViewController.swift",
-				"ZainabAlmahdi /SavedAddressesViewController.swift",
-				"ZainabAlmahdi /SessionManager.swift",
-				"ZainabAlmahdi /Settings.storyboard",
-				"ZainabAlmahdi /SettingViewController.swift",
-				"ZainabAlmahdi /UpdateNGOLicenseViewController.swift",
 			);
 			target = 5FEF8B812EDA363A007D3A97 /* ProjectSimulatorUITests */;
 		};
@@ -173,6 +151,11 @@
 		5FEF8B852EDA363A007D3A97 /* ProjectSimulatorUITests */ = {
 			isa = PBXFileSystemSynchronizedRootGroup;
 			path = ProjectSimulatorUITests;
+			sourceTree = "<group>";
+		};
+		D0FCA2B52EEEC14000D8AFFF /* ZainabAlmahdi  */ = {
+			isa = PBXFileSystemSynchronizedRootGroup;
+			path = "ZainabAlmahdi ";
 			sourceTree = "<group>";
 		};
 /* End PBXFileSystemSynchronizedRootGroup section */
@@ -215,6 +198,7 @@
 			children = (
 				D0E725412F009AB300365A28 /* SecuritySettingsViewController.swift */,
 				D0DEA5582F0060990008C402 /* GoogleService-Info.plist */,
+				D0FCA2B52EEEC14000D8AFFF /* ZainabAlmahdi  */,
 				5FEF8B642EDA3636007D3A97 /* ProjectSimulator */,
 				5FEF8B7B2EDA363A007D3A97 /* ProjectSimulatorTests */,
 				5FEF8B852EDA363A007D3A97 /* ProjectSimulatorUITests */,
@@ -257,6 +241,7 @@
 			);
 			fileSystemSynchronizedGroups = (
 				5FEF8B642EDA3636007D3A97 /* ProjectSimulator */,
+				D0FCA2B52EEEC14000D8AFFF /* ZainabAlmahdi  */,
 			);
 			name = ProjectSimulator;
 			packageProductDependencies = (
@@ -447,7 +432,7 @@
 				INFOPLIST_FILE = ProjectSimulator/Info.plist;
 				INFOPLIST_KEY_CFBundleDisplayName = "Nourish Bahrain";
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
-				INFOPLIST_KEY_UILaunchStoryboardName = LaunchScreen;
+				INFOPLIST_KEY_UILaunchStoryboardName = LaunchScreen.storyboard;
 				INFOPLIST_KEY_UIMainStoryboardFile = Main;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
@@ -476,7 +461,7 @@
 				INFOPLIST_FILE = ProjectSimulator/Info.plist;
 				INFOPLIST_KEY_CFBundleDisplayName = "Nourish Bahrain";
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
-				INFOPLIST_KEY_UILaunchStoryboardName = LaunchScreen;
+				INFOPLIST_KEY_UILaunchStoryboardName = LaunchScreen.storyboard;
 				INFOPLIST_KEY_UIMainStoryboardFile = Main;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";

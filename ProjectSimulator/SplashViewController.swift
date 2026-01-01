@@ -14,19 +14,17 @@ class SplashViewController: UIViewController {
     @IBOutlet weak var titleLabel: UILabel!
 
         // ✅ Add this label in Storyboard (small label under the title) and connect it
-        @IBOutlet weak var loadingLabel: UILabel!
+        //@IBOutlet weak var loadingLabel: UILabel!
+
 
 
         // MARK: - Layers
         private var gradientLayer: CAGradientLayer?
         private var sparkleLayer: CAEmitterLayer?
 
-        // MARK: - Loading
-        private var loadingTimer: Timer?
-        private var dotCount = 0
-
-        // MARK: - Extra UI (added programmatically, no storyboard needed)
-        private let activity = UIActivityIndicatorView(style: .medium)
+        // MARK: - Modern Loader (3 bars wave)
+        private let loaderStack = UIStackView()
+        private var loaderBars: [UIView] = []
 
         // MARK: - Lifecycle
         override func viewDidLoad() {
@@ -36,14 +34,11 @@ class SplashViewController: UIViewController {
             animateGradientBackground()
 
             styleLogo()
-            setupActivityIndicator()
+            setupModernLoaderBars()
 
             setupInitialState()
             animateSplash()
 
-            startLoadingDots()
-
-            // Smooth transition timing
             DispatchQueue.main.asyncAfter(deadline: .now() + 3.0) { [weak self] in
                 self?.goToAuth()
             }
@@ -52,12 +47,11 @@ class SplashViewController: UIViewController {
         override func viewDidLayoutSubviews() {
             super.viewDidLayoutSubviews()
             gradientLayer?.frame = view.bounds
-            // keep sparkles around logo correctly if layout changes
             updateSparklesPosition()
         }
 
         deinit {
-            stopLoadingDots()
+            stopModernLoaderBars()
         }
 
         // MARK: - UI Enhancements
@@ -66,7 +60,6 @@ class SplashViewController: UIViewController {
             let g = CAGradientLayer()
             let beige = UIColor(named: "BeigeCol") ?? UIColor.systemBackground
 
-            // Slightly more “designed” than systemBackground
             g.colors = [
                 beige.cgColor,
                 UIColor.secondarySystemBackground.cgColor,
@@ -110,46 +103,26 @@ class SplashViewController: UIViewController {
             logoImageView.layer.shadowOpacity = 0.18
             logoImageView.layer.shadowRadius = 14
             logoImageView.layer.shadowOffset = CGSize(width: 0, height: 8)
-
-            // Make logo edges smoother if it’s not already
             logoImageView.layer.masksToBounds = false
-        }
-
-        private func setupActivityIndicator() {
-            activity.translatesAutoresizingMaskIntoConstraints = false
-            activity.hidesWhenStopped = true
-
-            view.addSubview(activity)
-
-            // Place it below loadingLabel (no storyboard changes)
-            NSLayoutConstraint.activate([
-                activity.topAnchor.constraint(equalTo: loadingLabel.bottomAnchor, constant: 10),
-                activity.centerXAnchor.constraint(equalTo: view.centerXAnchor)
-            ])
         }
 
         // MARK: - Initial State
         private func setupInitialState() {
-            // Logo starts hidden and slightly down
             logoImageView.alpha = 0
             logoImageView.transform = CGAffineTransform(translationX: 0, y: 26).scaledBy(x: 0.98, y: 0.98)
 
-            // Title starts hidden and slightly smaller
             titleLabel.alpha = 0
             titleLabel.transform = CGAffineTransform(scaleX: 0.88, y: 0.88)
 
-            loadingLabel.alpha = 0
-            loadingLabel.text = "Loading"
-
-            activity.stopAnimating()
+            loaderStack.alpha = 0
+            stopModernLoaderBars()
         }
 
         // MARK: - Animations
         private func animateSplash() {
-            // Respect Reduce Motion
             let reduceMotion = UIAccessibility.isReduceMotionEnabled
 
-            // 1) Logo reveal + tiny “shine” feel
+            // 1) Logo reveal
             UIView.animate(
                 withDuration: reduceMotion ? 0.35 : 0.85,
                 delay: 0.05,
@@ -176,25 +149,24 @@ class SplashViewController: UIViewController {
                 animations: {
                     self.titleLabel.alpha = 1
                     self.titleLabel.transform = .identity
-                },
-                completion: nil
+                }
             )
 
-            // 3) Loading label + activity indicator
+            // 3) Modern loader bars only (clean)
             UIView.animate(
                 withDuration: reduceMotion ? 0.2 : 0.55,
                 delay: 0.68,
                 options: [.curveEaseOut],
                 animations: {
-                    self.loadingLabel.alpha = 1
+                    self.loaderStack.alpha = 1
                 },
                 completion: { _ in
-                    self.activity.startAnimating()
+                    self.startModernLoaderBars()
                 }
             )
         }
 
-        /// Subtle float = very “app store” vibe
+        /// Subtle float + tiny pulse
         private func startFloatingLogo() {
             guard UIAccessibility.isReduceMotionEnabled == false else { return }
 
@@ -203,15 +175,9 @@ class SplashViewController: UIViewController {
             float.keyTimes = [0, 0.25, 0.55, 0.8, 1.0]
             float.duration = 2.8
             float.repeatCount = .infinity
-            float.timingFunctions = [
-                CAMediaTimingFunction(name: .easeInEaseOut),
-                CAMediaTimingFunction(name: .easeInEaseOut),
-                CAMediaTimingFunction(name: .easeInEaseOut),
-                CAMediaTimingFunction(name: .easeInEaseOut)
-            ]
+            float.timingFunctions = Array(repeating: CAMediaTimingFunction(name: .easeInEaseOut), count: 4)
             logoImageView.layer.add(float, forKey: "logo.float")
 
-            // Tiny pulse (very subtle)
             let pulse = CABasicAnimation(keyPath: "transform.scale")
             pulse.fromValue = 1.0
             pulse.toValue = 1.025
@@ -222,32 +188,27 @@ class SplashViewController: UIViewController {
             logoImageView.layer.add(pulse, forKey: "logo.pulse")
         }
 
-        // MARK: - Sparkles (Elegant particles behind logo)
+        // MARK: - Sparkles (light, elegant)
 
         private func addSparklesBehindLogo() {
-            // Remove old
             sparkleLayer?.removeFromSuperlayer()
 
             let emitter = CAEmitterLayer()
             emitter.emitterShape = .circle
             emitter.renderMode = .additive
 
-            // Put it behind the logo (above gradient, below logo)
             view.layer.insertSublayer(emitter, above: gradientLayer)
             sparkleLayer = emitter
 
-            // Configure cells (very light sparkles)
             let cell = CAEmitterCell()
-            cell.birthRate = 1.2                 // low = elegant
-            cell.lifetime = 2.6
-            cell.velocity = 18
+            cell.birthRate = 1.0
+            cell.lifetime = 2.4
+            cell.velocity = 16
             cell.velocityRange = 10
             cell.scale = 0.02
             cell.scaleRange = 0.02
             cell.alphaSpeed = -0.35
             cell.emissionRange = .pi * 2
-
-            // Use a tiny circle image generated in code
             cell.contents = makeSparkleDotImage()?.cgImage
             cell.color = UIColor.white.withAlphaComponent(0.85).cgColor
 
@@ -257,7 +218,6 @@ class SplashViewController: UIViewController {
 
         private func updateSparklesPosition() {
             guard let emitter = sparkleLayer else { return }
-            // Sparkles around logo center
             let centerInView = logoImageView.superview?.convert(logoImageView.center, to: view) ?? logoImageView.center
             emitter.emitterPosition = centerInView
             emitter.emitterSize = CGSize(width: 120, height: 120)
@@ -276,82 +236,111 @@ class SplashViewController: UIViewController {
             return UIGraphicsGetImageFromCurrentImageContext()
         }
 
-        // MARK: - Loading Dots
-        private func startLoadingDots() {
-            dotCount = 0
-            loadingTimer?.invalidate()
+        // MARK: - Modern Loader Bars (clean)
 
-            loadingTimer = Timer.scheduledTimer(withTimeInterval: 0.33, repeats: true) { [weak self] _ in
-                guard let self = self else { return }
-                self.dotCount = (self.dotCount + 1) % 4
-                self.loadingLabel.text = "Loading" + String(repeating: ".", count: self.dotCount)
+        private func setupModernLoaderBars() {
+            loaderStack.axis = .horizontal
+            loaderStack.alignment = .center
+            loaderStack.distribution = .equalSpacing
+            loaderStack.spacing = 6
+            loaderStack.translatesAutoresizingMaskIntoConstraints = false
+
+            let green = UIColor(named: "greenCol") ?? UIColor.systemGreen
+
+            // Create 3 bars
+            loaderBars = (0..<3).map { _ in
+                let v = UIView()
+                v.translatesAutoresizingMaskIntoConstraints = false
+                v.layer.cornerRadius = 3
+                v.backgroundColor = green.withAlphaComponent(0.85)
+                NSLayoutConstraint.activate([
+                    v.widthAnchor.constraint(equalToConstant: 6),
+                    v.heightAnchor.constraint(equalToConstant: 12)
+                ])
+                return v
+            }
+
+            loaderBars.forEach { loaderStack.addArrangedSubview($0) }
+            view.addSubview(loaderStack)
+
+            // ✅ Now that loadingLabel is deleted, pin loader under titleLabel
+            NSLayoutConstraint.activate([
+                loaderStack.topAnchor.constraint(equalTo: titleLabel.bottomAnchor, constant: 20),
+                loaderStack.centerXAnchor.constraint(equalTo: view.centerXAnchor)
+            ])
+        }
+
+        private func startModernLoaderBars() {
+            guard UIAccessibility.isReduceMotionEnabled == false else { return }
+
+            for (i, bar) in loaderBars.enumerated() {
+                let anim = CABasicAnimation(keyPath: "transform.scale.y")
+                anim.fromValue = 1.0
+                anim.toValue = 1.8
+                anim.duration = 0.55
+                anim.autoreverses = true
+                anim.repeatCount = .infinity
+                anim.timingFunction = CAMediaTimingFunction(name: .easeInEaseOut)
+                anim.beginTime = CACurrentMediaTime() + (Double(i) * 0.12) // wave delay
+                bar.layer.add(anim, forKey: "barWave")
             }
         }
 
-        private func stopLoadingDots() {
-            loadingTimer?.invalidate()
-            loadingTimer = nil
-            activity.stopAnimating()
+        private func stopModernLoaderBars() {
+            loaderBars.forEach { $0.layer.removeAnimation(forKey: "barWave") }
         }
 
-        // MARK: - Navigation
-    private func goToAuth() {
-        stopLoadingDots()
+        // MARK: - Navigation (Crossfade with NO black screen)
 
-        // Clean up layers
-        sparkleLayer?.removeFromSuperlayer()
-        sparkleLayer = nil
+        private func goToAuth() {
+            stopModernLoaderBars()
 
-        let storyboard = UIStoryboard(name: "Authentication", bundle: nil)
-        let authVC = storyboard.instantiateInitialViewController()!
+            sparkleLayer?.removeFromSuperlayer()
+            sparkleLayer = nil
 
-        let window = (view.window ?? UIApplication.shared
-            .connectedScenes
-            .compactMap { ($0 as? UIWindowScene)?.keyWindow }
-            .first)
+            let storyboard = UIStoryboard(name: "Authentication", bundle: nil)
+            let authVC = storyboard.instantiateInitialViewController()!
 
-        guard let window else { return }
+            let window = (view.window ?? UIApplication.shared
+                .connectedScenes
+                .compactMap { ($0 as? UIWindowScene)?.keyWindow }
+                .first)
 
-        // ✅ Prevent any black fallback color
-        let beige = UIColor(named: "BeigeCol") ?? UIColor.systemBackground
-        window.backgroundColor = beige
+            guard let window else { return }
 
-        // ✅ Ensure auth view is ready and starts hidden (we will fade it IN)
-        _ = authVC.view
-        authVC.view.frame = window.bounds
-        authVC.view.backgroundColor = beige
-        authVC.view.alpha = 0
-        authVC.view.layoutIfNeeded()
+            // Prevent any black fallback
+            let beige = UIColor(named: "BeigeCol") ?? UIColor.systemBackground
+            window.backgroundColor = beige
 
-        // ✅ Snapshot of splash stays visible while we swap roots
-        let snapshot = view.snapshotView(afterScreenUpdates: true) ?? UIView()
-        snapshot.frame = window.bounds
-        snapshot.alpha = 1
+            // Prepare auth view (fade IN)
+            _ = authVC.view
+            authVC.view.frame = window.bounds
+            authVC.view.backgroundColor = beige
+            authVC.view.alpha = 0
+            authVC.view.layoutIfNeeded()
 
-        // Put snapshot on top of window
-        window.addSubview(snapshot)
+            // Snapshot splash stays visible while swapping roots
+            let snapshot = view.snapshotView(afterScreenUpdates: true) ?? UIView()
+            snapshot.frame = window.bounds
+            snapshot.alpha = 1
+            window.addSubview(snapshot)
 
-        // ✅ Switch root immediately (auth is behind snapshot)
-        window.rootViewController = authVC
-        window.makeKeyAndVisible()
+            // Swap root behind snapshot
+            window.rootViewController = authVC
+            window.makeKeyAndVisible()
 
-        // ✅ Crossfade: splash snapshot OUT while auth IN (no black in between)
-        UIView.animate(withDuration: 0.55, delay: 0, options: [.curveEaseInOut], animations: {
-            snapshot.alpha = 0
-            authVC.view.alpha = 1
-            snapshot.transform = CGAffineTransform(scaleX: 1.02, y: 1.02) // subtle premium push
-        }, completion: { _ in
-            snapshot.removeFromSuperview()
-        })
-    }
-
-
+            // Crossfade: snapshot OUT + auth IN
+            UIView.animate(withDuration: 0.55, delay: 0, options: [.curveEaseInOut], animations: {
+                snapshot.alpha = 0
+                authVC.view.alpha = 1
+                snapshot.transform = CGAffineTransform(scaleX: 1.02, y: 1.02)
+            }, completion: { _ in
+                snapshot.removeFromSuperview()
+            })
+        }
     }
 
     // MARK: - UIWindowScene helper (stays in this file only)
     private extension UIWindowScene {
-        var keyWindow: UIWindow? {
-            return windows.first(where: { $0.isKeyWindow })
-        }
+        var keyWindow: UIWindow? { windows.first(where: { $0.isKeyWindow }) }
     }
-

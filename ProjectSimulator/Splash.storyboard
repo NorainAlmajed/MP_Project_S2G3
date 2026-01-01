@@ -17,16 +17,16 @@
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="Splash" translatesAutoresizingMaskIntoConstraints="NO" id="lGY-qW-kuv">
-                                <rect key="frame" x="71.666666666666686" y="271" width="250" height="250"/>
+                                <rect key="frame" x="71.666666666666686" y="261" width="250" height="250"/>
                             </imageView>
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Nourish Bahrain" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="22y-u2-ldi">
-                                <rect key="frame" x="88.666666666666686" y="496" width="216" height="35"/>
+                                <rect key="frame" x="88.666666666666686" y="486" width="216" height="35"/>
                                 <fontDescription key="fontDescription" type="boldSystem" pointSize="29"/>
                                 <color key="textColor" name="greenCol"/>
                                 <nil key="highlightedColor"/>
                             </label>
-                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Loading" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="9hU-Ot-itf">
-                                <rect key="frame" x="164" y="530" width="65" height="21"/>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="9hU-Ot-itf">
+                                <rect key="frame" x="196.66666666666666" y="520" width="0.0" height="0.0"/>
                                 <fontDescription key="fontDescription" type="boldSystem" pointSize="17"/>
                                 <nil key="highlightedColor"/>
                             </label>
@@ -39,13 +39,12 @@
                             <constraint firstItem="lGY-qW-kuv" firstAttribute="centerX" secondItem="NHS-be-bW6" secondAttribute="centerX" id="OAr-Jd-fCf"/>
                             <constraint firstItem="9hU-Ot-itf" firstAttribute="top" secondItem="lGY-qW-kuv" secondAttribute="bottom" constant="9" id="eMI-k9-aQ7"/>
                             <constraint firstItem="lGY-qW-kuv" firstAttribute="width" secondItem="NHS-be-bW6" secondAttribute="width" multiplier="0.636132" id="pnu-eE-1Dn"/>
-                            <constraint firstItem="lGY-qW-kuv" firstAttribute="centerY" secondItem="NHS-be-bW6" secondAttribute="centerY" constant="-30" id="uku-fi-5f9"/>
+                            <constraint firstItem="lGY-qW-kuv" firstAttribute="centerY" secondItem="NHS-be-bW6" secondAttribute="centerY" constant="-40" id="uku-fi-5f9"/>
                             <constraint firstItem="9hU-Ot-itf" firstAttribute="centerX" secondItem="NHS-be-bW6" secondAttribute="centerX" id="vrN-NE-jpK"/>
                             <constraint firstItem="22y-u2-ldi" firstAttribute="centerX" secondItem="NHS-be-bW6" secondAttribute="centerX" id="zVT-zj-Sr9"/>
                         </constraints>
                     </view>
                     <connections>
-                        <outlet property="loadingLabel" destination="9hU-Ot-itf" id="6cl-KQ-jk9"/>
                         <outlet property="logoImageView" destination="lGY-qW-kuv" id="uFb-rz-RKj"/>
                         <outlet property="titleLabel" destination="22y-u2-ldi" id="HkI-fK-jSr"/>
                     </connections>

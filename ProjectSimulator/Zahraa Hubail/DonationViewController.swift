@@ -41,8 +41,8 @@ class DonationViewController: UIViewController, DonationFilterDelegate {
         let statuses = ["All", "Pending", "Accepted", "Collected", "Rejected", "Cancelled"]
         var selectedIndex = 0
 
-        var allDonations: [ZahraaDonation] = []
-        var displayedDonations: [ZahraaDonation] = []
+        var allDonations: [Donation] = []
+        var displayedDonations: [Donation] = []
         var allUsers: [ZahraaUser] = []
 
         private var searchBar: UISearchBar!
@@ -458,7 +458,7 @@ class DonationViewController: UIViewController, DonationFilterDelegate {
 
 
 
-                    let donation = ZahraaDonation(
+                    let donation = Donation(
                         firestoreID: firestoreID,
                         donationID: donationID,
                         ngo: ngo,
@@ -720,7 +720,7 @@ extension DonationViewController {
             }
         }
         
-        func nameForSort(_ d: ZahraaDonation) -> String {
+        func nameForSort(_ d: Donation) -> String {
             return (d.ngo.organization_name ?? d.ngo.fullName ?? d.ngo.username).lowercased()
         }
 

@@ -14,6 +14,7 @@ UICollectionViewDataSource,
     var adminId: String?
     private var myUserId = ""
     private let navProfileImageView = UIImageView()
+    private let SUPPORT_ADMIN_ID = "TwWqBSGX4ec4gxCWCZcbo7WocAI2"
 
     
     var chatID: String = ""
@@ -328,11 +329,17 @@ UICollectionViewDataSource,
 
             if let donorId = self.donorId { data["donorId"] = donorId }
             if let ngoId = self.ngoId { data["ngoId"] = ngoId }
-            if let adminId = self.adminId { data["adminId"] = adminId }
+
+            if self.chatType == .support {
+                data["adminId"] = self.SUPPORT_ADMIN_ID
+            } else if let adminId = self.adminId {
+                data["adminId"] = adminId
+            }
 
             chatRef.setData(data)
         }
     }
+
 
     func ensureChatID() {
         if chatID.isEmpty {

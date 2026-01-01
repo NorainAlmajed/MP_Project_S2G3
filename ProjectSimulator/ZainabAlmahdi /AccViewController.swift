@@ -5,7 +5,7 @@
 
 import UIKit
 import FirebaseAuth
-
+import FirebaseFirestore
 class AccViewController: UITableViewController {
 
     // MARK: - IBOutlets
@@ -186,19 +186,50 @@ class AccViewController: UITableViewController {
             .instantiateViewController(withIdentifier: "NGOSignupViewController")
         navigationController?.pushViewController(vc, animated: true)
     }
-
     func goToContactSupport() {
+        let db = Firestore.firestore()
         let storyboard = UIStoryboard(name: "Chat", bundle: nil)
 
         guard let chatVC = storyboard.instantiateViewController(
-            withIdentifier: "ChatListViewController"
-        ) as? ChatListViewController else {
-            print("ChatListViewController not found")
-            return
-        }
+            withIdentifier: "ChatViewController"
+        ) as? ChatViewController else { return }
 
-        navigationController?.pushViewController(chatVC, animated: true)
+        guard let myUserId = Auth.auth().currentUser?.uid else { return }
+
+        db.collection("users").document(myUserId).getDocument { userSnap, _ in
+            guard
+                let userData = userSnap?.data(),
+                let myRole = userData["role"] as? Int
+            else { return }
+
+            db.collection("users")
+                .whereField("role", isEqualTo: 1)
+                .limit(to: 1)
+                .getDocuments { adminSnap, _ in
+                    guard let adminDoc = adminSnap?.documents.first else { return }
+
+                    let adminId = adminDoc.documentID
+
+                    chatVC.chatType = .support
+                    chatVC.userName = "Live support chat"
+                    chatVC.adminId = adminId
+
+                    if myRole == 2 {
+                        chatVC.donorId = myUserId
+                    } else if myRole == 3 {
+                        chatVC.ngoId = myUserId
+                    }
+
+                    DispatchQueue.main.async {
+                        self.navigationController?.pushViewController(chatVC, animated: true)
+                    }
+                }
+        }
     }
+
+
+
+
 
     // MARK: - Logout
     func logoutUser() {

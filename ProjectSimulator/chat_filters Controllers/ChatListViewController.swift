@@ -2,10 +2,10 @@ import UIKit
 import FirebaseFirestore
 import FirebaseAuth
 
-
 struct SupportChat {
     let chatID: String
     let otherUserId: String
+    let adminId: String?
     let senderName: String
     let senderType: String
     let chatType: ChatType
@@ -71,7 +71,7 @@ class ChatListViewController: UIViewController,  UISearchBarDelegate, UITableVie
     var currentFilter = String ("all")
     private let db = Firestore.firestore()
     private var chatListener: ListenerRegistration?
-    
+
     
     
     
@@ -294,12 +294,8 @@ class ChatListViewController: UIViewController,  UISearchBarDelegate, UITableVie
         }
         
 
-        if chat.chatType == .support {
-            if currentUserRole == .admin {
-                cell.nameLabel.text = chat.senderName
-            } else {
-                cell.nameLabel.text = "Support chat"
-            }
+        if chat.chatType == .support && currentUserRole != .admin {
+            cell.nameLabel.text = "Live support chat"
         } else {
             cell.nameLabel.text = chat.senderName
         }
@@ -312,24 +308,32 @@ class ChatListViewController: UIViewController,  UISearchBarDelegate, UITableVie
     
     //filtering chats
     func applyFilter(type: String) {
-        
+
+        if currentUserRole != .admin {
+            chatsAfterFilter = allChats
+            visibleChats = chatsAfterFilter
+            ChatTable.reloadData()
+            return
+        }
+
         switch type {
         case "all":
             chatsAfterFilter = allChats
-            
+
         case "donor":
             chatsAfterFilter = allChats.filter { $0.senderType == "donor" }
-            
+
         case "ngo":
             chatsAfterFilter = allChats.filter { $0.senderType == "ngo" }
-            
+
         default:
             chatsAfterFilter = allChats
         }
+
         visibleChats = chatsAfterFilter
         ChatTable.reloadData()
     }
-    
+
     
     // searching by username function
     func searchBar(_ searchBar: UISearchBar, textDidChange searchText: String){
@@ -496,7 +500,10 @@ class ChatListViewController: UIViewController,  UISearchBarDelegate, UITableVie
                     let chat = SupportChat(
                         chatID: doc.documentID,
                         otherUserId: otherUserId,
-                        senderName: "Loading...",
+                        adminId: adminId, // ✅ STORE IT
+                        senderName: chatType == .support && currentUserRole != .admin
+                            ? "Live support chat"
+                            : "Loading...",
                         senderType: senderType,
                         chatType: chatType,
                         time: "",
@@ -517,14 +524,37 @@ class ChatListViewController: UIViewController,  UISearchBarDelegate, UITableVie
 
     func resolveChatNames() {
         for chat in allChats {
-            fetchUserNameAndPhoto(userId: chat.otherUserId) { [weak self] name, url in
+
+            let userIdToFetch: String
+
+            if chat.chatType == .support {
+                if currentUserRole == .admin {
+                    userIdToFetch = chat.otherUserId
+                } else {
+                    guard let adminId = chat.adminId else { continue }
+                    userIdToFetch = adminId
+                }
+            } else {
+                userIdToFetch = chat.otherUserId
+            }
+
+            fetchUserNameAndPhoto(userId: userIdToFetch) { [weak self] name, url in
                 guard let self = self else { return }
 
                 if let idx = self.allChats.firstIndex(where: { $0.chatID == chat.chatID }) {
+
+                    let displayName: String
+                    if chat.chatType == .support && self.currentUserRole != .admin {
+                        displayName = "Live support chat"
+                    } else {
+                        displayName = name
+                    }
+
                     self.allChats[idx] = SupportChat(
                         chatID: chat.chatID,
                         otherUserId: chat.otherUserId,
-                        senderName: name,
+                        adminId: chat.adminId, 
+                        senderName: displayName,
                         senderType: chat.senderType,
                         chatType: chat.chatType,
                         time: chat.time,
@@ -555,11 +585,18 @@ class ChatListViewController: UIViewController,  UISearchBarDelegate, UITableVie
             let role = data["role"] as? Int ?? 0
 
             let name: String
-            if role == 3 {
+
+            switch role {
+            case 1:
+                name = "Live support chat"
+
+            case 3:
                 name = data["organization_name"] as? String ?? "NGO"
-            } else {
+
+            default:
                 name = data["username"] as? String ?? "User"
             }
+
 
             let url = data["profile_image_url"] as? String ?? ""
 

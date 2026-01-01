@@ -28,7 +28,6 @@ class EditUsersViewController: UIViewController, UIImagePickerControllerDelegate
     @IBOutlet weak var govStack: UIStackView!
     @IBOutlet weak var statusStack: UIStackView!
     
-    @IBOutlet weak var licenseBtn: UIButton!
     @IBOutlet weak var uploadPicBtn: UIButton!
     @IBOutlet weak var ImagePickerEditView: UIImageView!
     
@@ -398,7 +397,6 @@ class EditUsersViewController: UIViewController, UIImagePickerControllerDelegate
         addressStack.isHidden = !isNGO
         govStack.isHidden = !isNGO
         statusStack.isHidden = !isNGO
-        licenseBtn.isHidden = !isNGO
     }
     
     private func showAlert(title: String, message: String) {

@@ -39,7 +39,7 @@ class NourishUsersViewController: UIViewController,UITableViewDelegate,UITableVi
         self.usersTableView.reloadData()
         usersTableView.delegate = self
         usersTableView.dataSource = self
-        usersTableView.tableFooterView = UIView(frame: CGRect(x:0, y:0, width:usersTableView.frame.width, height:20))
+        usersTableView.tableFooterView = UIView()
         
         let tap = UITapGestureRecognizer(target: self, action: #selector(dismissKeyboard))
         tap.cancelsTouchesInView = false
@@ -301,7 +301,7 @@ class NourishUsersViewController: UIViewController,UITableViewDelegate,UITableVi
     }
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return displayedUsers.count 
+        return displayedUsers.count
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
@@ -311,7 +311,7 @@ class NourishUsersViewController: UIViewController,UITableViewDelegate,UITableVi
         cell.configure(appUser: user)
         return cell
     }
-    
+ 
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
         return 120
     }

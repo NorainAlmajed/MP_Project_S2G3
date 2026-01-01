@@ -97,6 +97,10 @@ class UserDetailsViewController: UIViewController {
         nameLbl.text = appUser.name
         emailLbl.text = appUser.email
         
+        bioOrDesctxt.layer.cornerRadius = 7
+        bioOrDesctxt.layer.borderWidth = 1
+        bioOrDesctxt.layer.borderColor = UIColor.systemGray.cgColor
+        
         userImgV.layer.cornerRadius = 7
         userImgV.clipsToBounds = true
         userImgV.layer.borderWidth = 1
@@ -153,6 +157,8 @@ class UserDetailsViewController: UIViewController {
                 reasonLabel.isHidden = true
                 acceptBtn.isHidden = true
                 rejectBtn.isHidden = true
+                
+
             }
         }
     }

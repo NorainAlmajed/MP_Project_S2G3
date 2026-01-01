@@ -15,21 +15,23 @@
     - Zainab Almahdi 202302211
     - Zainab Mahdi  202200277
 
-##Main Features
-Feature No.    Feature Name    Developer    Tester
-1    User Registration, Authentication, and Profile    Zainab Almahdi    Norain Almajed
-2    Settings Management & Account Control    Zainab Almahdi    Zahraa Hubail
-3    Customize Dashboard    Fatima Alaiwi    Raghad Aleskafi
-4    Impact Tracking    Fatima Alaiwi    Zainab Saeed
-5    Admin User Controls (CRUD) and NGO Approvals    Norain Almajed    Zahraa Hubail
-6    Real-Time Notifications    Zahraa Hubail    Raghad Aleskafi
-7    Donation and Status Management    Zahraa Hubail    Zainab Saeed
-8    NGO Discovery    Raghad Aleskafi    Norain Almajed
-9    Food Donation Creation    Raghad Aleskafi    Fatima Alaiwi
-10    Pickup Scheduling & Recurring Donation Schedules    Norain Almajed    Fatima Alaiwi
-11    Search and Filter Tools    Zainab Mahdi    Zainab Almahdi
-12    Chat / Support Chat    Zainab Mahdi    Zahraa Hubail
-    
+## Main Features
+
+| Feature No. | Feature Name | Developer | Tester |
+|------------|--------------|-----------|--------|
+| 1 | User Registration, Authentication, and Profile | Zainab Almahdi | Norain Almajed |
+| 2 | Settings Management & Account Control | Zainab Almahdi | Zahraa Hubail |
+| 3 | Customize Dashboard | Fatima Alaiwi | Raghad Aleskafi |
+| 4 | Impact Tracking | Fatima Alaiwi | Zainab Saeed |
+| 5 | Admin User Controls (CRUD) and NGO Approvals | Norain Almajed | Zahraa Hubail |
+| 6 | Real-Time Notifications | Zahraa Hubail | Raghad Aleskafi |
+| 7 | Donation and Status Management | Zahraa Hubail | Zainab Saeed |
+| 8 | NGO Discovery | Raghad Aleskafi | Norain Almajed |
+| 9 | Food Donation Creation | Raghad Aleskafi | Fatima Alaiwi |
+| 10 | Pickup Scheduling & Recurring Donation Schedules | Norain Almajed | Fatima Alaiwi |
+| 11 | Search and Filter Tools | Zainab Mahdi | Zainab Almahdi |
+| 12 | Chat / Support Chat | Zainab Mahdi | Zahraa Hubail |
+
         
         
         

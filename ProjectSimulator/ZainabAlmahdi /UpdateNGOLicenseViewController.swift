@@ -16,17 +16,24 @@ class UpdateNGOLicenseViewController: UIViewController,
 
         styleActionButton(uploadButton)
         styleActionButton(saveButton)
+
         styleLicenseImageView()
+
         loadExistingLicense()
     }
 
-    // MARK: - License Image Styling
+    // MARK: - License Image Styling (NO PLACEHOLDER)
     func styleLicenseImageView() {
         licenseImageView.layer.cornerRadius = 7
         licenseImageView.clipsToBounds = true
         licenseImageView.layer.borderWidth = 1
         licenseImageView.layer.borderColor = UIColor.systemGray.cgColor
-        licenseImageView.contentMode = .scaleAspectFill
+
+        // IMPORTANT: documents should NOT be aspectFill
+        licenseImageView.contentMode = .scaleAspectFit
+
+        licenseImageView.image = nil
+        licenseImageView.backgroundColor = UIColor.systemGray6
     }
 
     // MARK: - Load Existing License
@@ -37,7 +44,8 @@ class UpdateNGOLicenseViewController: UIViewController,
             .collection("users")
             .document(uid)
             .getDocument { [weak self] snapshot, _ in
-                guard let data = snapshot?.data(),
+                guard let self = self,
+                      let data = snapshot?.data(),
                       let urlString = data["ngo_license_url"] as? String,
                       let url = URL(string: urlString) else { return }
 
@@ -46,7 +54,8 @@ class UpdateNGOLicenseViewController: UIViewController,
                           let image = UIImage(data: data) else { return }
 
                     DispatchQueue.main.async {
-                        self?.licenseImageView.image = image
+                        self.licenseImageView.image = image
+                        self.licenseImageView.contentMode = .scaleAspectFit
                     }
                 }.resume()
             }
@@ -67,7 +76,9 @@ class UpdateNGOLicenseViewController: UIViewController,
     ) {
         if let image = info[.editedImage] as? UIImage ??
                        info[.originalImage] as? UIImage {
+
             licenseImageView.image = image
+            licenseImageView.contentMode = .scaleAspectFit
         }
         dismiss(animated: true)
     }
@@ -85,8 +96,7 @@ class UpdateNGOLicenseViewController: UIViewController,
 
         saveButton.isEnabled = false
 
-        let cloudinaryService = CloudinaryService()
-        cloudinaryService.uploadImage(image) { [weak self] url in
+        CloudinaryService().uploadImage(image) { [weak self] url in
             guard let self = self,
                   let licenseUrl = url,
                   let uid = Auth.auth().currentUser?.uid else {

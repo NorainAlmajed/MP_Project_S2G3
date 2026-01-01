@@ -30,11 +30,6 @@ class SetupProfileViewController: UIViewController,
         styleActionButton(continueButton)
         styleActionButton(uploadButton)
 
-        // ✅ APPLY PROFILE IMAGE STYLE (same as teammate)
-        profileImageView.applyProfileStyle(
-            cornerRadius: profileImageView.frame.height / 2
-        )
-
         preloadUserData()
         configureBioTitle()
         configureBioTextView()
@@ -42,11 +37,18 @@ class SetupProfileViewController: UIViewController,
         bioCounterLabel.text = "0 / \(maxBioLength)"
     }
 
+    override func viewDidLayoutSubviews() {
+        super.viewDidLayoutSubviews()
+
+        profileImageView.applyProfileStyle(
+            cornerRadius: 12
+        )
+    }
+
     // MARK: - Preload
     func preloadUserData() {
         fullNameTextField.text = SessionManager.shared.fullName
 
-        // ✅ Load existing profile image if available
         if let imageUrl = SessionManager.shared.profileImageURL {
             profileImageView.loadProfileImage(from: imageUrl)
         }
@@ -65,7 +67,6 @@ class SetupProfileViewController: UIViewController,
 
     func configureBioTextView() {
         bioTextView.delegate = self
-
         bioTextView.layer.cornerRadius = 8
         bioTextView.layer.borderWidth = 1
         bioTextView.layer.borderColor = UIColor.systemGray4.cgColor
@@ -122,9 +123,8 @@ class SetupProfileViewController: UIViewController,
 
             profileImageView.image = image
 
-            // ✅ RE-APPLY STYLE AFTER IMAGE CHANGE
             profileImageView.applyProfileStyle(
-                cornerRadius: profileImageView.frame.height / 2
+                cornerRadius: 12
             )
         }
         dismiss(animated: true)
@@ -158,16 +158,12 @@ class SetupProfileViewController: UIViewController,
 
         continueButton.isEnabled = false
 
-        let cloudinaryService = CloudinaryService()
-        cloudinaryService.uploadImage(image) { [weak self] imageUrl in
+        CloudinaryService().uploadImage(image) { [weak self] imageUrl in
             guard let self = self else { return }
 
             guard let imageUrl = imageUrl else {
                 self.continueButton.isEnabled = true
-                self.showAlert(
-                    title: "Upload Failed",
-                    message: "Could not upload profile image."
-                )
+                self.showAlert(title: "Upload Failed", message: "Could not upload profile image.")
                 return
             }
 
@@ -203,23 +199,19 @@ class SetupProfileViewController: UIViewController,
                     return
                 }
 
-                SessionManager.shared.loadUserSession { _ in
-                    DispatchQueue.main.async {
-                        self.routeToDashboard()
-                    }
-                }
+                self.routeToLogin()
             }
     }
 
-    // MARK: - Routing
-    func routeToDashboard() {
-        let storyboard = UIStoryboard(name: "Main", bundle: nil)
-        guard let tabBarVC = storyboard.instantiateInitialViewController() else { return }
+    // MARK: - Routing (LOGIN)
+    func routeToLogin() {
+        let storyboard = UIStoryboard(name: "Authentication", bundle: nil)
+        guard let loginVC = storyboard.instantiateInitialViewController() else { return }
 
         guard let sceneDelegate = UIApplication.shared.connectedScenes
             .first?.delegate as? SceneDelegate else { return }
 
-        sceneDelegate.window?.rootViewController = tabBarVC
+        sceneDelegate.window?.rootViewController = loginVC
         sceneDelegate.window?.makeKeyAndVisible()
     }
 

@@ -4,15 +4,23 @@ import FirebaseFirestore
 
 class EditProfileViewController: UIViewController {
 
+    // MARK: - TextFields
     @IBOutlet weak var nameField: UITextField!
     @IBOutlet weak var phoneField: UITextField!
     @IBOutlet weak var addressField: UITextField!
     @IBOutlet weak var causeField: UITextField!
     @IBOutlet weak var governorateField: UITextField!
+
+    // MARK: - Labels (IMPORTANT)
+    @IBOutlet weak var addressLabel: UILabel!
+    @IBOutlet weak var causeLabel: UILabel!
+    @IBOutlet weak var governorateLabel: UILabel!
+
     @IBOutlet weak var saveButton: UIButton!
 
     private let db = Firestore.firestore()
 
+    // MARK: - Lifecycle
     override func viewDidLoad() {
         super.viewDidLoad()
         title = "Edit Profile"
@@ -25,29 +33,37 @@ class EditProfileViewController: UIViewController {
         configureFieldsForRole()
     }
 
+    // MARK: - Role-Based UI
     func configureFieldsForRole() {
 
-        // Hide everything optional by default
+        // Hide ALL optional fields + labels by default
         addressField.isHidden = true
         causeField.isHidden = true
         governorateField.isHidden = true
 
-        // If user is not logged in / role unknown
-        if Auth.auth().currentUser == nil {
-            return
-        }
+        addressLabel.isHidden = true
+        causeLabel.isHidden = true
+        governorateLabel.isHidden = true
+
+        guard Auth.auth().currentUser != nil else { return }
 
         if SessionManager.shared.isDonor {
             addressField.isHidden = false
+            addressLabel.isHidden = false
         }
 
         if SessionManager.shared.isNGO {
             addressField.isHidden = false
             causeField.isHidden = false
             governorateField.isHidden = false
+
+            addressLabel.isHidden = false
+            causeLabel.isHidden = false
+            governorateLabel.isHidden = false
         }
     }
 
+    // MARK: - Fetch Profile
     func fetchProfile() {
         guard let uid = Auth.auth().currentUser?.uid else { return }
 
@@ -57,10 +73,10 @@ class EditProfileViewController: UIViewController {
             DispatchQueue.main.async {
                 self.nameField.text =
                     data["full_name"] as? String ??
-                    data["organization_name"] as? String ??
-                    data["name"] as? String
+                    data["organization_name"] as? String
 
-                self.phoneField.text = data["phone_number"] as? String
+                // 🔧 FIXED KEY
+                self.phoneField.text = data["number"] as? String
                 self.addressField.text = data["address"] as? String
                 self.causeField.text = data["cause"] as? String
                 self.governorateField.text = data["governorate"] as? String
@@ -68,11 +84,15 @@ class EditProfileViewController: UIViewController {
         }
     }
 
+    // MARK: - Save
     @IBAction func saveTapped(_ sender: UIButton) {
         guard let uid = Auth.auth().currentUser?.uid else { return }
 
+        saveButton.isEnabled = false
+
         var updateData: [String: Any] = [
-            "phone_number": phoneField.text ?? ""
+            // 🔧 MATCH FIRESTORE KEY
+            "number": phoneField.text ?? ""
         ]
 
         if SessionManager.shared.isAdmin || SessionManager.shared.isDonor {
@@ -92,6 +112,8 @@ class EditProfileViewController: UIViewController {
 
         db.collection("users").document(uid).updateData(updateData) { error in
             DispatchQueue.main.async {
+                self.saveButton.isEnabled = true
+
                 if let error = error {
                     self.showAlert("Error", error.localizedDescription)
                 } else {
@@ -101,6 +123,7 @@ class EditProfileViewController: UIViewController {
         }
     }
 
+    // MARK: - Alert
     func showAlert(_ title: String, _ message: String) {
         let alert = UIAlertController(
             title: title,
@@ -111,6 +134,7 @@ class EditProfileViewController: UIViewController {
         present(alert, animated: true)
     }
 
+    // MARK: - Button Style
     private func styleActionButton(_ button: UIButton) {
         button.layer.cornerRadius = button.frame.height / 2
         button.clipsToBounds = true

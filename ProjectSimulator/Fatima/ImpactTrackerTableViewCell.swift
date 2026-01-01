@@ -18,7 +18,7 @@ class ImpactTrackerTableViewCell: UITableViewCell {
 
     // MARK: - Constants
     private let smallCardHeight: CGFloat = 60   // Donor
-    private let largeCardHeight: CGFloat = 68   // NGO/Admin (Figma)
+    private let largeCardHeight: CGFloat = 65   // NGO/Admin (Figma)
     private let cornerRadius: CGFloat = 24
 
     // MARK: - Lifecycle
@@ -38,7 +38,7 @@ class ImpactTrackerTableViewCell: UITableViewCell {
         contentView.addSubview(mainStack)
 
         NSLayoutConstraint.activate([
-            mainStack.topAnchor.constraint(equalTo: impactTrackerLabel.bottomAnchor, constant: 12),
+            mainStack.topAnchor.constraint(equalTo: impactTrackerLabel.bottomAnchor, constant: 16),
             mainStack.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 16),
             mainStack.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -16),
             mainStack.bottomAnchor.constraint(equalTo: contentView.bottomAnchor, constant: -16)

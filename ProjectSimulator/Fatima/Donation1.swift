@@ -11,14 +11,13 @@ struct Donation1 {
     let creationDate: Date
     let weight: Int
 
-    // MARK: - Derived / UI-safe values
+    // ✅ NEW (FOR IMPACT STATS)
+    let donorUserID: String
+    let ngoUserID: String
 
-    /// Donor dashboard → always the logged-in user
-    var donorDisplayName: String {
-        return "You"
-    }
+    // MARK: - UI helpers
+    var donorDisplayName: String { "You" }
 
-    /// Formatted date for UI display
     var formattedDate: String {
         let formatter = DateFormatter()
         formatter.dateStyle = .medium
@@ -26,7 +25,6 @@ struct Donation1 {
         return formatter.string(from: creationDate)
     }
 
-    // MARK: - Firestore Initializer
     init?(document: QueryDocumentSnapshot) {
         let data = document.data()
 
@@ -35,9 +33,9 @@ struct Donation1 {
             let category = data["Category"] as? String,
             let status = data["status"] as? Int,
             let quantity = data["quantity"] as? Int,
-            let weight = data["weight"] as? Int,        // ✅ ADD
-
-            let timestamp = data["creationDate"] as? Timestamp
+            let timestamp = data["creationDate"] as? Timestamp,
+            let donorRef = data["donor"] as? DocumentReference,
+            let ngoRef = data["ngo"] as? DocumentReference
         else {
             print("❌ Failed to parse Donation1:", document.documentID)
             return nil
@@ -49,7 +47,10 @@ struct Donation1 {
         self.status = status
         self.quantity = quantity
         self.creationDate = timestamp.dateValue()
-        self.weight = weight
+        self.weight = data["weight"] as? Int ?? 0
 
+        // ✅ Extract IDs safely
+        self.donorUserID = donorRef.documentID
+        self.ngoUserID = ngoRef.documentID
     }
 }

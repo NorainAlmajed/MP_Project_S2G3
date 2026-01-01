@@ -12,9 +12,12 @@ struct ImpactData {
 
 
 class DonorDashboardViewController: UIViewController {
-    // Valid donation = accepted or collected
-    // status: 2 = accepted, 3 = collected
-    //let valid = donations.filter { $0.status == 2 || $0.status == 3 }
+    // 🔥 FULL DATASETS FOR IMPACT
+    private var allPlatformDonations: [Donation1] = [] // admin
+    private var allNGODonations: [Donation1] = []       // ngo
+    private var approvedNGOsCount: Int = 0
+    private var approvedDonorsCount: Int = 0
+
 
     @objc private func browseNgoTapped() {
         goToBrowseNGOs()
@@ -22,7 +25,7 @@ class DonorDashboardViewController: UIViewController {
     @objc private func dismissManageUsers() {
         dismiss(animated: true)
     }
-    
+    // MARK: manage user tapped func
     @objc private func manageUsersTapped() {
         let storyboard = UIStoryboard(name: "norain-admin-controls1", bundle: nil)
 
@@ -54,25 +57,31 @@ class DonorDashboardViewController: UIViewController {
 
 // MARK: Donor impact math
     private func donorImpactStats() -> [ImpactStat] {
-        let valid = recentDonations.filter { $0.status == 2 || $0.status == 3 }
+
+        let valid = allDonations.filter { $0.status == 2 || $0.status == 3 }
+
         let meals = valid.reduce(0) { $0 + $1.quantity }
+        let lives = meals / 3
 
         return [
             ImpactStat(title: "Total Donations", value: valid.count),
             ImpactStat(title: "Meals Served", value: meals),
-            ImpactStat(title: "Lives Saved", value: meals / 3)
+            ImpactStat(title: "Lives Saved", value: lives)
         ]
     }
+
 // MARK: NGO impact math
     private func ngoImpactStats() -> [ImpactStat] {
 
-        let valid = roleBasedDonations.filter {
-            $0.status == 2 || $0.status == 3
-        }
+        let valid = allNGODonations.filter { $0.status == 2 || $0.status == 3 }
 
+        let meals = valid.reduce(0) { $0 + $1.quantity }
+        let beneficiaries = meals / 3
 
-        let calendar = Calendar.current
+        let wastePreventedKG = valid.reduce(0) { $0 + $1.weight } // REAL
+
         let today = Date()
+        let calendar = Calendar.current
 
         let todayCount = valid.filter {
             calendar.isDate($0.creationDate, inSameDayAs: today)
@@ -82,39 +91,39 @@ class DonorDashboardViewController: UIViewController {
             calendar.isDate($0.creationDate, equalTo: today, toGranularity: .month)
         }.count
 
-        let mealsProvided = valid.reduce(0) { $0 + $1.quantity }
-
-        // ⚠️ TEMP: using quantity as waste until weight is added to model
-        let wastePrevented = mealsProvided
-
-        let beneficiaries = mealsProvided / 3
-
         return [
             ImpactStat(title: "Donations Received", value: valid.count),
-            ImpactStat(title: "Waste Prevented (KG)", value: wastePrevented),
+            ImpactStat(title: "Waste Prevented (KG)", value: wastePreventedKG),
             ImpactStat(title: "Total Beneficiaries", value: beneficiaries),
-            ImpactStat(title: "Meals Provided", value: mealsProvided),
+            ImpactStat(title: "Meals Provided", value: meals),
             ImpactStat(title: "Today’s Stats", value: todayCount),
             ImpactStat(title: "Monthly Stats", value: monthlyCount)
         ]
     }
 
+// MARK: admin impact
 
     private func adminImpactStats() -> [ImpactStat] {
 
-        let valid = roleBasedDonations.filter { $0.status == 2 || $0.status == 3 }
+        let valid = allPlatformDonations.filter { $0.status == 2 || $0.status == 3 }
 
         let meals = valid.reduce(0) { $0 + $1.quantity }
+        let wasteKG = valid.reduce(0) { $0 + $1.weight }
+
+        let totalDonors = approvedDonorsCount
+        let totalApprovedNGOs = approvedNGOsCount
+
 
         return [
             ImpactStat(title: "Total Donations", value: valid.count),
-            ImpactStat(title: "Total Donors", value: Set(valid.map { $0.firestoreID }).count),
-            ImpactStat(title: "Total NGOs", value: ngosFromFirestore.count),
+            ImpactStat(title: "Total Donors", value: totalDonors),
+            ImpactStat(title: "Total NGOs", value: totalApprovedNGOs),
             ImpactStat(title: "Meals Provided", value: meals),
             ImpactStat(title: "Beneficiaries Served", value: meals / 3),
-            ImpactStat(title: "Waste Prevented", value: meals)
+            ImpactStat(title: "Waste Prevented (KG)", value: wasteKG)
         ]
     }
+
 
     @objc private func openChatsTapped() {
         let storyboard = UIStoryboard(name: "Chat", bundle: nil)
@@ -286,56 +295,155 @@ class DonorDashboardViewController: UIViewController {
 
         case .admin:
             startListeningForAdminDonations()
+            startListeningForApprovedNGOsCount()
+            startListeningForApprovedDonorsCount()
+
+
 
         case .ngo:
             startListeningForPendingDonations()
+            startListeningForNGOImpact()
+
         }
     }
+    // MARK: start listning for admin donations
     private func startListeningForAdminDonations() {
+        donationsListener?.remove()
 
         donationsListener = db.collection("Donation")
-            .order(by: "creationDate", descending: true)
-            .limit(to: 3)
-            .addSnapshotListener { [weak self] snapshot, _ in
+            .addSnapshotListener { [weak self] snapshot, error in
                 guard let self = self else { return }
 
-                self.roleBasedDonations =
-                    snapshot?.documents.compactMap { Donation1(document: $0) } ?? []
+                if let error = error {
+                    print("❌ Admin listener error:", error)
+                    return
+                }
 
-                self.mainTableView.reloadData()
+                let all = snapshot?.documents.compactMap {
+                    Donation1(document: $0)
+                } ?? []
+
+                // 🔥 FULL DATASET FOR IMPACT
+                self.allPlatformDonations = all
+
+                // 🔥 ONLY LAST 3 FOR UI
+                let sorted = all.sorted { $0.creationDate > $1.creationDate }
+                self.roleBasedDonations = Array(sorted.prefix(3))
+
+                DispatchQueue.main.async {
+                    self.mainTableView.reloadData()
+                }
             }
     }
+    private func startListeningForNGOImpact() {
+        guard let uid = currentUserID else { return }
+
+        let ngoRef = db.collection("users").document(uid)
+
+        db.collection("Donation")
+            .whereField("ngo", isEqualTo: ngoRef)
+            .addSnapshotListener { [weak self] snapshot, error in
+                guard let self = self else { return }
+
+                if let error = error {
+                    print("❌ NGO impact listener error:", error)
+                    return
+                }
+
+                self.allNGODonations = snapshot?.documents.compactMap {
+                    Donation1(document: $0)
+                } ?? []
+
+                DispatchQueue.main.async {
+                    self.mainTableView.reloadData()
+                }
+            }
+    }
+
+    private func startListeningForApprovedDonorsCount() {
+
+        db.collection("users")
+            .whereField("role", isEqualTo: 2)          // donors
+            // .whereField("status", isEqualTo: "Approved") // only if you use status for donors
+            .addSnapshotListener { [weak self] snapshot, error in
+                guard let self = self else { return }
+
+                if let error = error {
+                    print("❌ Approved donors listener error:", error)
+                    return
+                }
+
+                self.approvedDonorsCount = snapshot?.documents.count ?? 0
+
+                DispatchQueue.main.async {
+                    self.mainTableView.reloadData()
+                }
+            }
+    }
+
+
     private func clearCellSelection(_ cell: UITableViewCell) {
         cell.selectionStyle = .none
         cell.backgroundColor = .clear
         cell.contentView.backgroundColor = .clear
         cell.selectedBackgroundView = UIView() // 🔥 kills gray overlay
     }
-
+// MARK: start listning for pending donations
     private func startListeningForPendingDonations() {
         guard let uid = currentUserID else { return }
 
         let ngoRef = db.collection("users").document(uid)
+        donationsListener?.remove()
 
         donationsListener = db.collection("Donation")
-            .whereField("ngo", isEqualTo: ngoRef)   // 🔑 THIS WAS MISSING
-            .whereField("status", isEqualTo: 1)     // Pending
-            .order(by: "creationDate", descending: true)
-            .limit(to: 3)
+            .whereField("ngo", isEqualTo: ngoRef)
+            .whereField("status", isEqualTo: 1) // ✅ PENDING ONLY
             .addSnapshotListener { [weak self] snapshot, error in
                 guard let self = self else { return }
 
                 if let error = error {
-                    print("❌ NGO donation error:", error)
+                    print("❌ NGO listener error:", error)
                     return
                 }
 
-                self.roleBasedDonations =
-                    snapshot?.documents.compactMap { Donation1(document: $0) } ?? []
+                let pending = snapshot?.documents.compactMap {
+                    Donation1(document: $0)
+                } ?? []
 
-                print("🧪 NGO pending donations:", self.roleBasedDonations.count)
+                let sorted = pending.sorted {
+                    $0.creationDate > $1.creationDate
+                }
 
-                self.mainTableView.reloadData()
+                // ✅ LAST 3 PENDING ONLY
+                self.roleBasedDonations = Array(sorted.prefix(3))
+
+                DispatchQueue.main.async {
+                    self.mainTableView.reloadData()
+                }
+            }
+    }
+
+
+
+
+    private func startListeningForApprovedNGOsCount() {
+
+        db.collection("users")
+            .whereField("role", isEqualTo: 3)
+            .whereField("status", isEqualTo: "Approved")
+            .addSnapshotListener { [weak self] snapshot, error in
+                guard let self = self else { return }
+
+                if let error = error {
+                    print("❌ Approved NGOs listener error:", error)
+                    return
+                }
+
+                self.approvedNGOsCount = snapshot?.documents.count ?? 0
+
+                DispatchQueue.main.async {
+                    self.mainTableView.reloadData()
+                }
             }
     }
 
@@ -352,21 +460,44 @@ class DonorDashboardViewController: UIViewController {
                 self.mainTableView.reloadData()
             }
     }
-
+// MARK: start listning for recent donations
     private func startListeningForRecentDonations() {
         guard let uid = currentUserID else { return }
 
         let userRef = db.collection("users").document(uid)
+        donationsListener?.remove()
 
         donationsListener = db.collection("Donation")
             .whereField("donor", isEqualTo: userRef)
-            .limit(to: 5)
-            .addSnapshotListener { [weak self] snapshot, _ in
+            .addSnapshotListener { [weak self] snapshot, error in
                 guard let self = self else { return }
-                self.recentDonations = snapshot?.documents.compactMap { Donation1(document: $0) } ?? []
-                self.mainTableView.reloadData()
+
+                if let error = error {
+                    print("❌ Donor listener error:", error)
+                    return
+                }
+
+                let all = snapshot?.documents.compactMap {
+                    Donation1(document: $0)
+                } ?? []
+
+                // 🔥 SORT BY CREATION DATE (NEWEST FIRST)
+                let sorted = all.sorted {
+                    $0.creationDate > $1.creationDate
+                }
+
+                // 🔥 ALWAYS TAKE LAST 3 — NO FILTERS
+                self.recentDonations = Array(sorted.prefix(3))
+                self.allDonations = sorted
+
+                DispatchQueue.main.async {
+                    self.mainTableView.reloadData()
+                }
             }
     }
+
+
+// MARK: start listning for impact donations
 
     private func startListeningForImpactDonations() {
         guard let uid = currentUserID else { return }
@@ -503,7 +634,7 @@ extension DonorDashboardViewController: UITableViewDataSource, UITableViewDelega
                  + CGFloat(max(0, count - 1)) * spacing
                  + padding
         case .manageUsers:
-            return isPad ? 700 : 500
+            return isPad ? 700 : 520
 
         }
     }

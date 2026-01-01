@@ -194,6 +194,17 @@ class DonorDashboardViewController: UIViewController {
     private var donationsListener: ListenerRegistration?
 
     @IBOutlet weak var mainTableView: UITableView!
+        //added by zainab mahdi
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+
+        navigationController?.navigationBar.prefersLargeTitles = true
+        navigationItem.largeTitleDisplayMode = .always
+
+        edgesForExtendedLayout = []
+
+        mainTableView.contentInsetAdjustmentBehavior = .always
+    }
 
     // MARK: - Lifecycle
     override func viewDidLoad() {

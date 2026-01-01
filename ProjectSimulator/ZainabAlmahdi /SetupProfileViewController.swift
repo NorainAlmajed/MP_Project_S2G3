@@ -7,6 +7,7 @@ class SetupProfileViewController: UIViewController,
                                   UINavigationControllerDelegate,
                                   UITextViewDelegate {
 
+    // MARK: - IBOutlets
     @IBOutlet weak var continueButton: UIButton!
     @IBOutlet weak var uploadButton: UIButton!
     @IBOutlet weak var profileImageView: UIImageView!
@@ -19,6 +20,7 @@ class SetupProfileViewController: UIViewController,
     private let maxBioLength = 240
     private var bioPlaceholderText = ""
 
+    // MARK: - Lifecycle
     override func viewDidLoad() {
         super.viewDidLoad()
 
@@ -27,6 +29,11 @@ class SetupProfileViewController: UIViewController,
 
         styleActionButton(continueButton)
         styleActionButton(uploadButton)
+
+        // ✅ APPLY PROFILE IMAGE STYLE (same as teammate)
+        profileImageView.applyProfileStyle(
+            cornerRadius: profileImageView.frame.height / 2
+        )
 
         preloadUserData()
         configureBioTitle()
@@ -38,6 +45,11 @@ class SetupProfileViewController: UIViewController,
     // MARK: - Preload
     func preloadUserData() {
         fullNameTextField.text = SessionManager.shared.fullName
+
+        // ✅ Load existing profile image if available
+        if let imageUrl = SessionManager.shared.profileImageURL {
+            profileImageView.loadProfileImage(from: imageUrl)
+        }
     }
 
     // MARK: - Bio Configuration
@@ -54,18 +66,15 @@ class SetupProfileViewController: UIViewController,
     func configureBioTextView() {
         bioTextView.delegate = self
 
-        // TextField-like styling
         bioTextView.layer.cornerRadius = 8
         bioTextView.layer.borderWidth = 1
         bioTextView.layer.borderColor = UIColor.systemGray4.cgColor
         bioTextView.backgroundColor = .systemBackground
-
         bioTextView.font = UIFont.systemFont(ofSize: 16)
         bioTextView.textContainerInset = UIEdgeInsets(
             top: 12, left: 10, bottom: 12, right: 10
         )
 
-        // Placeholder
         bioTextView.text = bioPlaceholderText
         bioTextView.textColor = .placeholderText
     }
@@ -110,7 +119,13 @@ class SetupProfileViewController: UIViewController,
     ) {
         if let image = info[.editedImage] as? UIImage ??
                        info[.originalImage] as? UIImage {
+
             profileImageView.image = image
+
+            // ✅ RE-APPLY STYLE AFTER IMAGE CHANGE
+            profileImageView.applyProfileStyle(
+                cornerRadius: profileImageView.frame.height / 2
+            )
         }
         dismiss(animated: true)
     }

@@ -56,23 +56,54 @@ class SplashViewController: UIViewController {
 
         // MARK: - UI Enhancements
 
-        private func addGradientBackground() {
-            let g = CAGradientLayer()
-            let beige = UIColor(named: "BeigeCol") ?? UIColor.systemBackground
+    private func addGradientBackground() {
+        let g = CAGradientLayer()
+        g.startPoint = CGPoint(x: 0, y: 0)
+        g.endPoint   = CGPoint(x: 1, y: 1)
+        g.locations  = [0.0, 0.5, 1.0]
+        g.frame = view.bounds
 
-            g.colors = [
-                beige.cgColor,
-                UIColor.secondarySystemBackground.cgColor,
-                beige.withAlphaComponent(0.92).cgColor
-            ]
-            g.locations = [0.0, 0.6, 1.0]
-            g.startPoint = CGPoint(x: 0.0, y: 0.0)
-            g.endPoint   = CGPoint(x: 1.0, y: 1.0)
-            g.frame = view.bounds
+        view.layer.insertSublayer(g, at: 0)
+        gradientLayer = g
 
-            view.layer.insertSublayer(g, at: 0)
-            gradientLayer = g
+        applyThemeForCurrentStyle()
+    }
+
+
+    private func applyThemeForCurrentStyle() {
+        let beige = UIColor(named: "BeigeCol") ?? UIColor.systemBackground
+        let green = UIColor(named: "greenCol") ?? UIColor.systemGreen
+
+        // ✅ Beige in both light & dark (dynamic from Assets)
+        gradientLayer?.colors = [
+            beige.cgColor,
+            beige.withAlphaComponent(0.96).cgColor,
+            beige.cgColor
+        ]
+
+        // ✅ Shadow tuned for mode (no black blob)
+        if traitCollection.userInterfaceStyle == .dark {
+            logoImageView.layer.shadowColor = green.withAlphaComponent(0.35).cgColor
+            logoImageView.layer.shadowOpacity = 0.22
+            logoImageView.layer.shadowRadius = 18
+            logoImageView.layer.shadowOffset = CGSize(width: 0, height: 10)
+        } else {
+            logoImageView.layer.shadowColor = UIColor.black.cgColor
+            logoImageView.layer.shadowOpacity = 0.18
+            logoImageView.layer.shadowRadius = 14
+            logoImageView.layer.shadowOffset = CGSize(width: 0, height: 8)
         }
+    }
+
+
+    override func traitCollectionDidChange(_ previousTraitCollection: UITraitCollection?) {
+        super.traitCollectionDidChange(previousTraitCollection)
+
+        if previousTraitCollection?.userInterfaceStyle != traitCollection.userInterfaceStyle {
+            applyThemeForCurrentStyle()
+        }
+    }
+
 
         /// Slow-moving gradient = premium feel
         private func animateGradientBackground() {

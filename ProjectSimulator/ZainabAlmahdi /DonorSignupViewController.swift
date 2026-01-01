@@ -1,10 +1,3 @@
-//
-//  DonorSignupViewController.swift
-//  ProjectSimulator
-//
-//  Created by BP-36-201-02 on 20/12/2025.
-//
-
 import UIKit
 import FirebaseAuth
 import FirebaseFirestore
@@ -25,14 +18,67 @@ class DonorSignupViewController: UIViewController {
         navigationItem.title = "Sign Up"
     }
 
+    // MARK: - Navigation
+
     @IBAction func goToLoginTapped(_ sender: UIButton) {
         navigationController?.popToRootViewController(animated: true)
     }
 
     @IBAction func registerButtonTapped(_ sender: UIButton) {
         guard validateInputs() else { return }
-        createDonorAccount()
+
+        let username = usernameTextField.text?
+            .trimmingCharacters(in: .whitespacesAndNewlines) ?? ""
+
+        guard !username.isEmpty else {
+            showAlert(title: "Missing Username", message: "Please enter a username.")
+            return
+        }
+
+        signupButton.isEnabled = false
+
+        checkUsernameAvailability(username) { [weak self] available in
+            DispatchQueue.main.async {
+                guard let self = self else { return }
+
+                if !available {
+                    self.signupButton.isEnabled = true
+                    self.showAlert(
+                        title: "Username Taken",
+                        message: "This username is already in use. Please choose another one."
+                    )
+                    return
+                }
+
+                // ✅ Username is unique → proceed
+                self.createDonorAccount()
+            }
+        }
     }
+
+    
+    func checkUsernameAvailability(
+        _ username: String,
+        completion: @escaping (Bool) -> Void
+    ) {
+        Firestore.firestore()
+            .collection("users")
+            .whereField("username", isEqualTo: username)
+            .getDocuments { snapshot, error in
+
+                if let error = error {
+                    print("❌ Username check error:", error.localizedDescription)
+                    completion(false)
+                    return
+                }
+
+                // Username is available if no documents exist
+                completion(snapshot?.documents.isEmpty == true)
+            }
+    }
+
+
+    // MARK: - Validation
 
     func validateInputs() -> Bool {
 
@@ -79,6 +125,8 @@ class DonorSignupViewController: UIViewController {
         return true
     }
 
+    // MARK: - Firebase Signup
+
     func createDonorAccount() {
         signupButton.isEnabled = false
 
@@ -90,7 +138,10 @@ class DonorSignupViewController: UIViewController {
 
             if let error = error {
                 self.signupButton.isEnabled = true
-                self.showAlert(title: "Registration Failed", message: error.localizedDescription)
+                self.showAlert(
+                    title: "Registration Failed",
+                    message: error.localizedDescription
+                )
                 return
             }
 
@@ -100,47 +151,54 @@ class DonorSignupViewController: UIViewController {
             }
 
             self.saveDonorToFirestore(uid: uid, email: email)
-            
-
         }
     }
 
+    // MARK: - Firestore
+
     func saveDonorToFirestore(uid: String, email: String) {
+
+        let donorData: [String: Any] = [
+            "role": 2,
+            "username": usernameTextField.text?.trimmingCharacters(in: .whitespacesAndNewlines) ?? "",
+            "full_name": nameTextField.text?.trimmingCharacters(in: .whitespacesAndNewlines) ?? "",
+            "number": phoneNumberTextField.text?.trimmingCharacters(in: .whitespacesAndNewlines) ?? "",
+            "email": email,
+            "profile_image_url": "",          // ✅ REQUIRED
+            "profile_completed": false,
+            "created_at": Timestamp()
+        ]
 
         Firestore.firestore()
             .collection("users")
             .document(uid)
-            .setData([
-                "role": 2,
-                "username": usernameTextField.text ?? "",
-                "full_name": nameTextField.text ?? "",
-                "number": phoneNumberTextField.text ?? "",
-                "email": email,
-                "profile_completed": false,
-                "created_at": Timestamp()
-            ]) { [weak self] error in
+            .setData(donorData) { [weak self] error in
                 guard let self = self else { return }
 
                 if let error = error {
                     self.signupButton.isEnabled = true
-                    self.showAlert(title: "Registration Failed", message: error.localizedDescription)
+                    self.showAlert(
+                        title: "Registration Failed",
+                        message: error.localizedDescription
+                    )
                     return
                 }
 
-                
-                //Zahraa Hubail
-                self.sendAdminNotification(for: self.usernameTextField.text ?? "")
-                
+                self.sendAdminNotification(
+                    for: self.usernameTextField.text ?? ""
+                )
+
                 self.loadSessionAndRoute()
-                
-           
-                
             }
     }
 
+    // MARK: - Session + Routing
+
     func loadSessionAndRoute() {
 
-        SessionManager.shared.fetchUserRole { success in
+        SessionManager.shared.loadUserSession { [weak self] success in
+            guard let self = self else { return }
+
             DispatchQueue.main.async {
                 if success {
 
@@ -171,6 +229,8 @@ class DonorSignupViewController: UIViewController {
         }
     }
 
+    // MARK: - Helpers
+
     func showAlert(title: String, message: String) {
         let alert = UIAlertController(
             title: title,
@@ -185,27 +245,21 @@ class DonorSignupViewController: UIViewController {
         button.layer.cornerRadius = button.frame.height / 2
         button.clipsToBounds = true
     }
-    
+
+    // MARK: - Admin Notification
+
     func sendAdminNotification(for username: String) {
         let adminID = "TwWqBSGX4ec4gxCWCZcbo7WocAI2"
-        
+
         let notificationData: [String: Any] = [
             "date": Timestamp(date: Date()),
             "title": "New Donor Registration",
             "description": "\(username) has just signed up to the system.",
             "userID": adminID
         ]
-        
+
         Firestore.firestore()
             .collection("Notification")
-            .addDocument(data: notificationData) { error in
-                if let error = error {
-                    print("Failed to send notification: \(error.localizedDescription)")
-                } else {
-                    print("Admin notification sent successfully.")
-                }
-            }
+            .addDocument(data: notificationData)
     }
-
-    
 }

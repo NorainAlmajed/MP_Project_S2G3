@@ -13,14 +13,10 @@ class RaghadSection7TableViewCell: UITableViewCell, UITextViewDelegate {
 //    @IBOutlet weak var lblWeightError: UILabel!   //  error label
 //
 //    var onWeightChanged: ((Double?) -> Void)?     // ⚖️ send value to
-    
-    
-   
-
-    
-    // 🟣 BEGIN EDIT CALLBACK
+ 
+    // BEGIN EDIT CALLBACK
     var onBeginEditing: (() -> Void)?
-    // ✅ SEND TEXT TO VIEW CONTROLLER
+    //  SEND TEXT TO VIEW CONTROLLER
     var onTextChanged: ((String?) -> Void)?
 
 
@@ -151,10 +147,7 @@ class RaghadSection7TableViewCell: UITableViewCell, UITextViewDelegate {
             textView.text = String(textView.text.prefix(maxCharacters))
         }
         updateCounter(currentCount: textView.text.count)
-        // ✅ send updated text (nil if empty)
-//        let t = txtDescription.text.trimmingCharacters(in: .whitespacesAndNewlines)
-//        onTextChanged?(t.isEmpty ? nil : t)
-        
+
         
         let t = txtDescription.text.trimmingCharacters(in: .whitespacesAndNewlines)
         if t.isEmpty || t == placeholder {
@@ -162,15 +155,7 @@ class RaghadSection7TableViewCell: UITableViewCell, UITextViewDelegate {
         } else {
             onTextChanged?(t)
         }
-
-
     }
-
-    
-    
-    
-
-    
     private func addDoneButton() {
         let toolbar = UIToolbar(frame: CGRect(x: 0, y: 0, width: UIScreen.main.bounds.width, height: 44))
         toolbar.autoresizingMask = [.flexibleWidth]
@@ -183,8 +168,6 @@ class RaghadSection7TableViewCell: UITableViewCell, UITextViewDelegate {
         txtDescription.inputAccessoryView = toolbar
     }
 
-    
-    
         @objc private func doneTapped() {
             txtDescription.resignFirstResponder()
         }

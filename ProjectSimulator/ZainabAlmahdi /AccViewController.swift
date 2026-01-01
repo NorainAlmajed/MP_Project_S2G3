@@ -8,10 +8,12 @@ import FirebaseAuth
 
 class AccViewController: UITableViewController {
 
+    // MARK: - IBOutlets
+    @IBOutlet weak var profileImageView: UIImageView!
     @IBOutlet weak var nameLabel: UILabel!
-    
     @IBOutlet weak var roleLabel: UILabel!
-    
+
+    // MARK: - Rows
     enum AccountRow {
         case settings
         case createDonor
@@ -22,22 +24,72 @@ class AccViewController: UITableViewController {
 
     var rows: [AccountRow] = []
 
+    // MARK: - Lifecycle
     override func viewDidLoad() {
         super.viewDidLoad()
         title = "Account"
+        styleProfileImageView()
         configureRows()
     }
 
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
-        
-        nameLabel.text = SessionManager.shared.fullName ?? "User"
-        roleLabel.text = SessionManager.shared.roleDisplayName
-        
-        configureRows()
-        tableView.reloadData()
+
+        SessionManager.shared.loadUserSession { [weak self] success in
+            guard success else { return }
+
+            DispatchQueue.main.async {
+                self?.updateUI()
+            }
+        }
     }
 
+    // MARK: - UI Update
+    func updateUI() {
+        nameLabel.text = SessionManager.shared.fullName ?? "User"
+        roleLabel.text = SessionManager.shared.roleDisplayName
+
+        configureRows()
+        tableView.reloadData()
+
+        loadProfileImage()
+    }
+
+    // MARK: - Profile Image Styling (MATCHES TEAMMATE)
+    func styleProfileImageView() {
+        profileImageView.layer.cornerRadius = 7
+        profileImageView.clipsToBounds = true
+        profileImageView.layer.borderWidth = 1
+        profileImageView.layer.borderColor = UIColor.systemGray.cgColor
+        profileImageView.contentMode = .scaleAspectFill
+
+        // Placeholder
+        profileImageView.image = UIImage(systemName: "person.circle.fill")
+        profileImageView.tintColor = .systemGray3
+    }
+
+    // MARK: - Load Profile Image
+    func loadProfileImage() {
+        guard let urlString = SessionManager.shared.profileImageURL,
+              !urlString.isEmpty,
+              let url = URL(string: urlString) else {
+            return
+        }
+
+        // Placeholder while loading
+        profileImageView.image = UIImage(systemName: "person.circle.fill")
+
+        URLSession.shared.dataTask(with: url) { [weak self] data, _, _ in
+            guard let data = data,
+                  let image = UIImage(data: data) else { return }
+
+            DispatchQueue.main.async {
+                self?.profileImageView.image = image
+            }
+        }.resume()
+    }
+
+    // MARK: - Rows Config
     func configureRows() {
         rows = [.settings]
 
@@ -49,9 +101,11 @@ class AccViewController: UITableViewController {
         if SessionManager.shared.isDonor || SessionManager.shared.isNGO {
             rows.append(.contactSupport)
         }
+
         rows.append(.logout)
     }
 
+    // MARK: - TableView DataSource
     override func tableView(_ tableView: UITableView,
                             numberOfRowsInSection section: Int) -> Int {
         rows.count
@@ -81,7 +135,6 @@ class AccViewController: UITableViewController {
         case .contactSupport:
             cell.textLabel?.text = "Contact Support"
 
-
         case .logout:
             cell.textLabel?.text = "Logout"
             cell.textLabel?.textColor = .systemRed
@@ -91,29 +144,31 @@ class AccViewController: UITableViewController {
         return cell
     }
 
+    // MARK: - TableView Delegate
     override func tableView(_ tableView: UITableView,
                             didSelectRowAt indexPath: IndexPath) {
-        
+
         tableView.deselectRow(at: indexPath, animated: true)
-        
+
         switch rows[indexPath.row] {
         case .settings:
             goToSettings()
-            
+
         case .createDonor:
             goToCreateDonor()
-            
+
         case .createNGO:
             goToCreateNGO()
-            
+
         case .contactSupport:
             goToContactSupport()
-            
+
         case .logout:
             logoutUser()
         }
     }
-    
+
+    // MARK: - Navigation
     func goToSettings() {
         let vc = UIStoryboard(name: "Settings", bundle: nil)
             .instantiateViewController(withIdentifier: "SettingViewController")
@@ -133,11 +188,19 @@ class AccViewController: UITableViewController {
     }
 
     func goToContactSupport() {
-        let vc = UIStoryboard(name: "Main", bundle: nil)
-            .instantiateViewController(withIdentifier: "ContactSupportViewController")
-        navigationController?.pushViewController(vc, animated: true)
+        let storyboard = UIStoryboard(name: "Chat", bundle: nil)
+
+        guard let chatVC = storyboard.instantiateViewController(
+            withIdentifier: "ChatListViewController"
+        ) as? ChatListViewController else {
+            print("ChatListViewController not found")
+            return
+        }
+
+        navigationController?.pushViewController(chatVC, animated: true)
     }
 
+    // MARK: - Logout
     func logoutUser() {
         let alert = UIAlertController(
             title: "Logout",
@@ -169,7 +232,6 @@ class AccViewController: UITableViewController {
         present(alert, animated: true)
     }
 
-    
     func showLogoutError() {
         let alert = UIAlertController(
             title: "Error",

@@ -8,6 +8,7 @@
 import UIKit
 import FirebaseFirestore
 import FirebaseStorage
+import Cloudinary
 
 protocol EditUserDelegate: AnyObject {
     func didUpdateUser()
@@ -17,6 +18,9 @@ class EditUsersViewController: UIViewController, UIImagePickerControllerDelegate
     
     var userToEdit: NorainAppUser!
     weak var delegate: EditUserDelegate?
+    private let cloudinaryService = CloudinaryService()
+    private var isUploadingImage = false
+    private var uploadedImageUrl: String?
     private let db = Firestore.firestore()
     
     @IBOutlet weak var causeStack: UIStackView!
@@ -24,7 +28,6 @@ class EditUsersViewController: UIViewController, UIImagePickerControllerDelegate
     @IBOutlet weak var govStack: UIStackView!
     @IBOutlet weak var statusStack: UIStackView!
     
-    @IBOutlet weak var licenseBtn: UIButton!
     @IBOutlet weak var uploadPicBtn: UIButton!
     @IBOutlet weak var ImagePickerEditView: UIImageView!
     
@@ -51,7 +54,28 @@ class EditUsersViewController: UIViewController, UIImagePickerControllerDelegate
         let backButton = UIBarButtonItem(image: UIImage(systemName: "chevron.left"), style: .plain, target: self, action: #selector(backTapped))
         self.navigationItem.leftBarButtonItem = backButton
         backButton.tintColor = .black
-        
+
+        DispatchQueue.main.asyncAfter(deadline: .now() + 1.0){
+        print("debug info")
+        print("uploadPicBtn frame:", self.uploadPicBtn.frame)
+        print("uploadPicBtn hidden:", self.uploadPicBtn.isHidden)
+        print("uploadPicBtn user interaction enabled:", self.uploadPicBtn.isUserInteractionEnabled)
+        print("uploadPicBtn alpha:", self.uploadPicBtn.alpha)
+        print("image picker view frame:", self.ImagePickerEditView.frame)
+        print("image picker view user interaction enabled:", self.ImagePickerEditView.isUserInteractionEnabled)
+        print("image picker view image:", self.ImagePickerEditView.image != nil)
+            
+        print("uploadPicBtn superview:", self.uploadPicBtn.superview?.classForCoder ?? "nil")
+        print("uploadPicBtn superview frame :", self.uploadPicBtn.superview?.frame ?? .zero)
+        print("uploadPicBtn superview user interaction:", self.uploadPicBtn.superview?.isUserInteractionEnabled ?? false)
+            
+        print("uploadPicBtn can recieve touches:", self.uploadPicBtn.point(inside: CGPoint(x: 76, y: 19), with: nil))
+
+
+
+            
+            
+        }
         self.setupView()
         fetchUserFromFirestore()
         setupMenus()
@@ -81,12 +105,13 @@ class EditUsersViewController: UIViewController, UIImagePickerControllerDelegate
                 return
             }
             
-            // Update the UI with Firebase data
-            self.populateDataFromFirestore(data: data)
-            print("✅ User data fetched from Firestore")
+            // ✅ ALWAYS update UI on main thread
+            DispatchQueue.main.async {
+                self.populateDataFromFirestore(data: data)
+                print("✅ User data fetched from Firestore")
+            }
         }
     }
-    
     private func populateDataFromFirestore(data: [String: Any]) {
         usernameField?.text = data["username"] as? String
         nameField?.text = data["full_name"] as? String
@@ -94,16 +119,25 @@ class EditUsersViewController: UIViewController, UIImagePickerControllerDelegate
         emailField?.text = data["email"] as? String
         
         if let imageUrlString = data["profile_image_url"] as? String, !imageUrlString.isEmpty {
-                FetchImage.fetchImage(from: imageUrlString) { [weak self] image in
+            FetchImage.fetchImage(from: imageUrlString) { [weak self] image in
+                // ✅ CRITICAL FIX: Update UI on main thread
+                DispatchQueue.main.async {
                     if let downloadedImage = image {
                         self?.ImagePickerEditView.image = downloadedImage
                     } else {
                         self?.ImagePickerEditView.image = UIImage(systemName: "person.circle.fill")
                     }
+                    // ✅ Ensure interaction is enabled AFTER image is set
+                    self?.ImagePickerEditView.isUserInteractionEnabled = true
+                    self?.uploadPicBtn.isUserInteractionEnabled = true
                 }
-            } else {
-                self.ImagePickerEditView.image = UIImage(systemName: "person.circle.fill")
             }
+        } else {
+            // ✅ No image URL, set placeholder immediately
+            self.ImagePickerEditView.image = UIImage(systemName: "person.circle.fill")
+            self.uploadPicBtn.isUserInteractionEnabled = true
+        }
+        
         let role = data["role"] as? Int ?? 0
         
         if role == 3 { // NGO
@@ -118,22 +152,27 @@ class EditUsersViewController: UIViewController, UIImagePickerControllerDelegate
             }
         }
     }
-    
     private func populateDataFromLocal() {
-        // Fallback to local object if Firebase fails
         guard let user = userToEdit else { return }
         
         usernameField?.text = user.username
         nameField?.text = user.name
         phoneField?.text = "\(user.phoneNumber)"
         emailField?.text = user.email
+        
         if !user.userImg.isEmpty {
-                FetchImage.fetchImage(from: user.userImg) { [weak self] image in
+            FetchImage.fetchImage(from: user.userImg) { [weak self] image in
+                // ✅ CRITICAL FIX: Update UI on main thread
+                DispatchQueue.main.async {
                     self?.ImagePickerEditView.image = image ?? UIImage(systemName: "person.circle.fill")
+                    self?.ImagePickerEditView.isUserInteractionEnabled = true
+                    self?.uploadPicBtn.isUserInteractionEnabled = true
                 }
-            } else {
-                self.ImagePickerEditView.image = UIImage(systemName: "person.circle.fill")
             }
+        } else {
+            self.ImagePickerEditView.image = UIImage(systemName: "person.circle.fill")
+            self.uploadPicBtn.isUserInteractionEnabled = true
+        }
         
         if let ngo = user as? NorainNGO {
             addressField?.text = ngo.address
@@ -148,14 +187,18 @@ class EditUsersViewController: UIViewController, UIImagePickerControllerDelegate
         saveTapped()
     }
     
+    
     @objc func saveTapped() {
-        guard let user = userToEdit else {
-            showAlert(title: "Error", message: "No user to save")
-            return
+        if isUploadingImage {
+                showAlert(title: "Please Wait", message: "Image is still uploading. Please wait a moment.")
+                return
+            }
+            
+            guard let user = userToEdit else {
+                showAlert(title: "Error", message: "No user to save")
+                return
+            
         }
-        
-
-        
         // Prepare the update data
         var updateData: [String: Any] = [
             "username": usernameField.text?.trimmingCharacters(in: .whitespacesAndNewlines) ?? "",
@@ -199,7 +242,8 @@ class EditUsersViewController: UIViewController, UIImagePickerControllerDelegate
                 // Show success alert and pop
                 let alert = UIAlertController(title: "Success", message: "Changes saved.", preferredStyle: .alert)
                 alert.addAction(UIAlertAction(title: "OK", style: .default, handler: { _ in
-                    self.navigationController?.popViewController(animated: true)
+//                    self.navigationController?.popViewController(animated: true)
+                    self.dismiss(animated: true)
                 }))
                 self.present(alert, animated: true)
             }
@@ -307,14 +351,52 @@ class EditUsersViewController: UIViewController, UIImagePickerControllerDelegate
     }
     
     func setupView() {
-        ImagePickerEditView.isUserInteractionEnabled = true
+        ImagePickerEditView.layer.cornerRadius = 7
+        ImagePickerEditView.clipsToBounds = true
+        ImagePickerEditView.layer.borderWidth = 1
+        ImagePickerEditView.layer.borderColor = UIColor.systemGray.cgColor
+        
+        if let parentView = uploadPicBtn.superview{
+            parentView.translatesAutoresizingMaskIntoConstraints = false
+            
+            parentView.constraints.forEach { constraint in
+                
+                    if constraint.firstAttribute == .height{
+                           constraint.isActive = false
+                       }
+                   }
+            
+            NSLayoutConstraint.activate([
+                parentView.heightAnchor.constraint(greaterThanOrEqualToConstant: 50)
+            ])
+            
+            parentView.layoutIfNeeded()
+        }
+        
+       
+        ImagePickerEditView.isUserInteractionEnabled = false
+        ImagePickerEditView.gestureRecognizers?.forEach { gesture in
+            ImagePickerEditView.removeGestureRecognizer(gesture)
+        }
+
+        uploadPicBtn.isHidden = false
+        uploadPicBtn.isEnabled = true
         uploadPicBtn.isUserInteractionEnabled = true
+        uploadPicBtn.alpha = 1.0
+        
+        view.bringSubviewToFront(uploadPicBtn)
+        
+        if ImagePickerEditView.image == nil {
+            ImagePickerEditView.image = UIImage(systemName: "person.circle.fill")
+        }
+        
+        
+        
         let isNGO = userToEdit is NorainNGO
         causeStack.isHidden = !isNGO
         addressStack.isHidden = !isNGO
         govStack.isHidden = !isNGO
         statusStack.isHidden = !isNGO
-        licenseBtn.isHidden = !isNGO
     }
     
     private func showAlert(title: String, message: String) {
@@ -359,49 +441,50 @@ class EditUsersViewController: UIViewController, UIImagePickerControllerDelegate
         ImagePickerEditView.image = image
         
         // 2. Start the upload process
-        uploadImageToFirebaseStorage(image)
+        uploadImageToCloudinary(image)
     }
     
     func imagePickerControllerDidCancel(_ picker: UIImagePickerController) {
         dismiss(animated: true, completion: nil)
     }
     
-    // MARK: - Optional: Upload Image to Firebase Storage
-    private func uploadImageToFirebaseStorage(_ image: UIImage) {
+    // MARK: - Upload Image to Cloudinary
+    private func uploadImageToCloudinary(_ image: UIImage) {
         guard let user = userToEdit else { return }
-        guard let imageData = image.jpegData(compressionQuality: 0.7) else { return } // 0.7 is better for mobile data
         
-        // Show a small indicator or disable the save button so they don't leave early
+        // Show uploading state
         self.saveBtn.isEnabled = false
         self.saveBtn.setTitle("Uploading Image...", for: .normal)
+        self.isUploadingImage = true
         
-        // Path: use documentID to ensure uniqueness
-        let storageRef = Storage.storage().reference().child("userImages/\(user.documentID).jpg")
-        
-        storageRef.putData(imageData, metadata: nil) { [weak self] metadata, error in
+        cloudinaryService.uploadImage(image) { [weak self] url in
             guard let self = self else { return }
             
-            if let error = error {
-                print("❌ Storage Error: \(error.localizedDescription)")
-                self.saveBtn.isEnabled = true
+            self.isUploadingImage = false
+            self.saveBtn.isEnabled = true
+            self.saveBtn.setTitle("Save Changes", for: .normal)
+            
+            guard let imageUrl = url else {
+                print("❌ Cloudinary upload failed")
+                self.showAlert(title: "Upload Failed", message: "Could not upload image. Please try again.")
                 return
             }
             
-            storageRef.downloadURL { url, error in
-                if let downloadURL = url {
-                    // ✅ MATCH YOUR FIELDS: Use "profile_image_url" to match your fetch logic
-                    self.db.collection("users").document(user.documentID).updateData([
-                        "profile_image_url": downloadURL.absoluteString
-                    ]) { error in
-                        self.saveBtn.isEnabled = true
-                        self.saveBtn.setTitle("Save Changes", for: .normal)
-                        
-                        if error == nil {
-                            print("✅ Image URL synced to Firestore")
-                            // Update local object so it's ready if they hit 'Save' for other fields
-                            self.userToEdit.userImg = downloadURL.absoluteString
-                        }
-                    }
+            print("✅ Cloudinary Image URL:", imageUrl)
+            self.uploadedImageUrl = imageUrl
+            
+            // Update Firestore with the new Cloudinary URL
+            self.db.collection("users").document(user.documentID).updateData([
+                "profile_image_url": imageUrl
+            ]) { error in
+                if let error = error {
+                    print("❌ Failed to update image URL in Firestore:", error.localizedDescription)
+                    self.showAlert(title: "Error", message: "Image uploaded but failed to save URL")
+                } else {
+                    print("✅ Image URL saved to Firestore")
+                    self.userToEdit.userImg = imageUrl
+                    self.delegate?.didUpdateUser()
+
                 }
             }
         }

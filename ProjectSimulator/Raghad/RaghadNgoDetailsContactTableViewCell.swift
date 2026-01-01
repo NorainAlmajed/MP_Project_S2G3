@@ -25,29 +25,29 @@ class RaghadNgoDetailsContactTableViewCell: UITableViewCell {
     override func awakeFromNib() {
             super.awakeFromNib()
 
-            // ✅ Make cell background clear
+            //  Make cell background clear
             backgroundColor = .clear
             contentView.backgroundColor = .clear
 
-            // ✅ Light = white | Dark = system background (SAME as Mission cell)
+            //  Light = white | Dark = system background (SAME as Mission cell)
             contactView.backgroundColor = UIColor { trait in
                 trait.userInterfaceStyle == .dark
                     ? UIColor.secondarySystemBackground
                     : UIColor.white
             }
 
-            // ✅ Card styling
+            //  Card styling
             contactView.layer.cornerRadius = 16
             contactView.layer.borderWidth = 1
             contactView.layer.borderColor = UIColor.separator.cgColor
             contactView.clipsToBounds = true
 
-            // ✅ Text always visible
+            //  Text always visible
             lblPgoneNumber.textColor = .label
             lblEmail.textColor = .label
         }
 
-        // ✅ Update border color when switching Light/Dark
+        //  Update border color when switching Light/Dark
         override func traitCollectionDidChange(_ previousTraitCollection: UITraitCollection?) {
             super.traitCollectionDidChange(previousTraitCollection)
 

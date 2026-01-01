@@ -2,10 +2,12 @@ import UIKit
 
 class SettingViewController: UITableViewController {
 
+    // MARK: - IBOutlets
+    @IBOutlet weak var profileImageView: UIImageView!
     @IBOutlet weak var nameLabel: UILabel!
-    
     @IBOutlet weak var roleLabel: UILabel!
-    
+
+    // MARK: - Rows
     enum SettingsRow {
         case editProfile
         case security
@@ -16,22 +18,60 @@ class SettingViewController: UITableViewController {
 
     var rows: [SettingsRow] = []
 
+    // MARK: - Lifecycle
     override func viewDidLoad() {
         super.viewDidLoad()
         title = "Settings"
+        styleProfileImageView()
         configureRows()
     }
 
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
-        
+
         nameLabel.text = SessionManager.shared.fullName ?? "User"
         roleLabel.text = SessionManager.shared.roleDisplayName
-        
+
+        loadProfileImage()
         configureRows()
         tableView.reloadData()
     }
 
+    // MARK: - Profile Image Styling (MATCHES TEAMMATE)
+    func styleProfileImageView() {
+        profileImageView.layer.cornerRadius = 7
+        profileImageView.clipsToBounds = true
+        profileImageView.layer.borderWidth = 1
+        profileImageView.layer.borderColor = UIColor.systemGray.cgColor
+        profileImageView.contentMode = .scaleAspectFill
+
+        // Placeholder
+        profileImageView.image = UIImage(systemName: "person.circle.fill")
+        profileImageView.tintColor = .systemGray3
+    }
+
+    // MARK: - Load Profile Image
+    func loadProfileImage() {
+        guard let urlString = SessionManager.shared.profileImageURL,
+              !urlString.isEmpty,
+              let url = URL(string: urlString) else {
+            return
+        }
+
+        // Placeholder while loading
+        profileImageView.image = UIImage(systemName: "person.circle.fill")
+
+        URLSession.shared.dataTask(with: url) { [weak self] data, _, _ in
+            guard let data = data,
+                  let image = UIImage(data: data) else { return }
+
+            DispatchQueue.main.async {
+                self?.profileImageView.image = image
+            }
+        }.resume()
+    }
+
+    // MARK: - Configure Rows
     func configureRows() {
         rows = [.editProfile, .security]
 
@@ -49,6 +89,7 @@ class SettingViewController: UITableViewController {
         }
     }
 
+    // MARK: - TableView DataSource
     override func tableView(_ tableView: UITableView,
                             numberOfRowsInSection section: Int) -> Int {
         rows.count
@@ -85,6 +126,7 @@ class SettingViewController: UITableViewController {
         return cell
     }
 
+    // MARK: - TableView Delegate
     override func tableView(_ tableView: UITableView,
                             didSelectRowAt indexPath: IndexPath) {
 
@@ -108,6 +150,7 @@ class SettingViewController: UITableViewController {
         }
     }
 
+    // MARK: - Navigation
     func goToEditProfile() {
         let vc = UIStoryboard(name: "Settings", bundle: nil)
             .instantiateViewController(withIdentifier: "EditProfileViewController")

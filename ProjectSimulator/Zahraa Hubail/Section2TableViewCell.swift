@@ -38,7 +38,7 @@ class Section2TableViewCell: UITableViewCell {
         // Configure the view for the selected state
     }
     
-    func setup(with donation: ZahraaDonation) {
+    func setup(with donation: Donation) {
         donorLbl.text = donation.donor.username
         
         //  Setting the format of the address
@@ -46,9 +46,12 @@ class Section2TableViewCell: UITableViewCell {
 
         addressParts.append("Building \(donation.address.building)")
 
-        if let flat = donation.address.flat {
+        if let flat = donation.address.flat?
+                .trimmingCharacters(in: .whitespacesAndNewlines),
+           !flat.isEmpty {
             addressParts.append("Flat \(flat)")
         }
+
 
         addressParts.append("Road \(donation.address.road)")
         addressParts.append("Block \(donation.address.block)")

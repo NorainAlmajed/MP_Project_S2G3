@@ -9,56 +9,25 @@ import FirebaseCore
 import FirebaseFirestore
 import UIKit
 
-protocol NGOFilterDelegate: AnyObject {
-    func previewNgoFilters(
-         sort: String?,
-         locations: Set<String>,
-         types: Set<String>
-     ) -> Int
-    func didApplyNgoFilters(
-        sort: String?,
-        locations: Set<String>,
-        types: Set<String>
-    )
-
-    func currentNgoFilters() -> (
-        sort: String?,
-        locations: Set<String>,
-        types: Set<String>
-    )
-    
-    func currentResultCount() -> Int
-
-
-}
-
 class NgoViewController: UIViewController,
                          UITableViewDelegate,
                          UITableViewDataSource,
-                         UISearchBarDelegate, NGOFilterDelegate {
+                         UISearchBarDelegate {
 
     @IBOutlet weak var tableView: UITableView!
 
-    // ✅ Your data
+    //  Your data
     //private var shownNgos: [NGO] = []
-   // private var allNgos: [NGO] = []   // ✅ source of truth from Firebase
-    private var shownNgos: [NGO] = []   // ✅ what table shows
+   // private var allNgos: [NGO] = []   //  source of truth from Firebase
+    private var shownNgos: [NGO] = []   // what table shows
     private var allNgos: [NGO] = []
     private var selectedCategory: String? = nil
-    private var ngoGovernorateById: [String: String] = [:]
-    private var ngoCauseById: [String: String] = [:]
 
-    // ✅ Header UI (same style as Donor List)
+    //  Header UI (same style as Donor List)
     private var searchBar: UISearchBar!
     private var filterButton: UIButton!
-    
-    //added by zainab mahdi
-    private var currentSort: String?
-    private var currentLocations: Set<String> = []
-    private var currentTypes: Set<String> = []
-    private var ngoDocIDs: [Int: String] = [:]
 
-    // ✅ Empty state label
+    //  Empty state label
     private let noNgosLabel: UILabel = {
         let label = UILabel()
         label.text = "No NGOs available"
@@ -80,7 +49,7 @@ class NgoViewController: UIViewController,
         tableView.delegate = self
         tableView.dataSource = self
 
-        // ✅ Start list
+        //  Start list
        // shownNgos = arrNgo
        
 
@@ -88,10 +57,10 @@ class NgoViewController: UIViewController,
         
         
 
-        // ✅ Add header (Search + Filter) UNDER the navigation bar (like Donor List)
+        //  Add header (Search + Filter) UNDER the navigation bar (like Donor List)
         setupHeaderSearchAndFilter()
 
-        // ✅ Empty label
+        //  Empty label
         view.addSubview(noNgosLabel)
         noNgosLabel.translatesAutoresizingMaskIntoConstraints = false
         NSLayoutConstraint.activate([
@@ -117,7 +86,7 @@ class NgoViewController: UIViewController,
             bottomLine.bottomAnchor.constraint(equalTo: navigationController!.navigationBar.bottomAnchor)
         ])
 
-        // ✅ Hide back button text for next screen
+        //  Hide back button text for next screen
         if #available(iOS 14.0, *) {
             navigationItem.backButtonDisplayMode = .minimal
         } else {
@@ -151,7 +120,7 @@ class NgoViewController: UIViewController,
             .font: UIFont.systemFont(ofSize: 17, weight: .semibold)
         ]
 
-        // ✅ SAME appearance for both states
+        //  SAME appearance for both states
         navigationController?.navigationBar.standardAppearance = appearance
         navigationController?.navigationBar.scrollEdgeAppearance = appearance
 
@@ -161,7 +130,7 @@ class NgoViewController: UIViewController,
         
     }
 
-    // ✅ Helps iPad / rotation keep header width correct
+    //  Helps iPad / rotation keep header width correct
     override func viewDidLayoutSubviews() {
         super.viewDidLayoutSubviews()
         updateHeaderWidth()
@@ -173,10 +142,10 @@ class NgoViewController: UIViewController,
         
         title = "Browse NGOs"
 
-          // ✅ FORCE small title (no large title ever)
+          //  FORCE small title (no large title ever)
           navigationItem.largeTitleDisplayMode = .never
 
-          // ✅ Safety: override nav controller preference
+          //  Safety: override nav controller preference
           navigationController?.navigationBar.prefersLargeTitles = false
         
         
@@ -305,181 +274,32 @@ class NgoViewController: UIViewController,
     }
 
     // MARK: - Filter Button
+
     @objc private func filterTapped() {
-        let storyboard = UIStoryboard(name: "Filters", bundle: nil)
-
-        guard let filterVC = storyboard.instantiateViewController(
-            withIdentifier: "NGOFilterViewController"
-        ) as? NGOFilterViewController else { return }
-
-        filterVC.delegate = self
-        let state = currentNgoFilters()
-        filterVC.selectedSort = state.sort
-        filterVC.selectedLocations = state.locations
-        filterVC.selectedTypes = state.types
-
-        navigationController?.pushViewController(filterVC, animated: true)
-    }
-    func previewNgoFilters(
-        sort: String?,
-        locations: Set<String>,
-        types: Set<String>
-    ) -> Int {
-
-        currentSort = sort
-        currentLocations = locations
-        currentTypes = types
-
-        applySearchAndFilter()
-        return shownNgos.count
-    }
-    func didApplyNgoFilters(
-        sort: String?,
-        locations: Set<String>,
-        types: Set<String>
-    ) {
-        currentSort = sort
-        currentLocations = locations
-        currentTypes = types
-
-        applySearchAndFilter()
-    }
-
-    func currentNgoFilters() -> (
-        sort: String?,
-        locations: Set<String>,
-        types: Set<String>
-    ) {
-        return (currentSort, currentLocations, currentTypes)
-    }
-    func numberOfFilteredNgos(
-        sort: String?,
-        locations: Set<String>,
-        types: Set<String>
-    ) -> Int {
-        var result = allNgos
-
-        if !types.isEmpty {
-            result = result.filter { types.contains($0.category) }
-        }
-
-        if sort == "NGO Name (A–Z)" {
-            result.sort {
-                $0.name.localizedCaseInsensitiveCompare($1.name) == .orderedAscending
-            }
-        } else if sort == "NGO Name (Z–A)" {
-            result.sort {
-                $0.name.localizedCaseInsensitiveCompare($1.name) == .orderedDescending
-            }
-        }
-        return result.count
-    }
-    func currentResultCount() -> Int {
-        return shownNgos.count
+        // TODO: your teammate will implement filter UI later
     }
 
     // MARK: - Apply Search + Filter
 
-//    private func applySearchAndFilter() {
-////        var result = arrNgo
-//        var result = allNgos
-//
-//
-//        // category filter
-//        if let cat = selectedCategory {
-//            result = result.filter { $0.category == cat }
-//        }
-//
-//        // search by name/category
-//        let text = (searchBar?.text ?? "")
-//            .trimmingCharacters(in: .whitespacesAndNewlines)
-//            .lowercased()
-//
-//        if !text.isEmpty {
-//            result = result.filter { ngo in
-//                ngo.name.lowercased().contains(text) ||
-//                ngo.category.lowercased().contains(text)
-//            }
-//        }
-//
-//        shownNgos = result
-//        tableView.reloadData()
-//        updateNoNgosLabel()
-//    }
-    
-    func searchBarCancelButtonClicked(_ searchBar: UISearchBar) {
-        searchBar.text = ""
-        searchBar.resignFirstResponder()
-        applySearchAndFilter()
-    }
-
     private func applySearchAndFilter() {
+//        var result = arrNgo
         var result = allNgos
-        // LOCATION FILTER
-        if !currentLocations.isEmpty {
-            result = result.filter { ngo in
-                guard let gov = ngoGovernorateById[ngo.id] else { return false }
 
-                return currentLocations.contains {
-                    $0.caseInsensitiveCompare(
-                        gov.trimmingCharacters(in: .whitespacesAndNewlines)
-                    ) == .orderedSame
-                }
-            }
+
+        // category filter
+        if let cat = selectedCategory {
+            result = result.filter { $0.category == cat }
         }
-        // TYPE FILTER
-        if !currentTypes.isEmpty {
 
-            let declaredTypes: Set<String> = [
-                "Orphans",
-                "Chronically Ill",
-                "Disabled People",
-                "Children",
-                "Women",
-                "Elderly"
-            ]
-            let otherSelected = currentTypes.contains("Other")
-            let selectedRealTypes = currentTypes.subtracting(["Other"])
-            result = result.filter { ngo in
-                let category = ngo.category
-                    .trimmingCharacters(in: .whitespacesAndNewlines)
-
-                let isDeclaredType = declaredTypes.contains {
-                    $0.caseInsensitiveCompare(category) == .orderedSame
-                }
-
-                let matchesSelectedType = selectedRealTypes.contains {
-                    $0.caseInsensitiveCompare(category) == .orderedSame
-                }
-                if otherSelected && selectedRealTypes.isEmpty {
-                    return !isDeclaredType
-                }
-                if otherSelected {
-                    return matchesSelectedType || !isDeclaredType
-                }
-                return matchesSelectedType
-            }
-        }
-        // SEARCH
+        // search by name/category
         let text = (searchBar?.text ?? "")
             .trimmingCharacters(in: .whitespacesAndNewlines)
             .lowercased()
 
         if !text.isEmpty {
-            result = result.filter {
-                $0.name.lowercased().contains(text) ||
-                $0.category.lowercased().contains(text)
-            }
-        }
-
-        // SORT
-        if currentSort == "NGO Name (A–Z)" {
-            result.sort {
-                $0.name.localizedCaseInsensitiveCompare($1.name) == .orderedAscending
-            }
-        } else if currentSort == "NGO Name (Z–A)" {
-            result.sort {
-                $0.name.localizedCaseInsensitiveCompare($1.name) == .orderedDescending
+            result = result.filter { ngo in
+                ngo.name.lowercased().contains(text) ||
+                ngo.category.lowercased().contains(text)
             }
         }
 
@@ -487,25 +307,29 @@ class NgoViewController: UIViewController,
         tableView.reloadData()
         updateNoNgosLabel()
     }
+    
+    
+    
 
+    
     private func fetchNgosFromFirebase() {
-        print("🔥 Fetching NGOs from Firestore collection: users where role == 3")
+        print(" Fetching NGOs from Firestore collection: users where role == 3")
 
         Firestore.firestore()
             .collection("users")
-            .whereField("role", isEqualTo: 3)   // ✅ NGO role is number 3
+            .whereField("role", isEqualTo: 3)   //  NGO role is number 3
             .getDocuments { [weak self] snapshot, error in
                 guard let self = self else { return }
 
                 if let error = error {
-                    print("❌ Fetch NGOs failed:", error.localizedDescription)
+                    print(" Fetch NGOs failed:", error.localizedDescription)
                     self.allNgos = []
                     self.applySearchAndFilter()
                     return
                 }
 
                 let docs = snapshot?.documents ?? []
-                print("✅ Firestore returned docs count:", docs.count)
+                print("Firestore returned docs count:", docs.count)
 
                 let ngos: [NGO] = docs.compactMap { doc -> NGO? in
                     let data = doc.data()
@@ -516,10 +340,10 @@ class NgoViewController: UIViewController,
                     let email = data["email"] as? String ?? ""
                     let phone = data["number"] as? String ?? ""
                     let photoUrl = data["profile_image_url"] as? String ?? ""
-                    
-                    //Added by zainab mahdi
-                    let governorate = data["governorate"] as? String ?? ""
-                    self.ngoGovernorateById[doc.documentID] = governorate //
+                    let status = (data["status"] as? String ?? "Approved").lowercased()
+                    print("NGO:", name, "status:", status)
+                    guard status == "approved" else { return nil }
+
 
                     guard !name.isEmpty else { return nil }
 
@@ -545,7 +369,7 @@ class NgoViewController: UIViewController,
 
     @objc private func dismissKeyboard() { //for the keyboard
         view.endEditing(true)
-              }
+    }
     
 }
 //  NgoViewController.swift

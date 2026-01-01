@@ -110,22 +110,22 @@ class RecentDonationCardCell: UICollectionViewCell {
         switch donation.status {
         case 1:
             statusLabel.text = "Pending"
-            statusColor.backgroundColor = .systemOrange
+            statusColor.backgroundColor = UIColor(named: "orangeCol")
         case 2:
             statusLabel.text = "Accepted"
-            statusColor.backgroundColor = .systemGreen
+            statusColor.backgroundColor = UIColor(named: "greenCol")
         case 3:
             statusLabel.text = "Collected"
-            statusColor.backgroundColor = .systemBlue
+            statusColor.backgroundColor = UIColor(named: "blueCol")
         case 4:
             statusLabel.text = "Rejected"
-            statusColor.backgroundColor = .systemRed
+            statusColor.backgroundColor = UIColor(named: "redCol")
         case 5:
             statusLabel.text = "Cancelled"
-            statusColor.backgroundColor = .systemGray
+            statusColor.backgroundColor = UIColor(named: "greyCol")
         default:
             statusLabel.text = "Unknown"
-            statusColor.backgroundColor = .systemGray2
+            statusColor.backgroundColor = .lightGray
         }
     }
 }

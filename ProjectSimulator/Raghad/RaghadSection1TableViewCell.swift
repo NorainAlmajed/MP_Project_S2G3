@@ -8,7 +8,7 @@
 import UIKit
 
 
-// ✅ 1) Delegate protocol: the cell tells the ViewController "Upload tapped"
+//  1) Delegate protocol: the cell tells the ViewController "Upload tapped"
 protocol RaghadSection1TableViewCellDelegate: AnyObject {
     func section1DidTapUploadImage(_ cell: RaghadSection1TableViewCell)
 }
@@ -21,12 +21,12 @@ class RaghadSection1TableViewCell: UITableViewCell {
     @IBOutlet weak var imgWidthConstraint: NSLayoutConstraint!
     @IBOutlet weak var lblImageError: UILabel!
     
-    @IBOutlet weak var btnUploadImageOutlet: UIButton!   // 🟢 NEW
+    @IBOutlet weak var btnUploadImageOutlet: UIButton!   //  NEW
 
 
     
     
-//    // ✅ 2) Add delegate variable
+//    //  2) Add delegate variable
      weak var delegate: RaghadSection1TableViewCellDelegate?
  override func awakeFromNib() {
             super.awakeFromNib()
@@ -42,21 +42,21 @@ class RaghadSection1TableViewCell: UITableViewCell {
           Donation_ImageView.layer.borderColor = UIColor.systemGray4.cgColor
           Donation_ImageView.backgroundColor = UIColor.systemGray6
         
-        applyBigPlaceholderIcon() // 🟢 NEW: bigger logo
+        applyBigPlaceholderIcon() //  NEW: bigger logo
         Donation_ImageView.image = UIImage(systemName: "photo")
         Donation_ImageView.tintColor = .systemGray3
 
 
-          // ✅ iPad only: make the image view bigger
+          //  iPad only: make the image view bigger
           adjustImageSizeForDevice()
-     applyUploadButtonColor()   // 🟢 NEW
+     applyUploadButtonColor()   //  NEW
 
      
       }
 
     
     @IBAction func btnUploadImage(_ sender: Any) {
-        // ✅ 3) Tell the VC to open camera/library options
+        //  3) Tell the VC to open camera/library options
             delegate?.section1DidTapUploadImage(self)
         
     }
@@ -69,7 +69,7 @@ class RaghadSection1TableViewCell: UITableViewCell {
        
                 
             } else {
-                applyBigPlaceholderIcon() // 🟢 NEW: bigger logo
+                applyBigPlaceholderIcon() //  NEW: bigger logo
                 Donation_ImageView.image = UIImage(systemName: "photo")
                 Donation_ImageView.tintColor = .systemGray3
                 Donation_ImageView.contentMode = .center
@@ -85,26 +85,26 @@ class RaghadSection1TableViewCell: UITableViewCell {
         let isPad = UIDevice.current.userInterfaceIdiom == .pad
 
         if isPad {
-            // ✅ Bigger on iPad
+            //  Bigger on iPad
             imgHeightConstraint.constant = 170
             imgWidthConstraint.constant = 420
         } else {
-            // ✅ iPhone: keep storyboard sizes (do nothing)
+            // iPhone: keep storyboard sizes (do nothing)
         }
     }
     
-    // 🟢 NEW: makes the placeholder icon (logo) bigger
+    //  NEW: makes the placeholder icon (logo) bigger
     private func applyBigPlaceholderIcon() {
-        let config = UIImage.SymbolConfiguration(pointSize: 60, weight: .regular) // 🔧 change 60 -> 70 if you want bigger
+        let config = UIImage.SymbolConfiguration(pointSize: 60, weight: .regular) //  change 60 -> 70 if you want bigger
         Donation_ImageView.preferredSymbolConfiguration = config
     }
     
-    private func applyUploadButtonColor() {   // 🟢 NEW
+    private func applyUploadButtonColor() {   //  NEW
         btnUploadImageOutlet.backgroundColor = UIColor { trait in
             if trait.userInterfaceStyle == .dark {
-                return UIColor(named: "grayCol") ?? UIColor(red: 138/255, green: 138/255, blue: 138/255, alpha: 1.0) // 🌙
+                return UIColor(named: "grayCol") ?? UIColor(red: 138/255, green: 138/255, blue: 138/255, alpha: 1.0) //
             } else {
-                return .clear // ☀️ keep light mode as is
+                return .clear //  keep light mode as is
             }
         }
 

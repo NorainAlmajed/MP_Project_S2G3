@@ -19,7 +19,7 @@ extension UIImageView {
             return
         }
 
-        // ✅ prevents wrong images in reused table cells
+        //  prevents wrong images in reused table cells
         let token = UUID().uuidString
         self.accessibilityIdentifier = token
 

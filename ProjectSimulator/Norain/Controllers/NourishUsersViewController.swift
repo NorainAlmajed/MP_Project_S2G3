@@ -39,6 +39,7 @@ class NourishUsersViewController: UIViewController,UITableViewDelegate,UITableVi
         self.usersTableView.reloadData()
         usersTableView.delegate = self
         usersTableView.dataSource = self
+        usersTableView.tableFooterView = UIView(frame: CGRect(x:0, y:0, width:usersTableView.frame.width, height:20))
         
         let tap = UITapGestureRecognizer(target: self, action: #selector(dismissKeyboard))
         tap.cancelsTouchesInView = false
@@ -300,7 +301,7 @@ class NourishUsersViewController: UIViewController,UITableViewDelegate,UITableVi
     }
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return displayedUsers.count + 1
+        return displayedUsers.count 
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
@@ -335,51 +336,59 @@ class NourishUsersViewController: UIViewController,UITableViewDelegate,UITableVi
     }
     
     func tableView(_ tableView: UITableView, trailingSwipeActionsConfigurationForRowAt indexPath: IndexPath) -> UISwipeActionsConfiguration? {
-        
-        let user = users[indexPath.row]
-        let ngo = user as? NorainNGO
-        let userToRemove = self.displayedUsers[indexPath.row]
-                
-                let deleteAction = UIContextualAction(style: .destructive, title: "Delete") { [weak self] action, view, completionHandler in
-                    Alerts.confirmation(on: self!, title: "Delete", message: "Confirm removal?") {
-                        self?.deleteUserFromFirestore(user: userToRemove, indexPath: indexPath) { success in
-                            completionHandler(success)
-                        }
-            }
-        }
-        let editAction = UIContextualAction(style: .normal, title: "Edit") { (action, view, completionHandler) in
-            let storyboard = UIStoryboard(name: "norain-admin-controls1", bundle: nil)
-                let editVC = storyboard.instantiateViewController(withIdentifier: "EditUsersViewController") as! EditUsersViewController
-                
-              
-                editVC.userToEdit = self.displayedUsers[indexPath.row]
-                editVC.delegate = self
-                
-                let nav = UINavigationController(rootViewController: editVC)
-                self.present(nav, animated: true)
-                completionHandler(true)
-            
-        }
-        editAction.backgroundColor = UIColor(named: "blueCol")
-        
-        var actions: [UIContextualAction] = [editAction,deleteAction]
-        
-        
-        if let ngo = ngo {
+        let user = displayedUsers[indexPath.row]
+
+        // Create the action array
+        var actions: [UIContextualAction] = []
+
+        if let ngo = user as? NorainNGO {
             if ngo.status == .pending {
-                // Show both Accept and Reject
+                // Only show Accept and Reject actions for pending NGOs
                 actions.append(createAcceptAction(for: ngo, indexPath: indexPath))
                 actions.append(createRejectAction(for: ngo, indexPath: indexPath))
-            } else if ngo.status == .rejected {
-                // Show only Accept
-                actions.append(createAcceptAction(for: ngo, indexPath: indexPath))
+            } else {
+                // For other statuses of NGOs, show Edit and Delete actions
+                actions.append(createEditAction(for: ngo, indexPath: indexPath))
+                actions.append(createDeleteAction(for: ngo, indexPath: indexPath))
             }
+        } else if let donor = user as? NorainDonor {
+            // For donors, show Edit and Delete actions
+            actions.append(createEditAction(for: donor, indexPath: indexPath))
+            actions.append(createDeleteAction(for: donor, indexPath: indexPath))
         }
-        
+
         let configuration = UISwipeActionsConfiguration(actions: actions)
         return configuration
     }
-    
+
+    // Helper Methods to Create Actions
+    private func createEditAction(for user: Any, indexPath: IndexPath) -> UIContextualAction {
+        let editAction = UIContextualAction(style: .normal, title: "Edit") { (action, view, completionHandler) in
+            let storyboard = UIStoryboard(name: "norain-admin-controls1", bundle: nil)
+            let editVC = storyboard.instantiateViewController(withIdentifier: "EditUsersViewController") as! EditUsersViewController
+
+            editVC.userToEdit = user as? NorainAppUser // Handle both NGO and Donor types
+            editVC.delegate = self
+
+            let nav = UINavigationController(rootViewController: editVC)
+            self.present(nav, animated: true)
+            completionHandler(true)
+        }
+        editAction.backgroundColor = UIColor(named: "blueCol")
+        return editAction
+    }
+
+    private func createDeleteAction(for user: Any, indexPath: IndexPath) -> UIContextualAction {
+        let deleteAction = UIContextualAction(style: .destructive, title: "Delete") { [weak self] action, view, completionHandler in
+            let userToRemove = user as? NorainAppUser
+            Alerts.confirmation(on: self!, title: "Delete", message: "Confirm removal?") {
+                self?.deleteUserFromFirestore(user: userToRemove!, indexPath: indexPath) { success in
+                    completionHandler(success)
+                }
+            }
+        }
+        return deleteAction
+    }
     
     //create Reject Action
     func createRejectAction(for ngo: NorainNGO, indexPath: IndexPath) -> UIContextualAction {

@@ -23,6 +23,10 @@ class UserTableViewCell: UITableViewCell {
     func configure(appUser:NorainAppUser){
         nameLbl.text = appUser.name
         emailLbl.text = ("Email: " + appUser.email)
+        imgUserPhoto.layer.cornerRadius = 7
+        imgUserPhoto.clipsToBounds = true
+        imgUserPhoto.layer.borderWidth = 1
+        imgUserPhoto.layer.borderColor = UIColor.systemGray.cgColor
         
         currentImageURL = appUser.userImg
         if !appUser.userImg.isEmpty {

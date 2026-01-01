@@ -200,9 +200,6 @@ class EditUsersViewController: UIViewController, UIImagePickerControllerDelegate
                 return
             
         }
-        
-
-        
         // Prepare the update data
         var updateData: [String: Any] = [
             "username": usernameField.text?.trimmingCharacters(in: .whitespacesAndNewlines) ?? "",
@@ -246,7 +243,8 @@ class EditUsersViewController: UIViewController, UIImagePickerControllerDelegate
                 // Show success alert and pop
                 let alert = UIAlertController(title: "Success", message: "Changes saved.", preferredStyle: .alert)
                 alert.addAction(UIAlertAction(title: "OK", style: .default, handler: { _ in
-                    self.navigationController?.popViewController(animated: true)
+//                    self.navigationController?.popViewController(animated: true)
+                    self.dismiss(animated: true)
                 }))
                 self.present(alert, animated: true)
             }
@@ -354,6 +352,10 @@ class EditUsersViewController: UIViewController, UIImagePickerControllerDelegate
     }
     
     func setupView() {
+        ImagePickerEditView.layer.cornerRadius = 7
+        ImagePickerEditView.clipsToBounds = true
+        ImagePickerEditView.layer.borderWidth = 1
+        ImagePickerEditView.layer.borderColor = UIColor.systemGray.cgColor
         
         if let parentView = uploadPicBtn.superview{
             parentView.translatesAutoresizingMaskIntoConstraints = false

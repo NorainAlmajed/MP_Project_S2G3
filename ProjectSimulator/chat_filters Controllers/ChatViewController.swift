@@ -409,7 +409,6 @@ UICollectionViewDataSource,
         listenForChatEndedState()
 
        
-        navigationController?.navigationBar.tintColor = .black
         
         collectionView.dataSource = self
         collectionView.delegate = self

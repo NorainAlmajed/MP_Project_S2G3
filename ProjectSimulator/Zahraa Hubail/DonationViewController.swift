@@ -676,17 +676,7 @@ extension DonationViewController {
     
     func filterDonations() {
         
-        let hasActiveFilters =
-        selectedIndex != 0 ||
-        !activeCategories.isEmpty ||
-        !activeLocations.isEmpty ||
-        activeDate != nil ||
-        !(searchBar.text ?? "").isEmpty ||
-        activeSort != nil
-        
-        if !hasActiveFilters {
-            return
-        }
+    
         
         var filtered = allDonations
         

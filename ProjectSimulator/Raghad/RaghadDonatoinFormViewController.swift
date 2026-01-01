@@ -161,7 +161,8 @@ class RaghadDonatoinFormViewController: UIViewController,
         
         setupKeyboardAvoidance()
         
-        
+  
+
         
         
 //        print(" Role:", SessionManager.shared.roleDisplayName,
@@ -214,10 +215,7 @@ class RaghadDonatoinFormViewController: UIViewController,
         if !isKeyboardShowing { applyBaseBottomInset() }   // ✅ fixes “first time open page” issue
     }
     
-    
-    
-    
-    
+  
     
     
     
@@ -1084,11 +1082,18 @@ class RaghadDonatoinFormViewController: UIViewController,
     }
     
     
+ //edited by zainab mahdi
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
+
+        navigationController?.navigationBar.prefersLargeTitles = false
+        navigationItem.largeTitleDisplayMode = .always
+
+        edgesForExtendedLayout = []
         restoreDraftIfExists()
+
+
     }
-    
     
 }
 
@@ -1107,3 +1112,6 @@ extension UIView {
         return nil
     }
 }
+
+
+

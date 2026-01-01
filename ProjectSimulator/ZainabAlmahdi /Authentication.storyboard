@@ -676,7 +676,7 @@
                         <rect key="frame" x="0.0" y="0.0" width="393" height="852"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" alignment="center" spacing="11" translatesAutoresizingMaskIntoConstraints="NO" id="yDF-aP-24n">
+                            <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" alignment="center" spacing="8" translatesAutoresizingMaskIntoConstraints="NO" id="yDF-aP-24n">
                                 <rect key="frame" x="37" y="136" width="319" height="580"/>
                                 <subviews>
                                     <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" spacing="12" translatesAutoresizingMaskIntoConstraints="NO" id="K8Y-4V-8by">
@@ -711,7 +711,7 @@
                                         </constraints>
                                     </stackView>
                                     <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" alignment="top" spacing="25" translatesAutoresizingMaskIntoConstraints="NO" id="lKT-EA-SRQ">
-                                        <rect key="frame" x="0.0" y="177.33333333333334" width="319" height="257.33333333333326"/>
+                                        <rect key="frame" x="0.0" y="174.33333333333334" width="319" height="263.33333333333326"/>
                                         <subviews>
                                             <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" alignment="top" spacing="8" translatesAutoresizingMaskIntoConstraints="NO" id="Bf2-kh-m3U">
                                                 <rect key="frame" x="0.0" y="0.0" width="319" height="63.333333333333336"/>
@@ -735,23 +735,26 @@
                                                 </subviews>
                                             </stackView>
                                             <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" alignment="top" spacing="8" translatesAutoresizingMaskIntoConstraints="NO" id="nho-xN-1tT">
-                                                <rect key="frame" x="0.0" y="88.333333333333371" width="319" height="169"/>
+                                                <rect key="frame" x="0.0" y="88.333333333333371" width="319" height="175"/>
                                                 <subviews>
                                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Bio" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="bAN-kB-Fs3">
-                                                        <rect key="frame" x="0.0" y="0.0" width="24.333333333333332" height="20.333333333333332"/>
+                                                        <rect key="frame" x="0.0" y="0.0" width="24.333333333333332" height="27"/>
                                                         <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                                         <nil key="textColor"/>
                                                         <nil key="highlightedColor"/>
                                                     </label>
-                                                    <textField opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="248" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="3SX-db-ESk">
-                                                        <rect key="frame" x="0.0" y="28.333333333333314" width="319" height="140.66666666666666"/>
+                                                    <textView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" textAlignment="natural" translatesAutoresizingMaskIntoConstraints="NO" id="W20-Jc-XZf">
+                                                        <rect key="frame" x="0.0" y="35" width="319" height="140"/>
+                                                        <color key="backgroundColor" systemColor="systemBackgroundColor"/>
                                                         <constraints>
-                                                            <constraint firstAttribute="width" constant="319" id="7sm-hf-wmk"/>
-                                                            <constraint firstAttribute="height" constant="140.66999999999999" id="gYn-sm-39R"/>
+                                                            <constraint firstAttribute="width" constant="319" id="0OT-Fw-DdA"/>
+                                                            <constraint firstAttribute="height" constant="140" id="Aq3-lN-xn1"/>
                                                         </constraints>
+                                                        <mutableString key="text">Lorem ipsum dolor sit er elit lamet, consectetaur cillium adipisicing pecu, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum. Nam liber te conscient to factor tum poen legum odioque civiuda.</mutableString>
+                                                        <color key="textColor" systemColor="labelColor"/>
                                                         <fontDescription key="fontDescription" type="system" pointSize="14"/>
-                                                        <textInputTraits key="textInputTraits"/>
-                                                    </textField>
+                                                        <textInputTraits key="textInputTraits" autocapitalizationType="sentences"/>
+                                                    </textView>
                                                 </subviews>
                                             </stackView>
                                         </subviews>
@@ -819,7 +822,7 @@
                     </view>
                     <connections>
                         <outlet property="bioCounterLabel" destination="Fo0-mE-9AB" id="NHF-AF-ZT0"/>
-                        <outlet property="bioTextField" destination="3SX-db-ESk" id="AhS-WL-4VT"/>
+                        <outlet property="bioTextView" destination="W20-Jc-XZf" id="8Kl-HK-Rdh"/>
                         <outlet property="bioTitleLabel" destination="bAN-kB-Fs3" id="wRg-Tj-Lya"/>
                         <outlet property="continueButton" destination="v9H-oE-Pzj" id="AXW-bD-iiU"/>
                         <outlet property="fullNameTextField" destination="ezI-Yz-XRx" id="w3S-wM-KTa"/>

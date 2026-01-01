@@ -153,11 +153,6 @@
 			path = ProjectSimulatorUITests;
 			sourceTree = "<group>";
 		};
-		D0FCA2B52EEEC14000D8AFFF /* ZainabAlmahdi  */ = {
-			isa = PBXFileSystemSynchronizedRootGroup;
-			path = "ZainabAlmahdi ";
-			sourceTree = "<group>";
-		};
 /* End PBXFileSystemSynchronizedRootGroup section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -198,7 +193,6 @@
 			children = (
 				D0E725412F009AB300365A28 /* SecuritySettingsViewController.swift */,
 				D0DEA5582F0060990008C402 /* GoogleService-Info.plist */,
-				D0FCA2B52EEEC14000D8AFFF /* ZainabAlmahdi  */,
 				5FEF8B642EDA3636007D3A97 /* ProjectSimulator */,
 				5FEF8B7B2EDA363A007D3A97 /* ProjectSimulatorTests */,
 				5FEF8B852EDA363A007D3A97 /* ProjectSimulatorUITests */,
@@ -241,7 +235,6 @@
 			);
 			fileSystemSynchronizedGroups = (
 				5FEF8B642EDA3636007D3A97 /* ProjectSimulator */,
-				D0FCA2B52EEEC14000D8AFFF /* ZainabAlmahdi  */,
 			);
 			name = ProjectSimulator;
 			packageProductDependencies = (

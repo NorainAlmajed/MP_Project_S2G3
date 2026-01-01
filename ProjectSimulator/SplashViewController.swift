@@ -9,28 +9,51 @@ import UIKit
 
 class SplashViewController: UIViewController {
 
+    // MARK: - Outlets
+    @IBOutlet weak var logoImageView: UIImageView!
     @IBOutlet weak var titleLabel: UILabel!
 
+    // MARK: - Lifecycle
     override func viewDidLoad() {
         super.viewDidLoad()
+
         setupInitialState()
-        animateTitle()
+        animateSplash()
 
         DispatchQueue.main.asyncAfter(deadline: .now() + 2) {
             self.goToAuth()
         }
     }
 
-    // MARK: - Title animation
+    // MARK: - Initial State
     private func setupInitialState() {
+        // Logo starts hidden and slightly down
+        logoImageView.alpha = 0
+        logoImageView.transform = CGAffineTransform(translationX: 0, y: 20)
+
+        // Title starts hidden and slightly smaller
         titleLabel.alpha = 0
         titleLabel.transform = CGAffineTransform(scaleX: 0.85, y: 0.85)
     }
 
-    private func animateTitle() {
+    // MARK: - Animations
+    private func animateSplash() {
+
+        // Logo animation
         UIView.animate(
-            withDuration: 1.2,
-            delay: 0.3,
+            withDuration: 0.8,
+            delay: 0.1,
+            options: .curveEaseOut,
+            animations: {
+                self.logoImageView.alpha = 1
+                self.logoImageView.transform = .identity
+            }
+        )
+
+        // Title animation (staggered)
+        UIView.animate(
+            withDuration: 1.0,
+            delay: 0.4,
             usingSpringWithDamping: 0.8,
             initialSpringVelocity: 0.6,
             options: .curveEaseOut,

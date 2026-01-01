@@ -868,7 +868,7 @@ extension DonorDashboardViewController: UITableViewDataSource, UITableViewDelega
                 self?.manageDonationsTapped()
 
                 DispatchQueue.main.asyncAfter(deadline: .now() + 0.4) {
-                       NotificationCenter.default.post(name: .openPendingDonations, object: nil)
+                    NotificationCenter.default.post(name: .openPendingDonations, object: nil)
                    }
             }
 

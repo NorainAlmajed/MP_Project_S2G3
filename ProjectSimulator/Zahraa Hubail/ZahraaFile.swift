@@ -27,7 +27,7 @@ struct ZahraaAddress {
  
 }
 
-struct Notification {
+struct AppNotification {
     var title: String
     var description: String
     var date: Date

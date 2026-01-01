@@ -28,7 +28,7 @@ class NotificationsViewController: UIViewController {
             return label
         }()
         
-        var sortedNotifications: [Notification] = []
+        var sortedNotifications: [AppNotification] = []
         
         let db = Firestore.firestore()
         var currentUser: ZahraaUser?
@@ -244,7 +244,7 @@ class NotificationsViewController: UIViewController {
             }
 
             // Map to Notification struct
-            self.sortedNotifications = userNotifications.compactMap { doc -> Notification? in
+            self.sortedNotifications = userNotifications.compactMap { doc -> AppNotification? in
                 let data = doc.data()
                 guard
                     let title = data["title"] as? String,
@@ -255,7 +255,7 @@ class NotificationsViewController: UIViewController {
                     return nil
                 }
 
-                return Notification(
+                return AppNotification(
                     title: title,
                     description: description,
                     date: timestamp.dateValue(),

@@ -9,7 +9,7 @@ ios app that allow donors to make donations for verified NGOs.
 <p>Nourish Bahrain</p>
 
 <h2>GitHub Link</h2>
-<p>Noorain put the link plz</p>
+<p>(https://github.com/NorainAlmajed/MP_Project_S2G3.git)</p>
 
 <h2>Group members names and IDs</h2>
 <table border="1" cellpadding="6" cellspacing="0">

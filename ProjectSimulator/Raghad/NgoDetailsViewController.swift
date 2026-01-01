@@ -6,7 +6,8 @@
 //
 
 import UIKit
-
+import FirebaseAuth
+import FirebaseFirestore
 //class NgoDetailsViewController: UIViewController {
 class NgoDetailsViewController: UIViewController, UITableViewDataSource, UITableViewDelegate {
 
@@ -116,12 +117,72 @@ class NgoDetailsViewController: UIViewController, UITableViewDataSource, UITable
                 guard let self = self else { return }
                 self.performSegue(withIdentifier: "toDonationForm", sender: nil)
             }
+           //Edited by zainab mahdi
+            cell.onChatTapped = { [weak self] in
+                            guard let self = self else { return }
+                            guard
+                                let donorId = Auth.auth().currentUser?.uid,
+                                let ngoId = self.selectedNgo?.id
+                            else { return }
 
-            cell.onChatTapped = {
-                // TODO: open chat page / action
-            }
+                            let db = Firestore.firestore()
+                            let storyboard = UIStoryboard(name: "Chat", bundle: nil)
+
+                            db.collection("chats")
+                                .whereField("donorId", isEqualTo: donorId)
+                                .whereField("ngoId", isEqualTo: ngoId)
+                                .whereField("isEnded", isEqualTo: false)
+                                .limit(to: 1)
+                                .getDocuments { snapshot, error in
+
+                                    if let doc = snapshot?.documents.first {
+
+                                        let chatVC = storyboard.instantiateViewController(
+                                            withIdentifier: "ChatViewController"
+                                        ) as! ChatViewController
+                                        chatVC.hidesBottomBarWhenPushed = true
+                                        chatVC.chatID = doc.documentID
+                                        chatVC.donorId = donorId
+                                        chatVC.ngoId = ngoId
+                                        chatVC.chatType = .normal
+                                        chatVC.userName = self.selectedNgo?.name ?? "Chat"
+
+                                        self.navigationController?.pushViewController(chatVC, animated: true)
+                                        return
+                                    }
+
+                                    let chatRef = db.collection("chats").document()
+
+                                    chatRef.setData([
+                                        "donorId": donorId,
+                                        "ngoId": ngoId,
+                                        "type": ChatType.normal.rawValue,
+                                        "createdAt": Timestamp(),
+                                        "isEnded": false,
+                                        "endedAt": FieldValue.delete()
+                                    ], merge: true) { error in
+                                        guard error == nil else { return }
+
+                                        let chatVC = storyboard.instantiateViewController(
+                                            withIdentifier: "ChatViewController"
+                                        ) as! ChatViewController
+                                        chatVC.hidesBottomBarWhenPushed = true
+                                        chatVC.chatID = chatRef.documentID
+                                        chatVC.donorId = donorId
+                                        chatVC.ngoId = ngoId
+                                        chatVC.chatType = .normal
+                                        chatVC.userName = self.selectedNgo?.name ?? "Chat"
+
+                                        self.navigationController?.pushViewController(chatVC, animated: true)
+                                       
+
+                                    }
+                                }
+                
+                        }
 
             cell.selectionStyle = .none
+            
             return cell
         }
     }

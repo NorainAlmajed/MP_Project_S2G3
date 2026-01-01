@@ -17,7 +17,9 @@ class NGOSignupViewController: UIViewController,
         "Disabled People",
         "Children",
         "Women",
-        "Elderly"
+        "Elderly",
+        "Charity",
+        "Rehabilitation & Recovery"
     ]
 
     let governorates = [

@@ -52,6 +52,8 @@
 		7A8446E92F02A51400DCB566 /* Exceptions for "ProjectSimulator" folder in "ProjectSimulatorTests" target */ = {
 			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
 			membershipExceptions = (
+				Fatima/ManageUsersPreviewTableViewCell.swift,
+				Fatima/UserPreviewCardCell.swift,
 				Raghad/Raghad1.storyboard,
 				"Zahraa Hubail/DonationCollectionViewCell.swift",
 				"Zahraa Hubail/Donations.storyboard",
@@ -81,12 +83,25 @@
 				"Zahraa Hubail/ZahraaSection7TableViewCell.swift",
 				"Zahraa Hubail/ZahraaSection8TableViewCell.swift",
 				"Zahraa Hubail/ZHRejectionReasonViewController.swift",
+				"ZainabAlmahdi /AccountViewController.swift",
+				"ZainabAlmahdi /AccViewController.swift",
+				"ZainabAlmahdi /Authentication.storyboard",
+				"ZainabAlmahdi /EditProfileViewController.swift",
+				"ZainabAlmahdi /LoginViewController.swift",
+				"ZainabAlmahdi /NotificationSettingsViewController.swift",
+				"ZainabAlmahdi /SavedAddressesViewController.swift",
+				"ZainabAlmahdi /SessionManager.swift",
+				"ZainabAlmahdi /Settings.storyboard",
+				"ZainabAlmahdi /SettingViewController.swift",
+				"ZainabAlmahdi /UpdateNGOLicenseViewController.swift",
 			);
 			target = 5FEF8B772EDA363A007D3A97 /* ProjectSimulatorTests */;
 		};
 		7A8446EA2F02A51400DCB566 /* Exceptions for "ProjectSimulator" folder in "ProjectSimulatorUITests" target */ = {
 			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
 			membershipExceptions = (
+				Fatima/ManageUsersPreviewTableViewCell.swift,
+				Fatima/UserPreviewCardCell.swift,
 				Raghad/Raghad1.storyboard,
 				"Zahraa Hubail/DonationCollectionViewCell.swift",
 				"Zahraa Hubail/Donations.storyboard",
@@ -116,6 +131,17 @@
 				"Zahraa Hubail/ZahraaSection7TableViewCell.swift",
 				"Zahraa Hubail/ZahraaSection8TableViewCell.swift",
 				"Zahraa Hubail/ZHRejectionReasonViewController.swift",
+				"ZainabAlmahdi /AccountViewController.swift",
+				"ZainabAlmahdi /AccViewController.swift",
+				"ZainabAlmahdi /Authentication.storyboard",
+				"ZainabAlmahdi /EditProfileViewController.swift",
+				"ZainabAlmahdi /LoginViewController.swift",
+				"ZainabAlmahdi /NotificationSettingsViewController.swift",
+				"ZainabAlmahdi /SavedAddressesViewController.swift",
+				"ZainabAlmahdi /SessionManager.swift",
+				"ZainabAlmahdi /Settings.storyboard",
+				"ZainabAlmahdi /SettingViewController.swift",
+				"ZainabAlmahdi /UpdateNGOLicenseViewController.swift",
 			);
 			target = 5FEF8B812EDA363A007D3A97 /* ProjectSimulatorUITests */;
 		};
@@ -125,40 +151,6 @@
 				Info.plist,
 			);
 			target = 5FEF8B612EDA3636007D3A97 /* ProjectSimulator */;
-		};
-		D0FCA2BC2EEEC28F00D8AFFF /* Exceptions for "ZainabAlmahdi " folder in "ProjectSimulatorTests" target */ = {
-			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
-			membershipExceptions = (
-				AccountViewController.swift,
-				AccViewController.swift,
-				Authentication.storyboard,
-				EditProfileViewController.swift,
-				LoginViewController.swift,
-				NotificationSettingsViewController.swift,
-				SavedAddressesViewController.swift,
-				SessionManager.swift,
-				Settings.storyboard,
-				SettingViewController.swift,
-				UpdateNGOLicenseViewController.swift,
-			);
-			target = 5FEF8B772EDA363A007D3A97 /* ProjectSimulatorTests */;
-		};
-		D0FCA2BD2EEEC28F00D8AFFF /* Exceptions for "ZainabAlmahdi " folder in "ProjectSimulatorUITests" target */ = {
-			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
-			membershipExceptions = (
-				AccountViewController.swift,
-				AccViewController.swift,
-				Authentication.storyboard,
-				EditProfileViewController.swift,
-				LoginViewController.swift,
-				NotificationSettingsViewController.swift,
-				SavedAddressesViewController.swift,
-				SessionManager.swift,
-				Settings.storyboard,
-				SettingViewController.swift,
-				UpdateNGOLicenseViewController.swift,
-			);
-			target = 5FEF8B812EDA363A007D3A97 /* ProjectSimulatorUITests */;
 		};
 /* End PBXFileSystemSynchronizedBuildFileExceptionSet section */
 
@@ -181,15 +173,6 @@
 		5FEF8B852EDA363A007D3A97 /* ProjectSimulatorUITests */ = {
 			isa = PBXFileSystemSynchronizedRootGroup;
 			path = ProjectSimulatorUITests;
-			sourceTree = "<group>";
-		};
-		D0FCA2B52EEEC14000D8AFFF /* ZainabAlmahdi  */ = {
-			isa = PBXFileSystemSynchronizedRootGroup;
-			exceptions = (
-				D0FCA2BC2EEEC28F00D8AFFF /* Exceptions for "ZainabAlmahdi " folder in "ProjectSimulatorTests" target */,
-				D0FCA2BD2EEEC28F00D8AFFF /* Exceptions for "ZainabAlmahdi " folder in "ProjectSimulatorUITests" target */,
-			);
-			path = "ZainabAlmahdi ";
 			sourceTree = "<group>";
 		};
 /* End PBXFileSystemSynchronizedRootGroup section */
@@ -232,7 +215,6 @@
 			children = (
 				D0E725412F009AB300365A28 /* SecuritySettingsViewController.swift */,
 				D0DEA5582F0060990008C402 /* GoogleService-Info.plist */,
-				D0FCA2B52EEEC14000D8AFFF /* ZainabAlmahdi  */,
 				5FEF8B642EDA3636007D3A97 /* ProjectSimulator */,
 				5FEF8B7B2EDA363A007D3A97 /* ProjectSimulatorTests */,
 				5FEF8B852EDA363A007D3A97 /* ProjectSimulatorUITests */,
@@ -275,7 +257,6 @@
 			);
 			fileSystemSynchronizedGroups = (
 				5FEF8B642EDA3636007D3A97 /* ProjectSimulator */,
-				D0FCA2B52EEEC14000D8AFFF /* ZainabAlmahdi  */,
 			);
 			name = ProjectSimulator;
 			packageProductDependencies = (
@@ -464,6 +445,7 @@
 				DEVELOPMENT_TEAM = 7FMYPPL38A;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = ProjectSimulator/Info.plist;
+				INFOPLIST_KEY_CFBundleDisplayName = "Nourish Bahrain";
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchStoryboardName = LaunchScreen;
 				INFOPLIST_KEY_UIMainStoryboardFile = Main;
@@ -492,6 +474,7 @@
 				DEVELOPMENT_TEAM = 7FMYPPL38A;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = ProjectSimulator/Info.plist;
+				INFOPLIST_KEY_CFBundleDisplayName = "Nourish Bahrain";
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchStoryboardName = LaunchScreen;
 				INFOPLIST_KEY_UIMainStoryboardFile = Main;

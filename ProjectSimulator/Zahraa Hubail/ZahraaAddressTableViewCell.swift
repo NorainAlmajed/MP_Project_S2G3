@@ -33,9 +33,7 @@ class ZahraaAddressTableViewCell: UITableViewCell {
         // Configure the view for the selected state
     }
     
-    func configure(with donation: ZahraaDonation) {
-        // Full address
-        let address = donation.address
+    func configure(with address: ZahraaAddress) {
         var addressParts: [String] = []
         addressParts.append("Building \(address.building)")
         if let flat = address.flat { addressParts.append("Flat \(flat)") }
@@ -43,38 +41,25 @@ class ZahraaAddressTableViewCell: UITableViewCell {
         addressParts.append("Block \(address.block)")
         addressParts.append(address.area)
         addressParts.append("\(address.governorate) Governorate")
-
+        
         var fullAddress = addressParts.joined(separator: ", ")
         if UIDevice.current.userInterfaceIdiom == .phone {
             fullAddress = "Building \(address.building), Road \(address.road), Block \(address.block) ..."
         }
 
-        // ✅ Use UIButton.Configuration for background & text color
         var config = UIButton.Configuration.filled()
         config.title = fullAddress
         config.titleAlignment = .leading
         config.contentInsets = NSDirectionalEdgeInsets(top: 10, leading: 12, bottom: 10, trailing: 12)
-        
-        // Dynamic colors for light/dark mode
-        config.baseBackgroundColor = UIColor { trait in
-            return trait.userInterfaceStyle == .dark ? .black : .white
-        }
-        config.baseForegroundColor = UIColor { trait in
-            return trait.userInterfaceStyle == .dark ? .white : .black
-        }
-        
-        // Apply same subtle border as txtQuantity
+        config.baseBackgroundColor = UIColor { $0.userInterfaceStyle == .dark ? .black : .white }
+        config.baseForegroundColor = UIColor { $0.userInterfaceStyle == .dark ? .white : .black }
         config.background.strokeWidth = 1
-        config.background.strokeColor = UIColor { trait in
-            return UIColor.systemGray4
-        }
+        config.background.strokeColor = UIColor.systemGray4
         config.background.cornerRadius = 8
-
-        // Apply configuration
+        
         addressBtn.configuration = config
-        addressBtn.contentHorizontalAlignment = .leading
-        addressBtn.adjustsImageWhenHighlighted = false
     }
+
 
 
     

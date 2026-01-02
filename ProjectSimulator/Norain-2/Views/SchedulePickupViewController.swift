@@ -257,6 +257,7 @@ class SchedulePickupViewController: UIViewController {
                     // Use existing address
                     self.saveDonationToFirebase(
                         addressRef: existingRef,
+                        address: address,
                         date: date,
                         timeframe: timeframe,
                         userId: userId,
@@ -269,6 +270,7 @@ class SchedulePickupViewController: UIViewController {
                         if let addressRef = addressRef {
                             self.saveDonationToFirebase(
                                 addressRef: addressRef,
+                                address: address,
                                 date: date,
                                 timeframe: timeframe,
                                 userId: userId,
@@ -320,6 +322,7 @@ class SchedulePickupViewController: UIViewController {
 
         private func saveDonationToFirebase(
             addressRef: DocumentReference,
+            address:Address,
             date: Date,
             timeframe: String,
             userId: String,
@@ -327,7 +330,6 @@ class SchedulePickupViewController: UIViewController {
             payload: DonationPayload
         ) {
             let donorRef = db.document(payload.donorRefPath ?? "users/\(userId)")
-
             let ngoRef = db.collection("users").document(payload.ngoId)
             
             // Calculate recurrence value
@@ -382,24 +384,62 @@ class SchedulePickupViewController: UIViewController {
                     print("   - Donation ID: \(donationID)")
                     print("   - Recurrence: \(recurrenceValue)")
                     
-                    //Zahraa Hubail
-                    self?.sendNotificationForDonation(donorRef: donorRef, ngoRef: ngoRef)
-
+                    let firestoreID = self?.db.collection("Donation").document().documentID
                     
+                    // Create a Donation object
+                                let donation = Donation(
+                                    firestoreID: firestoreID ?? "firestore id not found",
+                                    donationID: donationID,
+                                    ngo: ZahraaUser(userID: payload.ngoId, username: payload.ngoName, role: 3),
+                                    creationDate: Timestamp(date: date),
+                                    donor: ZahraaUser(userID: userId, username: "" , role: 2),
+                                    address: ZahraaAddress(
+                                        name: address.name,
+                                        building: address.building,
+                                        road: address.road,
+                                        block: address.block,
+                                        flat: address.flat ,
+                                        area: address.area,
+                                        governorate:address.governorate),
+                                    pickupDate: Timestamp(date: date),
+                                    pickupTime: timeframe,
+                                    foodImageUrl: payload.imageUrl,
+                                    status: 1,
+                                    category: payload.foodCategory,
+                                    quantity: payload.quantity,
+                                    weight: payload.weight,
+                                    expiryDate: Timestamp(date: payload.expiryDate),
+                                    description: payload.shortDescription,
+                                    rejectionReason: "",
+                                    recurrence: recurrenceValue
+                            )
+                    
+                    
+                    //send notification and clear draft
+                    self?.sendNotificationForDonation(donorRef: donorRef, ngoRef: ngoRef)
                     DonationDraftStore.shared.clear(ngoId: payload.ngoId)
-                    self?.showSuccessAlert()
+                    self?.showSuccessAlert(with: donation)
                 }
             }
         }
+    
+    private func navigateToDonationDetails(with donation: Donation) {
+        let storyboard = UIStoryboard(name: "Donations", bundle: nil)
+        if let vc = storyboard.instantiateViewController(withIdentifier: "DonationDetailsViewController") as? DonationDetailsViewController {
+            vc.donation = donation // Pass the Donation object here
+            navigationController?.pushViewController(vc, animated: true)
+        }
+    }
     private func showAlert(title: String, message: String) {
         let alert = UIAlertController(title: title, message: message, preferredStyle: .alert)
         alert.addAction(UIAlertAction(title: "OK", style: .default))
         present(alert, animated: true)
     }
-    private func showSuccessAlert() {
+    private func showSuccessAlert(with donation: Donation) {
         let alert = UIAlertController(title: "Success", message: "Pickup Scheduled!", preferredStyle: .alert)
         alert.addAction(UIAlertAction(title: "OK", style: .default) { _ in
-            self.navigationController?.popToRootViewController(animated: true)
+        self.navigateToDonationDetails(with: donation)
+
         })
         present(alert, animated: true)
     }

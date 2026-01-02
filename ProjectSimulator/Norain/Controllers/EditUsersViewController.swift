@@ -212,6 +212,7 @@ class EditUsersViewController: UIViewController, UIImagePickerControllerDelegate
             updateData["address"] = addressField.text?.trimmingCharacters(in: .whitespacesAndNewlines) ?? ""
             updateData["governorate"] = governorateBtn.currentTitle?.trimmingCharacters(in: .whitespacesAndNewlines) ?? ""
             updateData["cause"] = causebtn.currentTitle?.trimmingCharacters(in: .whitespacesAndNewlines) ?? ""
+            updateData["organization_name"] = nameField.text?.trimmingCharacters(in: .whitespacesAndNewlines) ?? ""
             
             if let statusTitle = statusBtn.currentTitle,
                let newStatus = NGOStatus(rawValue: statusTitle) {

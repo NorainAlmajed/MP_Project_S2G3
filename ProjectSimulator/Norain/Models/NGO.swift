@@ -34,7 +34,7 @@ class NorainNGO: NorainAppUser {
             self.rejectionReason = dictionary["rejectionReason"] as? String
             self.cause = dictionary["cause"] as? String ?? ""
             self.address = dictionary["address"] as? String ?? ""
-            self.mission = dictionary["mission"] as? String ?? ""
+            self.mission = dictionary["mission"] as? String ?? "No NGO mission entered."
             self.governorate = dictionary["governorate"] as? String ?? ""
            
             

@@ -19,7 +19,8 @@ class NorainDonor: NorainAppUser{
             let notifications_enabled = dictionary["notifications_enabled"] as? Bool ?? true
             let profile_completed = dictionary["profile_completed"] as? Bool ?? true
         
-            self.bio = dictionary["bio"] as? String ?? ""
+            self.bio = dictionary["mission"] as? String ?? "No donor bio entered."
+    
         super.init(documentID: documentID,username: username, name: name, phoneNumber: phoneNumber, email: email, userImg: userImg, role: 3,notifications_enabled: notifications_enabled)
         }
     

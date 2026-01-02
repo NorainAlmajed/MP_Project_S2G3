@@ -142,12 +142,12 @@ class UserDetailsViewController: UIViewController {
                 rejectBtn.isHidden = false
                 
             case .rejected:
+                
                 phoneOrStatusLbl.text = "Rejected"
                 phoneOrStatusLbl.textColor = .red
                 reasonLabel.text = "Reason: \(ngo.rejectionReason ?? "None")"
                 reasonLabel.isHidden = false
-                acceptBtnWidthConstraint.constant = 308
-                acceptBtn.isHidden = false
+                acceptBtn.isHidden = true
                 rejectBtn.isHidden = true
                 
             case .approved:

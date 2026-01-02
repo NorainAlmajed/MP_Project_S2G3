@@ -812,7 +812,7 @@ class RaghadDonatoinFormViewController: UIViewController,
     
  
     
-    //🟡🟡🟡🟡🟡🟡🟡🟡🟡🟡🟡🟡🟡🟡🟡🟡🟡🟡🟡🟡🟡🟡🟡🟡🟡🟡🟡🟡🟡🟡🟡🟡🟡🟡🟡🟡🟡🟡
+    //🟡
     private func createDraftDonation(
         donorUserDocId: String,
         ngoUserDocId: String,
@@ -877,8 +877,10 @@ class RaghadDonatoinFormViewController: UIViewController,
         
         let draft = DonationDraft(
             ngoId: ngo.id,
-            ngoName: ngo.name,               //  ADD THIS
+            ngoName: ngo.name,
             donorName: selectedDonorName,
+            donorRefPath: selectedDonorRefPath,
+            
             foodCategory: selectedFoodCategory,
             quantity: selectedQuantity,
             weight: weightValue,
@@ -907,6 +909,9 @@ class RaghadDonatoinFormViewController: UIViewController,
         
         //  only restore if current value is empty (don’t overwrite user selections)
         if (selectedDonorName ?? "").isEmpty { selectedDonorName = draft.donorName }
+        if selectedDonorRefPath == nil { selectedDonorRefPath = draft.donorRefPath }  
+
+        
         if selectedFoodCategory == nil { selectedFoodCategory = draft.foodCategory }
         if weightValue == nil { weightValue = draft.weight }
         if selectedExpiryDate == nil { selectedExpiryDate = draft.expiryDate }

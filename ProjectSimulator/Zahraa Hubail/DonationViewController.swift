@@ -37,6 +37,10 @@ class DonationViewController: UIViewController, DonationFilterDelegate {
         // MARK: - Properties
         var currentUser: ZahraaUser?
         let db = Firestore.firestore()
+    private var pendingOpenDonationFirestoreID: String?
+    private var shouldOpenPendingSegmentFromDashboard: Bool = false
+    private var dashboardDonationToOpenID: String?
+    var initialStatusIndex: Int?
 
         let statuses = ["All", "Pending", "Accepted", "Collected", "Rejected", "Cancelled"]
         var selectedIndex = 0
@@ -92,7 +96,78 @@ class DonationViewController: UIViewController, DonationFilterDelegate {
             setupNoDonationsLabel()
             setupSearchHeaderUnderNavBar()
             setupDonationsCollectionLayout()
+            
+            NotificationCenter.default.addObserver(
+                self,
+                selector: #selector(openDonationDetailsFromDashboard(_:)),
+                name: .openDonationDetails,
+                object: nil
+            )
+            NotificationCenter.default.addObserver(
+                self,
+                selector: #selector(handleOpenPendingSegment(_:)),
+                name: .openPendingDonations,
+                object: nil
+            )
+
+
+
         }
+    /*@objc private func handleOpenDonationDetails(_ notification: Notification) {
+        guard let firestoreID = notification.object as? String else { return }
+        pendingOpenDonationFirestoreID = firestoreID
+        // We cannot open until donations are fetched -> open later from fetchDonations completion
+    }*/
+   /* @objc private func handleDashboardDonationOpen(_ notification: Notification) {
+        guard let firestoreID = notification.object as? String else { return }
+        dashboardDonationToOpenID = firestoreID
+    }*/
+
+    @objc private func handleOpenPendingSegment(_ notification: Notification) {
+        shouldOpenPendingSegmentFromDashboard = true
+    }
+
+
+
+    private func applyDashboardRedirectIfNeeded() {
+        // 1) If dashboard asked to open Pending segment (NGO flow)
+        if shouldOpenPendingSegmentFromDashboard {
+            shouldOpenPendingSegmentFromDashboard = false
+            selectedIndex = 1
+            filterDonations()
+            statusCollectionView.reloadData()
+        }
+
+        // 2) If dashboard asked to open a specific donation details (donor/admin flow)
+        if let id = pendingOpenDonationFirestoreID {
+            pendingOpenDonationFirestoreID = nil
+            openDonationDetailsDirectly(firestoreID: id)
+        }
+    }
+
+    private func openDonationDetailsDirectly(firestoreID: String) {
+        guard let donation = allDonations.first(where: {
+            $0.firestoreID == firestoreID
+        }) else {
+            print("❌ Donation not found:", firestoreID)
+            return
+        }
+
+        let storyboard = UIStoryboard(name: "Donations", bundle: nil)
+        guard let detailsVC =
+            storyboard.instantiateViewController(
+                withIdentifier: "DonationDetailsViewController"
+            ) as? DonationDetailsViewController else {
+            return
+        }
+
+        detailsVC.donation = donation
+        detailsVC.currentUser = currentUser
+        detailsVC.hidesBottomBarWhenPushed = true
+
+        navigationController?.pushViewController(detailsVC, animated: true)
+    }
+
 
         override func viewWillAppear(_ animated: Bool) {
             super.viewWillAppear(animated)
@@ -479,6 +554,12 @@ class DonationViewController: UIViewController, DonationFilterDelegate {
                     )
 
                     self.allDonations.append(donation)
+                    
+                }
+                self.applyDashboardRedirectIfNeeded()
+                if let id = dashboardDonationToOpenID {
+                    dashboardDonationToOpenID = nil
+                    openDonationDetailsDirectly(firestoreID: id)
                 }
             }
 //edited by zainab mahdi
@@ -489,15 +570,29 @@ class DonationViewController: UIViewController, DonationFilterDelegate {
                     return
                 }
 
-                self.displayedDonations = self.allDonations.sorted {
-                    $0.creationDate.dateValue() > $1.creationDate.dateValue()
+                if let index = self.initialStatusIndex {
+                    self.selectedIndex = index
+                    self.initialStatusIndex = nil
+
+                    // Zainab Mahdi: dashboard → pending segment redirect
+                    self.filterDonations()
+                    self.statusCollectionView.reloadData()
+                } else {
+                    self.displayedDonations = self.allDonations.sorted {
+                        $0.creationDate.dateValue() > $1.creationDate.dateValue()
+                    }
                 }
+
+                self.applyDashboardRedirectIfNeeded()
                 self.donationsCollectionView.reloadData()
                 self.updateNoDonationsLabel()
             }
 
+           
+
         }
     }
+ 
 
 
 
@@ -530,6 +625,11 @@ class DonationViewController: UIViewController, DonationFilterDelegate {
         func searchBarSearchButtonClicked(_ searchBar: UISearchBar) {
             searchBar.resignFirstResponder()
         }
+        @objc private func openDonationDetailsFromDashboard(_ notification: Notification) {
+            guard let firestoreID = notification.object as? String else { return }
+            openDonationDetailsDirectly(firestoreID: firestoreID)
+        }
+
     }
 
     // MARK: - UICollectionViewDataSource

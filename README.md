@@ -37,7 +37,7 @@ ios app that allow donors to make donations for verified NGOs.
   <tr><td>2</td><td>Settings Management & Account Control</td><td>Zainab Almahdi</td><td>Zahraa Hubail</td></tr>
   <tr><td>3</td><td>Customize Dashboard</td><td>Fatima Alaiwi</td><td>Raghad Aleskafi</td></tr>
   <tr><td>4</td><td>Impact Tracking</td><td>Fatima Alaiwi</td><td>Zainab Saeed</td></tr>
-  <tr><td>5</td><td>Admin User Controls (CRUD) and NGO Approvals</td><td>Norain Almajed</td><td>Zahraa Hubail</td></tr>
+  <tr><td>5</td><td>Admin User Controls (CRUD) and NGO Approvals</td><td>Norain Almajed</td><td>Zainab Almahdi</td></tr>
   <tr><td>6</td><td>Real-Time Notifications</td><td>Zahraa Hubail</td><td>Raghad Aleskafi</td></tr>
   <tr><td>7</td><td>Donation and Status Management</td><td>Zahraa Hubail</td><td>Zainab Saeed</td></tr>
   <tr><td>8</td><td>NGO Discovery</td><td>Raghad Aleskafi</td><td>Norain Almajed</td></tr>
@@ -63,6 +63,45 @@ ios app that allow donors to make donations for verified NGOs.
 
 <h2>Design Changes</h2>
 
+<h3>Zainab Almahdi</h3>
+
+<ul>
+  <li>
+    <strong>User Registration, Authentication, and Profile</strong>
+    <ul>
+      <li>
+        A Confirm Password field was added to reduce password entry errors during
+        registration and credential updates, improving validation reliability and overall user
+        experience.
+      </li>
+      <li>
+        Multi-Factor Authentication (MFA) and its associated storyboard scenes were
+        removed to keep the authentication flow simple and aligned with the current project
+        scope, while reducing navigation and state-management complexity in both the
+        storyboard and Swift codebase.
+      </li>
+    </ul>
+  </li>
+
+  <li>
+    <strong>Settings Management & Account Control</strong>
+    <ul>
+      <li>
+        Selecting the Security Settings cell now navigates directly to the Change
+        Email/Password screen, minimizing unnecessary intermediary views and improving
+        task efficiency in line with iOS navigation best practices.
+      </li>
+      <li>
+        Advanced account management features (last login details, active sessions,
+        device-specific logout, and local data/cache management) were removed to avoid UI
+        clutter and keep the storyboard structure lightweight, focusing on essential and
+        commonly used security actions.
+      </li>
+    </ul>
+  </li>
+</ul>
+
+
 <h3>Norain Almajed</h3>
 <ul>
   <li>Admin controls and user management(CRUD)
@@ -82,6 +121,11 @@ Initially, the donor and NGO dashboards included a spotlight section that displa
 <h3>Zahraa Hubail</h3>
 <p>
 An upcoming pickup reminder notification was considered, but it was not implemented. In iOS, time-based notifications are not reliable when the app is closed unless background or cloud services are used. A proper implementation would require a backend solution like Firebase Cloud Functions, which was beyond the scope of this project. Since this was an extra feature and not a core requirement, we focused on the main functionality of the app.
+</p>
+
+<h3>Zainab Mahdi</h3>
+<p>
+The send button was removed since sending messages through the keyboard follows common chat interaction conventions and helps maintain a clean, focused layout. To support this simplified design, The unread badge was not included to align with a simplified, minimal design approach that prioritizes clarity and readability over additional notification indicators. An admin profile photo was added to clearly identify official support communication, resulting in a more intuitive chat experience.
 </p>
 
 <h3>All</h3>

@@ -826,8 +826,23 @@ extension DonationViewController {
             }
         }
 
+        filtered.sort {
+            $0.creationDate.dateValue() > $1.creationDate.dateValue()
+        }
+
+        if activeSort == "Name (A–Z)" {
+            filtered.sort {
+                $0.category.localizedCaseInsensitiveCompare($1.category) == .orderedAscending
+            }
+        } else if activeSort == "Name (Z–A)" {
+            filtered.sort {
+                $0.category.localizedCaseInsensitiveCompare($1.category) == .orderedDescending
+            }
+        }
+
         displayedDonations = filtered
         donationsCollectionView.reloadData()
         updateNoDonationsLabelDuringSearch()
+
     }
 }

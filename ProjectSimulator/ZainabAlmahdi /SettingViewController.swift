@@ -29,12 +29,16 @@ class SettingViewController: UITableViewController {
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
 
-        nameLabel.text = SessionManager.shared.fullName ?? "User"
-        roleLabel.text = SessionManager.shared.roleDisplayName
-
-        loadProfileImage()
-        configureRows()
-        tableView.reloadData()
+        SessionManager.shared.loadUserSession { [weak self] success in
+            guard success else { return }
+            DispatchQueue.main.async {
+                self?.nameLabel.text = SessionManager.shared.fullName ?? "User"
+                self?.roleLabel.text = SessionManager.shared.roleDisplayName
+                self?.loadProfileImage()
+                self?.configureRows()
+                self?.tableView.reloadData()
+            }
+        }
     }
 
     // MARK: - Profile Image Styling (MATCHES TEAMMATE)

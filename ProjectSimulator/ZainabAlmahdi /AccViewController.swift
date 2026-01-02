@@ -37,12 +37,12 @@ class AccViewController: UITableViewController {
 
         SessionManager.shared.loadUserSession { [weak self] success in
             guard success else { return }
-
             DispatchQueue.main.async {
                 self?.updateUI()
             }
         }
     }
+
 
     // MARK: - UI Update
     func updateUI() {

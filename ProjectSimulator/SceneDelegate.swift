@@ -19,6 +19,8 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         let navAppearance = UINavigationBarAppearance()
     
         navAppearance.configureWithTransparentBackground()
+        navAppearance.backgroundEffect = nil
+
         
         navAppearance.backButtonAppearance = backAppearance
         

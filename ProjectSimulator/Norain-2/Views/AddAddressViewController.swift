@@ -39,7 +39,7 @@ class AddAddressViewController: UIViewController {
     private func setupUI() {
         title = "New Address Form"
 //        no back
-        navigationItem.backBarButtonItem = UIBarButtonItem(title: "")
+        navigationItem.backBarButtonItem = UIBarButtonItem(title: " ")
     }
     
     @IBAction func governorateButtonTapped(_ sender: Any) {

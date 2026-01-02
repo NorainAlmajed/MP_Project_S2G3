@@ -2,41 +2,55 @@ import UIKit
 
 extension UIImageView {
 
-    func applyProfileStyle(cornerRadius: CGFloat = 7) {
+    func applyProfileStyle(
+        cornerRadius: CGFloat = 7,
+        showsPlaceholder: Bool = true
+    ) {
         layer.cornerRadius = cornerRadius
         clipsToBounds = true
         layer.borderWidth = 1
         layer.borderColor = UIColor.systemGray.cgColor
+        backgroundColor = UIColor.systemGray6
 
-        if image == nil {
-            applyPlaceholderStyle()
-        } else {
-            contentMode = .scaleAspectFill
+        contentMode = .scaleAspectFill
+
+        if showsPlaceholder && image == nil {
+            setPlaceholderIcon()
         }
+    }
+
+    func setPlaceholderIcon() {
+        let config = UIImage.SymbolConfiguration(pointSize: 36, weight: .regular)
+        let image = UIImage(
+            systemName: "photo",
+            withConfiguration: config
+        )
+
+        self.image = image
+        self.tintColor = .systemGray3
+        self.contentMode = .center
+    }
+
+    func setRealImage(_ image: UIImage) {
+        self.image = image
+        self.contentMode = .scaleAspectFill
+        self.tintColor = nil
     }
 
     func loadProfileImage(from urlString: String) {
         guard !urlString.isEmpty else {
-            applyPlaceholderStyle()
+            setPlaceholderIcon()
             return
         }
 
-        applyPlaceholderStyle()
+        setPlaceholderIcon()
 
         FetchImage.fetchImage(from: urlString) { [weak self] image in
             DispatchQueue.main.async {
-                guard let self = self, let image = image else { return }
-                self.image = image
-                self.contentMode = .scaleAspectFill
+                if let image = image {
+                    self?.setRealImage(image)
+                }
             }
         }
-    }
-
-    private func applyPlaceholderStyle() {
-        let config = UIImage.SymbolConfiguration(pointSize: 40, weight: .regular)
-        image = UIImage(systemName: "person.circle.fill", withConfiguration: config)
-        tintColor = .systemGray3
-        contentMode = .center
-        backgroundColor = .clear
     }
 }

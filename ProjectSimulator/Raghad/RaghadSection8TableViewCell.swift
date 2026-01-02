@@ -50,7 +50,7 @@ class RaghadSection8TableViewCell: UITableViewCell {
                // Height (nice button size)
                btnProceedToSchedulePickup.heightAnchor.constraint(equalToConstant: 39),
 
-               //  Safety padding so it never touches edges
+               //  Safety padding so it never touches edges.
                btnProceedToSchedulePickup.topAnchor.constraint(greaterThanOrEqualTo: contentView.topAnchor, constant: 8),
                btnProceedToSchedulePickup.bottomAnchor.constraint(lessThanOrEqualTo: contentView.bottomAnchor, constant: -8)
            ])

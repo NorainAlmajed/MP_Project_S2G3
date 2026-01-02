@@ -44,19 +44,18 @@ class NGOSignupViewController: UIViewController,
     @IBOutlet weak var governorateTextField: UITextField!
     @IBOutlet weak var licenseImageView: UIImageView!
 
-    // MARK: - Lifecycle
     override func viewDidLoad() {
         super.viewDidLoad()
-        
-        styleActionButton(uploadButton)
-            styleActionButton(signupButton)
-            navigationItem.title = "Sign Up"
 
-            styleLicenseImageView()
+        navigationItem.title = "Sign Up"
 
         styleActionButton(uploadButton)
         styleActionButton(signupButton)
-        navigationItem.title = "Sign Up"
+
+        licenseImageView.applyProfileStyle(
+            cornerRadius: 7,
+            showsPlaceholder: true
+        )
 
         causeTextField.tintColor = .clear
         governorateTextField.tintColor = .clear
@@ -89,16 +88,6 @@ class NGOSignupViewController: UIViewController,
         picker.sourceType = .photoLibrary
         present(picker, animated: true)
     }
-    
-    // MARK: - License Image Styling
-    func styleLicenseImageView() {
-        licenseImageView.layer.cornerRadius = 7
-        licenseImageView.clipsToBounds = true
-        licenseImageView.layer.borderWidth = 1
-        licenseImageView.layer.borderColor = UIColor.systemGray.cgColor
-        licenseImageView.contentMode = .scaleAspectFill
-    }
-
 
     func imagePickerController(
         _ picker: UIImagePickerController,
@@ -106,7 +95,9 @@ class NGOSignupViewController: UIViewController,
     ) {
         if let image = info[.editedImage] as? UIImage ??
                        info[.originalImage] as? UIImage {
-            licenseImageView.image = image
+
+            // ✅ Switch to real image styling
+            licenseImageView.setRealImage(image)
         }
         dismiss(animated: true)
     }
@@ -118,27 +109,36 @@ class NGOSignupViewController: UIViewController,
     // MARK: - Picker Delegates
     func numberOfComponents(in pickerView: UIPickerView) -> Int { 1 }
 
-    func pickerView(_ pickerView: UIPickerView, numberOfRowsInComponent component: Int) -> Int {
+    func pickerView(_ pickerView: UIPickerView,
+                    numberOfRowsInComponent component: Int) -> Int {
         pickerView.tag == 1 ? causes.count : governorates.count
     }
 
-    func pickerView(_ pickerView: UIPickerView, titleForRow row: Int, forComponent component: Int) -> String? {
+    func pickerView(_ pickerView: UIPickerView,
+                    titleForRow row: Int,
+                    forComponent component: Int) -> String? {
         pickerView.tag == 1 ? causes[row] : governorates[row]
     }
 
-    func pickerView(_ pickerView: UIPickerView, didSelectRow row: Int, inComponent component: Int) {
+    func pickerView(_ pickerView: UIPickerView,
+                    didSelectRow row: Int,
+                    inComponent component: Int) {
         pickerView.tag == 1
-        ? (causeTextField.text = causes[row])
-        : (governorateTextField.text = governorates[row])
+            ? (causeTextField.text = causes[row])
+            : (governorateTextField.text = governorates[row])
     }
 
     // MARK: - Toolbar
     func addToolbar(to textField: UITextField) {
         let toolbar = UIToolbar()
         toolbar.sizeToFit()
-        toolbar.setItems([
-            UIBarButtonItem(title: "Done", style: .plain, target: self, action: #selector(doneTapped))
-        ], animated: false)
+        toolbar.setItems(
+            [UIBarButtonItem(title: "Done",
+                             style: .plain,
+                             target: self,
+                             action: #selector(doneTapped))],
+            animated: false
+        )
         textField.inputAccessoryView = toolbar
     }
 
@@ -155,12 +155,14 @@ class NGOSignupViewController: UIViewController,
             .lowercased() ?? ""
 
         guard !username.isEmpty else {
-            showAlert(title: "Missing Username", message: "Please enter a username.")
+            showAlert(title: "Missing Username",
+                      message: "Please enter a username.")
             return
         }
 
         guard let licenseImage = licenseImageView.image else {
-            showAlert(title: "Missing License", message: "Please upload NGO license.")
+            showAlert(title: "Missing License",
+                      message: "Please upload NGO license.")
             return
         }
 
@@ -179,17 +181,16 @@ class NGOSignupViewController: UIViewController,
                     return
                 }
 
-                let cloudinaryService = CloudinaryService()
-                cloudinaryService.uploadImage(licenseImage) { url in
-                    if let url = url {
-                        self.createNGOAccount(licenseUrl: url)
-                    } else {
+                CloudinaryService().uploadImage(licenseImage) { url in
+                    guard let url = url else {
                         self.signupButton.isEnabled = true
                         self.showAlert(
                             title: "Upload Failed",
                             message: "Could not upload NGO license."
                         )
+                        return
                     }
+                    self.createNGOAccount(licenseUrl: url)
                 }
             }
         }
@@ -198,27 +199,41 @@ class NGOSignupViewController: UIViewController,
     // MARK: - Validation
     func validateInputs() -> Bool {
         guard let email = emailTextField.text, !email.isEmpty else {
-            showAlert(title: "Missing Email", message: "Enter email"); return false
+            showAlert(title: "Missing Email", message: "Enter email")
+            return false
         }
+
         guard let password = passwordTextField.text, !password.isEmpty else {
-            showAlert(title: "Missing Password", message: "Enter password"); return false
+            showAlert(title: "Missing Password", message: "Enter password")
+            return false
         }
+
         guard password == confirmPasswordTextField.text else {
-            showAlert(title: "Password Mismatch", message: "Passwords do not match"); return false
+            showAlert(title: "Password Mismatch",
+                      message: "Passwords do not match")
+            return false
         }
+
         guard password.count >= 6 else {
-            showAlert(title: "Weak Password", message: "At least 6 characters"); return false
+            showAlert(title: "Weak Password",
+                      message: "At least 6 characters")
+            return false
         }
+
         guard let phone = phoneNumberTextField.text,
               phone.count >= 8,
               phone.allSatisfy({ $0.isNumber }) else {
-            showAlert(title: "Invalid Phone", message: "Digits only, min 8"); return false
+            showAlert(title: "Invalid Phone",
+                      message: "Digits only, min 8")
+            return false
         }
+
         return true
     }
 
     // MARK: - Username Check
-    func checkUsernameAvailability(_ username: String, completion: @escaping (Bool) -> Void) {
+    func checkUsernameAvailability(_ username: String,
+                                   completion: @escaping (Bool) -> Void) {
         Firestore.firestore()
             .collection("users")
             .whereField("username", isEqualTo: username)
@@ -233,7 +248,9 @@ class NGOSignupViewController: UIViewController,
             withEmail: emailTextField.text!,
             password: passwordTextField.text!
         ) { [weak self] result, error in
-            guard let self = self, let uid = result?.user.uid, error == nil else {
+            guard let self = self,
+                  let uid = result?.user.uid,
+                  error == nil else {
                 self?.signupButton.isEnabled = true
                 return
             }
@@ -274,20 +291,25 @@ class NGOSignupViewController: UIViewController,
     func loadSessionAndRoute() {
         SessionManager.shared.fetchUserRole { success in
             guard success,
-                  let sceneDelegate = UIApplication.shared.connectedScenes.first?.delegate as? SceneDelegate
-            else { return }
+                  let sceneDelegate = UIApplication.shared.connectedScenes
+                        .first?.delegate as? SceneDelegate else { return }
 
             let vc = UIStoryboard(name: "Authentication", bundle: nil)
-                .instantiateViewController(withIdentifier: "SetupProfileViewController")
+                .instantiateViewController(
+                    withIdentifier: "SetupProfileViewController"
+                )
 
-            sceneDelegate.window?.rootViewController = UINavigationController(rootViewController: vc)
+            sceneDelegate.window?.rootViewController =
+                UINavigationController(rootViewController: vc)
             sceneDelegate.window?.makeKeyAndVisible()
         }
     }
 
     // MARK: - Helpers
     func showAlert(title: String, message: String) {
-        let alert = UIAlertController(title: title, message: message, preferredStyle: .alert)
+        let alert = UIAlertController(title: title,
+                                      message: message,
+                                      preferredStyle: .alert)
         alert.addAction(UIAlertAction(title: "OK", style: .default))
         present(alert, animated: true)
     }
@@ -303,7 +325,8 @@ class NGOSignupViewController: UIViewController,
             .addDocument(data: [
                 "date": Timestamp(date: Date()),
                 "title": "NGO Awaiting Approval",
-                "description": "\(username) has just signed up and is awaiting verification.",
+                "description":
+                    "\(username) has just signed up and is awaiting verification.",
                 "userID": "TwWqBSGX4ec4gxCWCZcbo7WocAI2"
             ])
     }

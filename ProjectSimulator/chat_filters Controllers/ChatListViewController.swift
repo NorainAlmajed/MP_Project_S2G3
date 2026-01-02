@@ -48,25 +48,21 @@ enum ChatType: String {
 
 class ChatListViewController: UIViewController,  UISearchBarDelegate, UITableViewDataSource, UITableViewDelegate, UITextFieldDelegate {
     
-    var chatType: ChatType = .normal
     
     enum CurrentUserRole {
         case admin
         case donor
         case ngo
     }
-    
+    var chatType: ChatType = .normal
     var currentUserRole: CurrentUserRole = .admin
     var donorId: String?
     var ngoId: String?
     var adminId: String?
     var userNameCache: [String: String] = [:]
-    
     var currentUserId: String {
         Auth.auth().currentUser?.uid ?? ""
     }
-    
-    
     var chatsAfterFilter: [SupportChat] = []
     var currentFilter = String ("all")
     private let db = Firestore.firestore()
@@ -83,14 +79,10 @@ class ChatListViewController: UIViewController,  UISearchBarDelegate, UITableVie
     @IBOutlet weak var donorButton: UIButton!
     @IBOutlet weak var allButton: UIButton!
     @IBOutlet weak var ChatTable: UITableView!
-  
-
     @IBAction func allButton(_ sender: UIButton) {
         currentFilter = "all"
         setSelectedFilterButton(sender)
         applyFilter(type: currentFilter)
-        
-        
     }
     @IBAction func donorButton(_ sender: UIButton) {
         currentFilter = "donor"
@@ -103,6 +95,8 @@ class ChatListViewController: UIViewController,  UISearchBarDelegate, UITableVie
         applyFilter(type: currentFilter)
     }
     
+    
+    // MARK: - user UI and load
     func configureUIForRole() {
         switch currentUserRole {
         case .admin:
@@ -158,6 +152,10 @@ class ChatListViewController: UIViewController,  UISearchBarDelegate, UITableVie
                 self.listenForChats()
             }
     }
+    
+    
+    
+    
     func applyNavigationBarStyle() {
         let appearance = UINavigationBarAppearance()
         appearance.configureWithOpaqueBackground()
@@ -178,7 +176,6 @@ class ChatListViewController: UIViewController,  UISearchBarDelegate, UITableVie
 
     override func viewDidLoad() {
         super.viewDidLoad()
-
         ChatSearch.delegate = self
         ChatSearch.backgroundImage = UIImage()
         applyNavigationBarStyle()
@@ -200,20 +197,22 @@ class ChatListViewController: UIViewController,  UISearchBarDelegate, UITableVie
         ChatTable.delegate = self
 
         navigationItem.backButtonDisplayMode = .minimal
-      
+        registerForTraitChanges([UITraitUserInterfaceStyle.self]) {
+            [weak self] (env: UITraitEnvironment, previous: UITraitCollection) in
+            guard let self = self else { return }
+
+            self.refreshFilterUIAfterTraitChange()
+        }
         setupFilterButtonsInitialState()
-
-
         loadCurrentUserAndStart()
         
     }
 
     
-    //search bar shows cancel when clicked
+// MARK: - Search bar and keyboard
     func searchBarTextDidBeginEditing(_ searchBar: UISearchBar) {
         searchBar.setShowsCancelButton(true, animated: true)
     }
-    //hiding cancel button
     func searchBarCancelButtonClicked(_ searchBar: UISearchBar) {
         searchBar.text = ""
         searchBar.resignFirstResponder()
@@ -222,13 +221,12 @@ class ChatListViewController: UIViewController,  UISearchBarDelegate, UITableVie
         visibleChats = chatsAfterFilter
         ChatTable.reloadData()
     }
-    //dismiss keyboard function
     @objc func dismissKeyboard() {
         view.endEditing(true)
     }
     
     
-    // color initial unselected buttons
+// MARK: - Admin chat filter
     func setupFilterButtonsInitialState() {
         let buttons = [allButton, donorButton, ngoButton]
         let isDarkMode = traitCollection.userInterfaceStyle == .dark
@@ -250,16 +248,6 @@ class ChatListViewController: UIViewController,  UISearchBarDelegate, UITableVie
         }
     }
 
-    
-    func refreshFilterUIAfterTraitChange() {
-        setupFilterButtonsInitialState()
-        restoreSelectedFilterButton()
-        applyFilter(type: currentFilter)
-    }
-
-
-    
-    // change color of button when selected/unselected
     func setSelectedFilterButton(_ selected: UIButton) {
         setupFilterButtonsInitialState()
 
@@ -281,7 +269,7 @@ class ChatListViewController: UIViewController,  UISearchBarDelegate, UITableVie
     var allChats: [SupportChat] = []
     var visibleChats: [SupportChat] = []
     
-    //table function
+    // MARK: - table function
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         return visibleChats.count
     }
@@ -356,7 +344,7 @@ class ChatListViewController: UIViewController,  UISearchBarDelegate, UITableVie
         ChatTable.reloadData()
     }
     
-    //time function
+    // MARK: - time function
     func formatTimestampForChatList(_ date: Date) -> String {
         let calendar = Calendar.current
         
@@ -382,6 +370,7 @@ class ChatListViewController: UIViewController,  UISearchBarDelegate, UITableVie
     }
     
     
+    // MARK: - Segue function
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
 
         guard let chatVC = segue.destination as? ChatViewController else { return }
@@ -418,7 +407,7 @@ class ChatListViewController: UIViewController,  UISearchBarDelegate, UITableVie
 
     
     
-    //Firestore methods
+    // MARK: - Firestore methods
     func listenForChats() {
         chatListener?.remove()
         allChats.removeAll()
@@ -457,8 +446,6 @@ class ChatListViewController: UIViewController,  UISearchBarDelegate, UITableVie
                     let isEnded = data["isEnded"] as? Bool ?? false
                     if isEnded { continue }
                     let lastMessageTime = data["lastMessageAt"] as? Timestamp
-
-
                     let otherUserId: String
                     let senderType: String
 
@@ -531,7 +518,7 @@ class ChatListViewController: UIViewController,  UISearchBarDelegate, UITableVie
             }
     }
 
-
+// MARK: - Fetching firebase chat data
     func resolveChatNames() {
         for chat in allChats {
 
@@ -615,7 +602,7 @@ class ChatListViewController: UIViewController,  UISearchBarDelegate, UITableVie
     }
 
 
-
+//timestamp functions
     func fetchLastMessageTime(
         chatID: String,
         completion: @escaping (Timestamp?) -> Void
@@ -630,10 +617,6 @@ class ChatListViewController: UIViewController,  UISearchBarDelegate, UITableVie
                 completion(ts)
             }
     }
-
-
-
-
 
     func attachLastMessageTimes() {
         let group = DispatchGroup()
@@ -683,17 +666,9 @@ class ChatListViewController: UIViewController,  UISearchBarDelegate, UITableVie
 
         navigationController?.pushViewController(chatVC, animated: true)
     }
+
     
-    override func traitCollectionDidChange(_ previousTraitCollection: UITraitCollection?) {
-        super.traitCollectionDidChange(previousTraitCollection)
-
-        if previousTraitCollection?.userInterfaceStyle != traitCollection.userInterfaceStyle {
-            setupFilterButtonsInitialState()
-            restoreSelectedFilterButton()
-        }
-    }
-
-
+    // MARK: - Dark Mode
     func restoreSelectedFilterButton() {
         switch currentFilter {
         case "donor":
@@ -704,6 +679,10 @@ class ChatListViewController: UIViewController,  UISearchBarDelegate, UITableVie
             setSelectedFilterButton(allButton)
         }
     }
-
+    func refreshFilterUIAfterTraitChange() {
+        setupFilterButtonsInitialState()
+        restoreSelectedFilterButton()
+        applyFilter(type: currentFilter)
+    }
     }
 

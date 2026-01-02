@@ -7,19 +7,8 @@ UICollectionViewDelegate,
 UICollectionViewDataSource,
                           UITextFieldDelegate,UIGestureRecognizerDelegate {
     
-    var chatType: ChatType = .normal
     
-    var donorId: String?
-    var ngoId: String?
-    var adminId: String?
-    private var myUserId = ""
-    private let navProfileImageView = UIImageView()
-    private let SUPPORT_ADMIN_ID = "TwWqBSGX4ec4gxCWCZcbo7WocAI2"
-
-    
-    var chatID: String = ""
-    var userName: String = ""
-    
+    // MARK: - Properties
     struct ChatMessage {
         let id: String
         let text: String
@@ -27,12 +16,23 @@ UICollectionViewDataSource,
         let date: Date
     }
     
-
     enum UserRole {
         case admin
         case donor
         case ngo
     }
+    
+    var chatType: ChatType = .normal
+    var donorId: String?
+    var ngoId: String?
+    var adminId: String?
+    private var myUserId = ""
+    private let navProfileImageView = UIImageView()
+    private let SUPPORT_ADMIN_ID = "TwWqBSGX4ec4gxCWCZcbo7WocAI2"
+    var chatID: String = ""
+    var userName: String = ""
+   
+    
     
     func formatTimeForMessage(_ date: Date) -> String {
         let formatter = DateFormatter()
@@ -83,7 +83,7 @@ UICollectionViewDataSource,
     
     
     
-    //profile photo function
+    // MARK: - profile photo
     func receiverUserId() -> String? {
         let myId = Auth.auth().currentUser?.uid
 
@@ -145,9 +145,6 @@ UICollectionViewDataSource,
             }
     }
 
-
-
-    
     func applyChatLayout() {
         let itemSize = NSCollectionLayoutSize(
             widthDimension: .fractionalWidth(1.0),
@@ -185,7 +182,7 @@ UICollectionViewDataSource,
 
     
     
-    // ending chat function
+    // MARK: - ending chat function
     @IBAction func endButtonTapped(_ sender: UIBarButtonItem) {
         showEndChatAlert()
     }
@@ -228,8 +225,6 @@ UICollectionViewDataSource,
     }
 
     
-    
-    
     func endChat() {
         inputBarView.isHidden = true
         endButton.isEnabled = false
@@ -253,7 +248,7 @@ UICollectionViewDataSource,
     
     
     
-    // messages functions
+    // MARK: - messages functions
     @objc private func didPressReturnKey() {
         sendMessage()
     }
@@ -292,44 +287,34 @@ UICollectionViewDataSource,
         else { return }
         
         let tempId = UUID().uuidString
-        
         let localMessage = ChatMessage(
             id: tempId,
             text: text,
             senderId: myUserId,
             date: Date()
         )
-        
         messages.append(localMessage)
-        
         collectionView.reloadData()
         scrollToBottom(animated: true)
-        
         messageTextField.text = ""
-        
         sendMessageToFirestore(text: text, localId: tempId)
     }
     
-    
+    // MARK: - chat creation
     func createChatIfNeeded() {
         guard !chatID.isEmpty else { return }
-
         let chatRef = Firestore.firestore()
             .collection("chats")
             .document(chatID)
-
         chatRef.getDocument { snapshot, _ in
             if snapshot?.exists == true { return }
-
             var data: [String: Any] = [
                 "type": self.chatType.rawValue,
                 "createdAt": Timestamp(),
                 "isEnded": false
             ]
-
             if let donorId = self.donorId { data["donorId"] = donorId }
             if let ngoId = self.ngoId { data["ngoId"] = ngoId }
-
             if self.chatType == .support {
                 data["adminId"] = self.SUPPORT_ADMIN_ID
             } else if let adminId = self.adminId {
@@ -355,7 +340,7 @@ UICollectionViewDataSource,
     
     
     
-    //text field functions
+    // MARK: - input field and keyboard
     
     func textFieldDidChangeSelection(_ textField: UITextField) {
     }
@@ -364,22 +349,17 @@ UICollectionViewDataSource,
         sendMessage()
         return true
     }
-    
-    
     @objc func keyboardWillShow(_ notification: NSNotification) {
         guard let frame =
                 notification.userInfo?[UIResponder.keyboardFrameEndUserInfoKey] as? CGRect
         else { return }
-        
         inputBarConstraint.constant = -frame.height
-        
         UIView.animate(withDuration: 0.3, animations: {
             self.view.layoutIfNeeded()
         }) { _ in
             self.scrollToBottom(animated: true)
         }
     }
-    
     
     @objc func keyboardWillHide(_ notification: NSNotification) {
         inputBarConstraint.constant = 0
@@ -389,18 +369,71 @@ UICollectionViewDataSource,
         }
     }
     
-    
-  
-
     @objc func dismissKeyboard() {
         view.endEditing(true)
     }
+    
+    @objc private func textDidChange() {
+        guard let text = messageTextField.text else { return }
+        
+        if text.contains("\n") {
+            let cleaned = text.replacingOccurrences(of: "\n", with: "")
+            messageTextField.text = cleaned
+            sendMessage()
+        }
+    }
+    
+    func gestureRecognizer(
+        _ gestureRecognizer: UIGestureRecognizer,
+        shouldReceive touch: UITouch
+    ) -> Bool {
+        if touch.view?.isDescendant(of: inputBarView) == true {
+            return false
+        }
+        return true
+    }
+    
+    func applyInputBarStyle() {
+        let yellowBubble = UIColor(
+            red: 1.0,
+            green: 0.93,
+            blue: 0.75,
+            alpha: 1.0
+        )
+
+        if traitCollection.userInterfaceStyle == .dark {
+            inputBarView.backgroundColor = yellowBubble
+            messageTextField.backgroundColor = yellowBubble
+
+            messageTextField.textColor = .black
+            messageTextField.keyboardAppearance = .dark
+
+            messageTextField.attributedPlaceholder = NSAttributedString(
+                string: "Message",
+                attributes: [.foregroundColor: UIColor.black.withAlphaComponent(0.6)]
+            )
+
+        } else {
+            inputBarView.backgroundColor = .systemGray6
+            messageTextField.backgroundColor = .clear
+
+            messageTextField.textColor = .label
+            messageTextField.keyboardAppearance = .default
+
+            messageTextField.attributedPlaceholder = NSAttributedString(
+                string: "Message",
+                attributes: [.foregroundColor: UIColor.secondaryLabel]
+            )
+        }
+    }
+
+    // MARK: - view functions
     override func viewWillDisappear(_ animated: Bool) {
         super.viewWillDisappear(animated)
 
         navigationController?.navigationBar.prefersLargeTitles = false
     }
-
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         navigationItem.title = userName
@@ -481,36 +514,6 @@ UICollectionViewDataSource,
     }
     
     
-    @objc private func textDidChange() {
-        guard let text = messageTextField.text else { return }
-        
-        // Detect return character manually
-        if text.contains("\n") {
-            let cleaned = text.replacingOccurrences(of: "\n", with: "")
-            messageTextField.text = cleaned
-            sendMessage()
-        }
-    }
-    
-    
-    
-    func gestureRecognizer(
-        _ gestureRecognizer: UIGestureRecognizer,
-        shouldReceive touch: UITouch
-    ) -> Bool {
-        
-        if touch.view?.isDescendant(of: inputBarView) == true {
-            return false
-        }
-        
-        return true
-    }
-    
-    
-    
-    
-    
-    
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
       
@@ -539,6 +542,9 @@ UICollectionViewDataSource,
     deinit {
         NotificationCenter.default.removeObserver(self)
     }
+    
+    
+    // MARK: - Firestore Methods
     func listenForMessages() {
         
         Firestore.firestore()
@@ -596,44 +602,5 @@ UICollectionViewDataSource,
                 }
             }
     }
-    
-    func applyInputBarStyle() {
-        let yellowBubble = UIColor(
-            red: 1.0,
-            green: 0.93,
-            blue: 0.75,
-            alpha: 1.0
-        )
-
-        if traitCollection.userInterfaceStyle == .dark {
-            inputBarView.backgroundColor = yellowBubble
-            messageTextField.backgroundColor = yellowBubble
-
-            messageTextField.textColor = .black
-            messageTextField.keyboardAppearance = .dark
-
-            messageTextField.attributedPlaceholder = NSAttributedString(
-                string: "Message",
-                attributes: [.foregroundColor: UIColor.black.withAlphaComponent(0.6)]
-            )
-
-        } else {
-            inputBarView.backgroundColor = .systemGray6
-            messageTextField.backgroundColor = .clear
-
-            messageTextField.textColor = .label
-            messageTextField.keyboardAppearance = .default
-
-            messageTextField.attributedPlaceholder = NSAttributedString(
-                string: "Message",
-                attributes: [.foregroundColor: UIColor.secondaryLabel]
-            )
-        }
-    }
-
-
-
- 
-
 }
 

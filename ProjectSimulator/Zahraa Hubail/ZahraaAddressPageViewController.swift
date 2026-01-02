@@ -132,7 +132,6 @@ class ZahraaAddressPageViewController: UIViewController {
 
         let flatText = flatTextField.text?.trimmingCharacters(in: .whitespacesAndNewlines)
 
-        // ✅ CREATE A *NEW* ADDRESS OBJECT (DRAFT ONLY)
         let editedAddress = ZahraaAddress(
             building: building,
             road: road,
@@ -142,11 +141,16 @@ class ZahraaAddressPageViewController: UIViewController {
             governorate: selectedGovernorate
         )
 
-        // ✅ SEND BACK (NO DONATION MUTATION)
         delegate?.didAddAddress(editedAddress)
 
-        navigationController?.popViewController(animated: true)
+        // ✅ Show success alert first, then pop
+        let alert = UIAlertController(title: "Success", message: "Address details has been updated successfully.", preferredStyle: .alert)
+        alert.addAction(UIAlertAction(title: "OK", style: .default) { _ in
+            self.navigationController?.popViewController(animated: true)
+        })
+        present(alert, animated: true)
     }
+
 
 
         private func showAlert(title: String, message: String) {

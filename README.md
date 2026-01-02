@@ -63,7 +63,7 @@ ios app that allow donors to make donations for verified NGOs.
 
 <h2>Design Changes</h2>
 
-<h3>Zainab Almah</h3>
+<h3>Zainab Almahdi</h3>
 
 <ul>
   <li>

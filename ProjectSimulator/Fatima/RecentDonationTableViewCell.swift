@@ -100,16 +100,19 @@ class RecentDonationTableViewCell: UITableViewCell,
         recentDonationContent.addSubview(emptyStateLabel)
 
         NSLayoutConstraint.activate([
-            emptyStateLabel.topAnchor.constraint(
-                equalTo: headerView.bottomAnchor,
-                constant: 24   // 👈 space from header
+            emptyStateLabel.centerXAnchor.constraint(
+                equalTo: recentDonationContent.centerXAnchor
+            ),
+            emptyStateLabel.centerYAnchor.constraint(
+                equalTo: recentDonationContent.centerYAnchor,
+                constant: 20   // pushes it slightly below header
             ),
             emptyStateLabel.leadingAnchor.constraint(
-                equalTo: recentDonationContent.leadingAnchor,
+                greaterThanOrEqualTo: recentDonationContent.leadingAnchor,
                 constant: 24
             ),
             emptyStateLabel.trailingAnchor.constraint(
-                equalTo: recentDonationContent.trailingAnchor,
+                lessThanOrEqualTo: recentDonationContent.trailingAnchor,
                 constant: -24
             )
         ])
@@ -121,19 +124,19 @@ class RecentDonationTableViewCell: UITableViewCell,
         self.donations = Array(donations.prefix(3))
 
         let hasData = !self.donations.isEmpty
+
         recentDonationsCollectionView.isHidden = !hasData
         emptyStateLabel.isHidden = hasData
 
-        guard hasData else { return }
-
-        DispatchQueue.main.async {
-            self.recentDonationsCollectionView.reloadData()
-            self.recentDonationsCollectionView.collectionViewLayout.invalidateLayout()
-            self.layoutIfNeeded()
+        if hasData {
+            DispatchQueue.main.async {
+                self.recentDonationsCollectionView.reloadData()
+                self.recentDonationsCollectionView.collectionViewLayout.invalidateLayout()
+                self.layoutIfNeeded()
+            }
         }
-        print("🧪 recentDonations:", donations.count)
-
     }
+
 
     // MARK: - Collection View DataSource
     func collectionView(_ collectionView: UICollectionView,

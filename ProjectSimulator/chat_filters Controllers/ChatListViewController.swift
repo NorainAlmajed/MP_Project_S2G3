@@ -2,10 +2,10 @@ import UIKit
 import FirebaseFirestore
 import FirebaseAuth
 
-
 struct SupportChat {
     let chatID: String
     let otherUserId: String
+    let adminId: String?
     let senderName: String
     let senderType: String
     let chatType: ChatType
@@ -71,7 +71,7 @@ class ChatListViewController: UIViewController,  UISearchBarDelegate, UITableVie
     var currentFilter = String ("all")
     private let db = Firestore.firestore()
     private var chatListener: ListenerRegistration?
-    
+
     
     
     
@@ -158,12 +158,36 @@ class ChatListViewController: UIViewController,  UISearchBarDelegate, UITableVie
                 self.listenForChats()
             }
     }
+    func applyNavigationBarStyle() {
+        let appearance = UINavigationBarAppearance()
+        appearance.configureWithOpaqueBackground()
+        appearance.backgroundColor = .systemBackground
+
+        if traitCollection.userInterfaceStyle == .dark {
+            appearance.titleTextAttributes = [.foregroundColor: UIColor.white]
+            navigationController?.navigationBar.tintColor =
+                UIColor(red: 0.07, green: 0.39, blue: 0.07, alpha: 1.0)
+        } else {
+            appearance.titleTextAttributes = [.foregroundColor: UIColor.label]
+            navigationController?.navigationBar.tintColor = .black
+        }
+
+        navigationController?.navigationBar.standardAppearance = appearance
+        navigationController?.navigationBar.scrollEdgeAppearance = appearance
+    }
 
     override func viewDidLoad() {
         super.viewDidLoad()
 
         ChatSearch.delegate = self
         ChatSearch.backgroundImage = UIImage()
+        applyNavigationBarStyle()
+        registerForTraitChanges([UITraitUserInterfaceStyle.self]) {
+            [weak self] (env: UITraitEnvironment, previous: UITraitCollection) in
+            guard let self = self else { return }
+
+            self.refreshFilterUIAfterTraitChange()
+        }
 
         let tapGesture = UITapGestureRecognizer(
             target: self,
@@ -176,12 +200,12 @@ class ChatListViewController: UIViewController,  UISearchBarDelegate, UITableVie
         ChatTable.delegate = self
 
         navigationItem.backButtonDisplayMode = .minimal
-        navigationController?.navigationBar.tintColor = .black
       
         setupFilterButtonsInitialState()
 
 
         loadCurrentUserAndStart()
+        
     }
 
     
@@ -207,65 +231,51 @@ class ChatListViewController: UIViewController,  UISearchBarDelegate, UITableVie
     // color initial unselected buttons
     func setupFilterButtonsInitialState() {
         let buttons = [allButton, donorButton, ngoButton]
-        
+        let isDarkMode = traitCollection.userInterfaceStyle == .dark
+
         for button in buttons {
             button?.configuration = nil
-            button?.backgroundColor = .white
-            button?.setTitleColor(.black, for: .normal)
             button?.layer.cornerRadius = 16
             button?.layer.borderWidth = 1
-            button?.layer.borderColor = UIColor.black.cgColor
+
+            if isDarkMode {
+                button?.backgroundColor = .white
+                button?.setTitleColor(.black, for: .normal)
+                button?.layer.borderColor = UIColor.black.cgColor
+            } else {
+                button?.backgroundColor = .clear
+                button?.setTitleColor(.label, for: .normal)
+                button?.layer.borderColor = UIColor.systemGray3.cgColor
+            }
         }
     }
+
+    
+    func refreshFilterUIAfterTraitChange() {
+        setupFilterButtonsInitialState()
+        restoreSelectedFilterButton()
+        applyFilter(type: currentFilter)
+    }
+
+
     
     // change color of button when selected/unselected
     func setSelectedFilterButton(_ selected: UIButton) {
-        
-        let buttons = [allButton, donorButton, ngoButton]
-        
-        for button in buttons {
-            button?.configuration = nil
-            button?.backgroundColor = .clear
-            button?.setTitleColor(.black, for: .normal)
-            button?.layer.cornerRadius = 16
-            button?.layer.borderWidth = 1
-            button?.layer.borderColor = UIColor.black.cgColor
-            
-        }
-        
-        selected.backgroundColor = UIColor(red: 0.07, green: 0.39, blue: 0.07, alpha: 1.0)
+        setupFilterButtonsInitialState()
+
+        selected.backgroundColor =
+            UIColor(red: 0.07, green: 0.39, blue: 0.07, alpha: 1.0)
         selected.setTitleColor(.white, for: .normal)
-        selected.layer.cornerRadius = 16
-        selected.layer.borderColor = UIColor.black.cgColor
-        selected.layer.borderWidth = 1
-        
-        
     }
+
+
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         
           navigationItem.largeTitleDisplayMode = .never
-        setupFilterButtonsInitialState()
-        switch currentFilter {
-        case "donor":
-            setSelectedFilterButton(donorButton)
-        case "ngo":
-            setSelectedFilterButton(ngoButton)
-        default:
-            setSelectedFilterButton(allButton)
-        }
-        
-        applyFilter(type: currentFilter)
-        
-        let appearance = UINavigationBarAppearance()
-            appearance.configureWithOpaqueBackground()
-            appearance.backgroundColor = .white
-            appearance.titleTextAttributes = [
-                .foregroundColor: UIColor.black
-            ]
+        refreshFilterUIAfterTraitChange()
 
-            navigationItem.standardAppearance = appearance
-            navigationItem.scrollEdgeAppearance = appearance
+        
     }
     
     var allChats: [SupportChat] = []
@@ -294,12 +304,8 @@ class ChatListViewController: UIViewController,  UISearchBarDelegate, UITableVie
         }
         
 
-        if chat.chatType == .support {
-            if currentUserRole == .admin {
-                cell.nameLabel.text = chat.senderName
-            } else {
-                cell.nameLabel.text = "Support chat"
-            }
+        if chat.chatType == .support && currentUserRole != .admin {
+            cell.nameLabel.text = "Live support chat"
         } else {
             cell.nameLabel.text = chat.senderName
         }
@@ -312,24 +318,32 @@ class ChatListViewController: UIViewController,  UISearchBarDelegate, UITableVie
     
     //filtering chats
     func applyFilter(type: String) {
-        
+
+        if currentUserRole != .admin {
+            chatsAfterFilter = allChats
+            visibleChats = chatsAfterFilter
+            ChatTable.reloadData()
+            return
+        }
+
         switch type {
         case "all":
             chatsAfterFilter = allChats
-            
+
         case "donor":
             chatsAfterFilter = allChats.filter { $0.senderType == "donor" }
-            
+
         case "ngo":
             chatsAfterFilter = allChats.filter { $0.senderType == "ngo" }
-            
+
         default:
             chatsAfterFilter = allChats
         }
+
         visibleChats = chatsAfterFilter
         ChatTable.reloadData()
     }
-    
+
     
     // searching by username function
     func searchBar(_ searchBar: UISearchBar, textDidChange searchText: String){
@@ -496,7 +510,10 @@ class ChatListViewController: UIViewController,  UISearchBarDelegate, UITableVie
                     let chat = SupportChat(
                         chatID: doc.documentID,
                         otherUserId: otherUserId,
-                        senderName: "Loading...",
+                        adminId: adminId, // ✅ STORE IT
+                        senderName: chatType == .support && currentUserRole != .admin
+                            ? "Live support chat"
+                            : "Loading...",
                         senderType: senderType,
                         chatType: chatType,
                         time: "",
@@ -517,14 +534,37 @@ class ChatListViewController: UIViewController,  UISearchBarDelegate, UITableVie
 
     func resolveChatNames() {
         for chat in allChats {
-            fetchUserNameAndPhoto(userId: chat.otherUserId) { [weak self] name, url in
+
+            let userIdToFetch: String
+
+            if chat.chatType == .support {
+                if currentUserRole == .admin {
+                    userIdToFetch = chat.otherUserId
+                } else {
+                    guard let adminId = chat.adminId else { continue }
+                    userIdToFetch = adminId
+                }
+            } else {
+                userIdToFetch = chat.otherUserId
+            }
+
+            fetchUserNameAndPhoto(userId: userIdToFetch) { [weak self] name, url in
                 guard let self = self else { return }
 
                 if let idx = self.allChats.firstIndex(where: { $0.chatID == chat.chatID }) {
+
+                    let displayName: String
+                    if chat.chatType == .support && self.currentUserRole != .admin {
+                        displayName = "Live support chat"
+                    } else {
+                        displayName = name
+                    }
+
                     self.allChats[idx] = SupportChat(
                         chatID: chat.chatID,
                         otherUserId: chat.otherUserId,
-                        senderName: name,
+                        adminId: chat.adminId,
+                        senderName: displayName,
                         senderType: chat.senderType,
                         chatType: chat.chatType,
                         time: chat.time,
@@ -555,11 +595,18 @@ class ChatListViewController: UIViewController,  UISearchBarDelegate, UITableVie
             let role = data["role"] as? Int ?? 0
 
             let name: String
-            if role == 3 {
+
+            switch role {
+            case 1:
+                name = "Live support chat"
+
+            case 3:
                 name = data["organization_name"] as? String ?? "NGO"
-            } else {
+
+            default:
                 name = data["username"] as? String ?? "User"
             }
+
 
             let url = data["profile_image_url"] as? String ?? ""
 
@@ -635,6 +682,27 @@ class ChatListViewController: UIViewController,  UISearchBarDelegate, UITableVie
         }
 
         navigationController?.pushViewController(chatVC, animated: true)
+    }
+    
+    override func traitCollectionDidChange(_ previousTraitCollection: UITraitCollection?) {
+        super.traitCollectionDidChange(previousTraitCollection)
+
+        if previousTraitCollection?.userInterfaceStyle != traitCollection.userInterfaceStyle {
+            setupFilterButtonsInitialState()
+            restoreSelectedFilterButton()
+        }
+    }
+
+
+    func restoreSelectedFilterButton() {
+        switch currentFilter {
+        case "donor":
+            setSelectedFilterButton(donorButton)
+        case "ngo":
+            setSelectedFilterButton(ngoButton)
+        default:
+            setSelectedFilterButton(allButton)
+        }
     }
 
     }

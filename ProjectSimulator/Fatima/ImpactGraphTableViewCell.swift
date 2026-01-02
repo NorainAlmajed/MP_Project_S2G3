@@ -9,6 +9,7 @@ final class ImpactGraphTableViewCell: UITableViewCell {
     private let lineChart = LineChartView()
     private var donations: [Donation1] = []
 
+    @IBOutlet weak var titleLabel: UILabel!
     override func awakeFromNib() {
         super.awakeFromNib()
         setupChart()
@@ -41,10 +42,22 @@ final class ImpactGraphTableViewCell: UITableViewCell {
         lineChart.leftAxis.axisMinimum = 0
         lineChart.leftAxis.gridColor = .systemGray5
         lineChart.leftAxis.labelFont = .systemFont(ofSize: 11)
-        lineChart.leftAxis.labelTextColor = .darkGray
+        lineChart.leftAxis.labelTextColor = .secondaryLabel
         lineChart.leftAxis.gridColor = UIColor.systemGray4.withAlphaComponent(0.4)
         lineChart.leftAxis.gridLineDashLengths = [4, 4]
         lineChart.xAxis.gridColor = UIColor.clear
+        lineChart.backgroundColor = .clear
+        lineChart.drawGridBackgroundEnabled = false
+
+        let isDarkMode = traitCollection.userInterfaceStyle == .dark
+        let green = UIColor(named: "greenCol") ?? .systemGreen
+
+        lineChart.xAxis.labelTextColor = isDarkMode ? .white : green
+        lineChart.leftAxis.labelTextColor = isDarkMode ? .white : green
+
+        lineChart.leftAxis.gridColor = UIColor.white.withAlphaComponent(0.15)
+
+
 
     }
     private func updateChart() {
@@ -98,7 +111,7 @@ final class ImpactGraphTableViewCell: UITableViewCell {
     // ✅ IMPORTANT FIX: force visible scale
     private func configureYAxis(maxValue: Double) {
         let safeMax = max(maxValue, 2)
-        let step: Double = safeMax <= 10 ? 2 : safeMax <= 50 ? 5 : 10
+        let step: Double = safeMax <= 16 ? 2 : safeMax <= 50 ? 5 : 10
 
         lineChart.leftAxis.granularity = step
         lineChart.leftAxis.axisMaximum = ceil(safeMax / step) * step

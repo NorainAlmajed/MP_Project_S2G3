@@ -6,9 +6,11 @@
 //
 
 import UIKit
+
+
 class DonationFilterController: UIViewController, UITableViewDelegate, UITableViewDataSource {
     
-    
+
     enum FilterSection: Int, CaseIterable {
         case sort = 0
         case category
@@ -25,6 +27,9 @@ class DonationFilterController: UIViewController, UITableViewDelegate, UITableVi
     var selectedSort: String? = nil
     var selectedCategories: Set<String> = []
     var selectedLocations: Set<String> = []
+    weak var delegate: DonationFilterDelegate?
+    var isDateSelected: Bool = false
+    var selectedDate: Date = Date()
 
     //dummy data
     let sortOptions = ["Name (A–Z)", "Name (Z–A)"]
@@ -35,7 +40,7 @@ class DonationFilterController: UIViewController, UITableViewDelegate, UITableVi
     ]
 
     let locationOptions = [
-        "Manama Governorate", "Muharraq Governorate", "Northern Governorate", "Southern Governorate"
+        "Capital", "Muharraq", "Northern", "Southern"
     ]
 
     //section functions
@@ -48,7 +53,6 @@ class DonationFilterController: UIViewController, UITableViewDelegate, UITableVi
         tf.isHidden = true
         return tf
     }()
-    var selectedDate = Date()
 
     func formatDate(_ date: Date) -> String {
         let formatter = DateFormatter()
@@ -62,8 +66,11 @@ class DonationFilterController: UIViewController, UITableViewDelegate, UITableVi
     }
     @objc func dateChanged(_ sender: UIDatePicker) {
         selectedDate = sender.date
+        isDateSelected = true
         tableView.reloadSections(IndexSet(integer: 3), with: .none)
+        updateShowButtonCount()
     }
+
     @objc func doneWithDatePicker() {
         hiddenDateTextField.resignFirstResponder()
     }
@@ -82,6 +89,33 @@ class DonationFilterController: UIViewController, UITableViewDelegate, UITableVi
         tableView.reloadData()
     }
     
+    //Show button functions
+    @IBAction func showButtonTapped(_ sender: UIButton) {
+        delegate?.didApplyDonationFilters(
+            sort: selectedSort,
+            categories: selectedCategories,
+            locations: selectedLocations,
+            date: isDateSelected ? selectedDate : nil
+        )
+        navigationController?.popViewController(animated: true)
+    }
+
+
+
+    private func updateShowButtonCount() {
+        let count = delegate?.previewDonationFilters(
+            sort: selectedSort,
+            categories: selectedCategories,
+            locations: selectedLocations,
+            date: isDateSelected ? selectedDate : nil
+        ) ?? 0
+
+        showButton.setTitle("Show \(count) results", for: .normal)
+    }
+
+
+
+
     //clear button function
     @IBAction func clearFiltersTapped(_ sender: UIButton) {
         
@@ -89,9 +123,11 @@ class DonationFilterController: UIViewController, UITableViewDelegate, UITableVi
         selectedCategories = []
         selectedLocations = []
         selectedDate = Date()
+        isDateSelected = false
         expandedSection = nil
 
         tableView.reloadData()
+        updateShowButtonCount()
     }
 
    //checkbox method
@@ -101,6 +137,8 @@ class DonationFilterController: UIViewController, UITableViewDelegate, UITableVi
         let indexPath = IndexPath(row: row, section: section)
         tableView.selectRow(at: indexPath, animated: false, scrollPosition: .none)
         tableView.delegate?.tableView?(tableView, didSelectRowAt: indexPath)
+        
+        updateShowButtonCount()
     }
     
      //buttons radius method
@@ -193,7 +231,8 @@ class DonationFilterController: UIViewController, UITableViewDelegate, UITableVi
                     action: #selector(dateButtonTapped),
                     for: .touchUpInside
                 )
-            } else {
+            }
+ else {
                 cell.arrowButton.tag = indexPath.section
                 cell.arrowButton.addTarget(
                     self,
@@ -242,7 +281,7 @@ class DonationFilterController: UIViewController, UITableViewDelegate, UITableVi
         return FilterSection.allCases.count
     }
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-
+        updateShowButtonCount()
         guard indexPath.row != 0 else { return }
 
         let sectionType = FilterSection(rawValue: indexPath.section)!
@@ -322,7 +361,7 @@ class DonationFilterController: UIViewController, UITableViewDelegate, UITableVi
 
         styleActionButton(clearButton)
         styleActionButton(showButton)
-
+        updateShowButtonCount()
 
     }
 

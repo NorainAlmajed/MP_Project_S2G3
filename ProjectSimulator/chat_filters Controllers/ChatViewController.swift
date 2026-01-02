@@ -14,6 +14,7 @@ UICollectionViewDataSource,
     var adminId: String?
     private var myUserId = ""
     private let navProfileImageView = UIImageView()
+    private let SUPPORT_ADMIN_ID = "TwWqBSGX4ec4gxCWCZcbo7WocAI2"
 
     
     var chatID: String = ""
@@ -328,11 +329,17 @@ UICollectionViewDataSource,
 
             if let donorId = self.donorId { data["donorId"] = donorId }
             if let ngoId = self.ngoId { data["ngoId"] = ngoId }
-            if let adminId = self.adminId { data["adminId"] = adminId }
+
+            if self.chatType == .support {
+                data["adminId"] = self.SUPPORT_ADMIN_ID
+            } else if let adminId = self.adminId {
+                data["adminId"] = adminId
+            }
 
             chatRef.setData(data)
         }
     }
+
 
     func ensureChatID() {
         if chatID.isEmpty {
@@ -383,14 +390,21 @@ UICollectionViewDataSource,
     }
     
     
-    
+  
+
     @objc func dismissKeyboard() {
         view.endEditing(true)
     }
-    
+    override func viewWillDisappear(_ animated: Bool) {
+        super.viewWillDisappear(animated)
+
+        navigationController?.navigationBar.prefersLargeTitles = false
+    }
+
     override func viewDidLoad() {
         super.viewDidLoad()
         navigationItem.title = userName
+        applyInputBarStyle()
         setupProfilePicture()
         loadReceiverProfilePhoto()
         myUserId = Auth.auth().currentUser?.uid ?? ""
@@ -403,7 +417,6 @@ UICollectionViewDataSource,
         listenForChatEndedState()
 
        
-        navigationController?.navigationBar.tintColor = .black
         
         collectionView.dataSource = self
         collectionView.delegate = self
@@ -419,6 +432,15 @@ UICollectionViewDataSource,
         collectionView.keyboardDismissMode = .interactive
         messageTextField.returnKeyType = .send
         
+        registerForTraitChanges([UITraitUserInterfaceStyle.self]) {
+            [weak self] (_: UITraitEnvironment, previous: UITraitCollection) in
+            guard let self else { return }
+
+            if previous.userInterfaceStyle != self.traitCollection.userInterfaceStyle {
+                self.applyInputBarStyle()
+            }
+        }
+
         let tapGesture = UITapGestureRecognizer(
             target: self,
             action: #selector(dismissKeyboard)
@@ -491,20 +513,15 @@ UICollectionViewDataSource,
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
+      
+        navigationController?.navigationBar.prefersLargeTitles = false
+        navigationItem.largeTitleDisplayMode = .never
 
-        let appearance = UINavigationBarAppearance()
-        appearance.configureWithOpaqueBackground()
-        appearance.backgroundColor = .white
-        appearance.shadowColor = .clear
+        edgesForExtendedLayout = []
+  
 
-        let navBar = navigationController?.navigationBar
-        navBar?.standardAppearance = appearance
-        navBar?.scrollEdgeAppearance = appearance
-        navBar?.compactAppearance = appearance
-
-        navBar?.clipsToBounds = true
     }
-
+   
     
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
@@ -580,7 +597,43 @@ UICollectionViewDataSource,
             }
     }
     
+    func applyInputBarStyle() {
+        let yellowBubble = UIColor(
+            red: 1.0,
+            green: 0.93,
+            blue: 0.75,
+            alpha: 1.0
+        )
 
+        if traitCollection.userInterfaceStyle == .dark {
+            inputBarView.backgroundColor = yellowBubble
+            messageTextField.backgroundColor = yellowBubble
+
+            messageTextField.textColor = .black
+            messageTextField.keyboardAppearance = .dark
+
+            messageTextField.attributedPlaceholder = NSAttributedString(
+                string: "Message",
+                attributes: [.foregroundColor: UIColor.black.withAlphaComponent(0.6)]
+            )
+
+        } else {
+            inputBarView.backgroundColor = .systemGray6
+            messageTextField.backgroundColor = .clear
+
+            messageTextField.textColor = .label
+            messageTextField.keyboardAppearance = .default
+
+            messageTextField.attributedPlaceholder = NSAttributedString(
+                string: "Message",
+                attributes: [.foregroundColor: UIColor.secondaryLabel]
+            )
+        }
+    }
+
+
+
+ 
 
 }
 

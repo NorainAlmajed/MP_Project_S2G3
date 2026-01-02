@@ -7,9 +7,11 @@
 
 import UIKit
 
+
 class DonorFilterViewController: UIViewController, UITableViewDelegate, UITableViewDataSource {
     
-    
+    weak var delegate: DonorFilterDelegate?
+
     enum FilterSection: Int, CaseIterable {
         case sort
     }
@@ -17,7 +19,11 @@ class DonorFilterViewController: UIViewController, UITableViewDelegate, UITableV
     @IBOutlet weak var clearButton: UIButton!
     @IBOutlet weak var showButton: UIButton!
     @IBOutlet weak var tableView: UITableView!
-    
+    @IBAction func showFiltersTapped(_ sender: UIButton) {
+        delegate?.didApplyDonorSort(selectedSort)
+        navigationController?.popViewController(animated: true)
+    }
+
     
     var selectedSort: String? = nil
 
@@ -50,6 +56,8 @@ class DonorFilterViewController: UIViewController, UITableViewDelegate, UITableV
         selectedSort = nil
         expandedSection = nil
         tableView.reloadData()
+        updateShowButtonTitle()
+
     }
 
    //checkbox method
@@ -150,6 +158,7 @@ class DonorFilterViewController: UIViewController, UITableViewDelegate, UITableV
             IndexSet(integer: indexPath.section),
             with: .none
         )
+
     }
 
     override func viewDidLoad() {
@@ -163,6 +172,25 @@ class DonorFilterViewController: UIViewController, UITableViewDelegate, UITableV
 
         styleActionButton(clearButton)
         styleActionButton(showButton)
+        updateShowButtonTitle()
+
     }
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+
+        selectedSort = delegate?.currentDonorSort()
+
+        expandedSection = .sort
+
+        tableView.reloadData()
+        updateShowButtonTitle()
+    }
+
+
+    private func updateShowButtonTitle() {
+        let count = delegate?.numberOfFilteredDonors(for: selectedSort) ?? 0
+        showButton.setTitle("Show \(count) results", for: .normal)
+    }
+
 }
 

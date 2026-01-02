@@ -68,6 +68,8 @@ class SchedulePickupViewController: UIViewController {
     private func setupUI() {
         reccuringSwitch.addTarget(self, action: #selector(recurringSwitchChanged), for: .valueChanged)
         title = "Schedule Pick-up"
+        
+        navigationItem.backBarButtonItem = UIBarButtonItem(title: "")
         addressContainerView.layer.cornerRadius = 8
         addressContainerView.layer.borderWidth = 1
         addressContainerView.layer.borderColor = UIColor.systemGray4.cgColor

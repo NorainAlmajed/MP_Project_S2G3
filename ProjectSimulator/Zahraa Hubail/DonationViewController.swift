@@ -124,8 +124,9 @@ class DonationViewController: UIViewController, DonationFilterDelegate {
     }*/
 
     @objc private func handleOpenPendingSegment(_ notification: Notification) {
-        initialStatusIndex = 1   // Pending
+        shouldOpenPendingSegmentFromDashboard = true
     }
+
 
 
     private func applyDashboardRedirectIfNeeded() {
@@ -569,17 +570,24 @@ class DonationViewController: UIViewController, DonationFilterDelegate {
                     return
                 }
 
-                self.displayedDonations = self.allDonations.sorted {
-                    $0.creationDate.dateValue() > $1.creationDate.dateValue()
-                }
                 if let index = self.initialStatusIndex {
-                       self.selectedIndex = index
-                       self.initialStatusIndex = nil
-                   }
+                    self.selectedIndex = index
+                    self.initialStatusIndex = nil
+
+                    // Zainab Mahdi: dashboard → pending segment redirect
+                    self.filterDonations()
+                    self.statusCollectionView.reloadData()
+                } else {
+                    self.displayedDonations = self.allDonations.sorted {
+                        $0.creationDate.dateValue() > $1.creationDate.dateValue()
+                    }
+                }
+
                 self.applyDashboardRedirectIfNeeded()
                 self.donationsCollectionView.reloadData()
                 self.updateNoDonationsLabel()
             }
+
            
 
         }

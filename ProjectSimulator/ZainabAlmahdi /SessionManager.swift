@@ -7,7 +7,6 @@ final class SessionManager {
     static let shared = SessionManager()
     private init() {}
 
-    // MARK: - User Role
     enum UserRole: Int {
         case admin = 1
         case donor = 2
@@ -15,12 +14,10 @@ final class SessionManager {
         case unknown = 0
     }
 
-    // MARK: - Stored Session Data
     private(set) var role: UserRole = .unknown
     private(set) var fullName: String?
-    private(set) var profileImageURL: String?   // ✅ THIS IS THE CORRECT PROPERTY
+    private(set) var profileImageURL: String?
 
-    // MARK: - Role Helpers
     var isAdmin: Bool { role == .admin }
     var isDonor: Bool { role == .donor }
     var isNGO: Bool { role == .ngo }
@@ -34,7 +31,6 @@ final class SessionManager {
         }
     }
 
-    // MARK: - MAIN Session Loader (single source of truth)
     func loadUserSession(completion: @escaping (Bool) -> Void) {
 
         guard let uid = Auth.auth().currentUser?.uid else {
@@ -56,7 +52,6 @@ final class SessionManager {
                     return
                 }
 
-                // ✅ Always update session on MAIN thread
                 DispatchQueue.main.async {
 
                     // Name (Donor OR NGO)
@@ -72,7 +67,6 @@ final class SessionManager {
                         self.role = .unknown
                     }
 
-                    // Profile Image URL (🔥 this fixes your error)
                     self.profileImageURL = data["profile_image_url"] as? String
 
                     completion(true)
@@ -80,13 +74,10 @@ final class SessionManager {
             }
     }
 
-    // MARK: - BACKWARD COMPATIBILITY
-    /// Use this for older screens that already call fetchUserRole
     func fetchUserRole(completion: @escaping (Bool) -> Void) {
         loadUserSession(completion: completion)
     }
 
-    // MARK: - Clear Session (Logout)
     func clear() {
         role = .unknown
         fullName = nil

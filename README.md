@@ -123,6 +123,11 @@ Initially, the donor and NGO dashboards included a spotlight section that displa
 An upcoming pickup reminder notification was considered, but it was not implemented. In iOS, time-based notifications are not reliable when the app is closed unless background or cloud services are used. A proper implementation would require a backend solution like Firebase Cloud Functions, which was beyond the scope of this project. Since this was an extra feature and not a core requirement, we focused on the main functionality of the app.
 </p>
 
+<h3>Zainab Mahdi</h3>
+<p>
+The send button was removed since sending messages through the keyboard follows common chat interaction conventions and helps maintain a clean, focused layout. To support this simplified design, The unread badge was not included to align with a simplified, minimal design approach that prioritizes clarity and readability over additional notification indicators. An admin profile photo was added to clearly identify official support communication, resulting in a more intuitive chat experience.
+</p>
+
 <h3>All</h3>
 <p>
 The application logo was refined as a team to improve its visual clarity and overall appearance. Minor enhancements were made to colors, alignment, and consistency to better match the app’s theme and provide a more professional and polished look, without changing the original concept or identity of the logo.

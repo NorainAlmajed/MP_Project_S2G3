@@ -37,7 +37,7 @@ ios app that allow donors to make donations for verified NGOs.
   <tr><td>2</td><td>Settings Management & Account Control</td><td>Zainab Almahdi</td><td>Zahraa Hubail</td></tr>
   <tr><td>3</td><td>Customize Dashboard</td><td>Fatima Alaiwi</td><td>Raghad Aleskafi</td></tr>
   <tr><td>4</td><td>Impact Tracking</td><td>Fatima Alaiwi</td><td>Zainab Saeed</td></tr>
-  <tr><td>5</td><td>Admin User Controls (CRUD) and NGO Approvals</td><td>Norain Almajed</td><td>Zahraa Hubail</td></tr>
+  <tr><td>5</td><td>Admin User Controls (CRUD) and NGO Approvals</td><td>Norain Almajed</td><td>Zainab Almahdi</td></tr>
   <tr><td>6</td><td>Real-Time Notifications</td><td>Zahraa Hubail</td><td>Raghad Aleskafi</td></tr>
   <tr><td>7</td><td>Donation and Status Management</td><td>Zahraa Hubail</td><td>Zainab Saeed</td></tr>
   <tr><td>8</td><td>NGO Discovery</td><td>Raghad Aleskafi</td><td>Norain Almajed</td></tr>
@@ -62,6 +62,21 @@ ios app that allow donors to make donations for verified NGOs.
 </table>
 
 <h2>Design Changes</h2>
+
+<h3>Norain Almajed</h3>
+<ul>
+  <li>User Registration, Authentication, and Profile
+    <ul>
+      <li>A Confirm Password field was added to reduce password entry errors during
+registration and credential updates, improving validation reliability and overall user
+experience.</li>
+      <li>Multi-Factor Authentication (MFA) and its associated storyboard scenes were
+removed to keep the authentication flow simple and aligned with the current project
+scope, while reducing navigation and state-management complexity in both the
+storyboard and Swift codebase.​</li>
+    </ul>
+  </li>
+</ul>
 
 <h3>Norain Almajed</h3>
 <ul>

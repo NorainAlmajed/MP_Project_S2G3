@@ -28,7 +28,7 @@ class RecentDonationCardCell: UICollectionViewCell {
             contentView.trailingAnchor.constraint(equalTo: trailingAnchor),
             contentView.bottomAnchor.constraint(equalTo: bottomAnchor)
         ])
-        statusView.backgroundColor = UIColor.white
+        statusView.backgroundColor = .white
         statusView.layer.cornerRadius = 12
         statusView.clipsToBounds = true
         //textStack.axis = .vertical
@@ -50,7 +50,7 @@ class RecentDonationCardCell: UICollectionViewCell {
             donationCardView.trailingAnchor.constraint(equalTo: contentView.trailingAnchor),
             donationCardView.bottomAnchor.constraint(equalTo: contentView.bottomAnchor)
         ])
-        donationCardView.layer.shadowColor = UIColor.black.cgColor
+        donationCardView.layer.shadowColor = UIColor.label.withAlphaComponent(0.25).cgColor
         donationCardView.layer.shadowOpacity = 0.08
         donationCardView.layer.shadowRadius = 8
         donationCardView.layer.shadowOffset = CGSize(width: 0, height: 4)
@@ -61,21 +61,20 @@ class RecentDonationCardCell: UICollectionViewCell {
 
         donationIDLabel.font = .systemFont(ofSize: 14, weight: .semibold)
 
-        //donorNamelabel.font = .systemFont(ofSize: 14, weight: .medium)
-        //donorNamelabel.textColor = .secondaryLabel
-
         donationTimeLabel.font = .systemFont(ofSize: 14, weight: .medium)
-        // greyCol
         donationTimeLabel.textColor = .black
+        categoryLabel.textColor = .black
+        donationIDLabel.textColor = .black
 
         // Styling
         donationCardView.layer.cornerRadius = 20
-        donationCardView.backgroundColor =  UIColor(named: "BeigeCol")
+        donationCardView.applyBeigeSurface()
         donationCardView.clipsToBounds = true
 
         statusView.layer.cornerRadius = 12
         statusView.clipsToBounds = true
-        
+        statusLabel.textColor = .black
+
         // constraints and setting the size of the basket image
         //basketImage.translatesAutoresizingMaskIntoConstraints = false
 

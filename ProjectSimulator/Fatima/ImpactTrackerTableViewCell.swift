@@ -150,7 +150,7 @@ class ImpactTrackerTableViewCell: UITableViewCell {
     private func createDynamicCard(stat: ImpactStat) -> UIView {
 
         let card = UIView()
-        card.backgroundColor = UIColor(named: "BeigeCol")
+        card.applyBeigeSurface()
         card.layer.cornerRadius = cornerRadius
         card.translatesAutoresizingMaskIntoConstraints = false
 

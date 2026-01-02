@@ -194,6 +194,17 @@ class DonorDashboardViewController: UIViewController {
     private var donationsListener: ListenerRegistration?
 
     @IBOutlet weak var mainTableView: UITableView!
+        //added by zainab mahdi
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+
+        navigationController?.navigationBar.prefersLargeTitles = true
+        navigationItem.largeTitleDisplayMode = .always
+
+        edgesForExtendedLayout = []
+
+        mainTableView.contentInsetAdjustmentBehavior = .always
+    }
 
     // MARK: - Lifecycle
     override func viewDidLoad() {
@@ -206,7 +217,7 @@ class DonorDashboardViewController: UIViewController {
             navigationItem.backButtonTitle = ""
 
             // 🎨 Black chevron color
-            navigationController?.navigationBar.tintColor = .black
+        navigationController?.navigationBar.tintColor = .label
         setupEllipsisMenu()
         loadCurrentUser()
         startListeningForNGOs()
@@ -258,8 +269,7 @@ class DonorDashboardViewController: UIViewController {
         guard let user = Auth.auth().currentUser else { return }
 
         currentUserID = user.uid
-
-        // Fetch role
+        // Fetch role + name correctly
         db.collection("users").document(user.uid).getDocument { [weak self] snapshot, _ in
             guard
                 let self = self,
@@ -270,18 +280,42 @@ class DonorDashboardViewController: UIViewController {
 
             self.currentRole = role
             self.configureSections(for: role)
-            // added this for fetching donations based on role, just a test
+
+            // ✅ NAME LOGIC (IMPORTANT PART)
+            switch role {
+
+            case .ngo:
+                // Always use NGO full name
+                if let fullName = data["full_name"] as? String, !fullName.isEmpty {
+                    self.currentUserName = fullName
+                } else if let orgName = data["organization_name"] as? String {
+                    self.currentUserName = orgName
+                } else {
+                    self.currentUserName = "Our Partner NGO"
+                }
+
+            case .donor:
+                // Donor name
+                if let fullName = data["full_name"] as? String, !fullName.isEmpty {
+                    self.currentUserName = fullName
+                } else if let username = data["username"] as? String {
+                    self.currentUserName = username
+                } else if let email = user.email {
+                    self.currentUserName = email.components(separatedBy: "@").first?.capitalized ?? "there"
+                }
+
+            case .admin:
+                self.currentUserName = "Nourish Bahrain Admin"
+            }
+
+            // Start listeners
             self.startListeningForDonationsByRole()
 
-            self.mainTableView.reloadData()
+            DispatchQueue.main.async {
+                self.mainTableView.reloadData()
+            }
         }
 
-        // Name
-        if let name = user.displayName, !name.isEmpty {
-            currentUserName = name
-        } else if let email = user.email {
-            currentUserName = email.components(separatedBy: "@").first?.capitalized ?? "there"
-        }
 
         //startListeningForRecentDonations()
         //startListeningForImpactDonations()
@@ -525,20 +559,8 @@ class DonorDashboardViewController: UIViewController {
             livesImpacted: meals / 3
         )
     }
-    private func goToDonationDetails(_ donation: Donation1) {
-        let storyboard = UIStoryboard(name: "Donations", bundle: nil)
+ 
 
-        guard let detailsVC = storyboard.instantiateViewController(
-            withIdentifier: "DonationDetailsViewController"
-        ) as? DonationDetailsViewController else {
-            print("❌ DonationDetailsViewController not found")
-            return
-        }
-
-       
-
-        navigationController?.pushViewController(detailsVC, animated: true)
-    }
 
     // MARK: - Menu and ellipses
     private func setupEllipsisMenu() {
@@ -599,11 +621,11 @@ extension DonorDashboardViewController: UITableViewDataSource, UITableViewDelega
         let section = sections[indexPath.section]
         // MARK: Height Section
         switch section {
-        case .welcome: return isPad ? 120 : 80
-        case .quickActions: return isPad ? 110 : 80
+        case .welcome: return isPad ? 120 : 90
+        case .quickActions: return isPad ? 110 : 100
         case .impactTracker:
             switch currentRole {
-            case .donor: return isPad ? 140 : 120
+            case .donor: return isPad ? 140 : 140
             case .ngo:   return isPad ? 320 : 280
             case .admin: return isPad ? 320 : 280
             }
@@ -651,35 +673,32 @@ extension DonorDashboardViewController: UITableViewDataSource, UITableViewDelega
         case .welcome:
             let cell = UITableViewCell()
             cell.selectionStyle = .none
-            
+
             let label = UILabel()
             label.font = .boldSystemFont(ofSize: 19)
             label.numberOfLines = 0
             label.translatesAutoresizingMaskIntoConstraints = false
-            // diso
+
             switch currentRole {
             case .admin:
                 label.text = "Welcome back, Nourish Bahrain Admin!"
+
             case .donor:
                 label.text = "Hi \(currentUserName), thank you for your generosity!"
+
             case .ngo:
-                let name = currentUserName.trimmingCharacters(in: .whitespacesAndNewlines)
-
-                if name.isEmpty || name.lowercased().hasPrefix("contact") {
-                    label.text = "Welcome back, our partner NGO"
-                } else {
-                    label.text = "Welcome back, \(name)"
-                }
-
+                label.text = "Welcome back, \(currentUserName)"
             }
-            
+
             cell.contentView.addSubview(label)
+
             NSLayoutConstraint.activate([
                 label.topAnchor.constraint(equalTo: cell.contentView.topAnchor, constant: 16),
                 label.leadingAnchor.constraint(equalTo: cell.contentView.leadingAnchor, constant: 16),
                 label.trailingAnchor.constraint(equalTo: cell.contentView.trailingAnchor, constant: -16),
                 label.bottomAnchor.constraint(equalTo: cell.contentView.bottomAnchor, constant: -16)
             ])
+
             
             return cell
             // MARK: - Quick Actions
@@ -823,15 +842,15 @@ extension DonorDashboardViewController: UITableViewDataSource, UITableViewDelega
             cell.headerView.text = "Recent Donations"
             cell.configure(with: recentDonations)
 
-            // ✅ Donation card → Donations page
-            cell.onDonationSelected = { [weak self] _ in
-                self?.manageDonationsTapped()
+            cell.onDonationSelected = { [weak self] donation in
+                self?.openDonationFromDashboard(donation)
             }
 
-            // ✅ Header → Donations page
             cell.onHeaderTapped = { [weak self] in
                 self?.manageDonationsTapped()
             }
+
+
 
             return cell
 
@@ -911,6 +930,21 @@ extension DonorDashboardViewController: UITableViewDataSource, UITableViewDelega
 
         }
     }
+    private func openDonationFromDashboard(_ donation: Donation1) {
+        manageDonationsTapped()
+
+        DispatchQueue.main.asyncAfter(deadline: .now() + 0.4) {
+            NotificationCenter.default.post(
+                name: .openDonationDetailsFromDashboard,
+                object: nil,
+                userInfo: [
+                    "firestoreID": donation.firestoreID
+                ]
+            )
+        }
+    }
+
+
     private func openEditUser(userID: String) {
         let storyboard = UIStoryboard(name: "norain-admin-controls1", bundle: nil)
 
@@ -1031,4 +1065,19 @@ private func styleQuickActionButton(_ button: UIButton) {
 }
 extension Notification.Name {
     static let openPendingDonations = Notification.Name("openPendingDonations")
+}
+extension Notification.Name {
+    static let openDonationDetailsFromDashboard =
+        Notification.Name("openDonationDetailsFromDashboard")
+}
+
+
+extension UIView {
+    func applyBeigeSurface() {
+        if traitCollection.userInterfaceStyle == .dark {
+            backgroundColor = UIColor(named: "BeigeCol")?.withAlphaComponent(0.9)
+        } else {
+            backgroundColor = UIColor(named: "BeigeCol")
+        }
+    }
 }

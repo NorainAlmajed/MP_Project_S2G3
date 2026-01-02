@@ -39,8 +39,8 @@ class UserPreviewCardCell: UICollectionViewCell {
 
         // Card styling
         cardContainerView.layer.cornerRadius = 20
-        cardContainerView.backgroundColor = UIColor(named: "BeigeCol")
-        cardContainerView.layer.shadowColor = UIColor.black.cgColor
+        cardContainerView.applyBeigeSurface()
+        cardContainerView.layer.shadowColor = UIColor.label.withAlphaComponent(0.25).cgColor
         cardContainerView.layer.shadowOpacity = 0.09
         cardContainerView.layer.shadowRadius = 8
         cardContainerView.layer.shadowOffset = CGSize(width: 0, height: 4)
@@ -71,7 +71,8 @@ class UserPreviewCardCell: UICollectionViewCell {
 
         numberLabel.textColor = .black
         emailLabel.textColor = .black
-
+        statusLabel.textColor = .black
+        nameLabel.textColor = .black
         // ⭐️ KEY FIX: prevent overlap with status pill
         nameLabel.trailingAnchor.constraint(
             lessThanOrEqualTo: statusView.leadingAnchor,

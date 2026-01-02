@@ -22,6 +22,7 @@ class NGOCardCollectionViewCell: UICollectionViewCell {
         ngoImageView.clipsToBounds = true
         ngoNameLabel.textColor = .black
         ngoTypeLabel.textColor = .black
+        
 
     }
 

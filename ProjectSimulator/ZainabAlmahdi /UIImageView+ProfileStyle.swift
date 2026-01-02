@@ -22,7 +22,7 @@ extension UIImageView {
     func setPlaceholderIcon() {
         let config = UIImage.SymbolConfiguration(pointSize: 36, weight: .regular)
         let image = UIImage(
-            systemName: "doc.text.image",
+            systemName: "photo",
             withConfiguration: config
         )
 

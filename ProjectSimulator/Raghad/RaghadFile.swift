@@ -40,6 +40,8 @@ struct DonationDraft {
     var ngoName: String
 
     var donorName: String?
+    var donorRefPath: String?
+    
     var foodCategory: String?
     var quantity: Int?
     var weight: Double?

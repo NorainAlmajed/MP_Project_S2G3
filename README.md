@@ -182,8 +182,8 @@ The application logo was refined as a team to improve its visual clarity and ove
 <h3>Donor (Zahraa Hubail)</h3>
 <p>Email: zahraa@gmail.com<br>Password: zahraa</p>
 
-<h3>NGO (Raghad Aleskafi Charity)</h3>
-<p>Email: raghad@chrity.com<br>Password: 12341234</p>
-
 <h3>NGO (Karrana Charity Society)</h3>
 <p>Email: contact@karranacharity.org<br>Password: 12341234</p>
+
+<h3>NGO (Raghad Aleskafi Charity)</h3>
+<p>Email: raghad@chrity.com<br>Password: 12341234</p>

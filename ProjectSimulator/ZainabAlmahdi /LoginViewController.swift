@@ -12,6 +12,11 @@ class LoginViewController: UIViewController {
         super.viewDidLayoutSubviews()
         styleActionButton(loginButton)
     }
+    
+    override func viewDidLoad() {
+        super.viewDidLoad()
+        title = "Login"
+    }
 
     // MARK: - Forgot Password
     @IBAction func forgotPasswordTapped(_ sender: UIButton) {

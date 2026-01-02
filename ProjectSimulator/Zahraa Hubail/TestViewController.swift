@@ -6,7 +6,6 @@
 //
 
 import UIKit
-import PDFKit
 import FirebaseFirestore
 
 
@@ -190,7 +189,7 @@ class DonationDetailsViewController: UIViewController, UITableViewDelegate, UITa
         // Bottom border & footer
         report.append(NSAttributedString(string: "\n", attributes: [.font: monoFont]))
         report.append(topLine)
-        let generated = "Generated On: \(DateFormatter.localizedString(from: Date(), dateStyle: .medium, timeStyle: .short))\nProjectSimulator App\n"
+        let generated = "Generated On: \(DateFormatter.localizedString(from: Date(), dateStyle: .medium, timeStyle: .short))\nNourish Bahrain App\n"
         report.append(NSAttributedString(string: generated, attributes: [.font: monoFont]))
         report.append(topLine)
 
@@ -614,7 +613,7 @@ class DonationDetailsViewController: UIViewController, UITableViewDelegate, UITa
     private func buildDonationPDF(for donation: Donation) -> Data {
 
         let pdfMetaData = [
-            kCGPDFContextCreator: "ProjectSimulator",
+            kCGPDFContextCreator: "Nourish Bahrain",
             kCGPDFContextAuthor: currentUser?.username ?? "Unknown",
             kCGPDFContextTitle: "Donation Report"
         ]
@@ -813,7 +812,7 @@ class DonationDetailsViewController: UIViewController, UITableViewDelegate, UITa
                 drawLine(at: yPosition)
                 yPosition += 8
                 drawText("Generated On: \(DateFormatter.localizedString(from: Date(), dateStyle: .medium, timeStyle: .short))", y: &yPosition)
-                drawText("ProjectSimulator App", y: &yPosition, font: .boldSystemFont(ofSize: 14))
+                drawText("Nourish Bahrain App", y: &yPosition, font: .boldSystemFont(ofSize: 14))
             }
 
             drawPage()

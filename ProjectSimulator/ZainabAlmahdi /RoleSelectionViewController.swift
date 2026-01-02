@@ -17,7 +17,7 @@ class RoleSelectionViewController: UIViewController {
         super.viewDidLoad()
         styleActionButton(donorSignup)
         styleActionButton(ngoSignup)
-        navigationItem.title = ""
+        navigationItem.title = "Select your role"
 
     }
     

@@ -91,7 +91,6 @@ class EditProfileViewController: UIViewController {
         saveButton.isEnabled = false
 
         var updateData: [String: Any] = [
-            // 🔧 MATCH FIRESTORE KEY
             "number": phoneField.text ?? ""
         ]
 
@@ -117,6 +116,9 @@ class EditProfileViewController: UIViewController {
                 if let error = error {
                     self.showAlert("Error", error.localizedDescription)
                 } else {
+
+                    SessionManager.shared.loadUserSession { _ in }
+
                     self.showAlert("Success", "Profile updated successfully")
                 }
             }

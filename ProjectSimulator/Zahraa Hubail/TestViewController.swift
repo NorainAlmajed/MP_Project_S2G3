@@ -70,7 +70,23 @@ class DonationDetailsViewController: UIViewController, UITableViewDelegate, UITa
             ExcelExporter.shareCSV(from: self, donation: donation)
         }
     
-    
+    private func openDonationDetails(_ donation: Donation) {
+
+        let storyboard = UIStoryboard(name: "Donations", bundle: nil)
+
+        guard let detailsVC = storyboard.instantiateViewController(
+            withIdentifier: "DonationDetailsViewController"
+        ) as? DonationDetailsViewController else {
+            print("❌ DonationDetailsViewController not found")
+            return
+        }
+
+        detailsVC.donation = donation
+        detailsVC.currentUser = self.currentUser   // IMPORTANT
+
+        navigationController?.pushViewController(detailsVC, animated: true)
+    }
+
     
         
     private func buildDonationReport(for donation: Donation) -> NSAttributedString {

@@ -16,6 +16,7 @@ class DonationViewController: UIViewController {
     
     @IBOutlet weak var statusCollectionView: UICollectionView!
     
+    var pendingFirestoreID: String?
 
         // MARK: - Properties
         var currentUser: ZahraaUser?
@@ -75,6 +76,23 @@ class DonationViewController: UIViewController {
             listenForPendingRedirect()
 
         }
+     func openDonationDetails(_ donation: Donation) {
+
+        let storyboard = UIStoryboard(name: "Donations", bundle: nil)
+
+        guard let detailsVC = storyboard.instantiateViewController(
+            withIdentifier: "DonationDetailsViewController"
+        ) as? DonationDetailsViewController else {
+            print("❌ DonationDetailsViewController not found")
+            return
+        }
+
+        detailsVC.donation = donation
+        detailsVC.currentUser = currentUser
+        detailsVC.hidesBottomBarWhenPushed = true
+
+        navigationController?.pushViewController(detailsVC, animated: true)
+    }
 
         override func viewWillAppear(_ animated: Bool) {
             super.viewWillAppear(animated)
@@ -454,6 +472,13 @@ class DonationViewController: UIViewController {
                 self.donationsCollectionView.reloadData()
                 self.updateNoDonationsLabel()
             }
+            if let pendingID = self.pendingFirestoreID,
+               let donation = self.allDonations.first(where: { $0.firestoreID == pendingID }) {
+
+                self.pendingFirestoreID = nil
+                self.openDonationDetails(donation)
+            }
+
         }
     }
 

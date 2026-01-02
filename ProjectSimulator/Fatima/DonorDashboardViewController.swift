@@ -832,8 +832,23 @@ extension DonorDashboardViewController: UITableViewDataSource, UITableViewDelega
             cell.configure(with: recentDonations)
 
             cell.onDonationSelected = { [weak self] donation in
-                self?.openDonationFromDashboard(donation)
+                let firestoreID = donation.firestoreID
+
+                cell.onDonationSelected = { [weak self] donation in
+                    let storyboard = UIStoryboard(name: "Donations", bundle: nil)
+
+                    guard let vc = storyboard.instantiateViewController(
+                        withIdentifier: "DonationViewController"
+                    ) as? DonationViewController else {
+                        return
+                    }
+
+                    vc.pendingFirestoreID = donation.firestoreID
+                    self?.navigationController?.pushViewController(vc, animated: true)
+                }
+
             }
+
 
             cell.onHeaderTapped = { [weak self] in
                 self?.manageDonationsTapped()
@@ -919,19 +934,27 @@ extension DonorDashboardViewController: UITableViewDataSource, UITableViewDelega
 
         }
     }
-    private func openDonationFromDashboard(_ donation: Donation1) {
-        manageDonationsTapped()
+    @objc func openDonationDetailsFromDashboard(_ notification: Notification) {
 
-        DispatchQueue.main.asyncAfter(deadline: .now() + 0.4) {
-            NotificationCenter.default.post(
-                name: .openDonationDetailsFromDashboard,
-                object: nil,
-                userInfo: [
-                    "firestoreID": donation.firestoreID
-                ]
-            )
+        guard
+            let userInfo = notification.userInfo,
+            let firestoreID = userInfo["firestoreID"] as? String
+        else {
+            print("❌ Missing firestoreID")
+            return
         }
+
+        // 🔥 FIND donation Zahraa already created
+        guard let donation = allDonations.first(where: {
+            $0.firestoreID == firestoreID
+        }) else {
+            print("❌ Donation not found in allDonations")
+            return
+        }
+
+        //openDonationDetails(donation)
     }
+
 
 
     private func openEditUser(userID: String) {

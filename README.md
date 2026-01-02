@@ -98,6 +98,7 @@ The application logo was refined as a team to improve its visual clarity and ove
   <tr><td>Abseil</td><td>Abseil is a low-level C++ support library required internally by Firebase.</td></tr>
   <tr><td>gRPC</td><td>gRPC is used internally by Firebase to handle efficient communication.</td></tr>
   <tr><td>Google Utilities</td><td>Provides helper functions used internally by Firebase and Google libraries.</td></tr>
+  <tr><td>DGCharts</td><td>used to display donation trends through simple and interactive line charts on the dashboard..</td></tr>
   <tr><td>Google Data Transport</td><td>Manages secure transmission of analytics and backend data.</td></tr>
   <tr><td>Google App Measurement</td><td>Supports Firebase Analytics.</td></tr>
   <tr><td>Google Ads On-Device Conversion</td><td>Included as part of Firebase dependencies.</td></tr>

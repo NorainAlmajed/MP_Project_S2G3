@@ -22,7 +22,7 @@
                             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                             <subviews>
                                 <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="person.crop.circle" catalog="system" translatesAutoresizingMaskIntoConstraints="NO" id="tWB-qO-Ztr">
-                                    <rect key="frame" x="136" y="6.6666666666667425" width="120" height="120"/>
+                                    <rect key="frame" x="136" y="6.6666666666666714" width="120" height="120"/>
                                     <color key="tintColor" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                     <constraints>
                                         <constraint firstAttribute="width" constant="120" id="gqW-Wp-Uko"/>
@@ -35,7 +35,7 @@
                                     <nil key="highlightedColor"/>
                                 </label>
                                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Role" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="MGQ-00-HkY">
-                                    <rect key="frame" x="179.66666666666666" y="174" width="35.666666666666657" height="21"/>
+                                    <rect key="frame" x="177.66666666666674" y="174" width="35.666666666666742" height="21"/>
                                     <fontDescription key="fontDescription" type="boldSystem" pointSize="17"/>
                                     <nil key="textColor"/>
                                     <nil key="highlightedColor"/>
@@ -43,7 +43,7 @@
                             </subviews>
                             <color key="backgroundColor" systemColor="systemBackgroundColor"/>
                             <constraints>
-                                <constraint firstItem="MGQ-00-HkY" firstAttribute="centerX" secondItem="bJ2-ZS-J8E" secondAttribute="centerX" constant="1.0000000000001137" id="6td-I1-YcA"/>
+                                <constraint firstItem="MGQ-00-HkY" firstAttribute="centerX" secondItem="bJ2-ZS-J8E" secondAttribute="centerX" constant="-0.99999999999988631" id="6td-I1-YcA"/>
                                 <constraint firstItem="tWB-qO-Ztr" firstAttribute="top" secondItem="bJ2-ZS-J8E" secondAttribute="top" constant="6.0000000000000764" id="BtD-Gh-kM7"/>
                                 <constraint firstItem="je4-rP-wgO" firstAttribute="centerX" secondItem="bJ2-ZS-J8E" secondAttribute="centerX" id="LbV-zG-bNG"/>
                                 <constraint firstAttribute="bottom" secondItem="tWB-qO-Ztr" secondAttribute="bottom" constant="80.6666666666666" id="cBp-eB-rLD"/>
@@ -241,7 +241,7 @@
                                     <nil key="highlightedColor"/>
                                 </label>
                                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Role" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="21X-6Y-TQx">
-                                    <rect key="frame" x="179.66666666666666" y="174" width="35.666666666666657" height="21"/>
+                                    <rect key="frame" x="178.66666666666674" y="174" width="35.666666666666742" height="21"/>
                                     <fontDescription key="fontDescription" type="boldSystem" pointSize="17"/>
                                     <nil key="textColor"/>
                                     <nil key="highlightedColor"/>
@@ -250,7 +250,7 @@
                             <color key="backgroundColor" systemColor="systemBackgroundColor"/>
                             <constraints>
                                 <constraint firstItem="21X-6Y-TQx" firstAttribute="top" secondItem="74s-zw-jSS" secondAttribute="bottom" constant="11" id="3MV-6L-vEK"/>
-                                <constraint firstItem="21X-6Y-TQx" firstAttribute="centerX" secondItem="fjX-PG-xoE" secondAttribute="centerX" constant="1.0000000000001137" id="5XR-c2-46x"/>
+                                <constraint firstItem="21X-6Y-TQx" firstAttribute="centerX" secondItem="fjX-PG-xoE" secondAttribute="centerX" constant="1.1368683772161603e-13" id="5XR-c2-46x"/>
                                 <constraint firstItem="74s-zw-jSS" firstAttribute="top" secondItem="BTX-sm-qKZ" secondAttribute="bottom" constant="14.6666666666666" id="H0z-ee-oK0"/>
                                 <constraint firstItem="BTX-sm-qKZ" firstAttribute="top" secondItem="fjX-PG-xoE" secondAttribute="top" constant="6.0000000000000764" id="LYK-Fw-D3f"/>
                                 <constraint firstItem="BTX-sm-qKZ" firstAttribute="leading" secondItem="fjX-PG-xoE" secondAttribute="leading" constant="136" id="Omr-Wg-mXM"/>

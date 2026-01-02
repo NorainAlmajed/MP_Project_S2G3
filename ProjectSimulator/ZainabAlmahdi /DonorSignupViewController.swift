@@ -164,7 +164,7 @@ class DonorSignupViewController: UIViewController {
             "full_name": nameTextField.text?.trimmingCharacters(in: .whitespacesAndNewlines) ?? "",
             "number": phoneNumberTextField.text?.trimmingCharacters(in: .whitespacesAndNewlines) ?? "",
             "email": email,
-            "profile_image_url": "",          // ✅ REQUIRED
+            "profile_image_url": "",
             "profile_completed": false,
             "created_at": Timestamp()
         ]

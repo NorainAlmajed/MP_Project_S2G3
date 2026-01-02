@@ -25,6 +25,7 @@ class DonorDashboardViewController: UIViewController {
     @objc private func dismissManageUsers() {
         dismiss(animated: true)
     }
+    
     // MARK: manage user tapped func
     @objc private func manageUsersTapped() {
         let storyboard = UIStoryboard(name: "norain-admin-controls1", bundle: nil)
@@ -150,6 +151,16 @@ class DonorDashboardViewController: UIViewController {
         }
 
         navigationController?.pushViewController(vc, animated: true)
+    }
+    private func openDonationFromDashboard(_ donation: Donation1) {
+        manageDonationsTapped()
+
+        DispatchQueue.main.asyncAfter(deadline: .now() + 0.35) {
+            NotificationCenter.default.post(
+                name: .openDonationDetails,
+                object: donation.firestoreID
+            )
+        }
     }
 
     // MARK: - Roles
@@ -631,7 +642,7 @@ extension DonorDashboardViewController: UITableViewDataSource, UITableViewDelega
             }
 
         case .graph: return isPad ? 260 : 350
-        case .browseNGOs: return isPad ? 280 : 220
+        case .browseNGOs: return isPad ? 280 : 235
         case .recentDonations,
              .allDonations,
              .pendingDonations:
@@ -752,6 +763,13 @@ extension DonorDashboardViewController: UITableViewDataSource, UITableViewDelega
                         action: #selector(manageDonationsTapped),
                         for: .touchUpInside
                     )
+
+                    secondButton.addTarget(
+                        self,
+                        action: #selector(manageProfileTapped),
+                        for: .touchUpInside
+                    )
+
 
                 case .admin:
                     firstButton.setTitle("Manage Users", for: .normal)
@@ -930,19 +948,65 @@ extension DonorDashboardViewController: UITableViewDataSource, UITableViewDelega
 
         }
     }
-    private func openDonationFromDashboard(_ donation: Donation1) {
-        manageDonationsTapped()
+    @objc private func manageProfileTapped() {
 
-        DispatchQueue.main.asyncAfter(deadline: .now() + 0.4) {
-            NotificationCenter.default.post(
-                name: .openDonationDetailsFromDashboard,
-                object: nil,
-                userInfo: [
-                    "firestoreID": donation.firestoreID
-                ]
-            )
+        guard let tabBar = tabBarController else { return }
+
+        let accountIndex = 2
+        let dashboardIndex = 0
+
+        tabBar.selectedIndex = accountIndex
+
+        guard let nav = tabBar.viewControllers?[accountIndex] as? UINavigationController else { return }
+
+        nav.popToRootViewController(animated: false)
+
+        let storyboard = UIStoryboard(name: "Settings", bundle: nil)
+        let settingsVC = storyboard.instantiateViewController(
+            withIdentifier: "SettingViewController"
+        )
+
+        // 🔥 Override back behavior
+        settingsVC.navigationItem.leftBarButtonItem = UIBarButtonItem(
+            image: UIImage(systemName: "chevron.left"),
+            style: .plain,
+            target: self,
+            action: #selector(backToDashboard)
+        )
+
+        nav.pushViewController(settingsVC, animated: true)
+    }
+
+    @objc private func backToDashboard() {
+        guard let tabBar = tabBarController else { return }
+
+        let dashboardIndex = 0
+        tabBar.selectedIndex = dashboardIndex
+
+        if let dashboardNav = tabBar.viewControllers?[dashboardIndex] as? UINavigationController {
+            dashboardNav.popToRootViewController(animated: false)
         }
     }
+
+
+    @objc private func dismissAccount() {
+        dismiss(animated: true)
+    }
+
+    static func returnToDashboard(from vc: UIViewController) {
+        guard let tabBar = vc.tabBarController else { return }
+
+        let dashboardIndex = 0 // change if dashboard is not tab 0
+
+        // Switch to Dashboard tab
+        tabBar.selectedIndex = dashboardIndex
+
+        // Reset dashboard navigation stack
+        if let dashboardNav = tabBar.viewControllers?[dashboardIndex] as? UINavigationController {
+            dashboardNav.popToRootViewController(animated: false)
+        }
+    }
+
 
 
     private func openEditUser(userID: String) {
@@ -1028,7 +1092,7 @@ extension DonorDashboardViewController: UITableViewDataSource, UITableViewDelega
     }
 
 }
-// MARK: - Quick Action Button Styling (iOS 15+ safe)
+// MARK: - Quick Action Button Styling
 private func styleQuickActionButton(_ button: UIButton) {
 
     var config = UIButton.Configuration.filled()
@@ -1049,7 +1113,7 @@ private func styleQuickActionButton(_ button: UIButton) {
     config.titleTextAttributesTransformer =
         UIConfigurationTextAttributesTransformer { incoming in
             var outgoing = incoming
-            outgoing.font = .systemFont(ofSize: 16, weight: .semibold)
+            outgoing.font = .systemFont(ofSize: 14, weight: .bold)
             outgoing.foregroundColor = .white
             return outgoing
         }
@@ -1065,6 +1129,8 @@ private func styleQuickActionButton(_ button: UIButton) {
 }
 extension Notification.Name {
     static let openPendingDonations = Notification.Name("openPendingDonations")
+    static let openDonationDetails  = Notification.Name("openDonationDetails")
+
 }
 extension Notification.Name {
     static let openDonationDetailsFromDashboard =

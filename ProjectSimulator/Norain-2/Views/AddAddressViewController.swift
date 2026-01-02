@@ -34,9 +34,13 @@ class AddAddressViewController: UIViewController {
         setupUI()
         // Do any additional setup after loading the view.
     }
+    
+    
     private func setupUI() {
         title = "New Address Form"
+        navigationItem.backBarButtonItem = UIBarButtonItem(title: "")
     }
+    
     @IBAction func governorateButtonTapped(_ sender: Any) {
         let alert = UIAlertController(title: "Select Governorate", message: nil, preferredStyle: .actionSheet)
         

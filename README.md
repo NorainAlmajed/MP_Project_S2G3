@@ -37,7 +37,7 @@ ios app that allow donors to make donations for verified NGOs.
   <tr><td>2</td><td>Settings Management & Account Control</td><td>Zainab Almahdi</td><td>Zahraa Hubail</td></tr>
   <tr><td>3</td><td>Customize Dashboard</td><td>Fatima Alaiwi</td><td>Raghad Aleskafi</td></tr>
   <tr><td>4</td><td>Impact Tracking</td><td>Fatima Alaiwi</td><td>Zainab Saeed</td></tr>
-  <tr><td>5</td><td>Admin User Controls (CRUD) and NGO Approvals</td><td>Norain Almajed</td><td>Zahraa Hubail</td></tr>
+  <tr><td>5</td><td>Admin User Controls (CRUD) and NGO Approvals</td><td>Norain Almajed</td><td>Zainab Almahdi</td></tr>
   <tr><td>6</td><td>Real-Time Notifications</td><td>Zahraa Hubail</td><td>Raghad Aleskafi</td></tr>
   <tr><td>7</td><td>Donation and Status Management</td><td>Zahraa Hubail</td><td>Zainab Saeed</td></tr>
   <tr><td>8</td><td>NGO Discovery</td><td>Raghad Aleskafi</td><td>Norain Almajed</td></tr>
@@ -62,6 +62,45 @@ ios app that allow donors to make donations for verified NGOs.
 </table>
 
 <h2>Design Changes</h2>
+
+<h3>Zainab Almahdi</h3>
+
+<ul>
+  <li>
+    <strong>User Registration, Authentication, and Profile</strong>
+    <ul>
+      <li>
+        A Confirm Password field was added to reduce password entry errors during
+        registration and credential updates, improving validation reliability and overall user
+        experience.
+      </li>
+      <li>
+        Multi-Factor Authentication (MFA) and its associated storyboard scenes were
+        removed to keep the authentication flow simple and aligned with the current project
+        scope, while reducing navigation and state-management complexity in both the
+        storyboard and Swift codebase.
+      </li>
+    </ul>
+  </li>
+
+  <li>
+    <strong>Settings Management & Account Control</strong>
+    <ul>
+      <li>
+        Selecting the Security Settings cell now navigates directly to the Change
+        Email/Password screen, minimizing unnecessary intermediary views and improving
+        task efficiency in line with iOS navigation best practices.
+      </li>
+      <li>
+        Advanced account management features (last login details, active sessions,
+        device-specific logout, and local data/cache management) were removed to avoid UI
+        clutter and keep the storyboard structure lightweight, focusing on essential and
+        commonly used security actions.
+      </li>
+    </ul>
+  </li>
+</ul>
+
 
 <h3>Norain Almajed</h3>
 <ul>
@@ -98,6 +137,7 @@ The application logo was refined as a team to improve its visual clarity and ove
   <tr><td>Abseil</td><td>Abseil is a low-level C++ support library required internally by Firebase.</td></tr>
   <tr><td>gRPC</td><td>gRPC is used internally by Firebase to handle efficient communication.</td></tr>
   <tr><td>Google Utilities</td><td>Provides helper functions used internally by Firebase and Google libraries.</td></tr>
+  <tr><td>DGCharts</td><td>Used to display donation trends through simple and interactive line charts on the dashboard..</td></tr>
   <tr><td>Google Data Transport</td><td>Manages secure transmission of analytics and backend data.</td></tr>
   <tr><td>Google App Measurement</td><td>Supports Firebase Analytics.</td></tr>
   <tr><td>Google Ads On-Device Conversion</td><td>Included as part of Firebase dependencies.</td></tr>

@@ -10,14 +10,14 @@ class NorainAppUser {
     var documentID: String
     var username:String
     var name : String
-    var phoneNumber:Int
+    var phoneNumber:String
     var email:String
     var userImg:String
     var role:Int
     var notifications_enabled:Bool
 
 
-    init(documentID: String,username: String, name: String, phoneNumber: Int, email: String, userImg: String,role:Int,notifications_enabled:Bool) {
+    init(documentID: String,username: String, name: String, phoneNumber: String, email: String, userImg: String,role:Int,notifications_enabled:Bool) {
         self.documentID = documentID
         self.username = username
         self.phoneNumber = phoneNumber

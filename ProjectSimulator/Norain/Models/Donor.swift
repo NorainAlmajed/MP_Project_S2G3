@@ -14,7 +14,7 @@ class NorainDonor: NorainAppUser{
             let name = dictionary["full_name"] as? String ?? ""
             let email = dictionary["email"] as? String ?? ""
             let userImg = dictionary["profile_image_url"] as? String ?? ""
-            let phoneNumber = dictionary["number"] as? Int ?? 12345678
+            let phoneNumber = dictionary["number"] as? String ?? "12345678"
             let role = dictionary["role"] as? Int ?? 2
             let notifications_enabled = dictionary["notifications_enabled"] as? Bool ?? true
             let profile_completed = dictionary["profile_completed"] as? Bool ?? true

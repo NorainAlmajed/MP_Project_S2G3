@@ -20,6 +20,7 @@ class NourishUsersViewController: UIViewController,UITableViewDelegate,UITableVi
     @IBOutlet weak var btnApproved: UIButton!
     @IBOutlet weak var btnRejected: UIButton!
     
+    
     private let db = Firestore.firestore()
     private var listener: ListenerRegistration?
     
@@ -39,8 +40,8 @@ class NourishUsersViewController: UIViewController,UITableViewDelegate,UITableVi
         self.usersTableView.reloadData()
         usersTableView.delegate = self
         usersTableView.dataSource = self
-        usersTableView.tableFooterView = UIView()
-        
+        usersTableView.contentInset = UIEdgeInsets(top: 0, left: 0, bottom: 100, right: 0)
+
         let tap = UITapGestureRecognizer(target: self, action: #selector(dismissKeyboard))
         tap.cancelsTouchesInView = false
         view.addGestureRecognizer(tap)
@@ -123,7 +124,53 @@ class NourishUsersViewController: UIViewController,UITableViewDelegate,UITableVi
             }
         }
 
+    @IBAction func addUserBtnTapped(_ sender: UIBarButtonItem) {
+        let alert = UIAlertController(title: "Add New User", message: "Select user type to add", preferredStyle: .actionSheet)
         
+        // Add NGO option
+        let addNGOAction = UIAlertAction(title: "Add NGO", style: .default) { [weak self] _ in
+            self?.navigateToAddNGO()
+        }
+        
+        // Add Donor option
+        let addDonorAction = UIAlertAction(title: "Add Donor", style: .default) { [weak self] _ in
+            self?.navigateToAddDonor()
+        }
+        
+        // Cancel option
+        let cancelAction = UIAlertAction(title: "Cancel", style: .cancel)
+        
+        alert.addAction(addNGOAction)
+        alert.addAction(addDonorAction)
+        alert.addAction(cancelAction)
+        
+        // For iPad - prevent crash
+        if let popoverController = alert.popoverPresentationController {
+            popoverController.barButtonItem = sender
+        }
+        
+        present(alert, animated: true)
+    }
+
+    private func navigateToAddNGO() {
+        let storyboard = UIStoryboard(name: "Authentication", bundle: nil)
+        
+        if let addVC = storyboard.instantiateViewController(withIdentifier: "NGOSignupViewController") as? NGOSignupViewController {
+            
+            let nav = UINavigationController(rootViewController: addVC)
+            present(nav, animated: true)
+        }
+    }
+
+    private func navigateToAddDonor() {
+        let storyboard = UIStoryboard(name: "Authentication", bundle: nil)
+        
+        if let addVC = storyboard.instantiateViewController(withIdentifier: "DonorSignupViewController") as? DonorSignupViewController {
+            
+            let nav = UINavigationController(rootViewController: addVC)
+            present(nav, animated: true)
+        }
+    }
 
         // MARK: - Helper Mappers (Matches your JSON fields)
     private func mapToNGO(documentID: String,data: [String: Any]) -> NorainNGO {

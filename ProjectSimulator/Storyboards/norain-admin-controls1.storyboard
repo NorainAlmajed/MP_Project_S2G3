@@ -17,7 +17,7 @@
                         <rect key="frame" x="0.0" y="0.0" width="402" height="874"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <searchBar contentMode="redraw" verticalCompressionResistancePriority="749" translatesAutoresizingMaskIntoConstraints="NO" id="kCS-FM-0iJ">
+                            <searchBar contentMode="redraw" verticalCompressionResistancePriority="749" placeholder="Search Nourish User" translatesAutoresizingMaskIntoConstraints="NO" id="kCS-FM-0iJ">
                                 <rect key="frame" x="0.0" y="192" width="393" height="44"/>
                                 <constraints>
                                     <constraint firstAttribute="width" constant="393" id="8zj-Db-Q4S"/>
@@ -126,7 +126,11 @@
                                 </constraints>
                                 <items>
                                     <navigationItem title="Nourish Users" id="MIf-2b-ZPO">
-                                        <barButtonItem key="rightBarButtonItem" systemItem="add" id="Spw-93-Kz7"/>
+                                        <barButtonItem key="rightBarButtonItem" systemItem="add" id="Spw-93-Kz7">
+                                            <connections>
+                                                <action selector="addUserBtnTapped:" destination="Fwt-11-JKb" id="56J-iJ-yN2"/>
+                                            </connections>
+                                        </barButtonItem>
                                     </navigationItem>
                                 </items>
                             </navigationBar>
@@ -838,7 +842,7 @@
             <color white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
         </systemColor>
         <systemColor name="systemGray5Color">
-            <color red="0.8980392157" green="0.8980392157" blue="0.91764705879999997" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+            <color red="0.89803921568627454" green="0.89803921568627454" blue="0.91764705882352937" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
         </systemColor>
     </resources>
 </document>

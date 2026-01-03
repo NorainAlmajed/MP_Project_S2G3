@@ -3,7 +3,6 @@
 //  ProjectSimulator
 //
 //  Created by BP-36-201-02 on 18/12/2025.
-//
 
 import UIKit
 
@@ -32,3 +31,5 @@ class WelcomeViewController: UIViewController {
         button.clipsToBounds = true
     }
 }
+
+

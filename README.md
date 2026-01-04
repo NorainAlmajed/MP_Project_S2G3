@@ -59,6 +59,11 @@ ios app that allow donors to make donations for verified NGOs.
     <td>Zahraa Hubail</td>
     <td>Raghad Aleskafi</td>
   </tr>
+  <tr>
+    <td>Donations Representation in Charts</td>
+    <td>Fatima Alaiwi</td>
+    <td>Zainab Saeed</td>
+  </tr>
 </table>
 
 <h2>Design Changes</h2>

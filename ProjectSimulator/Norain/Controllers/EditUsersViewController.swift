@@ -115,7 +115,7 @@ class EditUsersViewController: UIViewController, UIImagePickerControllerDelegate
     private func populateDataFromFirestore(data: [String: Any]) {
         usernameField?.text = data["username"] as? String
         nameField?.text = data["full_name"] as? String
-        phoneField?.text = "\(data["number"] as? Int ?? 0)"
+        phoneField?.text = data["number"] as? String
         emailField?.text = data["email"] as? String
         
         if let imageUrlString = data["profile_image_url"] as? String, !imageUrlString.isEmpty {
@@ -157,7 +157,7 @@ class EditUsersViewController: UIViewController, UIImagePickerControllerDelegate
         
         usernameField?.text = user.username
         nameField?.text = user.name
-        phoneField?.text = "\(user.phoneNumber)"
+        phoneField?.text = user.phoneNumber
         emailField?.text = user.email
         
         if !user.userImg.isEmpty {
@@ -204,7 +204,7 @@ class EditUsersViewController: UIViewController, UIImagePickerControllerDelegate
             "username": usernameField.text?.trimmingCharacters(in: .whitespacesAndNewlines) ?? "",
             "name": nameField.text?.trimmingCharacters(in: .whitespacesAndNewlines) ?? "",
             "email": emailField.text?.trimmingCharacters(in: .whitespacesAndNewlines) ?? "",
-            "phoneNumber": Int(phoneField.text ?? "0") ?? 0
+            "number": phoneField.text ?? "0"
         ]
         
         // Add NGO-specific fields if this is an NGO
@@ -255,7 +255,7 @@ class EditUsersViewController: UIViewController, UIImagePickerControllerDelegate
         userToEdit.username = data["username"] as? String ?? userToEdit.username
         userToEdit.name = data["name"] as? String ?? userToEdit.name
         userToEdit.email = data["email"] as? String ?? userToEdit.email
-        userToEdit.phoneNumber = data["phoneNumber"] as? Int ?? userToEdit.phoneNumber
+        userToEdit.phoneNumber = data["number"] as? String ?? userToEdit.phoneNumber
         
         if let ngo = userToEdit as? NorainNGO {
             ngo.address = data["address"] as? String ?? ngo.address

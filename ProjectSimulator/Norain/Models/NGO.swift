@@ -27,7 +27,7 @@ class NorainNGO: NorainAppUser {
             let name = dictionary["organization_name"] as? String ?? ""
             let email = dictionary["email"] as? String ?? ""
             let userImg = dictionary["profile_image_url"] as? String ?? ""
-            let phoneNumber = dictionary["number"] as? Int ?? 12345678
+            let phoneNumber = dictionary["number"] as? String ?? "12345678"
             let notifications_enabled = dictionary["notifications_enabled"] as? Bool ?? true
         
             self.status = NGOStatus(rawValue: dictionary["status"] as? String ?? "Pending") ?? .pending
